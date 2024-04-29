@@ -86,7 +86,7 @@
       t = $("#datatable").KTDatatable({
         data: {
           type: "remote",
-          source: '<?= base_url() ?>perencanaan/spa/jsonKotakKeluarSpa',
+          source: '<?= base_url() ?>jadwal/jadwal/jsonJadwalList',
           pageSize: 10
         },
         layout: {
@@ -101,7 +101,7 @@
         },
         columns: [{
           field: "NOMOR_SPA_SEQ",
-          title: "Klausul"
+          title: "CABANG/DIVISI"
         },
         // {
         //   field: "NOMOR_SPA_SEQ",
@@ -129,42 +129,20 @@
         //   }
         // }, 
         {
-          field: "FILE_TTD",
-          title: "Waktu Pelaksanaan",
-          template: function(t) {
-            if (t.FILE_TTD == '' || t.FILE_TTD == null) {
-              return 'File tidak ditemukan.';
-            } else {
-              return '<a href="<?= base_url() ?>storage/spa/' + t.FILE_TTD + '" download>Download File Tanda Tangan.</a>';
-            }
-          }}, 
+          field: "WAKTU_AUDIT",
+          title: "Waktu Audit",
+           
+        },
           {
-          field: "ID_SPA",
-          title: "Actions",
-          class: "text-center",
-          sortable: !1,
-          searchable: !1,
-          overflow: "visible",
-          template: function(t) {
-            var aksi, teks, fa;
-            if (t.ID_STATUS == 1) {
-              aksi = "nonaktif";
-              teks = "Non-Aktifkan";
-              fa = "user-alt-slash";
-            } else {
-              aksi = "aktif";
-              teks = "Aktifkan";
-              fa = "check-circle";
-            }
-            if (t.ID_STATUS == 1 || t.ID_STATUS == 4) {
-              // return '<a href="<?= base_url() ?>perencanaan/kotak_keluar/spa/create/'+t.ID_SPA+'" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit"></i></a><a target="_blank" href="<?= base_url() ?>perencanaan/kotak_keluar/spa/cetak_preview/'+t.ID_SPA+'" class="btn btn-sm btn-clean btn-icon" title="Download"><i class="fa fa-download"></i></a>'
-              return '<a href="<?= base_url() ?>perencanaan/spa/create?id=' + btoa(t.ID_SPA) + '" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit text-dark"></i></a>'
-            } else {
-              // return '<a href="<?= base_url() ?>perencanaan/kotak_keluar/spa/create/'+t.ID_SPA+'" class="btn btn-sm btn-clean btn-icon" title="View"><i class="fa fa-eye"></i></a><a target="_blank" href="<?= base_url() ?>perencanaan/kotak_keluar/spa/cetak_preview/'+t.ID_SPA+'" class="btn btn-sm btn-clean btn-icon" title="Download"><i class="fa fa-download"></i></a>'
-              return '<a href="<?= base_url() ?>perencanaan/spa/create?id=' + btoa(t.ID_SPA) + '" class="btn btn-sm btn-clean btn-icon" title="View"><i class="fa fa-eye text-dark"></i></a>'
-            }
-          }
-        }]
+          field: "NAMA_AUDITOR",
+          title: "Auditor"
+        },
+        {
+          field: "NAMA_LEAD_AUDITOR",
+          title: "Lead Auditor"
+        },
+          
+      ]
       }), $("#datatable_search_status").on("change", (function() {
         t.search($(this).val().toLowerCase(), "STATUS")
       })), $("#datatable_search_status").selectpicker()

@@ -10,6 +10,7 @@ class Jadwal extends MY_Controller
 		$this->load->library('Pdf');
 		$this->load->model('perencanaan/M_spa', 'm_spa');
 		$this->load->model('perencanaan/M_tim_audit', 'm_tim_audit');
+		$this->load->model('perencanaan/M_jadwal', 'm_jadwal');
 		$this->is_login();
 		if(!$this->is_auditor()) $this->load->view('/errors/html/err_401');
 	}
@@ -17,39 +18,42 @@ class Jadwal extends MY_Controller
 	public function jadwal_audit()
 	{
 		$data['list_status'] 	= $this->master_act->status();
+		// print_r($data);
+		// die();
 		$data['menu']           = 'perencanaan';
 		$data['sub_menu']       = 'jadwal_audit';
 		$data['title']          = 'List Jadwal Audit ISO';
         $data['content']        = 'content/jadwal/jadwal_audit';
+		$data['jadwal_list'] 	= $this->m_jadwal->jadwal_list();
         $this->show($data);
+	}
+	function jsonJadwalList() 
+	{
+        header('Content-Type: application/json');
+        echo json_encode($this->m_jadwal->jadwal_list());
 	}
 
 	public function create()
 	{
-		$id_spa = $this->input->get('id');
-		$id_spa = base64_decode($id_spa);
-		if (!empty($id_spa) || $id_spa != null) {
-			$spa_detail	= $this->m_spa->spa_detail($id_spa);
-			if ($spa_detail->ID_STATUS != 1 && $spa_detail->ID_STATUS != 4) {
-				$data['disabled'] 	= 'disabled';
-				$data['enable'] 	= 0;
-				$data['enable_css'] = 'background-color:#F3F6F9;';
-			}
-			$data['peserta'] 		= $this->m_spa->get_dasar($id_spa);
-			$data['perintah'] 		= $this->m_spa->get_perintah($id_spa);
-			$data['tembusan'] 		= $this->m_spa->get_tembusan($id_spa);
-			$data['spa_detail'] 	= $spa_detail; 
-			$data['data_log'] 		= $this->main_act->log_by_id_perencanaan($id_spa, 'SPA');
-			$data['tim_audit'] 		= $this->m_tim_audit->get_tim_audit($id_spa, 'SPA');
-		}
+		
 		$data['list_user'] 			= $this->master_act->user(['U.STATUS' => 1]);
+		
+		
+		
+		$data_auditor 				= $this->master_act->auditor(['R.ID_ROLE' => 1]);
+		$data_lead_auditor			= $this->master_act->auditor(['R.ID_ROLE' => 5]);
+		$data['data_auditor'] 		= $data_auditor;
+		$data['data_lead_auditor'] 	= $data_lead_auditor;
+
 		$data['list_jenis_audit'] 	= $this->master_act->jenis_audit();
 		$data['list_divisi'] 		= $this->master_act->divisi();
 		$data['menu']           	= 'perencanaan';
 		$data['sub_menu']      		= 'jadwal_audit';
-		$data['sub_menu_2']     	= 'kotak_keluar_spa';
-		$data['title']          	= 'Create Jadwal List ISO';
+		
+		$data['title']          	= 'Create Jadwal Audit';
         $data['content']        	= 'content/jadwal/create';
+		// print_r($data_lead_auditor);
+		// die();
         $this->show($data);
 	}
 
@@ -63,5 +67,49 @@ class Jadwal extends MY_Controller
             'script' => $this->recaptcha->getScriptTag()
         );
 		$this->load->view('/content/v_home', $data);
+	}
+
+
+	public function simpan()
+	{
+		$request = $this->input->post();
+		// $id_apm = $request['ID_APM'];
+		// print_r($request);
+		// die();
+		$data = [
+				    'ID_AUDITOR'           			=> is_empty_return_null($request['ID_AUDITOR']),
+				    'ID_LEAD_AUDITOR'          		=> is_empty_return_null($request['ID_LEAD_AUDITOR']),
+				    'WAKTU_AUDIT' 					=> is_empty_return_null($request['WAKTU_AUDIT']),
+				    'ID_REG'    					=> is_empty_return_null($request['ID_REG']),
+		];
+		$save = $this->m_jadwal->save($data);
+		if($save==true){
+			$success_message = 'Data berhasil disimpan.';
+			echo base_url('perencanaan/apm/kotak_keluar');
+		}
+		else{
+			
+			$this->session->set_flashdata('error', $error_message);
+		}
+		
+		
+		// if (empty($id_apm)) {
+		// 	$data['ID_SPA'] = $request['ID_SPA'];
+		// 	$save = $this->m_apm->save($data);
+		// 	if ($save) {
+		// 		$success_message = 'Data berhasil disimpan.';
+		// 		$this->session->set_flashdata('success', $success_message);
+		// 		echo base_url('perencanaan/apm/kotak_keluar');
+		// 	}else {
+		// 		$error_message = 'Nomor sudah terpakai.';
+		// 		$this->session->set_flashdata('error', $error_message);
+		// 		echo base_url('perencanaan/apm/create');
+		// 	}
+		// }else {
+		// 	$this->m_apm->send_update($data, $id_apm);
+		// 	$success_message = 'Data berhasil dikirim.';
+		// 	$this->session->set_flashdata('success', $success_message);
+		// 	echo base_url('perencanaan/apm/kotak_keluar');
+		// }
 	}
 }
