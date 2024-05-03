@@ -16,6 +16,8 @@ class Home extends MY_Controller {
 		$this->menu 		= 'home';
 		$data['menu'] 		= $this->menu;
 		$data['content'] 	= 'content/v_home';
+		// var_dump($this->session);
+		// die();
 		$this->show($data);
 	}
 

@@ -6,15 +6,14 @@
         <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
         <span class="text-muted font-weight-bold mr-4">Perencanaan</span>
         <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
-        <span class="text-muted font-weight-bold mr-4">Penjadwalan Audit</span>
+        <span class="text-muted font-weight-bold mr-4">Kotak Keluar</span>
         <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
-        <!-- <span class="text-muted font-weight-bold mr-4">APM</span>
-        <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div> -->
+        <span class="text-muted font-weight-bold mr-4">APM</span>
+        <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
         <span class="text-muted font-weight-bold mr-4">Create</span>
       </div>
     </div>
   </div>
-  
   <div class="d-flex flex-column-fluid">
     <div class="container">
 
@@ -42,12 +41,12 @@
             </div>
           </div>
           <?php } ?>
-          
           <div class="form-group row">
             <label class="col-form-label col-3 text-left">Auditor</label>
             <div class="col-8">
             
               <select class="form-control select-dua" id="id_auditor" name="ID_AUDITOR">
+                <option value="<?= $data_jadwal['0']['ID_AUDITOR']?>"><?= $data_jadwal['0']['NAMA_AUDITOR']?></option>
                 <option value="">--Pilih Auditor--</option>
                 <?php 
                 foreach ($data_auditor as $auditor) { ?>
@@ -62,6 +61,7 @@
             <div class="col-8">
             
               <select class="form-control select-dua" id="id_lead_auditor" name="ID_LEAD_AUDITOR">
+              <option value="<?= $data_jadwal['0']['ID_LEAD']?>"><?= $data_jadwal['0']['NAMA_LEAD_AUDITOR']?></option>
                 <option value="">--Pilih Auditor--</option>
                 <?php 
                 foreach ($data_lead_auditor as $lead) { ?>
@@ -70,7 +70,7 @@
               </select>
               
                 
-              
+              <input type="hidden" value="<?= $data_jadwal['0']['ID_JADWAL']?>" name="ID_JADWAL"></input>
             </div>
           </div>
           
@@ -79,7 +79,17 @@
             <div class="col-lg-4 col-md-11">
               <div class="form-label">
                 <div class="input-icon input-icon-right mb-2">
-                  <input autocomplete="off" placeholder="Periode Awal" type="text" <?= $disabled ?> value="<?= $data_apm->JADWAL_PELAKSANAAN ?>" name="WAKTU_AUDIT" id="WAKTU_AUDIT" required class="form-control datepicker w-100">
+                  <input autocomplete="off" placeholder="Periode Awal" type="text" <?= $disabled ?> value="<?= $data_jadwal['0']['WAKTU_AUDIT_AWAL']?>" name="WAKTU_AUDIT_AWAL" id="WAKTU_AUDIT_AWAL" required class="form-control datepicker w-100">
+                  <span>
+                    <i class="fa fa-calendar"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-11">
+              <div class="form-label">
+                <div class="input-icon input-icon-right mb-2">
+                  <input autocomplete="off" placeholder="Periode Selesai" type="text" <?= $disabled ?> type="date" value="<?= $data_jadwal['0']['WAKTU_AUDIT_SELESAI'] ?>" name="WAKTU_AUDIT_SELESAI" required class="form-control datepicker w-100">
                   <span>
                     <i class="fa fa-calendar"></i>
                   </span>
@@ -88,87 +98,32 @@
             </div>
             
               <!-- <p class="my-auto">s/d</p> -->
-            <div class="col-lg-4 col-md-11">
-              <div class="form-label">
-                <div class="input-icon input-icon-right mb-2">
-                  <input autocomplete="off" placeholder="Periode Selesai" type="text" <?= $disabled ?> value="<?= $data_apm->JADWAL_PELAKSANAAN_SELESAI ?>" name="JADWAL_PELAKSANAAN_SELESAI" id="JADWAL_PELAKSANAAN_SELESAI" required class="form-control datepicker w-100">
-                  <span>
-                    <i class="fa fa-calendar"></i>
-                  </span>
-                </div>
-              </div>
-            </div>
+            
           </div>
           <div class="form-group row">
             <label class="col-form-label col-3 text-left">Cabang/Divisi</label>
             <div class="col-8">
             <?php if(empty($data_apm)){ ?>
-              <select class="form-control select-dua" id="id_reg" name="ID_REG">
+              <select class="form-control select-dua" id="id_divisi" name="ID_DIVISI">
+              <option value="<?= $data_jadwal['0']['ID_DIVISI']?>"><?= $data_jadwal['0']['NAMA_DIVISI']?></option>
                 <option value="">--Pilih Cabang/Divisi--</option>
                 <?php 
-                foreach ($nomor_spa as $nomor) { ?>
-                  <option value="<?= $nomor['ID_SPA'] ?>"><?= $nomor['NOMOR_SURAT'] ?></option>
+                foreach ($list_divisi as $divisi) { ?>
+                  <option value="<?= $divisi['ID_DIVISI'] ?>"><?= $divisi['NAMA_DIVISI'] ?></option>
                 <?php } ?>
               </select>
               <?php }else{ ?>
-                <input type="text" disabled value="<?= $nomor_surat ?>" class="form-control">
+                <input type="text" disabled value="<?= $list_divisi ?>" class="form-control">
               <?php } ?>
             </div>
           </div>
           
+					
           
           
           
-					<?php if(isset($_GET['review'])){ ?>
-						<div class="form-group row">
-							<label class="col-form-label col-3 text-left">Komentar</label>
-							<div class="col-8">
-								<textarea name="KOMENTAR" id="KOMENTAR"></textarea>
-							</div>
-						</div>
-						<div class="form-group row">
-							<label class="col-form-label col-3 text-left">Tanggal Approve</label>
-							<div class="col-4">
-                <div class="form-label">
-                  <div class="input-icon input-icon-right mb-2">
-                    <input autocomplete="off" placeholder="Tanggal Approve" type="text" <?= $disabled ?> value="<?= date('Y-m-d') ?>"  name="TANGGAL" class="form-control datepicker w-100">
-                    <span>
-                      <i class="fa fa-calendar"></i>
-                    </span>
-                  </div>
-                </div>
-							</div>
-						</div>
-            <div class="separator separator-dashed mb-5"></div>
-            <?php if ($data_apm->ID_STATUS != 4) {?>
-						<div class="form-group row">
-							<div class="col-8 offset-3">
-								<label class="col-form-label text-left"><h6><b>Log History</b></h6></label>
-								<div class="timeline timeline-justified timeline-4 mb-5">
-                <div class="timeline-bar"></div>
-                <div class="timeline-items">
-                  <?php if(!empty($data_log)) {
-                    foreach ($data_log as $value) { ?>
-                    <div class="timeline-item">
-                        <div class="timeline-badge">
-                            <div class="bg-primary"></div>
-                        </div>
-
-                        <div class="timeline-label">
-                            <span class="text-primary font-weight-bold"><?= $value['TGL_LOG'] ?></span>
-                        </div>
-
-                        <div class="timeline-content">
-                            <?= $value['LOG'] ?>
-                        </div>
-                    </div>
-                  <?php } } ?>
-                </div>
-              </div>
-							</div>
-						</div>
-          <?php }?>
-					<?php } ?>
+					
+          
 					<?php if ($data_apm->ID_STATUS == 4) {?>
 						<div class="form-group row">
 							<div class="col-8 offset-3">
@@ -189,23 +144,22 @@
             <div class="col-8">
 							<?php if(isset($_GET['review'])){ ?>
                 <?php if($data_apm->ID_APM != ''){ ?>
-								<a target="_blank" href='<?= base_url() ?>perencanaan/apm/cetak_preview/<?= $data_apm->ID_APM ?>' class="btn btn-light-primary font-weight-bold">Preview</a>
+								<a target="_blank" href='<?= base_url() ?>perencanaan/apm/cetak_preview/<?= $data_jadwal['0']['ID_JADWAL'] ?>' class="btn btn-light-primary font-weight-bold">Preview</a>
                 <?php } ?>
 								<?php if ($_GET['sts-approver'] == 1) {?>
 									<a onclick="submitButton(3)" class="btn btn-light-success font-weight-bold">Approve</a>
 									<a onclick="submitButton(4)" class="btn btn-light-warning font-weight-bold">Reject</a>
 								<?php } ?>
-								<a onclick="back('<?= $data_apm->ID_APM ?>')" class="btn btn-light-danger font-weight-bold">Kembali</a>
+								<a onclick="back('<?= $data_jadwal['0']['ID_JADWAL'] ?>')" class="btn btn-light-danger font-weight-bold">Kembali</a>
 							<?php }else { ?>
                 <?php if($data_apm->ID_APM != ''){ ?>
-								<a target="_blank" href='<?= base_url() ?>perencanaan/apm/cetak_preview/<?= $data_apm->ID_APM ?>' class="btn btn-light-primary font-weight-bold">Preview</a>
+								<a target="_blank" href='<?= base_url() ?>perencanaan/apm/cetak_preview/<?= $data_jadwal['0']['ID_JADWAL'] ?>' class="btn btn-light-primary font-weight-bold">Preview</a>
                 <?php } ?>
 								<?php if ($data_apm->ID_STATUS != 2 && $data_apm->ID_STATUS != 3) {?>
-									<a onclick="save('<?= $data_apm->ID_APM ?>', 1)" class="btn btn-light-success font-weight-bold">Simpan</a>
+									<a onclick="save('<?= $data_jadwal['0']['ID_JADWAL']?>', 1)" class="btn btn-light-success font-weight-bold">Simpan</a>
 									<a onclick="save('<?= $data_apm->ID_APM ?>', 2)" class="btn btn-light-warning font-weight-bold">Kirim</a>
 								<?php } ?>
 								<a onclick="back()" class="btn btn-light-danger font-weight-bold">Kembali</a>
-                <a onclick="back()" class="btn btn-light-danger font-weight-bold">Hapus</a>
 							<?php } ?>
 
             </div>
@@ -219,7 +173,6 @@
 <script type="text/javascript">
 $(document).ready(function() {
 
-  set_tinymce('QUESTION', '<?= trim(preg_replace('/\s\s+/', ' ',$data_apm->TUJUAN)) ?>');
 
   set_tinymce('TUJUAN', '<?= trim(preg_replace('/\s\s+/', ' ',$data_apm->TUJUAN)) ?>');
   set_tinymce('RUANG_LINGKUP', '<?= trim(preg_replace('/\s\s+/', ' ',$data_apm->RUANG_LINGKUP)) ?>');
@@ -268,7 +221,7 @@ $(document).ready(function() {
   function save(id, action)
   {
     Swal.fire({
-    text: 'Apakah Anda yakin mengupdate data ini ?',
+    text: 'Apakah Anda yakin menyimpan data ini ?',
     icon: 'question',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -283,17 +236,20 @@ $(document).ready(function() {
         }
         var form_data = $("#form_apm").serialize() + '&' + $.param(obj);
         $.ajax({
-          url: '<?= base_url() ?>jadwal/jadwal/simpan/',
+          url: '<?= base_url() ?>aia/jadwal/simpan/',
           type: 'post',
           data: form_data,
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
           success: function(data) {
+            // console.log(data);
+            // alert(form_data);
             window.location = data; 
-            // alert(data);
           },
-          
+          error: function(data){
+            Swal.fire("Gagal menyimpan data!", "Pastika semua kolom terisi!", "error");
+          }
         });
       }
     })
@@ -302,7 +258,7 @@ $(document).ready(function() {
   function submitButton(action)
   {
     Swal.fire({
-      text: 'ye melakukan aksi ini ?',
+      text: 'Yakin melakukan aksi ini ?',
       icon: 'question',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -327,6 +283,7 @@ $(document).ready(function() {
                 window.location = data;
             },
             error: function(data){
+                alert(data);
                 Swal.fire("Gagal menyimpan data!", "Pastika semua kolom terisi!", "error");
             }
         });
@@ -335,49 +292,9 @@ $(document).ready(function() {
   }
 	function back(id) { 
 		if (id) {
-			window.location = '<?= base_url() ?>jadwal/jadwal/jadwal_audit'
+			window.location = '<?= base_url() ?>perencanaan/apm/kotak_masuk'
 		}else {
-			window.location = '<?= base_url() ?>jadwal/jadwal/jadwal_audit'
-		}
-	}
-
-  function delete(id) { 
-
-    Swal.fire({
-      text: 'ye melakukan aksi ini ?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Ya',
-      cancelButtonText: 'Batal'
-    }).then((result) => {
-      if (result.value) {
-        console.log("WOY");
-
-        var obj = {ACTION: action};
-        var form_data = $("#form_apm").serialize() + '&' + $.param(obj);
-        $.ajax({
-            url: '<?= base_url() ?>/perencanaan/apm/approve_reject/<?= $data_apm->ID_APM ?>',
-            type: 'post',
-            data: form_data,
-            headers: {
-              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(data) {
-                // console.log(data);
-                window.location = data;
-            },
-            error: function(data){
-                Swal.fire("Gagal menyimpan data!", "Pastika semua kolom terisi!", "error");
-            }
-        });
-      }
-    }),
-		if (id) {
-			window.location = '<?= base_url() ?>jadwal/jadwal/jadwal_audit'
-		}else {
-			window.location = '<?= base_url() ?>jadwal/jadwal/jadwal_audit'
+			window.location = '<?= base_url() ?>perencanaan/apm/kotak_keluar'
 		}
 	}
 </script>

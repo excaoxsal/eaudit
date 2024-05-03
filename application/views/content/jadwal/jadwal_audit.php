@@ -23,7 +23,7 @@
             <h3 class="card-label"><?= $title ?></h3>
           </div>
           <div class="card-toolbar">
-            <a href="<?= base_url() ?>jadwal/jadwal/create" class="btn btn-primary font-weight-bolder">
+            <a href="<?= base_url() ?>aia/jadwal/create" class="btn btn-primary font-weight-bolder">
               <i class="fa fa-plus" style="font-size: 12px;"></i>&nbsp;&nbsp;&nbsp;&nbsp;Tambah Jadwal</a>
           </div>
         </div>
@@ -86,7 +86,7 @@
       t = $("#datatable").KTDatatable({
         data: {
           type: "remote",
-          source: '<?= base_url() ?>jadwal/jadwal/jsonJadwalList',
+          source: '<?= base_url() ?>aia/jadwal/jsonJadwalList',
           pageSize: 10
         },
         layout: {
@@ -100,7 +100,7 @@
           key: "generalSearch"
         },
         columns: [{
-          field: "NOMOR_SPA_SEQ",
+          field: "NAMA_DIVISI",
           title: "CABANG/DIVISI"
         },
         // {
@@ -129,8 +129,13 @@
         //   }
         // }, 
         {
-          field: "WAKTU_AUDIT",
-          title: "Waktu Audit",
+          field: "WAKTU_AUDIT_AWAL",
+          title: "Waktu Mulai",
+           
+        },
+        {
+          field: "WAKTU_AUDIT_SELESAI",
+          title: "Waktu Selesai",
            
         },
           {
@@ -141,6 +146,57 @@
           field: "NAMA_LEAD_AUDITOR",
           title: "Lead Auditor"
         },
+        {
+          field: "EDIT",
+          title: "Edit",
+          class: "text-center",
+          sortable: !1,
+          searchable: !1,
+          overflow: "visible",
+          template: function(t) {
+            var aksi, teks, fa;
+            if (t.STATUS == 1) {
+              aksi  = "nonaktif";
+              teks  = "Non-Aktifkan";
+              fa    = "user-alt-slash";
+            }else{
+              aksi  = "aktif";
+              teks  = "Aktifkan";
+              fa    = "check-circle";
+            }
+            if (t.ID_STATUS == 1 || t.ID_STATUS == 4) {			
+              return 0;
+            }else {
+              return ('<a href="<?= base_url() ?>aia/jadwal/update/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit text-dark"></i></a>');
+            }
+          },
+          
+          
+          
+        },
+        {
+          field: "HAPUS",
+          title: "Hapus",
+          class: "text-center",
+          sortable: !1,
+          searchable: !1,
+          overflow: "visible",
+          template: function(t) {
+            var aksi1, teks2, fa3;
+            
+              aksi1  = "nonaktif";
+              teks2  = "Non-Aktifkan";
+              fa3    = "user-alt-slash";
+           
+            
+              return ('<a href="<?= base_url() ?>aia/jadwal/hapus/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Hapus"><i class="fa fa-trash text-dark"></i></a>');
+            
+          },
+          
+          
+          
+        },
+        
           
       ]
       }), $("#datatable_search_status").on("change", (function() {
