@@ -28,6 +28,12 @@
               <span class="menu-text">Penjadwalan Audit</span>
             </a>
           </li>
+          <li class="menu-item menu-item-submenu <?= isset($sub_menu) ? $sub_menu == 'm_iso' ? 'menu-item-open menu-item-here' : '' : ''; ?>" aria-haspopup="true">
+            <a href="<?= base_url() ?>aia/iso/" class="menu-link mx-5 my-1 rounded">
+            
+              <span class="menu-text">Master Pertanyaan</span>
+            </a>
+          </li>
         </ul>
       </div>
     </li>
