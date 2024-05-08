@@ -16,6 +16,10 @@ class M_jadwal extends CI_Model{
 
     public function save($data)
 	{
+
+		$insertboy=$this->db->insert('WAKTU_AUDIT', $data);
+		$query = $insertboy;
+		return $query;
 		// $this->db->trans_start(TRUE); // Mode strict transaksi
 		// $tarik = $this->db->select('*')->from('WAKTU_AUDIT')->where('ID_JADWAL',1);
 		// $this->db->from('WAKTU_AUDIT_AWAL');
@@ -23,28 +27,24 @@ class M_jadwal extends CI_Model{
 		// $query = $this->db->get();
 		// $lastquery=$this->db->last_query();
 		// return $tarik;
-		if($data['ID_JADWAL']!=null){
-			return 1;
-		}
-		if($query->num_rows() > 0){
-			$data_update = array(
-				'ID_REG' => $data['ID_REG'],
-				'ID_AUDITOR' => $data['ID_AUDITOR'],
-				'ID_LEAD_AUDITOR' => $data['ID_LEAD_AUDITOR'],
-				'WAKTU_AUDIT_AWAL' => $data['WAKTU_AUDIT_AWAL'],
-				'WAKTU_AUDIT_SELESAI' => $data['WAKTU_AUDIT_SELESAI'],
-				'STATUS' => $data['STATUS']
-			);
-			$this->db->where('ID_JADWAL', $data['ID_JADWAL']);
-			$insertboy=$this->db->update('WAKTU_AUDIT', $data_update);
-			$lastquery=$this->db->last_query();
-			$query = $insertboy;
-			return $insertboy;
-		} else {
-			$insertboy=$this->db->insert('WAKTU_AUDIT', $data);
-			$query = $insertboy;
-			return $query;
-		}
+		
+		// if($query->num_rows() > 0){
+		// 	$data_update = array(
+		// 		'ID_REG' => $data['ID_REG'],
+		// 		'ID_AUDITOR' => $data['ID_AUDITOR'],
+		// 		'ID_LEAD_AUDITOR' => $data['ID_LEAD_AUDITOR'],
+		// 		'WAKTU_AUDIT_AWAL' => $data['WAKTU_AUDIT_AWAL'],
+		// 		'WAKTU_AUDIT_SELESAI' => $data['WAKTU_AUDIT_SELESAI'],
+		// 		'STATUS' => $data['STATUS']
+		// 	);
+		// 	$this->db->where('ID_JADWAL', $data['ID_JADWAL']);
+		// 	$insertboy=$this->db->update('WAKTU_AUDIT', $data_update);
+		// 	$lastquery=$this->db->last_query();
+		// 	$query = $insertboy;
+		// 	return $insertboy;
+		// } else {
+			
+		// }
 		// $this->db->trans_complete(); // Akhiri transaksi
 		
 
