@@ -8,7 +8,7 @@ class Jadwal extends MY_Controller
 	{
 		parent::__construct();
 		$this->load->library('Pdf');
-		$this->load->model('perencanaan/M_spa', 'm_spa');
+		
 		$this->load->model('perencanaan/M_tim_audit', 'm_tim_audit');
 		$this->load->model('perencanaan/M_jadwal', 'm_jadwal');
 		$this->is_login();
