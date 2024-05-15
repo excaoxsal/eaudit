@@ -169,14 +169,14 @@
         
         
         {
-          field: "ID_ISO",
+          field: "ID_TL",
           title: "Action",
           class: "text-center",
           sortable: !1,
           searchable: !1,
           overflow: "visible",
           template: function(t) {
-            return '<a onclick="uploadFile(' + t.ID_ISO + ')" class="btn btn-sm btn-clean btn-icon"><i class="text-dark fa fa-upload"></i></a><a onclick="lihat(' + t.ID_TL + ')" class="btn btn-sm btn-clean btn-icon" title="Lihat"><i class="text-dark fa fa-eye"></i></a>'
+            return '<a onclick="uploadFile(' + t.ID_TL + ')" class="btn btn-sm btn-clean btn-icon"><i class="text-dark fa fa-upload"></i></a>'
             // return '<a href="<?= base_url() ?>monitoring/entry/tindak_lanjut/' + t.ID_TL + '" class="btn btn-sm btn-clean btn-icon" title="Tindak Lanjut"><i class="text-dark fa fa-file-import"></i></a><a onclick="hapus(' + t.ID_TL + ')" class="btn btn-sm btn-clean btn-icon" title="Hapus"><i class="text-dark fa fa-trash"></i></a><a onclick="preview(' + t.TAHUN + ',' + t.ID_DIVISI + ', ' + t.ID_JENIS_AUDIT + ')" class="btn btn-sm btn-clean btn-icon" title="Preview"><i class="text-dark fa fa-eye"></i></a><a onclick="lha_final(' + t.ID_TL + ')" class="btn btn-sm btn-clean btn-icon" title="LHA Final"><i class="text-dark fa fa-file-word"></i></a>'
             // return '<center><a href="<?= base_url() ?>perencanaan/kotak_masuk/spa/review/'+t.ID_SPA+'" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit"></i></a></center>'
           }
@@ -199,18 +199,6 @@
         // console.log(data.NOMOR_LHA);
     });
     $('#modal_upload').modal('show');
-  }
-
-  function lihat(id_tl)
-  {
-    $.post(`<?= base_url('aia/iso/show_iso') ?>`+id_tl, function(data, status){
-        const obj = JSON.parse(data);
-        $('#id_tl').val(id_tl);
-        $('#NOMOR_LHA').val(obj.NOMOR_LHA);
-        $('#TANGGAL_LHA').val(obj.TANGGAL_LHA);
-        // console.log(data.NOMOR_LHA);
-    });
-    
   }
   jQuery(document).ready((function() {
     KTDatatableJsonRemoteDemo.init()
