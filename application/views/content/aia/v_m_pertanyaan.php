@@ -93,6 +93,7 @@
           <div class="form-group row">
             <div class="col-12">
               <label>Nomor ISO</label>
+              
               <input type="text" class="form-control" placeholder="Nomor ISO" name="NOMOR_ISO" id="NOMOR_ISO">
               <input type="hidden" class="form-control" placeholder="Nomor LHA" name="id_tl" id="id_tl">
             </div>
@@ -124,7 +125,7 @@
       t = $("#datatable").KTDatatable({
         data: {
           type: "remote",
-          source: '<?= base_url() ?>aia/iso/jsonIsoList',
+          source: '<?= base_url() ?>aia/iso/jsonPertanyaanList',
           pageSize: 10
         },
         layout: {
@@ -137,10 +138,39 @@
           input: $("#datatable_search_query"),
           key: "generalSearch"
         },
-        columns: [{
+        columns: [
+          {
           field: "NOMOR_ISO",
-          title: "ISO"
+          title: "NOMOR ISO"
         },
+        {
+          field: "LV1",
+          title: "LV1"
+        },
+        {
+          field: "LV2",
+          title: "LV2"
+        },
+        {
+          field: "LV3",
+          title: "LV3"
+        },
+        {
+          field: "LV4",
+          title: "LV4"
+        },
+        {
+          field: "AUDITEE",
+          title: "AUDITEE"
+        },
+        {
+          field: "PERTANYAAN",
+          title: "PERTANYAAN"
+        },
+        
+
+
+        
         // {
         //   field: "NOMOR_SPA_SEQ",
         //   title: "ID"
