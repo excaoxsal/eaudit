@@ -27,12 +27,12 @@ class Iso extends MY_Controller
         echo json_encode($this->m_iso->iiso());
 	}
 
-	function jsonPertanyaanList() 
+	function jsonPertanyaanList($id_iso) 
 	{
         header('Content-Type: application/json');
-		// echo $this->m_iso->get_iso();
+		// echo $this->m_pertanyaan->show_iso($data);
 		// die();
-        echo json_encode($this->m_pertanyaan->show_iso());
+        echo json_encode($this->m_pertanyaan->show_iso($id_iso));
 	}
 
 
@@ -58,6 +58,8 @@ class Iso extends MY_Controller
 		// var_dump($iso);
 		// die;
 		$datapertanyaan = $this->m_pertanyaan->show_iso($iso);
+		$eljson = json_encode($datapertanyaan);
+		$data['id_iso'] = $iso;
 		$data['pertanyaan']=$datapertanyaan;
 		$data['list_status'] 	= $this->master_act->status();
 		$dataiso = $this->m_iso->get_iso();
@@ -69,10 +71,15 @@ class Iso extends MY_Controller
 		$id_user = $data['id_user'];
 		$data['jadwal_list'] 	= $this->m_jadwal->jadwal_list($id_user);
         $data['data_iso'] = $dataiso;
+		$data['data_pertanyaan'] = $eljson;
 		// print_r( $this->jsonIsoList() );
 		// die;
 		// var_dump($dataiso);
 		// die();
+		// var_dump($_POST);
+		// die;
+		// $jsoncode =  $this->jsonPertanyaanList($iso);
+		
         $this->show($data);
 	}
 
