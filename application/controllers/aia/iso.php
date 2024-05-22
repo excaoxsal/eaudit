@@ -24,7 +24,15 @@ class Iso extends MY_Controller
         header('Content-Type: application/json');
 		// echo $this->m_iso->get_iso();
 		// die();
-        echo json_encode($this->m_iso->get_iso());
+        echo json_encode($this->m_iso->iiso());
+	}
+
+	function jsonPertanyaanList() 
+	{
+        header('Content-Type: application/json');
+		// echo $this->m_iso->get_iso();
+		// die();
+        echo json_encode($this->m_pertanyaan->show_iso());
 	}
 
 
@@ -47,6 +55,10 @@ class Iso extends MY_Controller
     }
 
 	public function show_iso($iso){
+		// var_dump($iso);
+		// die;
+		$datapertanyaan = $this->m_pertanyaan->show_iso($iso);
+		$data['pertanyaan']=$datapertanyaan;
 		$data['list_status'] 	= $this->master_act->status();
 		$dataiso = $this->m_iso->get_iso();
 		$data['menu']           = 'master';
@@ -65,6 +77,8 @@ class Iso extends MY_Controller
 	}
 
 	public function proses_upload() {
+		// var_dump($_POST['ID_ISO']);
+		// die;
 		$nipp                       = $this->input->post('nipp');
 		$config['file_name']        = "asd";
 		$config['upload_path'] = './storage/aia/'; // Lokasi penyimpanan file
@@ -100,7 +114,7 @@ class Iso extends MY_Controller
 		}
 
 		$base_url = base_url();
-		$this->m_pertanyaan->clean();
+		$this->m_pertanyaan->clean($_POST['ID_ISO']);
 		$inputFileName = $file_path;
 		$inputFileType = PHPExcel_IOFactory::identify($inputFileName);
 		$reader = PHPExcel_IOFactory::createReader($inputFileType);
@@ -136,7 +150,7 @@ class Iso extends MY_Controller
 					'LV4'			=> is_empty_return_null($lv4),
 					'AUDITEE'		=> is_empty_return_null($auditee),
 					'PERTANYAAN'	=> is_empty_return_null($pertanyaan),
-					'ID_ISO'=>is_empty_return_null('1'),
+					'ID_ISO'=>is_empty_return_null($_POST['ID_ISO']),
 					'ID_MASTER_PERTANYAAN' => is_empty_return_null('')
 				);
 				// var_dump($data);
@@ -168,18 +182,20 @@ class Iso extends MY_Controller
 					'LV4'			=> is_empty_return_null($data[$col]['LV4']),
 					'AUDITEE'		=> is_empty_return_null($data[$col]['AUDITEE']),
 					'PERTANYAAN'	=> is_empty_return_null($data[$col]['PERTANYAAN']),
-					'ID_ISO'=>is_empty_return_null('1'),
+					'ID_ISO'=>is_empty_return_null($_POST['ID_ISO']),
 					
 				];
 				// var_dump($data[$col]['LV1']);
 				// var_dump($eldata);
 				$save = $this->m_pertanyaan->save($eldata);
 				
+				
 		}
 				// var_dump($eldata);
 				// die;
 				unlink($file_path);
 			if($save==true){
+				$update = $this->m_iso->update($_POST['ID_ISO']);
 				$success_message = 'Data berhasil disimpan.';
 				$this->session->set_flashdata('success', $success_message);
 				redirect($_SERVER['HTTP_REFERER']);
