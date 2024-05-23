@@ -6,7 +6,7 @@
         <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
         <span class="text-muted font-weight-bold mr-4">Master</span>
         <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
-        <span class="text-muted font-weight-bold mr-4">Divisi</span>
+        <span class="text-muted font-weight-bold mr-4">Divisi / Subdivisi</span>
       </div>
     </div>
   </div>
@@ -15,7 +15,7 @@
       <div class="card card-custom">
         <div class="card-header flex-wrap border-0 pt-6 pb-0">
           <div class="card-title">
-            <h3 class="card-label"><?= $title ?></h3>
+            <h3 class="card-label"><?= $title ?> / Subdivisi</h3>
           </div>
         </div>
         <div class="card-body">
@@ -23,29 +23,38 @@
           <div class="accordion accordion-solid accordion-toggle-plus mb-10" id="accordionExample3">
             <div class="card">
               <div class="card-header" id="headingOne3">
-                <div class="card-title collapsed" id="accordion-title" data-toggle="collapse" data-target="#collapseOne3" aria-expanded="false">Add Divisi</div>
+                <div class="card-title collapsed" id="accordion-title" data-toggle="collapse" data-target="#collapseOne3" aria-expanded="false">Add Divisi / Subdivisi</div>
               </div>
               <form class="form" id="form" method="post">
               <input type="hidden" name="ID" id="ID">
               <div id="collapseOne3" class="collapse" data-parent="#accordionExample3" style="">
                 <div class="card-body">
                   <div class="form-group row">
-                    <label class="col-form-label col-3 text-right">Divisi <sup class="text-danger">*</sup></label>
+                    <label class="col-form-label col-3 text-right">Is Divisi? <sup class="text-danger">*</sup></label>
                     <div class="col-9">
                       <div class="form-label">
-                        <input type="text" class="form-control" placeholder="Divisi" id="divisi" name="divisi" required>
+                        <select class="form-control" id="is_divisi" name="is_divisi" onchange="hiddenFieldText()" required>
+                          <option value="">--Pilih--</option>
+                          <?php foreach($is_divisi as $is_divisix){ ?>
+                              <option value=<?=$is_divisix['IS_DIVISI']?>><?php if ($is_divisix['IS_DIVISI'] == 'Y'){ 
+                                echo "Divisi"; } else { echo "Sub Divisi"; } ?></option>
+                          <?php } ?>
+                        </select>
                       </div>
                     </div>
                   </div>
-                  <div class="form-group row">
-                    <label class="col-form-label col-3 text-right">Is Divisi? <sup class="text-danger">*</sup></label>
-                    <div class="col-9">
-                      <span class="switch">
-                        <label>
-                          <input type="checkbox" checked="checked" id="is_divisi" name="is_divisi" onclick="addSubdiv()">
-                          <span></span>
-                        </label>
-                      </span>
+                  <div id="divisi" class="form-group row" style="display:none">
+                    <label class="col-form-label col-3 text-right">Divisi <sup class="text-danger">*</sup></label>
+                    <div class="col-9" style="margin-bottom: 1.75rem;">
+                      <div class="form-label">
+                        <input type="text" class="form-control" placeholder="Divisi" id="divisi1" name="divisi1" required>
+                      </div>
+                    </div>
+                    <label class="col-form-label col-3 text-right">Kode Divisi <sup class="text-danger">*</sup></label>
+                    <div class="col-9" style="margin-bottom: 1.75rem;">
+                      <div class="form-label">
+                        <input type="text" class="form-control" placeholder="Kode Divisi" id="kode_divisi" name="kode_divisi" required>
+                      </div>
                     </div>
                   </div>
                   <div id= "subdiv" class="form-group row" style="display:none">
@@ -56,9 +65,20 @@
                       </div>
                     </div>
                     <label class="col-form-label col-3 text-right">Kode Sub Divisi <sup class="text-danger">*</sup></label>
-                    <div class="col-9">
+                    <div class="col-9" style="margin-bottom: 1.75rem;">
                       <div class="form-label">
                         <input type="text" class="form-control" placeholder="Kode Sub Divisi" id="kode_sub_divisi" name="kode_sub_divisi" required>
+                      </div>
+                    </div>
+                    <label class="col-form-label col-3 text-right">Divisi <sup class="text-danger">*</sup></label>
+                    <div class="col-9">
+                      <div class="form-label">
+                        <select class="form-control" id="id_divisi" name="id_divisi" required>
+                          <option value="">--Pilih Divisi--</option>
+                          <?php foreach($list_divisi as $divisi){ ?>
+                          <option value="<?= $divisi['ID_DIVISI'] ?>"><?= $divisi['NAMA_DIVISI'] ?></option>
+                          <?php } ?>
+                        </select>
                       </div>
                     </div>
                   </div>
@@ -150,14 +170,21 @@
     });
   });
 
-  function addSubdiv() {
-    var checkBox = document.getElementById("is_divisi");
-    var text = document.getElementById("subdiv");
-    if (checkBox.checked == true){
-      text.style.display = "none";
+  function hiddenFieldText() {
+    var checkBox = document.getElementById("is_divisi").value;
+    var divisi = document.getElementById("divisi");
+    var subdiv = document.getElementById("subdiv");
+    if (checkBox == "Y" && checkBox !== null){
+      divisi.style.display = "flex";
+      subdiv.style.display = "none";
+    } else if (checkBox == "N" && checkBox !== null){
+      subdiv.style.display = "flex";
+      divisi.style.display = "none";
     } else {
-      text.style.display = "flex";
+      divisi.style.display = "none";
+      subdiv.style.display = "none";
     }
+    console.log(checkBox)
   }
 
   function hapus(id) {
@@ -182,23 +209,25 @@
     fetch(`<?= base_url() ?>aia/master/divisi/divisi_json?id=${id}`, {method:'POST'})
         .then(response => response.json())
         .then(data => {
-            $('#divisi').val(data[0]['NAMA_DIVISI']);
             if(data[0]['IS_CABANG'] == 'N')
               $('#is_cabang').prop('checked', false);
             else
               $('#is_cabang').prop('checked', true);
 
             if(data[0]['IS_DIVISI'] == 'N') {
-              $('#is_divisi').prop('checked', false);
               $('#subdiv').css('display', 'flex');
-              $('#sub_divisi').val(data[0]['NAMA_SUB_DIVISI']);
-              $('#kode_sub_divisi').val(data[0]['KODE_SUB_DIVISI']);
+              $('#is_divisi').val(data[0]['IS_DIVISI']);
+              $('#sub_divisi').val(data[0]['nama_sub_divisi']);
+              $('#id_divisi').val(data[0]['KODE_PARENT']).trigger('change');
+              $('#kode_sub_divisi').val(data[0]['KODE']);
             }
             else{
-              $('#is_divisi').prop('checked', true);
+              $('#divisi').css('display', 'flex');
+              $('#is_divisi').val(data[0]['IS_DIVISI']);
+              $('#divisi1').val(data[0]['nama_divisi']);
+              $('#kode_divisi').val(data[0]['KODE']);
             }
             $('#ID').val(btoa(data[0]['ID_DIVISI']));
-
             $('#accordion-title').html('Update Divisi');
             $('#save').html('Simpan perubahan');
             $('#collapseOne3').collapse('show');
@@ -243,10 +272,10 @@ var KTDatatableJsonRemoteDemo = {
         key: "generalSearch"
       },
       columns: [{
-        field: "NAMA_DIVISI",
+        field: "nama_divisi",
         title: "Divisi"
       },{
-        field: "NAMA_SUB_DIVISI",
+        field: "nama_sub_divisi",
         title: "SUB DIVISI"
       }, {
         field: "IS_CABANG",

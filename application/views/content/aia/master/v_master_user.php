@@ -112,10 +112,10 @@
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label class="col-form-label col-3 text-right">Atasan II <sup class="text-danger">*</sup></label>
+                    <label class="col-form-label col-3 text-right">Atasan II</label>
                     <div class="col-9">
                       <div class="form-label">
-                        <select class="form-control" id="atasan_ii" name="atasan_ii" required>
+                        <select class="form-control" id="atasan_ii" name="atasan_ii">
                           <option value="">--Pilih Atasan--</option>
                           <?php foreach($list_user as $user){ ?>
                           <option value="<?= $user['ID_USER'] ?>"><?= $user['NAMA'] ?></option>

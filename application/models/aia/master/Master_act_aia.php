@@ -101,11 +101,36 @@ class Master_act_aia extends CI_Model{
 
     public function divisi($id='')
     {
+        if ($id != '') {
+            $where = ' AND d1."ID_DIVISI" = ' . $id;
+        }
+        $query = 'SELECT d1.*,
+            CASE
+                WHEN d1."KODE_PARENT" IS NOT NULL THEN d2."NAMA_DIVISI"
+                ELSE d1."NAMA_DIVISI"
+            END AS nama_divisi,
+            CASE
+                WHEN d1."KODE_PARENT" IS NOT NULL THEN d1."NAMA_DIVISI"
+                ELSE NULL
+            END AS nama_sub_divisi
+            FROM "TM_DIVISI" d1
+            LEFT JOIN "TM_DIVISI" d2 ON d1."KODE_PARENT" = d2."ID_DIVISI"
+            WHERE d1."STATUS" = 1 ' . $where . '
+            ORDER BY d1."NAMA_DIVISI" ASC';
+            // echo "<pre>";
+            // var_dump($this->db->query($query)->result_array());die();
+            return $this->db->query($query)->result_array();
+    }
+
+    public function is_divisi($id='')
+    {
+        $this->db->select('IS_DIVISI');
         $this->db->from('TM_DIVISI');
-        $this->db->where('STATUS', 1);
+        $this->db->where('IS_DIVISI IS NOT NULL');
         if($id!='') $this->db->where('ID_DIVISI', $id);
-        $this->db->order_by('NAMA_DIVISI','ASC');
-        $query = $this->db->get();
+        $this->db->distinct('IS_DIVISI');
+        $this->db->order_by('IS_DIVISI','DESC');
+        $query=$this->db->get();
         return $query->result_array();
     }
 

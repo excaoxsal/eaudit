@@ -18,6 +18,9 @@ class Divisi extends MY_Controller
         $data['menu']           = 'master';
         $data['sub_menu']       = 'divisi';
         $data['title']          = 'Master Divisi';
+        $data['list_divisi']      = $this->aia_master_act->divisi();
+        $data['is_divisi']      = $this->aia_master_act->is_divisi();
+        //print_r($data['is_divisi']);die();
         $data['content']        = 'content/aia/master/v_master_divisi';
         $this->show($data);
     }
@@ -35,25 +38,31 @@ class Divisi extends MY_Controller
         $id = base64_decode($id);
         $is_divisi = $this->input->post('is_divisi');
         $is_cabang = $this->input->post('is_cabang');
-        //var_dump($is_divisi);die();
-        if($is_divisi == 'on') 
-            $is_divisi = 'Y';
-        else 
-            $is_divisi = 'N';
 
-        if($is_cabang == 'on') 
+        if($is_cabang == 'on'){
             $is_cabang = 'Y';
-        else 
+        }
+        else {
             $is_cabang = 'N';
-        
-        $data = array(
-            'NAMA_DIVISI'  => trim(htmlspecialchars($this->input->post('divisi', TRUE))),
-            'NAMA_SUB_DIVISI'  => trim(htmlspecialchars($this->input->post('sub_divisi', TRUE))),
-            'KODE_SUB_DIVISI'  => trim(htmlspecialchars($this->input->post('kode_sub_divisi', TRUE))),
-            'IS_DIVISI'    => $is_divisi,
-            'IS_CABANG'    => $is_cabang
-        );
-
+        }
+        //var_dump($is_cabang);die();
+        if($is_divisi == 'Y'){
+            $data = array(
+                'NAMA_DIVISI'  => trim(htmlspecialchars($this->input->post('divisi1', TRUE))),
+                'KODE'         => trim(htmlspecialchars($this->input->post('kode_divisi', TRUE))),
+                'IS_DIVISI'    => $is_divisi,
+                'IS_CABANG'    => $is_cabang
+            );
+        }else{
+            $data = array(
+                'NAMA_DIVISI'  => trim(htmlspecialchars($this->input->post('sub_divisi', TRUE))),
+                'KODE_PARENT'  => trim(htmlspecialchars($this->input->post('id_divisi', TRUE))),
+                'KODE'         => trim(htmlspecialchars($this->input->post('kode_sub_divisi', TRUE))),
+                'IS_DIVISI'    => $is_divisi,
+                'IS_CABANG'    => $is_cabang
+            );
+        }
+        //print_r($data);die();
         if (!$id) {
             $data['CREATED_BY'] = $this->session->ID_USER;
             $query  = $this->db->insert('TM_DIVISI', $data);
@@ -63,6 +72,7 @@ class Divisi extends MY_Controller
             $query  = $this->db->update('TM_DIVISI', $data);
             $msg    = 'Data telah diubah.';
         }
+        
         if($query) $response['status'] = 'OK';
         $response['msg'] = $msg;
         echo json_encode($response);
