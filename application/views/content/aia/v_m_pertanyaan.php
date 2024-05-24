@@ -125,7 +125,7 @@
       t = $("#datatable").KTDatatable({
         data: {
           type: "remote",
-          source: '<?= base_url() ?>aia/iso/jsonPertanyaanList',
+          source: '<?= base_url() ?>aia/iso/jsonPertanyaanList/<?=$id_iso?>',
           pageSize: 10
         },
         layout: {

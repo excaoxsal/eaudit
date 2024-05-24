@@ -19,10 +19,10 @@ class M_Pertanyaan extends CI_Model{
 		return $lastquery;
     }
 
-    public function show_iso() {
+    public function show_iso($iso) {
         $this->db->select('*');
         $this->db->from('M_PERTANYAAN');
-        $this->db->join('M_ISO', 'M_PERTANYAAN.ID_ISO = M_ISO.ID_ISO');
+        $this->db->join('M_ISO', 'M_PERTANYAAN.ID_ISO = M_ISO.ID_ISO')->where('M_ISO.ID_ISO',$iso);
         $query=$this->db->get();
         return $query->result_array();
     }
