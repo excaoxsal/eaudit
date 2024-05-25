@@ -93,15 +93,21 @@
           <div class="form-group row">
             <div class="col-12">
               <label>Nomor ISO</label>
-              <input type="text" class="form-control" placeholder="Nomor ISO" name="NOMOR_ISO" id="NOMOR_ISO">
-              <input type="hidden" class="form-control" placeholder="Nomor LHA" name="id_tl" id="id_tl">
+              <select class="form-control select-dua" id="id_iso" name="ID_ISO">
+              <option value="">--Pilih Auditor--</option>
+                <?php 
+                foreach ($data_iso as $iso) { ?>
+                  <option value="<?= $iso['ID_ISO'] ?>"><?= $iso['NOMOR_ISO'] ?></option>
+                <?php } ?>
+              
+                </select>
             </div>
           </div>
           <div class="form-group row">
             <div class="col-12">
               <label>Lampiran</label>
               <div class="custom-file">
-                <input type="file" class="custom-file-input" name="LAMPIRAN" id="LAMPIRAN">
+                <input type="file" class="custom-file-input" name="file_excel" id="file_excel">
                 <label class="custom-file-label" for="customFile">Choose file</label>
               </div>
             </div>
@@ -124,7 +130,7 @@
       t = $("#datatable").KTDatatable({
         data: {
           type: "remote",
-          source: '<?= base_url() ?>aia/m_iso/get_iso',
+          source: '<?= base_url() ?>aia/iso/jsonIsoList',
           pageSize: 10
         },
         layout: {
@@ -167,16 +173,43 @@
         //   }
         // }, 
         
-        
         {
-          field: "ID_TL",
+          field: "Lihat",
           title: "Action",
           class: "text-center",
           sortable: !1,
           searchable: !1,
           overflow: "visible",
           template: function(t) {
-            return '<a onclick="uploadFile(' + t.ID_TL + ')" class="btn btn-sm btn-clean btn-icon"><i class="text-dark fa fa-upload"></i></a>'
+            var aksi, teks, fa;
+            if (t.STATUS == 1) {
+              aksi  = "nonaktif";
+              teks  = "Non-Aktifkan";
+              fa    = "user-alt-slash";
+            }else{
+              aksi  = "aktif";
+              teks  = "Aktifkan";
+              fa    = "check-circle";
+            }
+            if (t.ID_STATUS == 1 || t.ID_STATUS == 4) {			
+              return 0;
+            }else {
+              return ('<a href="<?= base_url() ?>aia/jadwal/update/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit text-dark"></i></a>');
+            }
+          },
+          
+          
+          
+        },
+        {
+          field: "ID_ISO",
+          title: "Action",
+          class: "text-center",
+          sortable: !1,
+          searchable: !1,
+          overflow: "visible",
+          template: function(t) {
+            return '<a onclick="uploadFile(' + t.ID_ISO + ')" class="btn btn-sm btn-clean btn-icon"><i class="text-dark fa fa-upload"></i></a><a  href="<?= base_url() ?>aia/iso/show_iso/'+t.ID_ISO+'" class="btn btn-sm btn-clean btn-icon" title="Lihat"><i class="fa fa-eye text-dark"></i></a>'
             // return '<a href="<?= base_url() ?>monitoring/entry/tindak_lanjut/' + t.ID_TL + '" class="btn btn-sm btn-clean btn-icon" title="Tindak Lanjut"><i class="text-dark fa fa-file-import"></i></a><a onclick="hapus(' + t.ID_TL + ')" class="btn btn-sm btn-clean btn-icon" title="Hapus"><i class="text-dark fa fa-trash"></i></a><a onclick="preview(' + t.TAHUN + ',' + t.ID_DIVISI + ', ' + t.ID_JENIS_AUDIT + ')" class="btn btn-sm btn-clean btn-icon" title="Preview"><i class="text-dark fa fa-eye"></i></a><a onclick="lha_final(' + t.ID_TL + ')" class="btn btn-sm btn-clean btn-icon" title="LHA Final"><i class="text-dark fa fa-file-word"></i></a>'
             // return '<center><a href="<?= base_url() ?>perencanaan/kotak_masuk/spa/review/'+t.ID_SPA+'" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit"></i></a></center>'
           }
@@ -199,6 +232,18 @@
         // console.log(data.NOMOR_LHA);
     });
     $('#modal_upload').modal('show');
+  }
+
+  function lihat(id_tl)
+  {
+    $.post(`<?= base_url('aia/iso/show_iso') ?>`+id_tl, function(data, status){
+        const obj = JSON.parse(data);
+        $('#id_tl').val(id_tl);
+        $('#NOMOR_LHA').val(obj.NOMOR_LHA);
+        $('#TANGGAL_LHA').val(obj.TANGGAL_LHA);
+        // console.log(data.NOMOR_LHA);
+    });
+    
   }
   jQuery(document).ready((function() {
     KTDatatableJsonRemoteDemo.init()

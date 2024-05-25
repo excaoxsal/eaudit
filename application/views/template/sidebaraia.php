@@ -61,7 +61,7 @@
           </li>
 
           <li class="menu-item <?= isset($sub_menu) ? $sub_menu == 'divisi' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
-            <a href="<?= base_url() ?>master/divisi" class="menu-link mx-5 my-1 rounded">
+            <a href="<?= base_url() ?>aia/master/divisi" class="menu-link mx-5 my-1 rounded">
               <span class="menu-text">Divisi</span>
             </a>
           </li>

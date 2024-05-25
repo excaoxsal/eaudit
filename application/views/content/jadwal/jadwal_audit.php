@@ -147,8 +147,8 @@
           title: "Lead Auditor"
         },
         {
-          field: "EDIT",
-          title: "Edit",
+          field: "Action",
+          title: "Action",
           class: "text-center",
           sortable: !1,
           searchable: !1,
@@ -167,35 +167,15 @@
             if (t.ID_STATUS == 1 || t.ID_STATUS == 4) {			
               return 0;
             }else {
-              return ('<a href="<?= base_url() ?>aia/jadwal/update/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit text-dark"></i></a>');
+              return ('<a href="<?= base_url() ?>aia/jadwal/update/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Generate"><i class="fa fa-refresh text-dark"></i></a><a href="<?= base_url() ?>aia/jadwal/update/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit text-dark"></i></a><a href="<?= base_url() ?>aia/jadwal/hapus/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Hapus"><i class="fa fa-trash text-dark"></i></a>');
             }
           },
           
           
           
         },
-        {
-          field: "HAPUS",
-          title: "Hapus",
-          class: "text-center",
-          sortable: !1,
-          searchable: !1,
-          overflow: "visible",
-          template: function(t) {
-            var aksi1, teks2, fa3;
-            
-              aksi1  = "nonaktif";
-              teks2  = "Non-Aktifkan";
-              fa3    = "user-alt-slash";
-           
-            
-              return ('<a href="<?= base_url() ?>aia/jadwal/hapus/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Hapus"><i class="fa fa-trash text-dark"></i></a>');
-            
-          },
-          
-          
-          
-        },
+        
+        
         
           
       ]

@@ -3,7 +3,7 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 error_reporting(E_ERROR);
 class M_jadwal extends CI_Model{
 
-    private $_table 	= "WAKTU_AUDIT_AWAL";
+    private $_table 	= "WAKTU_AUDIT";
 
 	public function update($data){
 
