@@ -109,7 +109,7 @@ class Master_act extends CI_Model{
 
     public function user($array_where='')
 	{
-		$this->db->select('U.ID_USER AS ID_USER, U.TANDA_TANGAN AS TANDA_TANGAN, U.NIPP AS NIPP, U.NAMA AS NAMA, U.PASSWORD AS PASSWORD, U.EMAIL AS EMAIL, U.STATUS AS STATUS, U.LAST_LOGIN AS LAST_LOGIN, J.ID_JABATAN AS ID_JABATAN, J.NAMA_JABATAN AS NAMA_JABATAN, D.ID_DIVISI AS ID_DIVISI, D.NAMA_DIVISI AS NAMA_DIVISI, R.ID_ROLE AS ID_ROLE, R.NAMA_ROLE AS NAMA_ROLE, U.ATASAN_I AS ID_ATASAN_I, A_I.NAMA AS ATASAN_I, U.ATASAN_II AS ID_ATASAN_II, A_II.NAMA AS ATASAN_II');
+		$this->db->select('U.ID_USER AS ID_USER, U.TANDA_TANGAN AS TANDA_TANGAN, U.NIPP AS NIPP, U.NAMA AS NAMA, U.PASSWORD AS PASSWORD, U.EMAIL AS EMAIL, U.STATUS AS STATUS, U.LAST_LOGIN AS LAST_LOGIN, J.ID_JABATAN AS ID_JABATAN, J.NAMA_JABATAN AS NAMA_JABATAN, D.ID_DIVISI AS ID_DIVISI, D.NAMA_DIVISI AS NAMA_DIVISI, R.ID_ROLE AS ID_ROLE, R.NAMA_ROLE AS NAMA_ROLE, U.ATASAN_I AS ID_ATASAN_I, A_I.NAMA AS ATASAN_I, U.ATASAN_II AS ID_ATASAN_II, A_II.NAMA AS ATASAN_II, U.ID_MENU as MENU');
         $this->db->from('TM_USER U');
         $this->db->join("TM_JABATAN J", "J.ID_JABATAN = U.ID_JABATAN", "LEFT");
         $this->db->join("TM_DIVISI D", "D.ID_DIVISI = J.ID_DIVISI", "LEFT");
@@ -122,5 +122,37 @@ class Master_act extends CI_Model{
         $query=$this->db->get();
 		return $query->result_array();
 	}
+    
+    public function auditor($array_where='') {
+        $this->db->select('U.ID_USER AS ID_USER, 
+                   U.TANDA_TANGAN AS TANDA_TANGAN, 
+                   U.NIPP, 
+                   U.NAMA AS NAMA, 
+                   U.PASSWORD AS PASSWORD, 
+                   U.EMAIL AS EMAIL, 
+                   U.STATUS AS STATUS, 
+                   U.LAST_LOGIN AS LAST_LOGIN, 
+                   J.ID_JABATAN AS ID_JABATAN, 
+                   J.NAMA_JABATAN AS NAMA_JABATAN, 
+                   D.ID_DIVISI AS ID_DIVISI, 
+                   D.NAMA_DIVISI AS NAMA_DIVISI, 
+                   R.ID_ROLE AS ID_ROLE, 
+                   R.NAMA_ROLE AS NAMA_ROLE, 
+                   U.ATASAN_I AS ID_ATASAN_I, 
+                   A_I.NAMA AS ATASAN_I, 
+                   U.ATASAN_II AS ID_ATASAN_II, 
+                   A_II.NAMA AS ATASAN_II');
+        $this->db->from('TM_USER U');
+        $this->db->join("TM_JABATAN J", "J.ID_JABATAN = U.ID_JABATAN", "LEFT");
+        $this->db->join("TM_DIVISI D", "D.ID_DIVISI = J.ID_DIVISI", "LEFT");
+        $this->db->join("TM_ROLE R", "R.ID_ROLE = U.ID_ROLE", "LEFT");
+        $this->db->join("TM_USER A_I", "A_I.ID_USER = U.ATASAN_I", "LEFT");
+        $this->db->join("TM_USER A_II", "A_II.ID_USER = U.ATASAN_II", "LEFT");
+        if($array_where!='') $this->db->where($array_where);
+        $this->db->order_by('U.NAMA','ASC');
+        $query = $this->db->get();
+        return $query->result_array();
+
+    }
 }
 ?>

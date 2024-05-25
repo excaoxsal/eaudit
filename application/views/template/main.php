@@ -4,7 +4,7 @@
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 
 <head>
-
+  
   <meta charset="utf-8" />
   <title><?= APK_NAME ?></title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -71,13 +71,19 @@
             </span>
           </button>
         </div>
-
+        
         <div class="aside-menu-wrapper flex-column-fluid" id="kt_aside_menu_wrapper">
-
+          <div id="kt_aside_menu" class="aside-menu my-4" data-menu-vertical="1" data-menu-scroll="1" data-menu-dropdown-timeout="500">
+          <?php if ($is_ams) { ?>
           <?php $this->load->view('template/sidebar') ?>
+          <?php } ?>
+          <?php if ($is_aia) { ?>
+          <?php $this->load->view('template/sidebaraia') ?>
+          <?php } ?>
+          </div>
         
         </div>
-
+        
       </div>
       <div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
 
@@ -354,6 +360,24 @@ async function prosesDataMaster(url)
   });
   return proses;
 }
+
+// Mendapatkan referensi elemen unordered list dan tombol
+var myList = document.getElementById('myList');
+var toggleButton = document.getElementById('toggleButton');
+
+// Menambahkan event listener untuk tombol
+toggleButton.addEventListener('click', function() {
+    // Mengecek apakah unordered list sedang ditampilkan atau disembunyikan
+    if (myList.style.display === 'none') {
+        // Jika disembunyikan, tampilkan kembali
+        myList.style.display = 'block';
+    } else {
+        // Jika ditampilkan, sembunyikan
+        myList.style.display = 'none';
+    }
+});
+
+
 </script>
 </body>
 </html>

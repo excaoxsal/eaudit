@@ -1,4 +1,4 @@
-<div id="kt_aside_menu" class="aside-menu my-4" data-menu-vertical="1" data-menu-scroll="1" data-menu-dropdown-timeout="500">
+<!-- <div id="kt_aside_menu" class="aside-menu my-4" data-menu-vertical="1" data-menu-scroll="1" data-menu-dropdown-timeout="500"> -->
 
   <ul class="menu-nav">
     
@@ -8,11 +8,11 @@
         <span class="menu-text">Home</span>
       </a>
     </li>
-
-    <!-- <li class="menu-section">
-      <h4 class="menu-text">Menu</h4>
+    
+    <li class="menu-section">
+      <h4 class="menu-text">Menu AMS</h4>
       <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
-    </li> -->
+    </li>
     <?php if ($is_auditor) { ?>
     <li class="menu-item menu-item-submenu <?= isset($menu) ? $menu == 'perencanaan' ? 'menu-item-open menu-item-here' : '' : ''; ?>" aria-haspopup="true" data-menu-toggle="hover">
 
@@ -69,7 +69,7 @@
                   </a>
                 </li>
 
-                <!-- <li class="menu-item <?= isset($sub_menu_2) ? $sub_menu_2 == 'kotak_masuk_rcm' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
+                <li class="menu-item <?= isset($sub_menu_2) ? $sub_menu_2 == 'kotak_masuk_rcm' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
                   <a href="<?= base_url() ?>perencanaan/rcm/kotak_masuk" class="menu-link mx-5 my-1 rounded">
                     <i class="menu-bullet menu-bullet-dot">
                       <span></span>
@@ -95,19 +95,12 @@
                       <?php } ?>
                     </span>
                   </a>
-                </li> -->
+                </li>
 
               </ul>
 
             </div>
           </li>
-          
-          <li class="menu-item menu-item-submenu <?= isset($sub_menu) ? $sub_menu == 'jadwal' ? 'menu-item-open menu-item-here' : '' : ''; ?>" aria-haspopup="true">
-            <a href="<?= base_url() ?>jadwal/jadwal/jadwal_audit" class="menu-link mx-5 my-1 rounded">
-              <span class="menu-text">Penjadwalan Audit</span>
-            </a>
-          </li>
-
           <li class="menu-item menu-item-submenu <?= isset($sub_menu) ? $sub_menu == 'kotak_keluar' ? 'menu-item-open menu-item-here' : '' : ''; ?>" aria-haspopup="true" data-menu-toggle="hover">
 
             <a href="javascript:;" class="menu-link menu-toggle mx-5 my-1 rounded">
@@ -222,13 +215,13 @@
         <i class="menu-arrow"></i>
 
         <ul class="menu-subnav">
-           <?php if ($is_auditor) { ?>
-          <!-- <li class="menu-item  <?= isset($sub_menu) ? $sub_menu == 'entry' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
+          <?php if ($is_auditor) { ?>
+          <li class="menu-item  <?= isset($sub_menu) ? $sub_menu == 'entry' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
             <a href="<?= base_url() ?>monitoring/entry" class="menu-link mx-5 my-1 rounded">
 
               <span class="menu-text">Entry LHA</span>
             </a>
-          </li> -->
+          </li>
           <?php  } ?>
           <li class="menu-item  <?= isset($sub_menu) ? $sub_menu == 'update_hasil_monitoring' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
             <a href="<?= base_url() ?>monitoring/update_hasil_monitoring" class="menu-link mx-5 my-1 rounded">
@@ -248,7 +241,7 @@
 
               <span class="menu-text">Rekap</span>
               <span class="menu-label">
-                <!-- <span class="label label-rounded label-primary">20</span> -->
+                <span class="label label-rounded label-primary">20</span>
               </span>
               <i class="menu-arrow"></i>
             </a>
@@ -301,92 +294,92 @@
     </li>
     <?php if ($is_auditor) { ?>
 
-      <li class="menu-item menu-item-submenu <?= isset($menu) ? $menu == 'master' ? 'menu-item-open menu-item-here' : '' : ''; ?>" aria-haspopup="true" data-menu-toggle="hover">
+    <li class="menu-item menu-item-submenu <?= isset($menu) ? $menu == 'master' ? 'menu-item-open menu-item-here' : '' : ''; ?>" aria-haspopup="true" data-menu-toggle="hover">
 
-        <a href="javascript:;" class="menu-link menu-toggle mx-5 my-1 rounded">
-          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" class="mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-          <span class="menu-text">Master</span>
-          <i class="menu-arrow"></i>
-        </a>
+      <a href="javascript:;" class="menu-link menu-toggle mx-5 my-1 rounded">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" class="mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+        <span class="menu-text">Master</span>
+        <i class="menu-arrow"></i>
+      </a>
 
-        <div class="menu-submenu">
-          <i class="menu-arrow"></i>
+      <div class="menu-submenu">
+        <i class="menu-arrow"></i>
 
-          <ul class="menu-subnav">
+        <ul class="menu-subnav">
 
-            <li class="menu-item <?= isset($sub_menu) ? $sub_menu == 'user' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
-              <a href="<?= base_url() ?>master/user" class="menu-link mx-5 my-1 rounded">
+          <li class="menu-item <?= isset($sub_menu) ? $sub_menu == 'user' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
+            <a href="<?= base_url() ?>master/user" class="menu-link mx-5 my-1 rounded">
 
-                <span class="menu-text">User</span>
-              </a>
-            </li>
+              <span class="menu-text">User</span>
+            </a>
+          </li>
 
-            <li class="menu-item <?= isset($sub_menu) ? $sub_menu == 'jabatan' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
-              <a href="<?= base_url() ?>master/jabatan" class="menu-link mx-5 my-1 rounded">
+          <li class="menu-item <?= isset($sub_menu) ? $sub_menu == 'jabatan' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
+            <a href="<?= base_url() ?>master/jabatan" class="menu-link mx-5 my-1 rounded">
 
-                <span class="menu-text">Jabatan</span>
-              </a>
-            </li>
+              <span class="menu-text">Jabatan</span>
+            </a>
+          </li>
 
-            <li class="menu-item <?= isset($sub_menu) ? $sub_menu == 'divisi' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
-              <a href="<?= base_url() ?>master/divisi" class="menu-link mx-5 my-1 rounded">
+          <li class="menu-item <?= isset($sub_menu) ? $sub_menu == 'divisi' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
+            <a href="<?= base_url() ?>master/divisi" class="menu-link mx-5 my-1 rounded">
 
-                <span class="menu-text">Divisi</span>
-              </a>
-            </li>
-            
-            <li class="menu-item <?= isset($sub_menu) ? $sub_menu == 'tanda_tangan' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
-              <a href="<?= base_url() ?>master/tanda_tangan" class="menu-link mx-5 my-1 rounded">
+              <span class="menu-text">Divisi</span>
+            </a>
+          </li>
+          
+          <li class="menu-item <?= isset($sub_menu) ? $sub_menu == 'tanda_tangan' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
+            <a href="<?= base_url() ?>master/tanda_tangan" class="menu-link mx-5 my-1 rounded">
 
-                <span class="menu-text">Tanda Tangan</span>
-              </a>
-            </li>
-            
-            <li class="menu-item <?= isset($sub_menu) ? $sub_menu == 'jenis_audit' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
-              <a href="<?= base_url() ?>master/jenis_audit" class="menu-link mx-5 my-1 rounded">
+              <span class="menu-text">Tanda Tangan</span>
+            </a>
+          </li>
+          
+          <li class="menu-item <?= isset($sub_menu) ? $sub_menu == 'jenis_audit' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
+            <a href="<?= base_url() ?>master/jenis_audit" class="menu-link mx-5 my-1 rounded">
 
-                <span class="menu-text">Jenis Audit</span>
-              </a>
-            </li>
-            
-            <li class="menu-item <?= isset($sub_menu) ? $sub_menu == 'tingkat_resiko' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
-              <a href="<?= base_url() ?>master/tingkat_resiko" class="menu-link mx-5 my-1 rounded">
+              <span class="menu-text">Jenis Audit</span>
+            </a>
+          </li>
+          
+          <li class="menu-item <?= isset($sub_menu) ? $sub_menu == 'tingkat_resiko' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
+            <a href="<?= base_url() ?>master/tingkat_resiko" class="menu-link mx-5 my-1 rounded">
 
-                <span class="menu-text">Tingkat Resiko</span>
-              </a>
-            </li>
-            
-            <li class="menu-item <?= isset($sub_menu) ? $sub_menu == 'resiko_desc' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
-              <a href="<?= base_url() ?>master/resiko_desc" class="menu-link mx-5 my-1 rounded">
+              <span class="menu-text">Tingkat Resiko</span>
+            </a>
+          </li>
+          
+          <li class="menu-item <?= isset($sub_menu) ? $sub_menu == 'resiko_desc' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
+            <a href="<?= base_url() ?>master/resiko_desc" class="menu-link mx-5 my-1 rounded">
 
-                <span class="menu-text">Resiko</span>
-              </a>
-            </li>
-            
-            <li class="menu-item <?= isset($sub_menu) ? $sub_menu == 'tipe_kontrol' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
-              <a href="<?= base_url() ?>master/tipe_kontrol" class="menu-link mx-5 my-1 rounded">
+              <span class="menu-text">Resiko</span>
+            </a>
+          </li>
+          
+          <li class="menu-item <?= isset($sub_menu) ? $sub_menu == 'tipe_kontrol' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
+            <a href="<?= base_url() ?>master/tipe_kontrol" class="menu-link mx-5 my-1 rounded">
 
-                <span class="menu-text">Tipe Kontrol</span>
-              </a>
-            </li>
-            
-            <li class="menu-item <?= isset($sub_menu) ? $sub_menu == 'frekuensi_kontrol' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
-              <a href="<?= base_url() ?>master/frekuensi_kontrol" class="menu-link mx-5 my-1 rounded">
+              <span class="menu-text">Tipe Kontrol</span>
+            </a>
+          </li>
+          
+          <li class="menu-item <?= isset($sub_menu) ? $sub_menu == 'frekuensi_kontrol' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
+            <a href="<?= base_url() ?>master/frekuensi_kontrol" class="menu-link mx-5 my-1 rounded">
 
-                <span class="menu-text">Frekuensi Kontrol</span>
-              </a>
-            </li>
+              <span class="menu-text">Frekuensi Kontrol</span>
+            </a>
+          </li>
 
-          </ul>
-        </div>
-      </li>
+        </ul>
+      </div>
+    </li>
       
-        <!-- <li class="menu-item <?= isset($menu) ? $menu == 'file' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
+        <li class="menu-item <?= isset($menu) ? $menu == 'file' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
           <a href="<?= base_url('file') ?>" class="menu-link mx-5 my-1 rounded">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" class="mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
             <span class="menu-text">Browse File</span>
           </a>
-        </li> -->
+        </li>
         
       <li class="menu-item <?= isset($menu) ? $menu == 'setting_ttd_spa' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
         <a href="<?= base_url('setting_ttd_spa') ?>" class="menu-link mx-5 my-1 rounded">
@@ -396,4 +389,4 @@
       </li>
     <?php } ?>
   </ul>
-</div>
+<!-- </div> -->
