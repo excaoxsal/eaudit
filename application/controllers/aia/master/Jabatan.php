@@ -15,7 +15,7 @@ class Jabatan extends MY_Controller
 
     public function index()
     {
-        $data['menu']           = 'master';
+        $data['menu']           = 'master-aia';
         $data['sub_menu']       = 'jabatan';
         $data['title']          = 'Master Jabatan';
         $data['list_divisi']    = $this->aia_master_act->divisi();

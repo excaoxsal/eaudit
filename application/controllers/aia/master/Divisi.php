@@ -15,7 +15,7 @@ class Divisi extends MY_Controller
 
     public function index()
     {
-        $data['menu']           = 'master';
+        $data['menu']           = 'master-aia';
         $data['sub_menu']       = 'divisi';
         $data['title']          = 'Master Divisi';
         $data['content']        = 'content/aia/master/v_master_divisi';

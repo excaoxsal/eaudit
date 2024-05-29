@@ -12,7 +12,7 @@ class Iso extends MY_Controller
 		$this->load->library('upload');
 		$this->load->library('excel');
 		$this->load->model('perencanaan/M_tim_audit', 'm_tim_audit');
-		$this->load->model('perencanaan/M_jadwal', 'm_jadwal');
+		$this->load->model('aia/M_jadwal', 'm_jadwal');
         $this->load->model('aia/M_iso','m_iso');
         $this->load->model('aia/M_pertanyaan','m_pertanyaan');
 		$this->is_login();
@@ -39,7 +39,7 @@ class Iso extends MY_Controller
     public function index(){
         $data['list_status'] 	= $this->master_act->status();
 		$dataiso = $this->m_iso->get_iso();
-		$data['menu']           = 'perencanaan';
+		$data['menu']           = 'master-aia';
 		$data['sub_menu']       = 'm_iso';
 		$data['title']          = 'Master Pertanyaan';
         $data['content']        = 'content/aia/v_m_iso';
@@ -63,7 +63,7 @@ class Iso extends MY_Controller
 		$data['pertanyaan']=$datapertanyaan;
 		$data['list_status'] 	= $this->master_act->status();
 		$dataiso = $this->m_iso->get_iso();
-		$data['menu']           = 'master';
+		$data['menu']           = 'master-aia';
 		$data['sub_menu']       = 'm_pertanyaan';
 		$data['title']          = 'Master Pertanyaan';
         $data['content']        = 'content/aia/v_m_pertanyaan';
@@ -149,6 +149,7 @@ class Iso extends MY_Controller
 				$lv4 = $worksheet->getCellByColumnAndRow(4, $row+2)->getValue();
 				$auditee = $worksheet->getCellByColumnAndRow(5, $row+2)->getValue();
 				$pertanyaan = $worksheet->getCellByColumnAndRow(6, $row+2)->getValue();
+				
 				$data[] = array(
 					'KODE_KLAUSUL'	=> is_empty_return_null($kode_klausul),
 					'LV1'			=> is_empty_return_null($lv1),
@@ -189,9 +190,10 @@ class Iso extends MY_Controller
 					'LV4'			=> is_empty_return_null($data[$col]['LV4']),
 					'AUDITEE'		=> is_empty_return_null($data[$col]['AUDITEE']),
 					'PERTANYAAN'	=> is_empty_return_null($data[$col]['PERTANYAAN']),
-					'ID_ISO'=>is_empty_return_null($_POST['ID_ISO']),
+					'ID_ISO'		=> is_empty_return_null($_POST['ID_ISO']),
 					
 				];
+				
 				// var_dump($data[$col]['LV1']);
 				// var_dump($eldata);
 				$save = $this->m_pertanyaan->save($eldata);

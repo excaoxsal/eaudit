@@ -61,11 +61,11 @@
             <div class="col-8">
             
               <select class="form-control select-dua" id="id_lead_auditor" name="ID_LEAD_AUDITOR">
-              <option value="<?= $data_jadwal['0']['ID_LEAD']?>"><?= $data_jadwal['0']['NAMA_LEAD_AUDITOR']?></option>
+              <option value="<?= $data_jadwal['0']['ID_AUDITOR']?>"><?= $data_jadwal['0']['NAMA_AUDITOR']?></option>
                 <option value="">--Pilih Auditor--</option>
                 <?php 
-                foreach ($data_lead_auditor as $lead) { ?>
-                  <option value="<?= $lead['ID_USER'] ?>"><?= $lead['NAMA'] ?></option>
+                foreach ($data_auditor as $auditor) { ?>
+                  <option value="<?= $auditor['ID_USER'] ?>"><?= $auditor['NAMA'] ?></option>
                 <?php } ?>
               </select>
               

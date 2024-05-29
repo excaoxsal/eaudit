@@ -94,6 +94,7 @@ class M_jadwal extends CI_Model{
 		$this->db->join('TM_DIVISI div','div.ID_DIVISI = w.ID_DIVISI','LEFT');
         $this->db->where('w.ID_JADWAL', $id_jadwal);
         $this->db->or_where('w.ID_LEAD_AUDITOR', $id_user);
+		// $elquery = $this->db->select('')->from('RESPON_AUDITEE');
         $query = $this->db->get();
         return $query->result_array();
 	}

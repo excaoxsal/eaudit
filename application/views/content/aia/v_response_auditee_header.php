@@ -54,11 +54,11 @@
                   </div>
                   <div class="col-md-4 my-2 my-md-0">
                     <div class="d-flex align-items-center">
-                      <label class="mr-3 mb-0 d-none d-md-block">Status:</label>
+                      <label class="mr-3 mb-0 d-none d-md-block">Divisi:</label>
                       <select class="form-control" id="kt_datatable_search_status">
                         <option value="">All</option>
-                        <?php foreach($list_status as $status){ ?>
-                        <option value="<?= $status['STATUS'] ?>"><?= $status['STATUS'] ?></option>
+                        <?php foreach($list_divisi as $status){ ?>
+                        <option value="<?= $status['NAMA_DIVISI'] ?>"><?= $status['NAMA_DIVISI'] ?></option>
                         <?php } ?>
                       </select>
                     </div>
@@ -81,7 +81,7 @@ var KTDatatableJsonRemoteDemo = {
     t = $("#kt_datatable").KTDatatable({
       data: {
         type: "remote",
-        source: '<?= base_url() ?>perencanaan/apm/jsonKotakKeluarApm',
+        source: '<?= base_url() ?>aia/response_auditee/jsonResponAuditee',
         pageSize: 10
       },
       layout: {
@@ -95,11 +95,17 @@ var KTDatatableJsonRemoteDemo = {
         key: "generalSearch"
       },
       columns: [{
-        field: "KLAUSUL",
-        title: "Klausul"
+        field: "NOMOR_ISO",
+        title: "Nomor ISO"
+      },{
+        field: "NAMA_DIVISI",
+        title: "DIVISI"
       }, {
-        field: "WAKTU_PELAKSANAAN",
-        title: "Waktu Pelaksanaan"
+        field: "WAKTU_AUDIT_AWAL",
+        title: "Waktu Awal Audit"
+      },{
+        field: "WAKTU_AUDIT_SELESAI",
+        title: "Waktu Akhir Audit"
       },{
         field: "AUDITOR",
         title: "Auditor"
@@ -107,7 +113,7 @@ var KTDatatableJsonRemoteDemo = {
         field: "LEAD_AUDITOR",
         title: "Lead Auditor"
       },{
-        field: "ID_APM",
+        field: "ID_RE",
         title: "Action",
         class: "text-center",
         sortable: !1,
@@ -136,7 +142,7 @@ var KTDatatableJsonRemoteDemo = {
         }
       }]
     }), $("#kt_datatable_search_status").on("change", (function() {
-      t.search($(this).val().toLowerCase(), "STATUS")
+      t.search($(this).val().toLowerCase(), "NAMA_DIVISI")
     })), $("#kt_datatable_search_status").selectpicker()
   }
 };

@@ -20,7 +20,7 @@ class User extends MY_Controller
         $data['list_divisi']    = $this->aia_master_act->divisi();
         $data['list_role']      = $this->aia_master_act->role();
         $data['list_menu']      = $this->aia_master_act->menu();
-        $data['menu']           = 'master';
+        $data['menu']           = 'master-aia';
         $data['sub_menu']       = 'user';
         $data['title']          = 'Master User';
         $data['content']        = 'content/aia/master/v_master_user';

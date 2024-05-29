@@ -167,7 +167,7 @@
             if (t.ID_STATUS == 1 || t.ID_STATUS == 4) {			
               return 0;
             }else {
-              return ('<a href="<?= base_url() ?>aia/jadwal/update/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Generate"><i class="fa fa-refresh text-dark"></i></a><a href="<?= base_url() ?>aia/jadwal/update/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit text-dark"></i></a><a href="<?= base_url() ?>aia/jadwal/hapus/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Hapus"><i class="fa fa-trash text-dark"></i></a>');
+              return ('<a href="<?= base_url() ?>aia/response_auditee/generate/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Generate"><i class="fa fa-refresh text-dark"></i></a><a href="<?= base_url() ?>aia/jadwal/update/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit text-dark"></i></a><a href="<?= base_url() ?>aia/jadwal/hapus/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Hapus"><i class="fa fa-trash text-dark"></i></a>');
             }
           },
           
