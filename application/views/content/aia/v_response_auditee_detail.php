@@ -20,7 +20,7 @@
       <div class="card card-custom">
         <div class="card-header flex-wrap border-0 pt-6 pb-0">
           <div class="card-title">
-            <h3 class="card-label">List Respon Auditee
+            <h3 class="card-label">List Respon Auditee 
           </div>
         </div>
         <div class="card-body">
@@ -73,6 +73,76 @@
     </div>
   </div>
 </div>
+<!-- MODAL Respon -->
+<div class="modal fade" id="modal_upload" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Respon Auditee</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <i aria-hidden="true" class="ki ki-close"></i>
+        </button>
+      </div>
+      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/iso/proses_upload" enctype="multipart/form-data">
+        <div class="modal-body" style="height: auto">
+
+          <div class="form-group row">
+            <div class="col-12">
+              <label>Respon</label>
+              <textarea class="form-control" <?= $disabled ?> name="PESERTA[]" id="nama_auditee"><?= $peserta[0]['DASAR']  ?></textarea>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-12">
+              <label>Lampiran</label>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" name="file_excel" id="file_excel">
+                <label class="custom-file-label" for="customFile">Choose file</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <input type="submit" class="btn btn-primary font-weight-bold" value="Submit">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Modal Chat box -->
+<div class="modal fade" id="modal_chat" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Chatbox</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <i aria-hidden="true" class="ki ki-close"></i>
+        </button>
+      </div>
+      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/response_auditee/chatbox/<?=$kode?>" enctype="multipart/form-data">
+        <div class="modal-body" style="height: auto">
+
+          <div class="form-group row">
+            <div class="col-12">
+              <label>Message Auditor</label>
+              <textarea class="form-control" <?= $disabled ?> name="MSG_AUDITOR[]" id="msg_auditor"><?= $detail[0]['KOMENTAR_1']  ?></textarea>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-12">
+              <label>Message Auditee</label>
+              <textarea class="form-control" <?= $disabled ?> name="MSG_AUDITEE[]" id="msg_auditee"><?= $detail[0]['KOMENTAR_2']  ?></textarea>
+            </div>
+          </div>
+          
+        </div>
+        <div class="modal-footer">
+          <input type="submit" class="btn btn-primary font-weight-bold" value="Submit">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 <script type="text/javascript">
  "use strict";
 var KTDatatableJsonRemoteDemo = {
@@ -81,7 +151,7 @@ var KTDatatableJsonRemoteDemo = {
     t = $("#kt_datatable").KTDatatable({
       data: {
         type: "remote",
-        source: '<?= base_url() ?>aia/response_auditee/jsonResponAuditee',
+        source: '<?= base_url() ?>aia/response_auditee/jsonResponAuditeeDetail/<?=$kode?>',
         pageSize: 10
       },
       layout: {
@@ -95,49 +165,51 @@ var KTDatatableJsonRemoteDemo = {
         key: "generalSearch"
       },
       columns: [{
-        field: "NOMOR_ISO",
+        field: "KODE_KLAUSUL",
         title: "Klausul"
-      },{
-        field: "NAMA_DIVISI",
-        title: "DIVISI"
       },
       {
         field: "PERTANYAAN",
         title: "Pertanyaan"
       },{
-        field: "ID_RE",
-        title: "Action",
-        class: "text-center",
-        sortable: !1,
-        searchable: !1,
-        overflow: "visible",
-        template: function(t) {
-          var aksi, teks, fa;
-          if (t.STATUS == 1) {
-            aksi  = "nonaktif";
-            teks  = "Non-Aktifkan";
-            fa    = "user-alt-slash";
-          }else{
-            aksi  = "aktif";
-            teks  = "Aktifkan";
-            fa    = "check-circle";
-          }
-					if (t.STATUS_APPROVER == 1) {
-						return '<a href="<?= base_url() ?>perencanaan/apm/review/'+t.ID_APM+'?review=true&sts-approver='+t.STATUS_APPROVER+'" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit text-dark"></i></a>';
-					} else if (t.STATUS_APPROVER == 2) {
-            return '<a href="<?= base_url() ?>perencanaan/apm/review/'+t.ID_APM+'?review=true&sts-approver='+t.STATUS_APPROVER+'" class="btn btn-sm btn-clean btn-icon" title="View"><i class="fa fa-eye text-dark"></i></a>';
-          } else if (t.APPROVER_COUNT == t.APPROVED_COUNT) {
-            return '<a href="<?= base_url() ?>perencanaan/apm/review/'+t.ID_APM+'?review=true&sts-approver='+t.STATUS_APPROVER+'" class="btn btn-sm btn-clean btn-icon" title="View"><i class="fa fa-eye text-dark"></i></a>';
-					}else {
-						return '';
-					}
-        }
-      }]
+          field: "ID_ISO",
+          title: "Action",
+          class: "text-center",
+          sortable: !1,
+          searchable: !1,
+          overflow: "visible",
+          template: function(t) {
+            return '<a onclick="chatbox(' + t.ID_ISO + ')" class="btn btn-sm btn-clean btn-icon"><i class="text-dark fa fa-message" title="Respon"></i></a><a onclick="uploadFile(' + t.ID_ISO + ')" class="btn btn-sm btn-clean btn-icon" title="Upload"><i class="fa fa-upload text-dark"></i></a>'
+            }
+        }]
     }), $("#kt_datatable_search_status").on("change", (function() {
       t.search($(this).val().toLowerCase(), "NAMA_DIVISI")
     })), $("#kt_datatable_search_status").selectpicker()
   }
 };
+function uploadFile(id_tl)
+  {
+    $.get(`<?= base_url('aia/response_auditee/response_submit') ?>`+id_tl, function(data, status){
+        const obj = JSON.parse(data);
+        $('#id_tl').val(id_tl);
+        $('#NOMOR_LHA').val(obj.NOMOR_LHA);
+        $('#TANGGAL_LHA').val(obj.TANGGAL_LHA);
+        // console.log(data.NOMOR_LHA);
+    });
+    $('#modal_upload').modal('show');
+  }
+
+  function chatbox(id_tl)
+  {
+    $.get(`<?= base_url('aia/response_auditee/chatbox') ?>`+id_tl, function(data, status){
+        const obj = JSON.parse(data);
+        $('#id_tl').val(id_tl);
+        $('#NOMOR_LHA').val(obj.NOMOR_LHA);
+        $('#TANGGAL_LHA').val(obj.TANGGAL_LHA);
+        // console.log(data.NOMOR_LHA);
+    });
+    $('#modal_chat').modal('show');
+  }
 jQuery(document).ready((function() {
   KTDatatableJsonRemoteDemo.init()
 }));

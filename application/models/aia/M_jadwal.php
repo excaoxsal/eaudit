@@ -14,6 +14,20 @@ class M_jadwal extends CI_Model{
         
 	}
 
+	public function update_status($data){
+
+		$table = 'WAKTU_AUDIT';
+		$nomor = 1;
+		$update_data = array(
+            'STATUS' => "GENERATED"
+        );
+		$update=$this->db->where('ID_JADWAL',$data)->update('WAKTU_AUDIT', 'STATUS');
+		$lastquery=$this->db->last_query();
+		return($lastquery);
+        
+	}
+
+
     public function save($data)
 	{
 

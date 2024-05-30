@@ -56,17 +56,7 @@
                       </span>
                     </div>
                   </div>
-                  <div class="col-md-4 my-2 my-md-0">
-                    <div class="d-flex align-items-center">
-                      <label class="mr-3 mb-0 d-none d-md-block">Status:</label>
-                      <select class="form-control" id="datatable_search_status">
-                        <option value="">All</option>
-                        <?php foreach ($list_status as $status) { ?>
-                          <option value="<?= $status['STATUS'] ?>"><?= $status['STATUS'] ?></option>
-                        <?php } ?>
-                      </select>
-                    </div>
-                  </div>
+                  
                 </div>
               </div>
             </div>
@@ -173,34 +163,7 @@
         //   }
         // }, 
         
-        {
-          field: "Lihat",
-          title: "Action",
-          class: "text-center",
-          sortable: !1,
-          searchable: !1,
-          overflow: "visible",
-          template: function(t) {
-            var aksi, teks, fa;
-            if (t.STATUS == 1) {
-              aksi  = "nonaktif";
-              teks  = "Non-Aktifkan";
-              fa    = "user-alt-slash";
-            }else{
-              aksi  = "aktif";
-              teks  = "Aktifkan";
-              fa    = "check-circle";
-            }
-            if (t.ID_STATUS == 1 || t.ID_STATUS == 4) {			
-              return 0;
-            }else {
-              return ('<a href="<?= base_url() ?>aia/jadwal/update/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit text-dark"></i></a>');
-            }
-          },
-          
-          
-          
-        },
+        
         {
           field: "ID_ISO",
           title: "Action",

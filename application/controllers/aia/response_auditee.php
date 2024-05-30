@@ -8,6 +8,7 @@ class Response_auditee extends MY_Controller {
 		parent::__construct();
 		$this->load->library('Pdf');
 		$this->load->model('aia/M_res_auditee', 'm_res_au');
+		$this->load->model('aia/M_jadwal', 'm_jadwal');
 		$this->is_login();
 		if(!$this->is_auditor()) $this->load->view('/errors/html/err_401');
 	}
@@ -20,22 +21,66 @@ class Response_auditee extends MY_Controller {
         $data['title']          = 'Respon Auditee';
         $data['content']        = 'content/aia/v_response_auditee_header';
 		// var_dump($this->m_res_au->get_divisi());
+		// var_dump($this->jsonResponAuditee());
 		// die;
         $this->show($data);
 	}
 
-	public function detail($data){
+	public function detail($datas){
 		$data['list_divisi'] 	= $this->m_res_au->get_divisi();
 		$data['menu']           = 'response_auditee';
         $data['title']          = 'Respon Auditee';
         $data['content']        = 'content/aia/v_response_auditee_detail';
+		$data['kode']			= $datas;	
+		$data['detail']			= $this->m_res_au->get_response_auditee_detail($datas);
+		$elcoding = $datas;
+		$elcoding_parts = explode('00', $elcoding); // Pisahkan data berdasarkan koma
+
+		// var_dump($this->m_res_au->get_response_auditee_detail($datas));
+		// // var_dump($elcoding_parts);
+		// die;
+		$this->show($data);
+	}
+
+	public function chatbox($data){
+		$request = $this->input->post();
+		
+		$data_update = [
+			'KOMENTAR_1'           			=> is_empty_return_null($request['MSG_AUDITOR']),
+			'KOMENTAR_2'          			=> is_empty_return_null($request['MSG_AUDITEE']),
+		];
+		
+		$elcoding_parts = explode('00', $data);
+        $divisi = $elcoding_parts[0];
+        $id_iso = $elcoding_parts[1];
+        $id_jadwal = $elcoding_parts[2];
+        $this->db->set('KOMENTAR_1', $data_update['KOMENTAR_1'][0]);
+        $this->db->set('KOMENTAR_2', $data_update['KOMENTAR_2'][0]);
+        $this->db->where('DIVISI', $divisi);
+        $this->db->where('ID_ISO', $id_iso);
+        $this->db->where('ID_JADWAL', $id_jadwal);
+        $this->db->update('RESPONSE_AUDITEE_D');
+		// $update = $this->m_res_au->update_komen($data,$data_update);
+
+	}
+	public function response_submit($data){
+		
+	}
+
+
+	function jsonResponAuditeeDetail($data) 
+	{
+        header('Content-Type: application/json');
+		// var_dump($this->m_res_au->get_response_auditee_detail($data));
+		// die;
+        echo json_encode($this->m_res_au->get_response_auditee_detail($data));
 	}
 
 	function jsonResponAuditee() 
 	{
         header('Content-Type: application/json');
 		// var_dump($this->m_res_au->get_response_auditee());
-        echo json_encode($this->m_res_au->get_response_auditee_detail());
+        echo json_encode($this->m_res_au->get_response_auditee_header());
 	}
 
 	function jsonKotakMasukApm() 
@@ -57,6 +102,8 @@ class Response_auditee extends MY_Controller {
 		foreach ($results as $row) {
 			$data_items = explode(',', $row['AUDITEE']); // Pisahkan data berdasarkan koma
 			foreach ($data_items as $item) {
+				$query_bersih_h = $this->db->where('DIVISI =', $result_divisi['0']['KODE'])->delete('RESPONSE_AUDITEE_D');
+				$query_bersih_d = $this->db->where('DIVISI =', $result_divisi['0']['KODE'])->delete('RESPONSE_AUDITEE_H');
 				if(trim($item)==$result_divisi['0']['KODE']){
 					$data_to_insert[] = [
 						'DIVISI' => trim($item),
@@ -83,17 +130,17 @@ class Response_auditee extends MY_Controller {
 		}
 		// var_dump($data_to_insert);
 		// 	die;
+		
 		$querys = $this->db->select('ID_JADWAL')->from('RESPONSE_AUDITEE_D')->where('ID_JADWAL',$data)->get();
 		$resultq = $querys->result_array();
 		// var_dump($resultq);
 		// die;
-		$update_data = array(
-            'STATUS' => "1"
-        );
+		
 		if (!empty($data_to_insert)) {
 			if(empty($resultq)){
 				$this->db->insert_batch('RESPONSE_AUDITEE_D', $data_to_insert);
-				$this->db->update('WAKTU_AUDIT',$update_data)->where('ID_JADWAL',$data);
+				$this->m_jadwal->update_status($data);
+				
 			}
 		}
 		$this->session->set_flashdata('success', $success_message);

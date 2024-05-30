@@ -48,7 +48,7 @@ class Jadwal extends MY_Controller
 		$data['list_jenis_audit'] 	= $this->master_act->jenis_audit();
 		$listdiv=$this->master_act->divisi();
 		$data['list_divisi'] 		= $listdiv;
-		$data['menu']           	= 'perencanaan';
+		$data['menu']           	= 'perencanaan-aia';
 		$data['sub_menu']      		= 'jadwal_audit';
 		
 		$data['title']          	= 'Create Jadwal Audit';

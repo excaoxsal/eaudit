@@ -71,6 +71,7 @@
               </div>
             </div>
           </div>
+          
           <div class="datatable datatable-bordered datatable-head-custom" id="datatable"></div>
         </div>
       </div>
@@ -167,7 +168,7 @@
             if (t.ID_STATUS == 1 || t.ID_STATUS == 4) {			
               return 0;
             }else {
-              return ('<a href="<?= base_url() ?>aia/response_auditee/generate/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Generate"><i class="fa fa-refresh text-dark"></i></a><a href="<?= base_url() ?>aia/jadwal/update/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit text-dark"></i></a><a href="<?= base_url() ?>aia/jadwal/hapus/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Hapus"><i class="fa fa-trash text-dark"></i></a>');
+              return ('<a onclick="save(' + t.ID_ISO + ')" class="btn btn-sm btn-clean btn-icon" title="Generate"><i class="fa fa-refresh text-dark"></i></a><a href="<?= base_url() ?>aia/jadwal/update/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit text-dark"></i></a><a href="<?= base_url() ?>aia/jadwal/hapus/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Hapus"><i class="fa fa-trash text-dark"></i></a>');
             }
           },
           
@@ -187,4 +188,42 @@
   jQuery(document).ready((function() {
     KTDatatableJsonRemoteDemo.init()
   }));
+
+  // function save(id, action)
+  // {
+  //   Swal.fire({
+  //   text: 'Apakah Anda yakin menyimpan data ini ?',
+  //   icon: 'question',
+  //   showCancelButton: true,
+  //   confirmButtonColor: '#3085d6',
+  //   cancelButtonColor: '#d33',
+  //   confirmButtonText: 'Ya',
+  //   cancelButtonText: 'Batal'
+  //   }).then((result) => {
+      
+  //       var form_data = $("#form_apm").serialize() + '&' + $.param(obj);
+  //       $.ajax({
+  //         url: '<?= base_url() ?>aia/response_auditee/generate/'id,
+  //         type: 'post',
+  //         data: form_data,
+  //         headers: {
+  //           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  //         },
+  //         success: function(data) {
+  //           // console.log(data);
+  //           // alert(form_data);
+  //           window.location = data; 
+  //         },
+  //         error: function(data){
+  //           Swal.fire("Gagal menyimpan data!", "Pastika semua kolom terisi!", "error");
+  //         }
+  //       });
+      
+  //   })
+  // }
+  
 </script>
+<script>
+  
+</script>
+
