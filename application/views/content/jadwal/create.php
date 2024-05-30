@@ -4,11 +4,7 @@
       <div class="d-flex align-items-center flex-wrap mr-2">
         <h5 class="text-dark font-weight-bold mt-2 mb-2 mr-5"><?= APK_NAME ?></h5>
         <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
-        <span class="text-muted font-weight-bold mr-4">Perencanaan</span>
-        <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
-        <span class="text-muted font-weight-bold mr-4">Kotak Keluar</span>
-        <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
-        <span class="text-muted font-weight-bold mr-4">APM</span>
+        <span class="text-muted font-weight-bold mr-4">List Jadwal Audit ISO</span>
         <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
         <span class="text-muted font-weight-bold mr-4">Create</span>
       </div>
@@ -61,11 +57,11 @@
             <div class="col-8">
             
               <select class="form-control select-dua" id="id_lead_auditor" name="ID_LEAD_AUDITOR">
-              <option value="<?= $data_jadwal['0']['ID_LEAD']?>"><?= $data_jadwal['0']['NAMA_LEAD_AUDITOR']?></option>
+              <option value="<?= $data_jadwal['0']['ID_AUDITOR']?>"><?= $data_jadwal['0']['NAMA_LEAD_AUDITOR']?></option>
                 <option value="">--Pilih Auditor--</option>
                 <?php 
-                foreach ($data_lead_auditor as $lead) { ?>
-                  <option value="<?= $lead['ID_USER'] ?>"><?= $lead['NAMA'] ?></option>
+                foreach ($data_auditor as $auditor) { ?>
+                  <option value="<?= $auditor['ID_USER'] ?>"><?= $auditor['NAMA'] ?></option>
                 <?php } ?>
               </select>
               
@@ -157,7 +153,7 @@
                 <?php } ?>
 								<?php if ($data_apm->ID_STATUS != 2 && $data_apm->ID_STATUS != 3) {?>
 									<a onclick="save('<?= $data_jadwal['0']['ID_JADWAL']?>', 1)" class="btn btn-light-success font-weight-bold">Simpan</a>
-									<a onclick="save('<?= $data_apm->ID_APM ?>', 2)" class="btn btn-light-warning font-weight-bold">Kirim</a>
+									
 								<?php } ?>
 								<a onclick="back()" class="btn btn-light-danger font-weight-bold">Kembali</a>
 							<?php } ?>
@@ -171,52 +167,7 @@
   </div>
 </div>
 <script type="text/javascript">
-$(document).ready(function() {
 
-
-  set_tinymce('TUJUAN', '<?= trim(preg_replace('/\s\s+/', ' ',$data_apm->TUJUAN)) ?>');
-  set_tinymce('RUANG_LINGKUP', '<?= trim(preg_replace('/\s\s+/', ' ',$data_apm->RUANG_LINGKUP)) ?>');
-  set_tinymce('PERIODE_AUDIT', '<?= trim(preg_replace('/\s\s+/', ' ',$data_apm->PERIODE_AUDIT)) ?>');
-  set_tinymce('DESKRIPSI_TEXT', '<?= trim(preg_replace('/\s\s+/', ' ',$data_apm->DESKRIPSI_TEXT)) ?>');
-  set_tinymce('PROSES_BISNIS_TEXT', '<?= trim(preg_replace('/\s\s+/', ' ',$data_apm->PROSES_BISNIS_TEXT)) ?>');
-  set_tinymce('RESIKO', '<?= trim(preg_replace('/\s\s+/', ' ',$data_apm->RESIKO)) ?>');
-  set_tinymce('CATATAN', '<?= trim(preg_replace('/\s\s+/', ' ',$data_apm->CATATAN)) ?>');
-  set_tinymce('REVIEW_ANALISIS', '<?= trim(preg_replace('/\s\s+/', ' ',$data_apm->REVIEW_ANALISIS)) ?>');
-  set_tinymce('BERITA_ATURAN', '<?= trim(preg_replace('/\s\s+/', ' ',$data_apm->BERITA_ATURAN)) ?>');
-  set_tinymce('DAFTAR_RESIKO_POTENSIAL', '<?= trim(preg_replace('/\s\s+/', ' ',$data_apm->DAFTAR_RESIKO_POTENSIAL)) ?>');
-  set_tinymce('DAFTAR_DOKUMEN', '<?= trim(preg_replace('/\s\s+/', ' ',$data_apm->DAFTAR_DOKUMEN)) ?>');
-  set_tinymce('KOMENTAR', '');
-
-  $('#id_spa').on('change', function (e) {
-      // $(this).valid();
-
-      //get tim audit
-      var id_spa = $('#id_spa').val();
-      $.ajax({
-       url: "<?= base_url() ?>perencanaan/spa/getTimAudit",
-       data: '&id_spa='+ id_spa,
-       type: 'GET',
-       beforeSend: function() {
-        $('#loadingDiv').css('display', 'block');
-       },
-       success:function(data){
-          var hasil = JSON.parse(data);  
-          var tim_audit = [];    
-          $.each(hasil, function(key,val){    
-          var tim = ['','Ketua Tim', 'Pengawas', 'Anggota Tim']; 
-            tim_audit.push(`<div class="form-group row">
-                              <label class="col-form-label col-3 text-left">`+tim[val.JABATAN]+`</label>
-                              <div class="col-8">
-                                <input class="form-control" disabled type="text" value="`+val.NAMA+`">
-                              </div>
-                            </div>`);
-          });
-          $('#tim_audit').html(tim_audit);
-          $('#loadingDiv').css('display', 'none');
-       }
-      }); 
-    });
-});
 
   function save(id, action)
   {
@@ -255,46 +206,10 @@ $(document).ready(function() {
     })
   }
 
-  function submitButton(action)
-  {
-    Swal.fire({
-      text: 'Yakin melakukan aksi ini ?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Ya',
-      cancelButtonText: 'Batal'
-    }).then((result) => {
-      if (result.value) {
-        console.log("WOY");
-
-        var obj = {ACTION: action};
-        var form_data = $("#form_apm").serialize() + '&' + $.param(obj);
-        $.ajax({
-            url: '<?= base_url() ?>/perencanaan/apm/approve_reject/<?= $data_apm->ID_APM ?>',
-            type: 'post',
-            data: form_data,
-            headers: {
-              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(data) {
-                // console.log(data);
-                window.location = data;
-            },
-            error: function(data){
-                alert(data);
-                Swal.fire("Gagal menyimpan data!", "Pastika semua kolom terisi!", "error");
-            }
-        });
-      }
-    })
-  }
+  
 	function back(id) { 
-		if (id) {
-			window.location = '<?= base_url() ?>perencanaan/apm/kotak_masuk'
-		}else {
-			window.location = '<?= base_url() ?>perencanaan/apm/kotak_keluar'
-		}
+		
+			window.location = '<?= base_url() ?>aia/jadwal/jadwal_audit'
+		
 	}
 </script>

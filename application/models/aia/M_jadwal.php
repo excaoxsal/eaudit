@@ -14,6 +14,20 @@ class M_jadwal extends CI_Model{
         
 	}
 
+	public function update_status($data){
+
+		$table = 'WAKTU_AUDIT';
+		$nomor = 1;
+		$update_data = array(
+            'STATUS' => "GENERATED"
+        );
+		$update=$this->db->where('ID_JADWAL',$data)->update('WAKTU_AUDIT', 'STATUS');
+		$lastquery=$this->db->last_query();
+		return($lastquery);
+        
+	}
+
+
     public function save($data)
 	{
 
@@ -94,6 +108,7 @@ class M_jadwal extends CI_Model{
 		$this->db->join('TM_DIVISI div','div.ID_DIVISI = w.ID_DIVISI','LEFT');
         $this->db->where('w.ID_JADWAL', $id_jadwal);
         $this->db->or_where('w.ID_LEAD_AUDITOR', $id_user);
+		// $elquery = $this->db->select('')->from('RESPON_AUDITEE');
         $query = $this->db->get();
         return $query->result_array();
 	}

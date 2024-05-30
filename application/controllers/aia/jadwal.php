@@ -10,7 +10,7 @@ class Jadwal extends MY_Controller
 		$this->load->library('Pdf');
 		
 		$this->load->model('perencanaan/M_tim_audit', 'm_tim_audit');
-		$this->load->model('perencanaan/M_jadwal', 'm_jadwal');
+		$this->load->model('aia/M_jadwal', 'm_jadwal');
 		$this->is_login();
 		if(!$this->is_auditor()) $this->load->view('/errors/html/err_401');
 	}
@@ -19,7 +19,7 @@ class Jadwal extends MY_Controller
 	{
 		$data['list_status'] 	= $this->master_act->status();
 		
-		$data['menu']           = 'perencanaan';
+		$data['menu']           = 'perencanaan-aia';
 		$data['sub_menu']       = 'jadwal_audit';
 		$data['title']          = 'List Jadwal Audit ISO';
         $data['content']        = 'content/jadwal/jadwal_audit';
@@ -48,7 +48,7 @@ class Jadwal extends MY_Controller
 		$data['list_jenis_audit'] 	= $this->master_act->jenis_audit();
 		$listdiv=$this->master_act->divisi();
 		$data['list_divisi'] 		= $listdiv;
-		$data['menu']           	= 'perencanaan';
+		$data['menu']           	= 'perencanaan-aia';
 		$data['sub_menu']      		= 'jadwal_audit';
 		
 		$data['title']          	= 'Create Jadwal Audit';
@@ -92,6 +92,8 @@ class Jadwal extends MY_Controller
 		if (isset($this->session->login)) {
 			redirect(base_url('aia'));
 		}
+		
+
 		$data = array(
             'widget' => $this->recaptcha->getWidget(),
             'script' => $this->recaptcha->getScriptTag()
@@ -171,6 +173,8 @@ class Jadwal extends MY_Controller
 		// 	echo base_url('perencanaan/apm/kotak_keluar');
 		// }
 	}
+
+	
 
 	public function hapus($data){
 		

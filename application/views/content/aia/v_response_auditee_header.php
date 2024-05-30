@@ -54,11 +54,11 @@
                   </div>
                   <div class="col-md-4 my-2 my-md-0">
                     <div class="d-flex align-items-center">
-                      <label class="mr-3 mb-0 d-none d-md-block">Status:</label>
+                      <label class="mr-3 mb-0 d-none d-md-block">Divisi:</label>
                       <select class="form-control" id="kt_datatable_search_status">
                         <option value="">All</option>
-                        <?php foreach($list_status as $status){ ?>
-                        <option value="<?= $status['STATUS'] ?>"><?= $status['STATUS'] ?></option>
+                        <?php foreach($list_divisi as $status){ ?>
+                        <option value="<?= $status['NAMA_DIVISI'] ?>"><?= $status['NAMA_DIVISI'] ?></option>
                         <?php } ?>
                       </select>
                     </div>
@@ -81,7 +81,7 @@ var KTDatatableJsonRemoteDemo = {
     t = $("#kt_datatable").KTDatatable({
       data: {
         type: "remote",
-        source: '<?= base_url() ?>perencanaan/apm/jsonKotakKeluarApm',
+        source: '<?= base_url() ?>aia/response_auditee/jsonResponAuditee',
         pageSize: 10
       },
       layout: {
@@ -95,48 +95,40 @@ var KTDatatableJsonRemoteDemo = {
         key: "generalSearch"
       },
       columns: [{
-        field: "KLAUSUL",
-        title: "Klausul"
+        field: "NOMOR_ISO",
+        title: "ISO"
+      },{
+        field: "NAMA_DIVISI",
+        title: "DIVISI"
       }, {
-        field: "WAKTU_PELAKSANAAN",
-        title: "Waktu Pelaksanaan"
+        field: "WAKTU_AUDIT_AWAL",
+        title: "Waktu Awal Audit"
+      },{
+        field: "WAKTU_AUDIT_SELESAI",
+        title: "Waktu Akhir Audit"
       },{
         field: "AUDITOR",
         title: "Auditor"
       }, {
         field: "LEAD_AUDITOR",
         title: "Lead Auditor"
-      },{
-        field: "ID_APM",
-        title: "Action",
-        class: "text-center",
-        sortable: !1,
-        searchable: !1,
-        overflow: "visible",
-        template: function(t) {
-          var aksi, teks, fa;
-          if (t.STATUS == 1) {
-            aksi  = "nonaktif";
-            teks  = "Non-Aktifkan";
-            fa    = "user-alt-slash";
-          }else{
-            aksi  = "aktif";
-            teks  = "Aktifkan";
-            fa    = "check-circle";
+      },
+      {
+          field: "ID_ISO",
+          title: "Action",
+          class: "text-center",
+          sortable: !1,
+          searchable: !1,
+          overflow: "visible",
+          template: function(t) {
+            return '<a  href="<?= base_url() ?>aia/response_auditee/detail/'+t.ELCODING+'" class="btn btn-sm btn-clean btn-icon" title="Lihat"><i class="fa fa-eye text-dark"></i></a><a  href="<?= base_url() ?>aia/response_auditee/detail/'+t.KODE+'" class="btn btn-sm btn-clean btn-icon" title="Export"><i class="fa fa-download text-dark"></i></a>'
+            // return '<a href="<?= base_url() ?>monitoring/entry/tindak_lanjut/' + t.ID_TL + '" class="btn btn-sm btn-clean btn-icon" title="Tindak Lanjut"><i class="text-dark fa fa-file-import"></i></a><a onclick="hapus(' + t.ID_TL + ')" class="btn btn-sm btn-clean btn-icon" title="Hapus"><i class="text-dark fa fa-trash"></i></a><a onclick="preview(' + t.TAHUN + ',' + t.ID_DIVISI + ', ' + t.ID_JENIS_AUDIT + ')" class="btn btn-sm btn-clean btn-icon" title="Preview"><i class="text-dark fa fa-eye"></i></a><a onclick="lha_final(' + t.ID_TL + ')" class="btn btn-sm btn-clean btn-icon" title="LHA Final"><i class="text-dark fa fa-file-word"></i></a>'
+            // return '<center><a href="<?= base_url() ?>perencanaan/kotak_masuk/spa/review/'+t.ID_SPA+'" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit"></i></a></center>'
           }
-					if (t.STATUS_APPROVER == 1) {
-						return '<a href="<?= base_url() ?>perencanaan/apm/review/'+t.ID_APM+'?review=true&sts-approver='+t.STATUS_APPROVER+'" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit text-dark"></i></a>';
-					} else if (t.STATUS_APPROVER == 2) {
-            return '<a href="<?= base_url() ?>perencanaan/apm/review/'+t.ID_APM+'?review=true&sts-approver='+t.STATUS_APPROVER+'" class="btn btn-sm btn-clean btn-icon" title="View"><i class="fa fa-eye text-dark"></i></a>';
-          } else if (t.APPROVER_COUNT == t.APPROVED_COUNT) {
-            return '<a href="<?= base_url() ?>perencanaan/apm/review/'+t.ID_APM+'?review=true&sts-approver='+t.STATUS_APPROVER+'" class="btn btn-sm btn-clean btn-icon" title="View"><i class="fa fa-eye text-dark"></i></a>';
-					}else {
-						return '';
-					}
         }
-      }]
+        ]
     }), $("#kt_datatable_search_status").on("change", (function() {
-      t.search($(this).val().toLowerCase(), "STATUS")
+      t.search($(this).val().toLowerCase(), "NAMA_DIVISI")
     })), $("#kt_datatable_search_status").selectpicker()
   }
 };
