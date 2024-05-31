@@ -6,6 +6,8 @@ class Response_auditee extends MY_Controller {
 	public function __construct()
 	{
 		parent::__construct();
+		$this->load->library('upload');
+		$this->load->library('excel');
 		$this->load->library('Pdf');
 		$this->load->model('aia/M_res_auditee', 'm_res_au');
 		$this->load->model('aia/M_jadwal', 'm_jadwal');
@@ -15,6 +17,16 @@ class Response_auditee extends MY_Controller {
 
 	public function index()
 	{
+		$datauser= $_SESSION;
+		if($datauser=="AUDITOR")
+		{
+			echo "ASASSAS";
+
+		}
+		else{
+			echo 	$_SESSION['ID_DIVISI'];
+		}
+		var_dump($datauser);die;
 		$data['list_status'] 	= $this->master_act->status();
 		$data['list_divisi'] 	= $this->m_res_au->get_divisi();
 		$data['menu']           = 'response_auditee';
@@ -41,6 +53,80 @@ class Response_auditee extends MY_Controller {
 		// die;
 		$this->show($data);
 	}
+	public function respon($data){
+		$request = $this->input->post();
+		date_default_timezone_set('Asia/Jakarta');
+		// // echo "Waktu server saat ini: " . date('Y-m-d H:i:s');
+		echo date('Y-m-d');
+		// $aswd=date('Y-m-d H:i:s');echo $asw;
+		// die;
+		$query_waktu=$this->db->select('WAKTU_AUDIT_AWAL,WAKTU_AUDIT_SELESAI')->from('WAKTU_AUDIT')->get();
+		$result_waktu= $query_waktu->result_array();
+		if($result_waktu['0']['WAKTU_AUDIT_AWAL']<=date('Y-m-d')){
+			if($result_waktu['0']['WAKTU_AUDIT_SELESAI']>=date('Y-m-d')){
+				echo"SUSKES";
+				var_dump($result_waktu['0']['WAKTU_AUDIT_AWAL']);die;
+				$elcoding_parts = explode('00', $data);
+				$divisi = $elcoding_parts[0];
+				$id_iso = $elcoding_parts[1];
+				$id_jadwal = $elcoding_parts[2];
+				$config['file_name']        = "RESPON_AUDITEE";
+				$config['upload_path'] = './storage/aia/'; // Lokasi penyimpanan file
+				$config['allowed_types'] = 'xls|xlsx'; // Jenis file yang diizinkan
+				$config['max_size'] = 1280000; // Ukuran maksimum file (dalam KB)\
+				$upload_path = './storage/aia/';
+				$eltype= $config['allowed_types'];
+				$loadupload = $config['upload_path'];
+				$this->upload->upload_path = $loadupload;
+				$this->upload->allowed_types = $eltype;
+				// $this->load->library('upload', $config);
+				$this->upload->initialize($config);
+				$file_path = './storage/aia/'.$config['file_name'];
+				$elupload = $this->upload->do_upload('file_excel');
+				$upload_data = $this->upload->data();
+				// echo($upload_data['full_path']);
+				$data_update = 
+					[
+					'RESPON'           			=> is_empty_return_null($request['RESPON']),
+					'FILE'           			=> is_empty_return_null($file_path)
+					];
+				$this->db->set('FILE', $data_update['FILE']);
+				$this->db->set('RESPONSE_AUDITEE', $data_update['RESPON'][0]);
+				$this->db->where('DIVISI', $divisi);
+				$this->db->where('ID_ISO', $id_iso);
+				$this->db->where('ID_JADWAL', $id_jadwal);
+				$this->db->update('RESPONSE_AUDITEE_D');
+				$success_message = 'Data Respon Berhasil Disimpan.';
+				$this->session->set_flashdata('success', $success_message);
+				redirect(base_url('aia/response_auditee/detail/'.$data));
+				}
+				else{
+					$error_message = 'Anda sudah melewati batas waktu yang telah ditentukan';
+					$this->session->set_flashdata('error', $error_message);
+					redirect(base_url('aia/response_auditee/detail/'.$data));
+				}
+				
+			}
+			else{
+				$error_message = 'Waktu Audit belum dimulai';
+				$this->session->set_flashdata('error', $error_message);
+				redirect(base_url('aia/response_auditee/detail/'.$data));
+			}
+		
+		// var_dump($elupload);
+		// die;
+		
+		// unlink($file_path);
+		// var_dump($elupload);
+		// die;
+		// if(!unlink($upload_data['full_path'])){
+		// 	echo "SUKSES'nt";
+		// }
+		// else{
+		// 	echo "!!!!!!!!!!!!!!!!!!!!";
+		// }
+
+	}
 
 	public function chatbox($data){
 		$request = $this->input->post();
@@ -60,6 +146,9 @@ class Response_auditee extends MY_Controller {
         $this->db->where('ID_ISO', $id_iso);
         $this->db->where('ID_JADWAL', $id_jadwal);
         $this->db->update('RESPONSE_AUDITEE_D');
+		$success_message = 'Data Komentar Berhasil Diposting.';
+		$this->session->set_flashdata('success', $success_message);
+		redirect(base_url('aia/response_auditee/detail/'.$data));
 		// $update = $this->m_res_au->update_komen($data,$data_update);
 
 	}
@@ -140,11 +229,13 @@ class Response_auditee extends MY_Controller {
 			if(empty($resultq)){
 				$this->db->insert_batch('RESPONSE_AUDITEE_D', $data_to_insert);
 				$this->m_jadwal->update_status($data);
+				$success_message = 'Data telah berhasil di-generate.';
+				$this->session->set_flashdata('success', $success_message);
+				echo base_url('aia/jadwal/jadwal_audit');
 				
 			}
 		}
-		$this->session->set_flashdata('success', $success_message);
-		redirect($_SERVER['HTTP_REFERER']);
+		
 		// var_dump($inserteldb);
 		// die;
 	}
