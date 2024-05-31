@@ -83,13 +83,13 @@
           <i aria-hidden="true" class="ki ki-close"></i>
         </button>
       </div>
-      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/iso/proses_upload" enctype="multipart/form-data">
+      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/response_auditee/respon/<?=$kode?>" enctype="multipart/form-data">
         <div class="modal-body" style="height: auto">
 
           <div class="form-group row">
             <div class="col-12">
               <label>Respon</label>
-              <textarea class="form-control" <?= $disabled ?> name="PESERTA[]" id="nama_auditee"><?= $peserta[0]['DASAR']  ?></textarea>
+              <textarea class="form-control" <?= $disabled ?> name="RESPON[]" id="respon"><?= $respon[0]['RESPON']  ?></textarea>
             </div>
           </div>
           <div class="form-group row">

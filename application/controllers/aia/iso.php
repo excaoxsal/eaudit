@@ -86,7 +86,7 @@ class Iso extends MY_Controller
 	public function proses_upload() {
 		// var_dump($_POST['ID_ISO']);
 		// die;
-		$nipp                       = $this->input->post('nipp');
+		// $nipp                       = $this->input->post('nipp');
 		$config['file_name']        = "asd";
 		$config['upload_path'] = './storage/aia/'; // Lokasi penyimpanan file
 		$config['allowed_types'] = 'xls|xlsx'; // Jenis file yang diizinkan
@@ -202,7 +202,8 @@ class Iso extends MY_Controller
 		}
 				// var_dump($eldata);
 				// die;
-				unlink($file_path);
+				$upload_data = $this->upload->data();
+				unlink($upload_data['full_path']);
 			if($save==true){
 				$update = $this->m_iso->update($_POST['ID_ISO']);
 				$success_message = 'Data berhasil disimpan.';

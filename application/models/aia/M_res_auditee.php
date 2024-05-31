@@ -4,28 +4,60 @@ error_reporting(E_ERROR);
 class M_res_auditee extends CI_Model{
 
     public function get_response_auditee_header(){
-        $this->db->select('
-        i.NOMOR_ISO,
-        ra.DIVISI KODE,
-        d.NAMA_DIVISI ,
-        w.WAKTU_AUDIT_AWAL,
-        w.WAKTU_AUDIT_SELESAI,
-        au.NAMA AUDITOR,
-        la.NAMA LEAD_AUDITOR,
-        m.PERTANYAAN,
-        m.KODE_KLAUSUL,
-        string_agg(ra."DIVISI"::text || \'00\' || i."ID_ISO"::text || \'00\' || ra."ID_JADWAL"::text, \'\') as "ELCODING"')
-        ->from('RESPONSE_AUDITEE_D ra')
-        ->join('WAKTU_AUDIT w','ra.ID_JADWAL=w.ID_JADWAL','left')
-        ->join('M_PERTANYAAN m','ra.ID_MASTER_PERTANYAAN=m.ID_MASTER_PERTANYAAN','left')
-        ->join('TM_USER au','w.ID_AUDITOR=au.ID_USER')
-        ->join('TM_USER la','w.ID_LEAD_AUDITOR=la.ID_USER','left')
-        ->join('M_ISO i','m.ID_ISO=i.ID_ISO','left')
-        ->join('TM_DIVISI d','d.KODE=ra.DIVISI');
-        $this->db->group_by('i."NOMOR_ISO", ra."DIVISI", d."NAMA_DIVISI", w."WAKTU_AUDIT_AWAL", 
-                        w."WAKTU_AUDIT_SELESAI", au."NAMA", la."NAMA", m."PERTANYAAN", m."KODE_KLAUSUL"');
-        $query = $this->db->get();
-        return $query->result_array();
+        if($datauser=="AUDITOR")
+		{
+			$this->db->select('
+            i.NOMOR_ISO,
+            ra.DIVISI KODE,
+            d.NAMA_DIVISI ,
+            w.WAKTU_AUDIT_AWAL,
+            w.WAKTU_AUDIT_SELESAI,
+            au.NAMA AUDITOR,
+            la.NAMA LEAD_AUDITOR,
+            m.PERTANYAAN,
+            m.KODE_KLAUSUL,
+            string_agg(ra."DIVISI"::text || \'00\' || i."ID_ISO"::text || \'00\' || ra."ID_JADWAL"::text, \'\') as "ELCODING"')
+            ->from('RESPONSE_AUDITEE_D ra')
+            ->join('WAKTU_AUDIT w','ra.ID_JADWAL=w.ID_JADWAL','left')
+            ->join('M_PERTANYAAN m','ra.ID_MASTER_PERTANYAAN=m.ID_MASTER_PERTANYAAN','left')
+            ->join('TM_USER au','w.ID_AUDITOR=au.ID_USER')
+            ->join('TM_USER la','w.ID_LEAD_AUDITOR=la.ID_USER','left')
+            ->join('M_ISO i','m.ID_ISO=i.ID_ISO','left')
+            ->join('TM_DIVISI d','d.KODE=ra.DIVISI');
+            $this->db->group_by('i."NOMOR_ISO", ra."DIVISI", d."NAMA_DIVISI", w."WAKTU_AUDIT_AWAL", 
+                            w."WAKTU_AUDIT_SELESAI", au."NAMA", la."NAMA", m."PERTANYAAN", m."KODE_KLAUSUL"');
+            $query = $this->db->get();
+            return $query->result_array();
+		}
+        else{
+
+            $this->db->select('
+            i.NOMOR_ISO,
+            ra.DIVISI KODE,
+            d.NAMA_DIVISI ,
+            w.WAKTU_AUDIT_AWAL,
+            w.WAKTU_AUDIT_SELESAI,
+            au.NAMA AUDITOR,
+            la.NAMA LEAD_AUDITOR,
+            m.PERTANYAAN,
+            m.KODE_KLAUSUL,
+            string_agg(ra."DIVISI"::text || \'00\' || i."ID_ISO"::text || \'00\' || ra."ID_JADWAL"::text, \'\') as "ELCODING"')
+            ->from('RESPONSE_AUDITEE_D ra')
+            ->join('WAKTU_AUDIT w','ra.ID_JADWAL=w.ID_JADWAL','left')
+            ->join('M_PERTANYAAN m','ra.ID_MASTER_PERTANYAAN=m.ID_MASTER_PERTANYAAN','left')
+            ->join('TM_USER au','w.ID_AUDITOR=au.ID_USER')
+            ->join('TM_USER la','w.ID_LEAD_AUDITOR=la.ID_USER','left')
+            ->join('M_ISO i','m.ID_ISO=i.ID_ISO','left')
+            ->join('TM_DIVISI d','d.KODE=ra.DIVISI')
+            ->where('d.ID_DIVISI',$_SESSION['ID_DIVISI'])
+            ->where('d.');
+            $this->db->group_by('i."NOMOR_ISO", ra."DIVISI", d."NAMA_DIVISI", w."WAKTU_AUDIT_AWAL", 
+                            w."WAKTU_AUDIT_SELESAI", au."NAMA", la."NAMA", m."PERTANYAAN", m."KODE_KLAUSUL"');
+            $query = $this->db->get();
+            return $query->result_array();
+
+        }
+        
     }
 
     public function get_response_auditee_detail($data){

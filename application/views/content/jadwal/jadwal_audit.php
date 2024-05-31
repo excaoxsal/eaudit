@@ -104,31 +104,6 @@
           field: "NAMA_DIVISI",
           title: "CABANG/DIVISI"
         },
-        // {
-        //   field: "NOMOR_SPA_SEQ",
-        //   title: "ID"
-        // }, {
-        //   field: "NAMA_DIVISI",
-        //   title: "Auditee"
-        // }, {
-        //   field: "NOMOR_SURAT",
-        //   title: "Nomor Surat"
-        // }, {
-        //   field: "STATUS",
-        //   title: "Status",
-        //   template: function(t) {
-        //     if (t.ID_STATUS == 3) {
-        //       if(t.APPROVER_COUNT == t.APPROVED_COUNT){
-        //         t.STATUS = 'Send';
-        //         t.CSS = 'success';
-        //         return '<span  style="border-radius:0" class="label font-weight-bold label-lg label-light-' + t.CSS + ' label-inline">' + t.STATUS + ' </span>';						
-        //       }else{
-        //         return '<span  style="border-radius:0" class="label font-weight-bold label-lg label-light-' + t.CSS + ' label-inline">' + t.STATUS + ' (' + t.APPROVED_COUNT + ' / ' + t.APPROVER_COUNT + ')</span>';
-        //       }
-        //     }
-        //     return '<span class="label font-weight-bold label-lg label-light-' + t.CSS + ' label-inline">' + t.STATUS + '</span>';
-        //   }
-        // }, 
         {
           field: "WAKTU_AUDIT_AWAL",
           title: "Waktu Mulai",
@@ -168,7 +143,10 @@
             if (t.ID_STATUS == 1 || t.ID_STATUS == 4) {			
               return 0;
             }else {
-              return ('<a onclick="save(' + t.ID_ISO + ')" class="btn btn-sm btn-clean btn-icon" title="Generate"><i class="fa fa-refresh text-dark"></i></a><a href="<?= base_url() ?>aia/jadwal/update/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit text-dark"></i></a><a href="<?= base_url() ?>aia/jadwal/hapus/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Hapus"><i class="fa fa-trash text-dark"></i></a>');
+              return (
+                      '<a onclick="save(' + t.ID_JADWAL + ')" class="btn btn-sm btn-clean btn-icon" title="Generate"><i class="fa fa-refresh text-dark"></i></a>'+
+                      '<a href="<?= base_url() ?>aia/jadwal/update/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit text-dark"></i></a>'+
+                      '<a href="<?= base_url() ?>aia/jadwal/hapus/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Hapus"><i class="fa fa-trash text-dark"></i></a>');
             }
           },
           
@@ -184,43 +162,41 @@
         t.search($(this).val().toLowerCase(), "STATUS")
       })), $("#datatable_search_status").selectpicker()
     }
+    
   };
   jQuery(document).ready((function() {
     KTDatatableJsonRemoteDemo.init()
   }));
 
-  // function save(id, action)
-  // {
-  //   Swal.fire({
-  //   text: 'Apakah Anda yakin menyimpan data ini ?',
-  //   icon: 'question',
-  //   showCancelButton: true,
-  //   confirmButtonColor: '#3085d6',
-  //   cancelButtonColor: '#d33',
-  //   confirmButtonText: 'Ya',
-  //   cancelButtonText: 'Batal'
-  //   }).then((result) => {
-      
-  //       var form_data = $("#form_apm").serialize() + '&' + $.param(obj);
-  //       $.ajax({
-  //         url: '<?= base_url() ?>aia/response_auditee/generate/'id,
-  //         type: 'post',
-  //         data: form_data,
-  //         headers: {
-  //           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-  //         },
-  //         success: function(data) {
-  //           // console.log(data);
-  //           // alert(form_data);
-  //           window.location = data; 
-  //         },
-  //         error: function(data){
-  //           Swal.fire("Gagal menyimpan data!", "Pastika semua kolom terisi!", "error");
-  //         }
-  //       });
-      
-  //   })
-  // }
+  function save(id) {
+    Swal.fire({
+      text: 'Apakah Anda yakin generate data ini dan menghapus data yang sudah tersimpan ?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya',
+      cancelButtonText: 'Batal'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: '<?= base_url() ?>aia/response_auditee/generate/' + id,
+          type: 'post',
+          data: { id: id },
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          success: function(data) {
+            window.location = data; 
+          },
+          error: function(data) {
+            // console.log(data)
+            Swal.fire("Gagal menyimpan data!", "Terjadi kesalahan, silakan coba lagi.", "error");
+          }
+        });
+      }
+    });
+  }
   
 </script>
 <script>
