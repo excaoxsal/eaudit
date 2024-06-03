@@ -87,7 +87,7 @@ class Iso extends MY_Controller
 		// var_dump($_POST['ID_ISO']);
 		// die;
 		// $nipp                       = $this->input->post('nipp');
-		$config['file_name']        = "asd";
+		$config['file_name']        = "upload_master_pertanyaan";
 		$config['upload_path'] = './storage/aia/'; // Lokasi penyimpanan file
 		$config['allowed_types'] = 'xls|xlsx'; // Jenis file yang diizinkan
 		$config['max_size'] = 1280000; // Ukuran maksimum file (dalam KB)\
@@ -140,7 +140,7 @@ class Iso extends MY_Controller
 		// Loop through each row and column to read the data
 		$data = [];
 		for ($col = 0; $col < $highestRow-1; $col++) {
-		for ($row = 0; $row <= $highestRow; $row++) {
+			for ($row = 0; $row <= $highestRow; $row++) {
 			
 				$kode_klausul = $worksheet->getCellByColumnAndRow(0, $row+2)->getValue();
 				$lv1 = $worksheet->getCellByColumnAndRow(1, $row+2)->getValue();
@@ -150,52 +150,72 @@ class Iso extends MY_Controller
 				$auditee = $worksheet->getCellByColumnAndRow(5, $row+2)->getValue();
 				$pertanyaan = $worksheet->getCellByColumnAndRow(6, $row+2)->getValue();
 				
-				$data[] = array(
-					'KODE_KLAUSUL'	=> is_empty_return_null($kode_klausul),
-					'LV1'			=> is_empty_return_null($lv1),
-					'LV2'			=> is_empty_return_null($lv2),
-					'LV3'			=> is_empty_return_null($lv3),
-					'LV4'			=> is_empty_return_null($lv4),
-					'AUDITEE'		=> is_empty_return_null($auditee),
-					'PERTANYAAN'	=> is_empty_return_null($pertanyaan),
-					'ID_ISO'=>is_empty_return_null($_POST['ID_ISO']),
-					'ID_MASTER_PERTANYAAN' => is_empty_return_null('')
-				);
-				// var_dump($data);
-				// die;
-				// $data[] = array(
-				// 'KODE_KLAUSUL'  => $kode_klausul,
-				// 'LV1'   => $lv1,
-				// 'LV2'    => $lv2,
-				// 'LV3'  => $lv3,
-				// 'LV4'   => $country,
-				// 'AUDITEE' =>$auditee,
-				// 'PERTANYAAN' =>$pertanyaan
-				// );
-				// Get the cell value
-				// ----------------------------------------------------------------------------
-				$value = $worksheet->getCellByColumnAndRow($col, $row)->getValue();
-				// Store the value in the data array
-				$data[$row][$col] = $value;
-				// ----------------------------------------------------------------------------
-				// echo 'test';
-				
-				// die;
-				}	
-				$eldata = [
-					'KODE_KLAUSUL'	=> is_empty_return_null($data[$col]['KODE_KLAUSUL']),
-					'LV1'			=> is_empty_return_null($data[$col]['LV1']),
-					'LV2'			=> is_empty_return_null($data[$col]['LV2']),
-					'LV3'			=> is_empty_return_null($data[$col]['LV3']),
-					'LV4'			=> is_empty_return_null($data[$col]['LV4']),
-					'AUDITEE'		=> is_empty_return_null($data[$col]['AUDITEE']),
-					'PERTANYAAN'	=> is_empty_return_null($data[$col]['PERTANYAAN']),
-					'ID_ISO'		=> is_empty_return_null($_POST['ID_ISO']),
+				// if($auditee=="ALL"){
+				// 	$query_all_divisi = $this->db->select('KODE')->from('TM_DIVISI')->get();
+				// 	$result_divisi = $query_all_divisi->result_array();
+				// 	// var_dump($result_divisi);die;
 					
-				];
+				// 	foreach($result_divisi as $divisi){
+				// 		$cols+=1;
+				// 		$rows=0;
+				// 		// var_dump($divisi['KODE']);die;
+				// 		// $a+=1;
+				// 		$data_all[] = array(
+				// 			'KODE_KLAUSUL'	=> is_empty_return_null($kode_klausul),
+				// 			'LV1'			=> is_empty_return_null($lv1),
+				// 			'LV2'			=> is_empty_return_null($lv2),
+				// 			'LV3'			=> is_empty_return_null($lv3),
+				// 			'LV4'			=> is_empty_return_null($lv4),
+				// 			'AUDITEE'		=> is_empty_return_null($divisi['KODE']),
+				// 			'PERTANYAAN'	=> is_empty_return_null($pertanyaan),
+				// 			'ID_ISO'=>is_empty_return_null($_POST['ID_ISO']),
+				// 			'ID_MASTER_PERTANYAAN' => is_empty_return_null('')
+				// 		);
+				// 	$values = $worksheet->getCellByColumnAndRow($cols-1, $rows-1)->getValue();
+				// 	$data_all[$rows-1][$cols-1] =$values;
+				// 	// $saves = $this->m_pertanyaan->save($data_all[$a-1]);
+						
+				// 	}
+					
+				// }else{
+					$data[] = array(
+						'KODE_KLAUSUL'	=> is_empty_return_null($kode_klausul),
+						'LV1'			=> is_empty_return_null($lv1),
+						'LV2'			=> is_empty_return_null($lv2),
+						'LV3'			=> is_empty_return_null($lv3),
+						'LV4'			=> is_empty_return_null($lv4),
+						'AUDITEE'		=> is_empty_return_null($auditee),
+						'PERTANYAAN'	=> is_empty_return_null($pertanyaan),
+						'ID_ISO'=>is_empty_return_null($_POST['ID_ISO']),
+						'ID_MASTER_PERTANYAAN' => is_empty_return_null('')
+					);
+					
+					
+				// }
+				$value = $worksheet->getCellByColumnAndRow($col, $row)->getValue();
+					
+					$data[$row][$col] = $value;
+				
+				
+
+			}	
+			// var_dump($data[$col]);die;
+
+			$eldata = [
+				'KODE_KLAUSUL'	=> is_empty_return_null($data[$col]['KODE_KLAUSUL']),
+				'LV1'			=> is_empty_return_null($data[$col]['LV1']),
+				'LV2'			=> is_empty_return_null($data[$col]['LV2']),
+				'LV3'			=> is_empty_return_null($data[$col]['LV3']),
+				'LV4'			=> is_empty_return_null($data[$col]['LV4']),
+				'AUDITEE'		=> is_empty_return_null($data[$col]['AUDITEE']),
+				'PERTANYAAN'	=> is_empty_return_null($data[$col]['PERTANYAAN']),
+				'ID_ISO'		=> is_empty_return_null($_POST['ID_ISO']),
+				
+			];
+			
 				
 				// var_dump($data[$col]['LV1']);
-				// var_dump($eldata);
+				// var_dump($eldata);die;
 				$save = $this->m_pertanyaan->save($eldata);
 				
 				

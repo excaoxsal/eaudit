@@ -1,6 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
+use PHPExcel\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 class Response_auditee extends MY_Controller {
 
 	public function __construct()
@@ -12,21 +13,14 @@ class Response_auditee extends MY_Controller {
 		$this->load->model('aia/M_res_auditee', 'm_res_au');
 		$this->load->model('aia/M_jadwal', 'm_jadwal');
 		$this->is_login();
-		if(!$this->is_auditor()) $this->load->view('/errors/html/err_401');
+		
 	}
 
 	public function index()
 	{
 		$datauser= $_SESSION;
-		if($datauser=="AUDITOR")
-		{
-			echo "ASASSAS";
-
-		}
-		else{
-			echo 	$_SESSION['ID_DIVISI'];
-		}
-		var_dump($datauser);die;
+		
+		// var_dump($datauser);die;
 		$data['list_status'] 	= $this->master_act->status();
 		$data['list_divisi'] 	= $this->m_res_au->get_divisi();
 		$data['menu']           = 'response_auditee';
@@ -35,6 +29,33 @@ class Response_auditee extends MY_Controller {
 		// var_dump($this->m_res_au->get_divisi());
 		// var_dump($this->jsonResponAuditee());
 		// die;
+		// $datauser = $_SESSION;
+		// var_dump($datauser);die;
+		$elqueri=$this->db->select('
+            i.NOMOR_ISO,
+            ra.DIVISI KODE,
+            d.NAMA_DIVISI ,
+			d.ID_DIVISI,
+            w.WAKTU_AUDIT_AWAL,
+            w.WAKTU_AUDIT_SELESAI,
+            au.NAMA AUDITOR,
+            la.NAMA LEAD_AUDITOR,
+            m.PERTANYAAN,
+            m.KODE_KLAUSUL,
+            string_agg(ra."DIVISI"::text || \'00\' || i."ID_ISO"::text || \'00\' || ra."ID_JADWAL"::text, \'\') as "ELCODING"')
+            ->from('RESPONSE_AUDITEE_D ra')
+            ->join('WAKTU_AUDIT w','ra.ID_JADWAL=w.ID_JADWAL','left')
+            ->join('M_PERTANYAAN m','ra.ID_MASTER_PERTANYAAN=m.ID_MASTER_PERTANYAAN','left')
+            ->join('TM_USER au','w.ID_AUDITOR=au.ID_USER')
+            ->join('TM_USER la','w.ID_LEAD_AUDITOR=la.ID_USER','left')
+            ->join('M_ISO i','m.ID_ISO=i.ID_ISO','left')
+            ->join('TM_DIVISI d','d.KODE=ra.DIVISI')
+            ->where('d.ID_DIVISI',$_SESSION['ID_DIVISI'])
+            ->group_by('i."NOMOR_ISO", ra."DIVISI", d."NAMA_DIVISI", w."WAKTU_AUDIT_AWAL", 
+                            w."WAKTU_AUDIT_SELESAI", au."NAMA", la."NAMA", m."PERTANYAAN", m."KODE_KLAUSUL",d."ID_DIVISI')->get();
+            $query = $elqueri->result_array();
+            //  var_dump($query);die;
+        // var_dump($_SESSION['NAMA_ROLE']);die;
         $this->show($data);
 	}
 
@@ -238,6 +259,100 @@ class Response_auditee extends MY_Controller {
 		
 		// var_dump($inserteldb);
 		// die;
+	}
+
+	public function export_excel($data){
+		$this->load->database();
+        $this->load->library('session');
+		$elcoding = $data;
+		$elcoding_parts = explode('00', $elcoding);
+        $divisi = $elcoding_parts[0];
+        $id_iso = $elcoding_parts[1];
+        $id_jadwal = $elcoding_parts[2];
+		$this->db->select('
+		i."NOMOR_ISO",
+		ra."DIVISI" AS "KODE",
+		d."NAMA_DIVISI",
+		w."WAKTU_AUDIT_AWAL",
+		w."WAKTU_AUDIT_SELESAI",
+		au."NAMA" AS "AUDITOR",
+		la."NAMA" AS "LEAD_AUDITOR",
+		m."PERTANYAAN",
+		m."KODE_KLAUSUL",
+		ra.RESPONSE_AUDITEE,
+		string_agg(ra."DIVISI"::text || \'00\' || i."ID_ISO"::text || \'00\' || ra."ID_JADWAL"::text, \'\') AS "ELCODING"'
+		)
+		->from('RESPONSE_AUDITEE_D ra')
+		->join('WAKTU_AUDIT w', 'ra."ID_JADWAL" = w."ID_JADWAL"', 'left')
+		->join('M_PERTANYAAN m', 'ra."ID_MASTER_PERTANYAAN" = m."ID_MASTER_PERTANYAAN"', 'left')
+		->join('TM_USER au', 'w."ID_AUDITOR" = au."ID_USER"')
+		->join('TM_USER la', 'w."ID_LEAD_AUDITOR" = la."ID_USER"', 'left')
+		->join('M_ISO i', 'm."ID_ISO" = i."ID_ISO"', 'left')
+		->join('TM_DIVISI d', 'd."KODE" = ra."DIVISI"')
+		->where('ra."DIVISI"', $divisi)
+		->where('i."ID_ISO"', $id_iso)
+		->where('w."ID_JADWAL"', $id_jadwal)
+		->group_by('i."NOMOR_ISO", ra."DIVISI", d."NAMA_DIVISI", w."WAKTU_AUDIT_AWAL", 
+					w."WAKTU_AUDIT_SELESAI", au."NAMA", la."NAMA", m."PERTANYAAN", m."KODE_KLAUSUL",ra.RESPONSE_AUDITEE');
+
+	$query = $this->db->get();
+	$data = $query->result_array();
+
+	// Create new Spreadsheet object
+	$spreadsheet = new PHPExcel();
+
+	// Set document properties
+	$spreadsheet->getProperties()->setCreator('Your Name')
+		->setLastModifiedBy('Your Name')
+		->setTitle('Export Data')
+		->setSubject('Export Data')
+		->setDescription('Export data from database to Excel file')
+		->setKeywords('export excel php codeigniter phpspreadsheet')
+		->setCategory('Export Data');
+
+	// Add header
+	$sheet = $spreadsheet->getActiveSheet();
+	$sheet->setCellValue('A1', 'NOMOR_ISO');
+	$sheet->setCellValue('B1', 'KODE');
+	$sheet->setCellValue('C1', 'NAMA_DIVISI');
+	$sheet->setCellValue('D1', 'WAKTU_AUDIT_AWAL');
+	$sheet->setCellValue('E1', 'WAKTU_AUDIT_SELESAI');
+	$sheet->setCellValue('F1', 'AUDITOR');
+	$sheet->setCellValue('G1', 'LEAD_AUDITOR');
+	$sheet->setCellValue('H1', 'PERTANYAAN');
+	$sheet->setCellValue('I1', 'KODE_KLAUSUL');
+	$sheet->setCellValue('J1', 'ELCODING');
+	$sheet->setCellValue('K1', 'RESPONSE_AUDITEE');
+
+	// Add data
+	$row = 2;
+	foreach ($data as $datum) {
+		$sheet->setCellValue('A' . $row, $datum['NOMOR_ISO']);
+		$sheet->setCellValue('B' . $row, $datum['KODE']);
+		$sheet->setCellValue('C' . $row, $datum['NAMA_DIVISI']);
+		$sheet->setCellValue('D' . $row, $datum['WAKTU_AUDIT_AWAL']);
+		$sheet->setCellValue('E' . $row, $datum['WAKTU_AUDIT_SELESAI']);
+		$sheet->setCellValue('F' . $row, $datum['AUDITOR']);
+		$sheet->setCellValue('G' . $row, $datum['LEAD_AUDITOR']);
+		$sheet->setCellValue('H' . $row, $datum['PERTANYAAN']);
+		$sheet->setCellValue('I' . $row, $datum['KODE_KLAUSUL']);
+		$sheet->setCellValue('J' . $row, $datum['ELCODING']);
+		$sheet->setCellValue('K' . $row, $datum['RESPONSE_AUDITEE']);
+		$row++;
+	}
+
+	// Redirect output to a client’s web browser (Xlsx)
+	header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+	header('Content-Disposition: attachment;filename="export_data.xlsx"');
+	header('Cache-Control: max-age=0');
+	header('Cache-Control: max-age=1'); // If you're serving to IE 9, set to 1
+
+	$writer = PHPExcel_IOFactory::createWriter($spreadsheet, 'Excel5');;
+	$writer->save('php://output');
+	exit;
+	}
+	function is_empty_return_null($value) {
+		return empty($value) ? NULL : $value;
 	}
 
 	

@@ -124,14 +124,28 @@
 
           <div class="form-group row">
             <div class="col-12">
+            <?php if ($is_auditor) { ?>
               <label>Message Auditor</label>
               <textarea class="form-control" <?= $disabled ?> name="MSG_AUDITOR[]" id="msg_auditor"><?= $detail[0]['KOMENTAR_1']  ?></textarea>
+            <?php } else {?>
+            
+              <label>Message Auditor</label>
+              <textarea readonly class="form-control" <?= $disabled ?> name="MSG_AUDITOR[]" id="msg_auditor"><?= $detail[0]['KOMENTAR_1']  ?></textarea>
+            <?php } ?>
+              
             </div>
           </div>
           <div class="form-group row">
             <div class="col-12">
+            <?php if ($is_auditee) { ?>
               <label>Message Auditee</label>
               <textarea class="form-control" <?= $disabled ?> name="MSG_AUDITEE[]" id="msg_auditee"><?= $detail[0]['KOMENTAR_2']  ?></textarea>
+            <?php } else {?>
+            
+              <label>Message Auditee</label>
+              <textarea readonly class="form-control" <?= $disabled ?> name="MSG_AUDITEE[]" id="msg_auditee"><?= $detail[0]['KOMENTAR_2']  ?></textarea>
+            <?php } ?>
+              
             </div>
           </div>
           

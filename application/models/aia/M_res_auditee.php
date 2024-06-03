@@ -4,6 +4,8 @@ error_reporting(E_ERROR);
 class M_res_auditee extends CI_Model{
 
     public function get_response_auditee_header(){
+        $datauser = $_SESSION['NAMA_ROLE'];
+        // var_dump($_SESSION);die;
         if($datauser=="AUDITOR")
 		{
 			$this->db->select('
@@ -50,7 +52,7 @@ class M_res_auditee extends CI_Model{
             ->join('M_ISO i','m.ID_ISO=i.ID_ISO','left')
             ->join('TM_DIVISI d','d.KODE=ra.DIVISI')
             ->where('d.ID_DIVISI',$_SESSION['ID_DIVISI'])
-            ->where('d.');
+            ;
             $this->db->group_by('i."NOMOR_ISO", ra."DIVISI", d."NAMA_DIVISI", w."WAKTU_AUDIT_AWAL", 
                             w."WAKTU_AUDIT_SELESAI", au."NAMA", la."NAMA", m."PERTANYAAN", m."KODE_KLAUSUL"');
             $query = $this->db->get();
