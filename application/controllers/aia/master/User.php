@@ -47,9 +47,13 @@ class User extends MY_Controller
             'EMAIL'             => trim(htmlspecialchars($this->input->post('email', TRUE))),
             'ID_ROLE'           => $this->input->post('id_role'),
             'ID_MENU'           => $this->input->post('id_menu'),
-            'ATASAN_I'          => $this->input->post('atasan_i'),
-            'ATASAN_II'         => $this->input->post('atasan_ii')
+            'ATASAN_I'          => $this->input->post('atasan_i')
         );
+        if (empty($this->input->post('atasan_ii'))) {
+            $data['ATASAN_II'] = NULL;
+        } else {
+            $data['ATASAN_II'] = $this->input->post('atasan_ii');
+        }
 
         if (!$id) {
             $data['NIPP']       = $nipp; 

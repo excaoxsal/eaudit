@@ -26,36 +26,6 @@ class Response_auditee extends MY_Controller {
 		$data['menu']           = 'response_auditee';
         $data['title']          = 'Respon Auditee';
         $data['content']        = 'content/aia/v_response_auditee_header';
-		// var_dump($this->m_res_au->get_divisi());
-		// var_dump($this->jsonResponAuditee());
-		// die;
-		// $datauser = $_SESSION;
-		// var_dump($datauser);die;
-		$elqueri=$this->db->select('
-            i.NOMOR_ISO,
-            ra.DIVISI KODE,
-            d.NAMA_DIVISI ,
-			d.ID_DIVISI,
-            w.WAKTU_AUDIT_AWAL,
-            w.WAKTU_AUDIT_SELESAI,
-            au.NAMA AUDITOR,
-            la.NAMA LEAD_AUDITOR,
-            m.PERTANYAAN,
-            m.KODE_KLAUSUL,
-            string_agg(ra."DIVISI"::text || \'00\' || i."ID_ISO"::text || \'00\' || ra."ID_JADWAL"::text, \'\') as "ELCODING"')
-            ->from('RESPONSE_AUDITEE_D ra')
-            ->join('WAKTU_AUDIT w','ra.ID_JADWAL=w.ID_JADWAL','left')
-            ->join('M_PERTANYAAN m','ra.ID_MASTER_PERTANYAAN=m.ID_MASTER_PERTANYAAN','left')
-            ->join('TM_USER au','w.ID_AUDITOR=au.ID_USER')
-            ->join('TM_USER la','w.ID_LEAD_AUDITOR=la.ID_USER','left')
-            ->join('M_ISO i','m.ID_ISO=i.ID_ISO','left')
-            ->join('TM_DIVISI d','d.KODE=ra.DIVISI')
-            ->where('d.ID_DIVISI',$_SESSION['ID_DIVISI'])
-            ->group_by('i."NOMOR_ISO", ra."DIVISI", d."NAMA_DIVISI", w."WAKTU_AUDIT_AWAL", 
-                            w."WAKTU_AUDIT_SELESAI", au."NAMA", la."NAMA", m."PERTANYAAN", m."KODE_KLAUSUL",d."ID_DIVISI')->get();
-            $query = $elqueri->result_array();
-            //  var_dump($query);die;
-        // var_dump($_SESSION['NAMA_ROLE']);die;
         $this->show($data);
 	}
 
@@ -68,10 +38,6 @@ class Response_auditee extends MY_Controller {
 		$data['detail']			= $this->m_res_au->get_response_auditee_detail($datas);
 		$elcoding = $datas;
 		$elcoding_parts = explode('00', $elcoding); // Pisahkan data berdasarkan koma
-
-		// var_dump($this->m_res_au->get_response_auditee_detail($datas));
-		// // var_dump($elcoding_parts);
-		// die;
 		$this->show($data);
 	}
 	public function respon($data){
