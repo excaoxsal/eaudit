@@ -141,8 +141,8 @@ class Jadwal extends MY_Controller
 						'ID_LEAD_AUDITOR'          		=> is_empty_return_null($request['ID_LEAD_AUDITOR']),
 						'WAKTU_AUDIT_AWAL' 				=> is_empty_return_null($request['WAKTU_AUDIT_AWAL']),
 						'WAKTU_AUDIT_SELESAI' 			=> is_empty_return_null($request['WAKTU_AUDIT_SELESAI']),
-						'ID_DIVISI'    					=> is_empty_return_null($request['ID_DIVISI']),
-						// 'ID_JADWAL'						=> is_empty_return_null($request['ID_JADWAL']),
+						'ID_DIVISI'    					=> is_empty_return_null($request['ID_DIVISI'])
+						// 'ID_JADWAL'						=> is_empty_return_null($request['ID_JADWAL'])
 			];
 			$save = $this->m_jadwal->save($data);
 			if($save==true){
@@ -156,22 +156,7 @@ class Jadwal extends MY_Controller
 			}
 		}
 		
-		// if (empty($id_apm)) {
-		// 	$data['ID_SPA'] = $request['ID_SPA'];
-		// 	$save = $this->m_apm->save($data);
-		// 	if ($save) {
-		// 		$success_message = 'Data berhasil disimpan.';
-		// 		$this->session->set_flashdata('success', $success_message);
-		// 		echo base_url('perencanaan/apm/kotak_keluar');
-		// 	}else {
-		// 		$error_message = 'Nomor sudah terpakai.';
-		// 		$this->session->set_flashdata('error', $error_message);
-		// 		echo base_url('perencanaan/apm/create');
-		// 	}
-		// }else {
-		// 	
-		// 	echo base_url('perencanaan/apm/kotak_keluar');
-		// }
+		
 	}
 
 	

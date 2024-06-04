@@ -113,53 +113,6 @@
               <?php } ?>
             </div>
           </div>
-          
-					
-          
-          
-          
-					
-          
-					<?php if ($data_apm->ID_STATUS == 4) {?>
-						<div class="form-group row">
-							<div class="col-8 offset-3">
-								<label class="col-form-label text-left"><h6><b>Log History</b></h6></label>
-								<div class="log" style="height:100px; background-color:#F3F6F9; border: 1px solid #1E1E2D; overflow-y:scroll; padding:10px">
-									<?php if(!empty($data_log)) {
-										foreach ($data_log as $value) {
-											echo $value['TGL_LOG'].' - '.$value['LOG'] . '<br>';
-										}
-									} ?>
-								</div>
-							</div>
-						</div>
-					<?php } ?>
-					
-          <div class="form-group row">
-            <label class="col-form-label col-3 text-left"></label>
-            <div class="col-8">
-							<?php if(isset($_GET['review'])){ ?>
-                <?php if($data_apm->ID_APM != ''){ ?>
-								<a target="_blank" href='<?= base_url() ?>perencanaan/apm/cetak_preview/<?= $data_jadwal['0']['ID_JADWAL'] ?>' class="btn btn-light-primary font-weight-bold">Preview</a>
-                <?php } ?>
-								<?php if ($_GET['sts-approver'] == 1) {?>
-									<a onclick="submitButton(3)" class="btn btn-light-success font-weight-bold">Approve</a>
-									<a onclick="submitButton(4)" class="btn btn-light-warning font-weight-bold">Reject</a>
-								<?php } ?>
-								<a onclick="back('<?= $data_jadwal['0']['ID_JADWAL'] ?>')" class="btn btn-light-danger font-weight-bold">Kembali</a>
-							<?php }else { ?>
-                <?php if($data_apm->ID_APM != ''){ ?>
-								<a target="_blank" href='<?= base_url() ?>perencanaan/apm/cetak_preview/<?= $data_jadwal['0']['ID_JADWAL'] ?>' class="btn btn-light-primary font-weight-bold">Preview</a>
-                <?php } ?>
-								<?php if ($data_apm->ID_STATUS != 2 && $data_apm->ID_STATUS != 3) {?>
-									<a onclick="save('<?= $data_jadwal['0']['ID_JADWAL']?>', 1)" class="btn btn-light-success font-weight-bold">Simpan</a>
-									
-								<?php } ?>
-								<a onclick="back()" class="btn btn-light-danger font-weight-bold">Kembali</a>
-							<?php } ?>
-
-            </div>
-          </div>
         </div>
         </form>
       </div>
@@ -199,6 +152,7 @@
             window.location = data; 
           },
           error: function(data){
+            // console.log(data);
             Swal.fire("Gagal menyimpan data!", "Pastika semua kolom terisi!", "error");
           }
         });

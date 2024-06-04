@@ -121,6 +121,8 @@
       </div>
       <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/response_auditee/chatbox/<?=$kode?>" enctype="multipart/form-data">
         <div class="modal-body" style="height: auto">
+          <input type="text"hidden name="ID_MASTER_PERTANYAAN" value="<?= $detail[0]['ID_MASTER_PERTANYAAN']  ?>">
+          <input type="text"hidden name="SUB_DIVISI" value="<?= $detail[0]['SUB_DIVISI']  ?>">
 
           <div class="form-group row">
             <div class="col-12">
@@ -193,7 +195,7 @@ var KTDatatableJsonRemoteDemo = {
           searchable: !1,
           overflow: "visible",
           template: function(t) {
-            return '<a onclick="chatbox(' + t.ID_ISO + ')" class="btn btn-sm btn-clean btn-icon"><i class="text-dark fa fa-message" title="Respon"></i></a><a onclick="uploadFile(' + t.ID_ISO + ')" class="btn btn-sm btn-clean btn-icon" title="Upload"><i class="fa fa-upload text-dark"></i></a>'
+            return '<a onclick="chatbox(' + t.ID_MASTER_PERTANYAAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="text-dark fa fa-message" title="Respon"></i></a><a onclick="uploadFile(' + t.ID_ISO + ')" class="btn btn-sm btn-clean btn-icon" title="Upload"><i class="fa fa-upload text-dark"></i></a>'
             }
         }]
     }), $("#kt_datatable_search_status").on("change", (function() {

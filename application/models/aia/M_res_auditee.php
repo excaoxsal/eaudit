@@ -16,7 +16,7 @@ class M_res_auditee extends CI_Model{
                     au."NAMA" AS "AUDITOR",
                     la."NAMA" AS "LEAD_AUDITOR",
                     string_agg(DISTINCT ra."DIVISI"::text || \'00\' || i."ID_ISO"::text || \'00\' || ra."ID_JADWAL"::text, \'\') AS "ELCODING"
-                FROM "RESPONSE_AUDITEE_D" ra
+                FROM "RESPONSE_AUDITEE_H" ra
                 LEFT JOIN "WAKTU_AUDIT" w ON ra."ID_JADWAL" = w."ID_JADWAL"
                 JOIN "TM_USER" au ON w."ID_AUDITOR" = au."ID_USER"
                 LEFT JOIN "TM_USER" la ON w."ID_LEAD_AUDITOR" = la."ID_USER"
@@ -44,7 +44,7 @@ class M_res_auditee extends CI_Model{
                     au."NAMA" AS "AUDITOR",
                     la."NAMA" AS "LEAD_AUDITOR",
                     string_agg(DISTINCT ra."DIVISI"::text || \'00\' || i."ID_ISO"::text || \'00\' || ra."ID_JADWAL"::text, \'\') AS "ELCODING"
-                FROM "RESPONSE_AUDITEE_D" ra
+                FROM "RESPONSE_AUDITEE_H        " ra
                 LEFT JOIN "WAKTU_AUDIT" w ON ra."ID_JADWAL" = w."ID_JADWAL"
                 JOIN "TM_USER" au ON w."ID_AUDITOR" = au."ID_USER"
                 LEFT JOIN "TM_USER" la ON w."ID_LEAD_AUDITOR" = la."ID_USER"
@@ -73,21 +73,53 @@ class M_res_auditee extends CI_Model{
         $id_iso = $elcoding_parts[1];
         $id_jadwal = $elcoding_parts[2];
 
-        $this->db->select('i.NOMOR_ISO,ra.DIVISI KODE,d.NAMA_DIVISI ,w.WAKTU_AUDIT_AWAL,w.WAKTU_AUDIT_SELESAI,au.NAMA AUDITOR,la.NAMA LEAD_AUDITOR,m.PERTANYAAN,m.KODE_KLAUSUL,ra.KOMENTAR_1,ra.KOMENTAR_2')
-        ->from('RESPONSE_AUDITEE_D ra')
-        ->join('WAKTU_AUDIT w','ra.ID_JADWAL=w.ID_JADWAL','left')
-        ->join('M_PERTANYAAN m','ra.ID_MASTER_PERTANYAAN=m.ID_MASTER_PERTANYAAN','left')
-        ->join('TM_USER au','w.ID_AUDITOR=au.ID_USER')
-        ->join('TM_USER la','w.ID_LEAD_AUDITOR=la.ID_USER','left')
-        ->join('M_ISO i','m.ID_ISO=i.ID_ISO','left')
-        ->join('TM_DIVISI d','d.KODE=ra.DIVISI');
+        $sql = '
+        SELECT 
+            i."NOMOR_ISO",
+            ra."DIVISI" AS "KODE",
+            d."NAMA_DIVISI",
+            w."WAKTU_AUDIT_AWAL",
+            w."WAKTU_AUDIT_SELESAI",
+            au."NAMA" AS "AUDITOR",
+            la."NAMA" AS "LEAD_AUDITOR",
+            m."PERTANYAAN",
+            m."KODE_KLAUSUL",
+            ra."KOMENTAR_1",
+            ra."KOMENTAR_2",
+            ra."ID_MASTER_PERTANYAAN",
+            ra."SUB_DIVISI"
+        FROM 
+            "RESPONSE_AUDITEE_D" ra
+        LEFT JOIN 
+            "WAKTU_AUDIT" w ON ra."ID_JADWAL" = w."ID_JADWAL"
+        LEFT JOIN 
+            "M_PERTANYAAN" m ON ra."ID_MASTER_PERTANYAAN" = m."ID_MASTER_PERTANYAAN"
+        JOIN 
+            "TM_USER" au ON w."ID_AUDITOR" = au."ID_USER"
+        LEFT JOIN 
+            "TM_USER" la ON w."ID_LEAD_AUDITOR" = la."ID_USER"
+        LEFT JOIN 
+            "M_ISO" i ON m."ID_ISO" = i."ID_ISO"
+        JOIN 
+            "TM_DIVISI" d ON d."KODE" = ra."DIVISI"
+        WHERE 
+            ra."DIVISI" = ?
+            AND i."ID_ISO" = ?
+            AND ra."ID_JADWAL" = ?
+            AND ra."SUB_DIVISI" IS NOT NULL
+        ';
+    
+        // Menyusun parameter untuk query
+        $params = array($divisi, $id_iso, $id_jadwal);
         
-        $this->db->where('ra."DIVISI"', $divisi);
-        $this->db->where('i."ID_ISO"', $id_iso);
-        $this->db->where('ra."ID_JADWAL"', $id_jadwal);
-        $query = $this->db->get();
+        // Menjalankan query dengan parameter
+        $query = $this->db->query($sql, $params);
+        
+        // Mengambil hasil query sebagai array asosiatif
+    
         return $query->result_array();
     }
+
     public function get_response_auditee_detail_id($data){
         $this->db->select('ra.DIVISI KODE')
         ->from('RESPONSE_AUDITEE_D ra')

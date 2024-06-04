@@ -123,7 +123,7 @@ class M_jadwal extends CI_Model{
 		$this->db->join('TM_DIVISI div','div.ID_DIVISI = w.ID_DIVISI','LEFT');
 		// $this->db->where('w.ID_AUDITOR', '1');
 		// $this->db->or_where('w.ID_LEAD_AUDITOR', '12345');
-		$this->db->order_by('w.WAKTU_AUDIT_AWAL', 'ASC'); // Perbaikan disini
+		$this->db->order_by('w.WAKTU_AUDIT_AWAL', 'DESC'); // Perbaikan disini
 
         $query = $this->db->get();
         return $query->result_array();

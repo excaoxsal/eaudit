@@ -150,34 +150,41 @@ class Iso extends MY_Controller
 				$auditee = $worksheet->getCellByColumnAndRow(5, $row+2)->getValue();
 				$pertanyaan = $worksheet->getCellByColumnAndRow(6, $row+2)->getValue();
 				
-				// if($auditee=="ALL"){
-				// 	$query_all_divisi = $this->db->select('KODE')->from('TM_DIVISI')->get();
-				// 	$result_divisi = $query_all_divisi->result_array();
-				// 	// var_dump($result_divisi);die;
-					
-				// 	foreach($result_divisi as $divisi){
-				// 		$cols+=1;
-				// 		$rows=0;
-				// 		// var_dump($divisi['KODE']);die;
-				// 		// $a+=1;
-				// 		$data_all[] = array(
-				// 			'KODE_KLAUSUL'	=> is_empty_return_null($kode_klausul),
-				// 			'LV1'			=> is_empty_return_null($lv1),
-				// 			'LV2'			=> is_empty_return_null($lv2),
-				// 			'LV3'			=> is_empty_return_null($lv3),
-				// 			'LV4'			=> is_empty_return_null($lv4),
-				// 			'AUDITEE'		=> is_empty_return_null($divisi['KODE']),
-				// 			'PERTANYAAN'	=> is_empty_return_null($pertanyaan),
-				// 			'ID_ISO'=>is_empty_return_null($_POST['ID_ISO']),
-				// 			'ID_MASTER_PERTANYAAN' => is_empty_return_null('')
-				// 		);
-				// 	$values = $worksheet->getCellByColumnAndRow($cols-1, $rows-1)->getValue();
-				// 	$data_all[$rows-1][$cols-1] =$values;
-				// 	// $saves = $this->m_pertanyaan->save($data_all[$a-1]);
+				if($auditee=="ALL"){
+					$query_all_divisi = $this->db->select('KODE')->from('TM_DIVISI')->where('IS_DIVISI','N')->get();
+					$result_divisi = $query_all_divisi->result_array();
+					// var_dump($result_divisi);die;
+					$data_divisi="";
+					for($i=0;$i<sizeof($result_divisi);$i++){
 						
-				// 	}
+						// var_dump($divisi['KODE']);die;
+						// $a+=1;
+						$data_divisi .=$result_divisi[$i]['KODE'];
+						if ($i < sizeof($result_divisi)-1){
+							$data_divisi.=",";
+						}
+						// var_dump($data_divisi);die;
+						// 
+					// $values = $worksheet->getCellByColumnAndRow($cols-1, $rows-1)->getValue();
+					// $data_all[$rows-1][$cols-1] =$values;
+					// $saves = $this->m_pertanyaan->save($data_all[$a-1]);
+						
+					}
+					// var_dump($data_divisi);die;
+					$auditee = $data_divisi;
+					$data[] = array(
+							'KODE_KLAUSUL'	=> is_empty_return_null($kode_klausul),
+							'LV1'			=> is_empty_return_null($lv1),
+							'LV2'			=> is_empty_return_null($lv2),
+							'LV3'			=> is_empty_return_null($lv3),
+							'LV4'			=> is_empty_return_null($lv4),
+							'AUDITEE'		=> is_empty_return_null($auditee),
+							'PERTANYAAN'	=> is_empty_return_null($pertanyaan),
+							'ID_ISO'=>is_empty_return_null($_POST['ID_ISO']),
+							'ID_MASTER_PERTANYAAN' => is_empty_return_null('')
+						);
 					
-				// }else{
+				}else{
 					$data[] = array(
 						'KODE_KLAUSUL'	=> is_empty_return_null($kode_klausul),
 						'LV1'			=> is_empty_return_null($lv1),
@@ -191,7 +198,8 @@ class Iso extends MY_Controller
 					);
 					
 					
-				// }
+				}
+				
 				$value = $worksheet->getCellByColumnAndRow($col, $row)->getValue();
 					
 					$data[$row][$col] = $value;

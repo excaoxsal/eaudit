@@ -114,7 +114,7 @@ class Master_act_aia extends CI_Model{
                 ELSE NULL
             END AS nama_sub_divisi
             FROM "TM_DIVISI" d1
-            LEFT JOIN "TM_DIVISI" d2 ON d1."KODE_PARENT" = d2."ID_DIVISI"
+            LEFT JOIN "TM_DIVISI" d2 ON d1."KODE_PARENT" = d2."KODE"
             WHERE d1."STATUS" = 1 ' . $where . '
             ORDER BY d1."NAMA_DIVISI" ASC';
             // echo "<pre>";
