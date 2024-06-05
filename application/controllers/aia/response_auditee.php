@@ -276,7 +276,7 @@ class Response_auditee extends MY_Controller {
         $this->load->library('session');
 		$this->db->select('
 		i."NOMOR_ISO",
-		ra."DIVISI" AS "DIVISI",
+		ra."DIVISI" AS "KODE_DIVISI",
 		d."NAMA_DIVISI",
 		w."WAKTU_AUDIT_AWAL",
 		w."WAKTU_AUDIT_SELESAI",
@@ -321,7 +321,7 @@ class Response_auditee extends MY_Controller {
 	// Add header
 	$sheet = $spreadsheet->getActiveSheet();
 	$sheet->setCellValue('A1', 'NOMOR_ISO');
-	$sheet->setCellValue('B1', 'DIVISI');
+	$sheet->setCellValue('B1', 'KODE DIVISI');
 	$sheet->setCellValue('C1', 'NAMA_DIVISI');
 	$sheet->setCellValue('D1', 'WAKTU_AUDIT_AWAL');
 	$sheet->setCellValue('E1', 'WAKTU_AUDIT_SELESAI');
@@ -339,7 +339,7 @@ class Response_auditee extends MY_Controller {
 	$row = 2;
 	foreach ($data as $datum) {
 		$sheet->setCellValue('A' . $row, $datum['NOMOR_ISO']);
-		$sheet->setCellValue('B' . $row, $datum['KODE']);
+		$sheet->setCellValue('B' . $row, $datum['KODE_DIVISI']);
 		$sheet->setCellValue('C' . $row, $datum['NAMA_DIVISI']);
 		$sheet->setCellValue('D' . $row, $datum['WAKTU_AUDIT_AWAL']);
 		$sheet->setCellValue('E' . $row, $datum['WAKTU_AUDIT_SELESAI']);
