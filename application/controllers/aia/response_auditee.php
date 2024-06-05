@@ -227,14 +227,16 @@ class Response_auditee extends MY_Controller {
 				
 				if(in_array(trim($item), $kode_subdiv)){
 					
-					// $query_header = $this->db->select('ID_JADWAL')->from('RESPONSE_AUDITEE_H')->where('DIVISI',trim($item))->get();
-					// $result_header = $query_header->result_array();
+					$query_header = $this->db->select('ID_HEADER')->from('RESPONSE_AUDITEE_H')->where('ID_ISO',$row['ID_ISO'])->where('ID_JADWAL',$data)->get();
+					$result_header = $query_header->result_array();
+					// var_dump($result_header);die;
 					$data_to_insert[] = [
 						'DIVISI' => $result_divisi[0]['KODE'],
 						'ID_ISO' => $row['ID_ISO'],
 						'ID_MASTER_PERTANYAAN' => $row['ID_MASTER_PERTANYAAN'],
 						'ID_JADWAL' => $data,
-						'SUB_DIVISI' => trim($item)
+						'SUB_DIVISI' => trim($item),
+						'ID_HEADER' => $result_header[0]['ID_HEADER']
 						
 					];
 					
