@@ -74,6 +74,7 @@
   </div>
 </div>
 <!-- MODAL Respon -->
+<?php if ($is_auditee) { ?>
 <div class="modal fade" id="modal_upload" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
     <div class="modal-content">
@@ -109,6 +110,34 @@
     </div>
   </div>
 </div>
+<?php }else{?>
+  <div class="modal fade" id="modal_upload" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Respon Auditee</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <i aria-hidden="true" class="ki ki-close"></i>
+        </button>
+      </div>
+      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/response_auditee/respon/<?=$kode?>" enctype="multipart/form-data">
+        <div class="modal-body" style="height: auto">
+          <input type="hidden"  name="ID_RE" id="ID_RE">
+          <div class="form-group row">
+            <div class="col-12">
+              <label>Respon</label>
+              <textarea class="form-control" <?= $disabled ?> name="RESPON[]" id="RESPONSE_AUDITEE" readonly></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <input type="submit" class="btn btn-primary font-weight-bold" value="Submit">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<?php }?>
 <!-- Modal Chat box -->
 <div class="modal fade" id="modal_chat" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
@@ -201,6 +230,7 @@ var KTDatatableJsonRemoteDemo = {
     })), $("#kt_datatable_search_status").selectpicker()
   }
 };
+
 function uploadFile(id_tl)
   {
     $.get(`<?= base_url('aia/response_auditee/getFileUpload/') ?>`+id_tl, function(data, status){

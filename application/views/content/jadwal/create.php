@@ -114,6 +114,32 @@
             </div>
           </div>
         </div>
+
+
+
+
+
+
+
+					
+
+          <div class="form-group row">
+            <label class="col-form-label col-3 text-left"></label>
+            <div class="col-8">
+							
+								
+								
+								<!-- <a onclick="back('<?= $data_jadwal['0']['ID_JADWAL'] ?>')" class="btn btn-light-danger font-weight-bold">Kembali</a> -->
+                
+								
+									<a onclick="save('<?= $data_jadwal['0']['ID_JADWAL']?>', 1)" class="btn btn-light-success font-weight-bold">Simpan</a>
+
+								
+								<a onclick="back()" class="btn btn-light-danger font-weight-bold">Kembali</a>
+							
+
+            </div>
+          </div>
         </form>
       </div>
     </div>

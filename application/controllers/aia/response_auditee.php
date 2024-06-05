@@ -26,6 +26,7 @@ class Response_auditee extends MY_Controller {
 		$data['menu']           = 'response_auditee';
         $data['title']          = 'Respon Auditee';
         $data['content']        = 'content/aia/v_response_auditee_header';
+		// var_dump($_SESSION);die;
         $this->show($data);
 	}
 

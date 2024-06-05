@@ -30,15 +30,16 @@ class M_res_auditee extends CI_Model{
         }else{
             $query = $this->db->query('
                 SELECT
+                    ra."ID_HEADER",
                     i."NOMOR_ISO",
                     ra."DIVISI" AS "KODE",
                     d."NAMA_DIVISI",
                     w."WAKTU_AUDIT_AWAL",
                     w."WAKTU_AUDIT_SELESAI",
                     au."NAMA" AS "AUDITOR",
-                    la."NAMA" AS "LEAD_AUDITOR",
-                    string_agg(DISTINCT ra."DIVISI"::text || \'01\' || i."ID_ISO"::text || \'01\' || ra."ID_JADWAL"::text, \'\') AS "ELCODING"
-                FROM "RESPONSE_AUDITEE_H        " ra
+                    la."NAMA" AS "LEAD_AUDITOR"
+                    
+                FROM "RESPONSE_AUDITEE_H" ra
                 LEFT JOIN "WAKTU_AUDIT" w ON ra."ID_JADWAL" = w."ID_JADWAL"
                 JOIN "TM_USER" au ON w."ID_AUDITOR" = au."ID_USER"
                 LEFT JOIN "TM_USER" la ON w."ID_LEAD_AUDITOR" = la."ID_USER"
@@ -46,14 +47,7 @@ class M_res_auditee extends CI_Model{
                 JOIN "TM_DIVISI" d ON d."KODE" = ra."DIVISI"
                 WHERE d."ID_DIVISI" = ' . $_SESSION['ID_DIVISI'] . '
                 AND d."STATUS" = \'1\'
-                GROUP BY 
-                    i."NOMOR_ISO",
-                    ra."DIVISI",
-                    d."NAMA_DIVISI",
-                    w."WAKTU_AUDIT_AWAL",
-                    w."WAKTU_AUDIT_SELESAI",
-                    au."NAMA",
-                    la."NAMA"
+                
                 ORDER BY i."NOMOR_ISO", w."WAKTU_AUDIT_SELESAI" ASC
             ');
             return $query->result_array();
