@@ -58,7 +58,7 @@ class Response_auditee extends MY_Controller {
 		$query_waktu=$this->db->select('WAKTU_AUDIT_AWAL,WAKTU_AUDIT_SELESAI')->from('WAKTU_AUDIT')->get();
 		$result_waktu= $query_waktu->result_array();
 		if($current_date>=$result_waktu['0']['WAKTU_AUDIT_AWAL']){
-			if($current_date>=$result_waktu['0']['WAKTU_AUDIT_SELESAI']){
+			if($current_date<=$result_waktu['0']['WAKTU_AUDIT_SELESAI']){
 				// echo"SUSKES";
 				// var_dump($result_waktu['0']['WAKTU_AUDIT_AWAL']);die;
 				$config['file_name']        = "RESPON_AUDITEE".$current_time;
