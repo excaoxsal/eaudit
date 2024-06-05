@@ -85,11 +85,11 @@
       </div>
       <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/response_auditee/respon/<?=$kode?>" enctype="multipart/form-data">
         <div class="modal-body" style="height: auto">
-
+          <input type="hidden"  name="ID_RE" id="ID_RE">
           <div class="form-group row">
             <div class="col-12">
               <label>Respon</label>
-              <textarea class="form-control" <?= $disabled ?> name="RESPON[]" id="respon"><?= $respon[0]['RESPON']  ?></textarea>
+              <textarea class="form-control" <?= $disabled ?> name="RESPON[]" id="RESPONSE_AUDITEE"></textarea>
             </div>
           </div>
           <div class="form-group row">
@@ -121,18 +121,16 @@
       </div>
       <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/response_auditee/chatbox/<?=$kode?>" enctype="multipart/form-data">
         <div class="modal-body" style="height: auto">
-          <input type="text"hidden name="ID_MASTER_PERTANYAAN" value="<?= $detail[0]['ID_MASTER_PERTANYAAN']  ?>">
-          <input type="text"hidden name="SUB_DIVISI" value="<?= $detail[0]['SUB_DIVISI']  ?>">
-
+          <input type="hidden"  name="ID_RE_CHAT" id="ID_RE_CHAT">
           <div class="form-group row">
             <div class="col-12">
             <?php if ($is_auditor) { ?>
               <label>Message Auditor</label>
-              <textarea class="form-control" <?= $disabled ?> name="MSG_AUDITOR[]" id="msg_auditor"><?= $detail[0]['KOMENTAR_1']  ?></textarea>
+              <textarea class="form-control" name="KOMENTAR_1" id="KOMENTAR_1"><?= $detail[0]['KOMENTAR_1']  ?></textarea>
             <?php } else {?>
             
               <label>Message Auditor</label>
-              <textarea readonly class="form-control" <?= $disabled ?> name="MSG_AUDITOR[]" id="msg_auditor"><?= $detail[0]['KOMENTAR_1']  ?></textarea>
+              <textarea readonly class="form-control" <?= $disabled ?> name="KOMENTAR_1" id="msg_auditor"><?= $detail[0]['KOMENTAR_1']  ?></textarea>
             <?php } ?>
               
             </div>
@@ -141,11 +139,11 @@
             <div class="col-12">
             <?php if ($is_auditee) { ?>
               <label>Message Auditee</label>
-              <textarea class="form-control" <?= $disabled ?> name="MSG_AUDITEE[]" id="msg_auditee"><?= $detail[0]['KOMENTAR_2']  ?></textarea>
+              <textarea class="form-control" <?= $disabled ?> name="KOMENTAR_2" id="KOMENTAR_2"><?= $detail[0]['KOMENTAR_2']  ?></textarea>
             <?php } else {?>
             
               <label>Message Auditee</label>
-              <textarea readonly class="form-control" <?= $disabled ?> name="MSG_AUDITEE[]" id="msg_auditee"><?= $detail[0]['KOMENTAR_2']  ?></textarea>
+              <textarea readonly class="form-control" <?= $disabled ?> name="KOMENTAR_2" id="KOMENTAR_2"><?= $detail[0]['KOMENTAR_2']  ?></textarea>
             <?php } ?>
               
             </div>
@@ -195,7 +193,7 @@ var KTDatatableJsonRemoteDemo = {
           searchable: !1,
           overflow: "visible",
           template: function(t) {
-            return '<a onclick="chatbox(' + t.ID_MASTER_PERTANYAAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="text-dark fa fa-message" title="Respon"></i></a><a onclick="uploadFile(' + t.ID_ISO + ')" class="btn btn-sm btn-clean btn-icon" title="Upload"><i class="fa fa-upload text-dark"></i></a>'
+            return '<a onclick="chatbox(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon"><i class="text-dark fa fa-message" title="Respon"></i></a><a onclick="uploadFile(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon" title="Upload"><i class="fa fa-upload text-dark"></i></a>'
             }
         }]
     }), $("#kt_datatable_search_status").on("change", (function() {
@@ -205,10 +203,10 @@ var KTDatatableJsonRemoteDemo = {
 };
 function uploadFile(id_tl)
   {
-    $.get(`<?= base_url('aia/response_auditee/response_submit') ?>`+id_tl, function(data, status){
+    $.get(`<?= base_url('aia/response_auditee/getFileUpload/') ?>`+id_tl, function(data, status){
         const obj = JSON.parse(data);
-        $('#id_tl').val(id_tl);
-        $('#NOMOR_LHA').val(obj.NOMOR_LHA);
+        $('#ID_RE').val(id_tl);
+        $('#RESPONSE_AUDITEE').val(obj.RESPONSE_AUDITEE);
         $('#TANGGAL_LHA').val(obj.TANGGAL_LHA);
         // console.log(data.NOMOR_LHA);
     });
@@ -217,11 +215,13 @@ function uploadFile(id_tl)
 
   function chatbox(id_tl)
   {
-    $.get(`<?= base_url('aia/response_auditee/chatbox') ?>`+id_tl, function(data, status){
+    $.get(`<?= base_url('aia/response_auditee/getdatadetail/') ?>`+id_tl, function(data,status){
         const obj = JSON.parse(data);
-        $('#id_tl').val(id_tl);
-        $('#NOMOR_LHA').val(obj.NOMOR_LHA);
-        $('#TANGGAL_LHA').val(obj.TANGGAL_LHA);
+        $('#ID_RE_CHAT').val(id_tl);
+        $('#KOMENTAR_1').val(obj.KOMENTAR_1);
+        $('#KOMENTAR_2').val(obj.KOMENTAR_2);
+        // console.log(data);
+        //     alert(form_data);
         // console.log(data.NOMOR_LHA);
     });
     $('#modal_chat').modal('show');

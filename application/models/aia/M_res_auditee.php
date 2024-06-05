@@ -8,29 +8,23 @@ class M_res_auditee extends CI_Model{
         if($datauser=="AUDITOR"){
             $query = $this->db->query('
                 SELECT
+                    ra."ID_HEADER",
                     i."NOMOR_ISO",
                     ra."DIVISI" AS "KODE",
                     d."NAMA_DIVISI",
                     w."WAKTU_AUDIT_AWAL",
                     w."WAKTU_AUDIT_SELESAI",
                     au."NAMA" AS "AUDITOR",
-                    la."NAMA" AS "LEAD_AUDITOR",
-                    string_agg(DISTINCT ra."DIVISI"::text || \'00\' || i."ID_ISO"::text || \'00\' || ra."ID_JADWAL"::text, \'\') AS "ELCODING"
+                    la."NAMA" AS "LEAD_AUDITOR"
+                    
                 FROM "RESPONSE_AUDITEE_H" ra
                 LEFT JOIN "WAKTU_AUDIT" w ON ra."ID_JADWAL" = w."ID_JADWAL"
                 JOIN "TM_USER" au ON w."ID_AUDITOR" = au."ID_USER"
                 LEFT JOIN "TM_USER" la ON w."ID_LEAD_AUDITOR" = la."ID_USER"
                 LEFT JOIN "M_ISO" i ON ra."ID_ISO" = i."ID_ISO"
                 JOIN "TM_DIVISI" d ON d."KODE" = ra."DIVISI"
-                GROUP BY 
-                    i."NOMOR_ISO",
-                    ra."DIVISI",
-                    d."NAMA_DIVISI",
-                    w."WAKTU_AUDIT_AWAL",
-                    w."WAKTU_AUDIT_SELESAI",
-                    au."NAMA",
-                    la."NAMA"
-                ORDER BY i."NOMOR_ISO", w."WAKTU_AUDIT_SELESAI" ASC
+                
+                ORDER BY i."NOMOR_ISO", w."WAKTU_AUDIT_SELESAI" DESC
             ');
             return $query->result_array();
         }else{
@@ -43,7 +37,7 @@ class M_res_auditee extends CI_Model{
                     w."WAKTU_AUDIT_SELESAI",
                     au."NAMA" AS "AUDITOR",
                     la."NAMA" AS "LEAD_AUDITOR",
-                    string_agg(DISTINCT ra."DIVISI"::text || \'00\' || i."ID_ISO"::text || \'00\' || ra."ID_JADWAL"::text, \'\') AS "ELCODING"
+                    string_agg(DISTINCT ra."DIVISI"::text || \'01\' || i."ID_ISO"::text || \'01\' || ra."ID_JADWAL"::text, \'\') AS "ELCODING"
                 FROM "RESPONSE_AUDITEE_H        " ra
                 LEFT JOIN "WAKTU_AUDIT" w ON ra."ID_JADWAL" = w."ID_JADWAL"
                 JOIN "TM_USER" au ON w."ID_AUDITOR" = au."ID_USER"
@@ -68,11 +62,11 @@ class M_res_auditee extends CI_Model{
 
     public function get_response_auditee_detail($data){
         $elcoding = $data;
-        $elcoding_parts = explode('00', $elcoding);
+        $elcoding_parts = explode('01', $elcoding);
         $divisi = $elcoding_parts[0];
         $id_iso = $elcoding_parts[1];
         $id_jadwal = $elcoding_parts[2];
-
+        
         $sql = '
         SELECT 
             i."NOMOR_ISO",
@@ -87,7 +81,9 @@ class M_res_auditee extends CI_Model{
             ra."KOMENTAR_1",
             ra."KOMENTAR_2",
             ra."ID_MASTER_PERTANYAAN",
-            ra."SUB_DIVISI"
+            ra."SUB_DIVISI",
+            ra."ID_RE"
+            
         FROM 
             "RESPONSE_AUDITEE_D" ra
         LEFT JOIN 
@@ -101,19 +97,21 @@ class M_res_auditee extends CI_Model{
         LEFT JOIN 
             "M_ISO" i ON m."ID_ISO" = i."ID_ISO"
         JOIN 
-            "TM_DIVISI" d ON d."KODE" = ra."DIVISI"
+            "TM_DIVISI" d ON d."KODE" = ra."SUB_DIVISI"
         WHERE 
-            ra."DIVISI" = ?
-            AND i."ID_ISO" = ?
-            AND ra."ID_JADWAL" = ?
-            AND ra."SUB_DIVISI" IS NOT NULL
+            ra."ID_HEADER" = ?
+        
+            
+        ORDER BY
+            ra."ID_MASTER_PERTANYAAN" ASC
         ';
     
         // Menyusun parameter untuk query
-        $params = array($divisi, $id_iso, $id_jadwal);
+        $params = array($data);
         
         // Menjalankan query dengan parameter
         $query = $this->db->query($sql, $params);
+        // var_dump($query);die;
         
         // Mengambil hasil query sebagai array asosiatif
     
@@ -142,7 +140,7 @@ class M_res_auditee extends CI_Model{
     }
 
     public function update_komen($data,$data_update){
-        $elcoding_parts = explode('00', $data);
+        $elcoding_parts = explode('01', $data);
         $divisi = $elcoding_parts[0];
         $id_iso = $elcoding_parts[1];
         $id_jadwal = $elcoding_parts[2];

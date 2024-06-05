@@ -30,66 +30,15 @@ class Response_auditee extends MY_Controller {
 	}
 
 	public function detail($datas){
+		// var_dump($datas);die;
 		$data['list_divisi'] 	= $this->m_res_au->get_divisi();
 		$data['menu']           = 'response_auditee';
         $data['title']          = 'Respon Auditee';
         $data['content']        = 'content/aia/v_response_auditee_detail';
 		$data['kode']			= $datas;	
 		$data['detail']			= $this->m_res_au->get_response_auditee_detail($datas);
-		$elcoding = $datas;
-		$elcoding_parts = explode('00', $elcoding); // Pisahkan data berdasarkan koma
-
-
-
-
-		$elcoding = $datas;
-        $elcoding_parts = explode('00', $elcoding);
-        $divisi = $elcoding_parts[0];
-        $id_iso = $elcoding_parts[1];
-        $id_jadwal = $elcoding_parts[2];
-
-        $sql = '
-        SELECT 
-            i."NOMOR_ISO",
-            ra."DIVISI" AS "KODE",
-            d."NAMA_DIVISI",
-            w."WAKTU_AUDIT_AWAL",
-            w."WAKTU_AUDIT_SELESAI",
-            au."NAMA" AS "AUDITOR",
-            la."NAMA" AS "LEAD_AUDITOR",
-            m."PERTANYAAN",
-            m."KODE_KLAUSUL",
-            ra."KOMENTAR_1",
-            ra."KOMENTAR_2",
-            ra."ID_MASTER_PERTANYAAN",
-            ra."SUB_DIVISI"
-        FROM 
-            "RESPONSE_AUDITEE_D" ra
-        LEFT JOIN 
-            "WAKTU_AUDIT" w ON ra."ID_JADWAL" = w."ID_JADWAL"
-        LEFT JOIN 
-            "M_PERTANYAAN" m ON ra."ID_MASTER_PERTANYAAN" = m."ID_MASTER_PERTANYAAN"
-        JOIN 
-            "TM_USER" au ON w."ID_AUDITOR" = au."ID_USER"
-        LEFT JOIN 
-            "TM_USER" la ON w."ID_LEAD_AUDITOR" = la."ID_USER"
-        LEFT JOIN 
-            "M_ISO" i ON m."ID_ISO" = i."ID_ISO"
-        JOIN 
-            "TM_DIVISI" d ON d."KODE" = ra."DIVISI"
-        WHERE 
-            ra."DIVISI" = ?
-            AND i."ID_ISO" = ?
-            AND ra."ID_JADWAL" = ?
-            AND ra."SUB_DIVISI" IS NOT NULL
-        ';
-    
-        // Menyusun parameter untuk query
-        $params = array($divisi, $id_iso, $id_jadwal);
-        
-        // Menjalankan query dengan parameter
-        $query = $this->db->query($sql, $params);
-		// var_dump($query->result_array());die;
+		$query = $this->m_res_au->get_response_auditee_detail($datas);
+		// var_dump($data);die;
 
 		$this->show($data);
 	}
@@ -97,20 +46,21 @@ class Response_auditee extends MY_Controller {
 		$request = $this->input->post();
 		date_default_timezone_set('Asia/Jakarta');
 		// // echo "Waktu server saat ini: " . date('Y-m-d H:i:s');
-		echo date('Y-m-d');
+		// echo date('Y-m-d');
 		// $aswd=date('Y-m-d H:i:s');echo $asw;
 		// die;
+		$id_re = $_REQUEST['ID_RE'];
+		// var_dump($request);die;
+
+		$current_date = date('Y-m-d');
+		$current_time = date('YmdHis');
 		$query_waktu=$this->db->select('WAKTU_AUDIT_AWAL,WAKTU_AUDIT_SELESAI')->from('WAKTU_AUDIT')->get();
 		$result_waktu= $query_waktu->result_array();
-		if($result_waktu['0']['WAKTU_AUDIT_AWAL']<=date('Y-m-d')){
-			if($result_waktu['0']['WAKTU_AUDIT_SELESAI']>=date('Y-m-d')){
+		if($current_date>=$result_waktu['0']['WAKTU_AUDIT_AWAL']){
+			if($current_date>=$result_waktu['0']['WAKTU_AUDIT_SELESAI']){
 				// echo"SUSKES";
 				// var_dump($result_waktu['0']['WAKTU_AUDIT_AWAL']);die;
-				$elcoding_parts = explode('00', $data);
-				$divisi = $elcoding_parts[0];
-				$id_iso = $elcoding_parts[1];
-				$id_jadwal = $elcoding_parts[2];
-				$config['file_name']        = "RESPON_AUDITEE";
+				$config['file_name']        = "RESPON_AUDITEE".$current_time;
 				$config['upload_path'] = './storage/aia/'; // Lokasi penyimpanan file
 				$config['allowed_types'] = 'xls|xlsx'; // Jenis file yang diizinkan
 				$config['max_size'] = 1280000; // Ukuran maksimum file (dalam KB)\
@@ -124,34 +74,44 @@ class Response_auditee extends MY_Controller {
 				$file_path = './storage/aia/'.$config['file_name'];
 				$elupload = $this->upload->do_upload('file_excel');
 				$upload_data = $this->upload->data();
-				// echo($upload_data['full_path']);
+				echo($file_path);
 				$data_update = 
 					[
 					'RESPON'           			=> is_empty_return_null($request['RESPON']),
 					'FILE'           			=> is_empty_return_null($file_path)
 					];
-				$this->db->set('FILE', $data_update['FILE']);
+				// var_dump($data_update['FILE'][0]);die;
+				// var_dump($current_time);die;
+
+				$this->db->set('FILE', $file_path);
 				$this->db->set('RESPONSE_AUDITEE', $data_update['RESPON'][0]);
-				$this->db->where('DIVISI', $divisi);
-				$this->db->where('ID_ISO', $id_iso);
-				$this->db->where('ID_JADWAL', $id_jadwal);
-				$this->db->update('RESPONSE_AUDITEE_D');
-				$success_message = 'Data Respon Berhasil Disimpan.';
-				$this->session->set_flashdata('success', $success_message);
-				redirect(base_url('aia/response_auditee/detail/'.$data));
+				$this->db->where('ID_RE', $id_re);
+				$update = $this->db->update('RESPONSE_AUDITEE_D');
+				// var_dump($update);die;
+				if ($update){
+					$success_message = 'Data Respon Berhasil Disimpan.';
+					$this->session->set_flashdata('success', $success_message);
+					redirect(base_url('aia/response_auditee/detail/'.$data));
 				}
 				else{
-					$error_message = 'Anda sudah melewati batas waktu yang telah ditentukan';
+					$error_message = 'Silahkan coba kembali';
 					$this->session->set_flashdata('error', $error_message);
 					redirect(base_url('aia/response_auditee/detail/'.$data));
 				}
 				
 			}
 			else{
-				$error_message = 'Waktu Audit belum dimulai';
+				$error_message = 'Anda sudah melewati batas waktu yang telah ditentukan';
 				$this->session->set_flashdata('error', $error_message);
 				redirect(base_url('aia/response_auditee/detail/'.$data));
 			}
+				
+		}
+		else{
+			$error_message = 'Waktu Audit belum dimulai';
+			$this->session->set_flashdata('error', $error_message);
+			redirect(base_url('aia/response_auditee/detail/'.$data));
+		}
 		
 		// var_dump($elupload);
 		// die;
@@ -170,33 +130,28 @@ class Response_auditee extends MY_Controller {
 
 	public function chatbox($data){
 		$request = $this->input->post();
-		// var_dump($request);die;
+		// var_dump($request['KOMENTAR_1']);die;
 		$data_update = [
 			'KOMENTAR_1'           			=> is_empty_return_null($request['MSG_AUDITOR']),
 			'KOMENTAR_2'          			=> is_empty_return_null($request['MSG_AUDITEE']),
 		];
 		
-		$elcoding_parts = explode('00', $data);
-        $divisi = $elcoding_parts[0];
-        $id_iso = $elcoding_parts[1];
-        $id_jadwal = $elcoding_parts[2];
-		$id_master_pertanyaan = $request['ID_MASTER_PERTANYAAN'];
-		$sub_divisi = $request['SUB_DIVISI'];
 
 		// var_dump($elcoding_parts);die; 
-        $this->db->set('KOMENTAR_1', $data_update['KOMENTAR_1'][0]);
-        $this->db->set('KOMENTAR_2', $data_update['KOMENTAR_2'][0]);
-        $this->db->where('DIVISI', $divisi);
-        $this->db->where('ID_ISO', $id_iso);
-        $this->db->where('ID_JADWAL', $id_jadwal);
-        $this->db->where('ID_MASTER_PERTANYAAN', $id_master_pertanyaan);
-        $this->db->where('SUB_DIVISI', $sub_divisi);
+        $this->db->set('KOMENTAR_1', $request['KOMENTAR_1']);
+        $this->db->set('KOMENTAR_2', $request['KOMENTAR_2']);
+        $this->db->where('ID_RE', $request['ID_RE_CHAT']);
         $elupdate = $this->db->update('RESPONSE_AUDITEE_D');
-		// var_dump($elupdate);die;
-		$success_message = 'Data Komentar Berhasil Diposting.';
-		$this->session->set_flashdata('success', $success_message);
-		redirect(base_url('aia/response_auditee/detail/'.$data));
-		// $update = $this->m_res_au->update_komen($data,$data_update);
+		if($elupdate){
+			$success_message = 'Data Komentar Berhasil Diposting.';
+			$this->session->set_flashdata('success', $success_message);
+			redirect(base_url('aia/response_auditee/detail/'.$data));
+		}else{
+			$error_message = 'Gagal Silahakan coba lagi';
+			$this->session->set_flashdata('error', $error_message);
+			redirect(base_url('aia/response_auditee/detail/'.$data));
+		}
+		
 
 	}
 	public function response_submit($data){
@@ -209,20 +164,31 @@ class Response_auditee extends MY_Controller {
         header('Content-Type: application/json');
 		// var_dump($this->m_res_au->get_response_auditee_detail($data));
 		// die;
-        echo json_encode($this->m_res_au->get_response_auditee_detail($data));
+		$query = $this->m_res_au->get_response_auditee_detail($data);
+        echo json_encode($query);
 	}
+
+	function getdatadetail($id_tl) 
+	{
+		$query = $this->db->select('ID_RE,KOMENTAR_1,KOMENTAR_2')->from('RESPONSE_AUDITEE_D')->where('ID_RE', $id_tl)->get()->row();
+		// var_dump($query);die;
+        echo json_encode($query);
+	}
+	function getFileUpload($id_tl)
+    {
+
+        
+            $query = $this->db->select('ID_RE, FILE, RESPONSE_AUDITEE')->from('RESPONSE_AUDITEE_D')
+                        ->where('ID_RE', $id_tl)->get()->row();
+            echo json_encode($query);
+        
+    }
 
 	function jsonResponAuditee() 
 	{
         header('Content-Type: application/json');
-		// var_dump($this->m_res_au->get_response_auditee());
+		// var_dump($this->m_res_au->get_response_auditee_header());
         echo json_encode($this->m_res_au->get_response_auditee_header());
-	}
-
-	function jsonKotakMasukApm() 
-	{
-        header('Content-Type: application/json');
-        echo json_encode($this->m_apm->kotak_masuk($this->session->ID_USER));
 	}
 	
 	public function generate($data){
@@ -302,14 +268,9 @@ class Response_auditee extends MY_Controller {
 		// die;
 	}
 
-	public function export_excel($data){
+	public function export_excel($datas){
 		$this->load->database();
         $this->load->library('session');
-		$elcoding = $data;
-		$elcoding_parts = explode('00', $elcoding);
-        $divisi = $elcoding_parts[0];
-        $id_iso = $elcoding_parts[1];
-        $id_jadwal = $elcoding_parts[2];
 		$this->db->select('
 		i."NOMOR_ISO",
 		ra."DIVISI" AS "DIVISI",
@@ -320,10 +281,11 @@ class Response_auditee extends MY_Controller {
 		la."NAMA" AS "LEAD_AUDITOR",
 		m."PERTANYAAN",
 		m."KODE_KLAUSUL",
-		ra.RESPONSE_AUDITEE,
-		ra.KOMENTAR_1 as "KOMENTAR AUDITOR",
-		ra.KOMENTAR_2 as "KOMENTAR AUDITEE",
-		string_agg(ra."DIVISI"::text || \'00\' || i."ID_ISO"::text || \'00\' || ra."ID_JADWAL"::text, \'\') AS "ELCODING"'
+		ra."RESPONSE_AUDITEE",
+		ra."KOMENTAR_1" as "KOMENTAR_AUDITOR",
+		ra."KOMENTAR_2" as "KOMENTAR_AUDITEE",
+		ra."FILE"
+		'
 		)
 		->from('RESPONSE_AUDITEE_D ra')
 		->join('WAKTU_AUDIT w', 'ra."ID_JADWAL" = w."ID_JADWAL"', 'left')
@@ -331,16 +293,15 @@ class Response_auditee extends MY_Controller {
 		->join('TM_USER au', 'w."ID_AUDITOR" = au."ID_USER"')
 		->join('TM_USER la', 'w."ID_LEAD_AUDITOR" = la."ID_USER"', 'left')
 		->join('M_ISO i', 'm."ID_ISO" = i."ID_ISO"', 'left')
-		->join('TM_DIVISI d', 'd."KODE" = ra."DIVISI"')
-		->where('ra."DIVISI"', $divisi)
-		->where('i."ID_ISO"', $id_iso)
-		->where('w."ID_JADWAL"', $id_jadwal)
-		->group_by('i."NOMOR_ISO", ra."DIVISI", d."NAMA_DIVISI", w."WAKTU_AUDIT_AWAL", 
-					w."WAKTU_AUDIT_SELESAI", au."NAMA", la."NAMA", m."PERTANYAAN", m."KODE_KLAUSUL",ra.RESPONSE_AUDITEE,ra.KOMENTAR_1,ra.KOMENTAR_2');
+		->join('TM_DIVISI d', 'd."KODE" = ra."SUB_DIVISI"')
+		->where('ra."ID_HEADER"', $datas)
+		
+		;
 
 	$query = $this->db->get();
 	$data = $query->result_array();
-	var_dump($data);die;
+		// var_dump($data);die;
+	
 
 	// Create new Spreadsheet object
 	$spreadsheet = new PHPExcel();
@@ -365,10 +326,10 @@ class Response_auditee extends MY_Controller {
 	$sheet->setCellValue('G1', 'LEAD_AUDITOR');
 	$sheet->setCellValue('H1', 'PERTANYAAN');
 	$sheet->setCellValue('I1', 'KODE_KLAUSUL');
-	$sheet->setCellValue('J1', 'ELCODING');
-	$sheet->setCellValue('K1', 'RESPONSE_AUDITEE');
-	$sheet->setCellValue('L1', 'KOMENTAR AUDITOR');
-	$sheet->setCellValue('M1', 'KOMENTAR AUDITEE');
+	$sheet->setCellValue('J1', 'RESPONSE_AUDITEE');
+	$sheet->setCellValue('K1', 'KOMENTAR AUDITOR');
+	$sheet->setCellValue('L1', 'KOMENTAR AUDITEE');
+	$sheet->setCellValue('M1', 'FILE');
 
 
 	// Add data
@@ -383,8 +344,12 @@ class Response_auditee extends MY_Controller {
 		$sheet->setCellValue('G' . $row, $datum['LEAD_AUDITOR']);
 		$sheet->setCellValue('H' . $row, $datum['PERTANYAAN']);
 		$sheet->setCellValue('I' . $row, $datum['KODE_KLAUSUL']);
-		$sheet->setCellValue('J' . $row, $datum['ELCODING']);
-		$sheet->setCellValue('K' . $row, $datum['RESPONSE_AUDITEE']);
+		$sheet->setCellValue('J' . $row, $datum['RESPONSE_AUDITEE']);
+		$sheet->setCellValue('K' . $row, $datum['KOMENTAR_AUDITOR']);
+		$sheet->setCellValue('L' . $row, $datum['KOMENTAR_AUDITEE']);
+		$sheet->setCellValue('M' . $row, $datum['FILE']);
+		
+
 		$row++;
 	}
 
