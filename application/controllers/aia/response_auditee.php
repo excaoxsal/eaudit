@@ -321,8 +321,8 @@ class Response_auditee extends MY_Controller {
 	// Add header
 	$sheet = $spreadsheet->getActiveSheet();
 	$sheet->setCellValue('A1', 'NOMOR_ISO');
-	$sheet->setCellValue('B1', 'KODE DIVISI');
-	$sheet->setCellValue('C1', 'NAMA_DIVISI');
+	$sheet->setCellValue('B1', 'DIVISI');
+	$sheet->setCellValue('C1', 'SUB DIVISI');
 	$sheet->setCellValue('D1', 'WAKTU_AUDIT_AWAL');
 	$sheet->setCellValue('E1', 'WAKTU_AUDIT_SELESAI');
 	$sheet->setCellValue('F1', 'AUDITOR');

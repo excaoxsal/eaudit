@@ -212,6 +212,10 @@ var KTDatatableJsonRemoteDemo = {
         title: "Klausul"
       },
       {
+        field: "NAMA_DIVISI",
+        title: "SUB DIVISI"
+      },
+      {
         field: "PERTANYAAN",
         title: "Pertanyaan"
       },{
