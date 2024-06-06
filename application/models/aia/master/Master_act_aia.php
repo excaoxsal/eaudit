@@ -115,7 +115,7 @@ class Master_act_aia extends CI_Model{
             END AS nama_sub_divisi
             FROM "TM_DIVISI" d1
             LEFT JOIN "TM_DIVISI" d2 ON d1."KODE_PARENT" = d2."KODE"
-            WHERE d1."STATUS" = 1 ' . $where . '
+            WHERE d1."STATUS" = 1 AND d1."KODE" IS NOT NULL' . $where . '
             ORDER BY d1."NAMA_DIVISI" ASC';
             // echo "<pre>";
             // var_dump($this->db->query($query)->result_array());die();

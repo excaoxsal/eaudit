@@ -76,7 +76,7 @@
                         <select class="form-control" id="id_divisi" name="id_divisi" required>
                           <option value="">--Pilih Divisi--</option>
                           <?php foreach($list_divisi as $divisi){ ?>
-                          <option value="<?= $divisi['ID_DIVISI'] ?>"><?= $divisi['NAMA_DIVISI'] ?></option>
+                          <option value="<?= $divisi['KODE'] ?>"><?= $divisi['NAMA_DIVISI'] ?></option>
                           <?php } ?>
                         </select>
                       </div>
