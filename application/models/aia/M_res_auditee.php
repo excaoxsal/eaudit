@@ -60,8 +60,9 @@ class M_res_auditee extends CI_Model{
         $divisi = $elcoding_parts[0];
         $id_iso = $elcoding_parts[1];
         $id_jadwal = $elcoding_parts[2];
-        
-        $sql = '
+		$user_session = $_SESSION['NAMA_ROLE'];
+        if($user_session=="AUDITOR"){
+            $sql = '
         SELECT 
             i."NOMOR_ISO",
             ra."DIVISI" AS "KODE",
@@ -77,8 +78,7 @@ class M_res_auditee extends CI_Model{
             ra."ID_MASTER_PERTANYAAN",
             ra."SUB_DIVISI",
             ra."ID_RE",
-            ra."STATUS_AUDITOR",
-            ra."STATUS_AUDITEE"
+            ra."STATUS_AUDITOR" as "STATUS"
             
         FROM 
             "RESPONSE_AUDITEE_D" ra
@@ -101,6 +101,49 @@ class M_res_auditee extends CI_Model{
         ORDER BY
             ra."ID_MASTER_PERTANYAAN" ASC
         ';
+        }
+        else{
+            $sql = '
+        SELECT 
+            i."NOMOR_ISO",
+            ra."DIVISI" AS "KODE",
+            d."NAMA_DIVISI",
+            w."WAKTU_AUDIT_AWAL",
+            w."WAKTU_AUDIT_SELESAI",
+            au."NAMA" AS "AUDITOR",
+            la."NAMA" AS "LEAD_AUDITOR",
+            m."PERTANYAAN",
+            m."KODE_KLAUSUL",
+            ra."KOMENTAR_1",
+            ra."KOMENTAR_2",
+            ra."ID_MASTER_PERTANYAAN",
+            ra."SUB_DIVISI",
+            ra."ID_RE",
+            ra."STATUS_AUDITEE" as "STATUS"
+            
+        FROM 
+            "RESPONSE_AUDITEE_D" ra
+        LEFT JOIN 
+            "WAKTU_AUDIT" w ON ra."ID_JADWAL" = w."ID_JADWAL"
+        LEFT JOIN 
+            "M_PERTANYAAN" m ON ra."ID_MASTER_PERTANYAAN" = m."ID_MASTER_PERTANYAAN"
+        JOIN 
+            "TM_USER" au ON w."ID_AUDITOR" = au."ID_USER"
+        LEFT JOIN 
+            "TM_USER" la ON w."ID_LEAD_AUDITOR" = la."ID_USER"
+        LEFT JOIN 
+            "M_ISO" i ON m."ID_ISO" = i."ID_ISO"
+        JOIN 
+            "TM_DIVISI" d ON d."KODE" = ra."SUB_DIVISI"
+        WHERE 
+            ra."ID_HEADER" = ?
+        
+            
+        ORDER BY
+            ra."ID_MASTER_PERTANYAAN" ASC
+        ';
+        }
+        
     
         // Menyusun parameter untuk query
         $params = array($data);
