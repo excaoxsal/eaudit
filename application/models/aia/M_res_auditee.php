@@ -76,7 +76,9 @@ class M_res_auditee extends CI_Model{
             ra."KOMENTAR_2",
             ra."ID_MASTER_PERTANYAAN",
             ra."SUB_DIVISI",
-            ra."ID_RE"
+            ra."ID_RE",
+            ra."STATUS_AUDITOR",
+            ra."STATUS_AUDITEE"
             
         FROM 
             "RESPONSE_AUDITEE_D" ra

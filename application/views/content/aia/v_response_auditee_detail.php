@@ -189,7 +189,8 @@
 <script type="text/javascript">
  "use strict";
 var KTDatatableJsonRemoteDemo = {
-  init: function() {
+  init: function() 
+  {
     var t;
     t = $("#kt_datatable").KTDatatable({
       data: {
@@ -226,8 +227,9 @@ var KTDatatableJsonRemoteDemo = {
           searchable: !1,
           overflow: "visible",
           template: function(t) {
-            return '<a onclick="chatbox(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon"><i class="text-dark fa fa-message" title="Respon"></i></a><a onclick="uploadFile(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon" title="Upload"><i class="fa fa-upload text-dark"></i></a>'
-            }
+            var iconClass = t.STATUS_AUDITOR == 1 ? 'fa-comments' : 'fa-comment';
+          return '<a onclick="uploadFile(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon" title="Upload"><i class="fa fa-upload text-dark"></i></a><a onclick="chatbox(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon"><i class="text-dark fa ' + iconClass + '" title="Respon"></i></a>';
+        }
         }]
     }), $("#kt_datatable_search_status").on("change", (function() {
       t.search($(this).val().toLowerCase(), "NAMA_DIVISI")
@@ -249,6 +251,9 @@ function uploadFile(id_tl)
 
   function chatbox(id_tl)
   {
+    $.post('<?= base_url('aia/response_auditee/updateStatus/') ?>'+id_tl, function(response) {
+        // Tangani respon jika diperlukan
+    });
     $.get(`<?= base_url('aia/response_auditee/getdatadetail/') ?>`+id_tl, function(data,status){
         const obj = JSON.parse(data);
         $('#ID_RE_CHAT').val(id_tl);
@@ -263,4 +268,17 @@ function uploadFile(id_tl)
 jQuery(document).ready((function() {
   KTDatatableJsonRemoteDemo.init()
 }));
+$(document).ready(function() {
+  // Inisialisasi datatable
+  KTDatatableJsonRemoteDemo.init();
+
+  // Event handler untuk refresh halaman ketika modal ditutup
+  $('#modal_chat').on('hidden.bs.modal', function() {
+    location.reload();
+  });
+
+  $('#modal_upload').on('hidden.bs.modal', function() {
+    location.reload();
+  });
+});
 </script>

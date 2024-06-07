@@ -32,6 +32,7 @@ class Response_auditee extends MY_Controller {
 
 	public function detail($datas){
 		// var_dump($datas);die;
+		// var_dump($user_session);die;
 		$data['list_divisi'] 	= $this->m_res_au->get_divisi();
 		$data['menu']           = 'response_auditee';
         $data['title']          = 'Respon Auditee';
@@ -39,7 +40,7 @@ class Response_auditee extends MY_Controller {
 		$data['kode']			= $datas;	
 		$data['detail']			= $this->m_res_au->get_response_auditee_detail($datas);
 		$query = $this->m_res_au->get_response_auditee_detail($datas);
-		// var_dump($data);die;
+		// var_dump($data);die;	
 
 		$this->show($data);
 	}
@@ -190,6 +191,21 @@ class Response_auditee extends MY_Controller {
         header('Content-Type: application/json');
 		// var_dump($this->m_res_au->get_response_auditee_header());
         echo json_encode($this->m_res_au->get_response_auditee_header());
+	}
+
+	function updateStatus($data){
+		$user_session = $_SESSION['NAMA_ROLE'];
+		if($user_session=="AUDITOR"){
+			$this->db->set('STATUS_AUDITOR','0');
+			$this->db->where('ID_RE', $data);
+			$this->db->update('RESPONSE_AUDITEE_D');
+		}
+		else{
+			$this->db->set('STATUS_AUDITEE','0');
+			$this->db->where('ID_RE', $data);
+			$this->db->update('RESPONSE_AUDITEE_D');
+		}
+		
 	}
 	
 	public function generate($data){
