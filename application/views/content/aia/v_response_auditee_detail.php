@@ -227,8 +227,8 @@ var KTDatatableJsonRemoteDemo = {
           searchable: !1,
           overflow: "visible",
           template: function(t) {
-            var iconClass = t.STATUS == 1 ? 'fa-comments' : 'fa-comment';
-          return '<a onclick="uploadFile(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon" title="Upload"><i class="fa fa-upload text-dark"></i></a><a onclick="chatbox(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon"><i class="text-dark fa ' + iconClass + '" title="Respon"></i></a>';
+            var iconClass = t.STATUS == 1 ? 'color:red' : 'color:#000';
+          return '<a onclick="uploadFile(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon" title="Respon"><i class="fa fa-upload text-dark"></i></a><a onclick="chatbox(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>';
         }
         }]
     }), $("#kt_datatable_search_status").on("change", (function() {
