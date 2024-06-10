@@ -45,7 +45,7 @@ class M_res_auditee extends CI_Model{
                 LEFT JOIN "TM_USER" la ON w."ID_LEAD_AUDITOR" = la."ID_USER"
                 LEFT JOIN "M_ISO" i ON ra."ID_ISO" = i."ID_ISO"
                 JOIN "TM_DIVISI" d ON d."KODE" = ra."DIVISI"
-                WHERE d."ID_DIVISI" = ' . $_SESSION['ID_DIVISI'] . '
+                WHERE d."KODE" = (select d."KODE_PARENT" from "TM_DIVISI" d where d."ID_DIVISI"  =' . $_SESSION['ID_DIVISI'] . ' )
                 AND d."STATUS" = \'1\'
                 
                 ORDER BY i."NOMOR_ISO", w."WAKTU_AUDIT_SELESAI" ASC
@@ -61,6 +61,8 @@ class M_res_auditee extends CI_Model{
         $id_iso = $elcoding_parts[1];
         $id_jadwal = $elcoding_parts[2];
 		$user_session = $_SESSION['NAMA_ROLE'];
+		$user_divisi = $_SESSION['ID_DIVISI'];
+
         if($user_session=="AUDITOR"){
             $sql = '
         SELECT 
@@ -96,11 +98,13 @@ class M_res_auditee extends CI_Model{
             "TM_DIVISI" d ON d."KODE" = ra."SUB_DIVISI"
         WHERE 
             ra."ID_HEADER" = ?
+            
         
             
         ORDER BY
             ra."ID_MASTER_PERTANYAAN" ASC
         ';
+        $params = array($data);
         }
         else{
             $sql = '
@@ -137,16 +141,18 @@ class M_res_auditee extends CI_Model{
             "TM_DIVISI" d ON d."KODE" = ra."SUB_DIVISI"
         WHERE 
             ra."ID_HEADER" = ?
+            and ra."SUB_DIVISI" = (select "KODE" from "TM_DIVISI" where "ID_DIVISI" = ?)
         
             
         ORDER BY
             ra."ID_MASTER_PERTANYAAN" ASC
         ';
+        $params = array($data,$user_divisi);
         }
         
     
         // Menyusun parameter untuk query
-        $params = array($data);
+        
         
         // Menjalankan query dengan parameter
         $query = $this->db->query($sql, $params);

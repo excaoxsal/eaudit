@@ -32,7 +32,7 @@ class Response_auditee extends MY_Controller {
 
 	public function detail($datas){
 		// var_dump($datas);die;
-		// var_dump($user_session);die;
+		// var_dump($_SESSION);die;
 		$data['list_divisi'] 	= $this->m_res_au->get_divisi();
 		$data['menu']           = 'response_auditee';
         $data['title']          = 'Respon Auditee';
@@ -138,12 +138,22 @@ class Response_auditee extends MY_Controller {
 			'KOMENTAR_2'          			=> is_empty_return_null($request['MSG_AUDITEE']),
 		];
 		
-
+		$user_session = $_SESSION['NAMA_ROLE'];
+        if($user_session=="AUDITOR"){
+			$this->db->set('KOMENTAR_1', $request['KOMENTAR_1']);
+			$this->db->set('KOMENTAR_2', $request['KOMENTAR_2']);
+			$this->db->set('STATUS_AUDITEE', '1');
+			$this->db->where('ID_RE', $request['ID_RE_CHAT']);
+			$elupdate = $this->db->update('RESPONSE_AUDITEE_D');
+		}else{
+			$this->db->set('KOMENTAR_1', $request['KOMENTAR_1']);
+			$this->db->set('KOMENTAR_2', $request['KOMENTAR_2']);
+			$this->db->set('STATUS_AUDITOR', '1');
+			$this->db->where('ID_RE', $request['ID_RE_CHAT']);
+			$elupdate = $this->db->update('RESPONSE_AUDITEE_D');
+		}
 		// var_dump($elcoding_parts);die; 
-        $this->db->set('KOMENTAR_1', $request['KOMENTAR_1']);
-        $this->db->set('KOMENTAR_2', $request['KOMENTAR_2']);
-        $this->db->where('ID_RE', $request['ID_RE_CHAT']);
-        $elupdate = $this->db->update('RESPONSE_AUDITEE_D');
+        
 		if($elupdate){
 			$success_message = 'Data Komentar Berhasil Diposting.';
 			$this->session->set_flashdata('success', $success_message);
@@ -172,7 +182,13 @@ class Response_auditee extends MY_Controller {
 
 	function getdatadetail($id_tl) 
 	{
-		$query = $this->db->select('ID_RE,KOMENTAR_1,KOMENTAR_2')->from('RESPONSE_AUDITEE_D')->where('ID_RE', $id_tl)->get()->row();
+		$user_session = $_SESSION['NAMA_ROLE'];
+		$user_divisi = $_SESSION['ID_DIVISI'];
+        if($user_session=="AUDITOR"){
+			$query = $this->db->select('ID_RE,KOMENTAR_1,KOMENTAR_2')->from('RESPONSE_AUDITEE_D')->where('ID_RE', $id_tl)->get()->row();
+		}else{
+			$query = $this->db->select('ID_RE,KOMENTAR_1,KOMENTAR_2')->from('RESPONSE_AUDITEE_D')->where('ID_RE', $id_tl)->get()->row();
+		}
 		// var_dump($query);die;
         echo json_encode($query);
 	}
