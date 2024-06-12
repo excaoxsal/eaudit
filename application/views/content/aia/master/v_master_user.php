@@ -361,7 +361,7 @@ var KTDatatableJsonRemoteDemo = {
               title: "AMS"
             }
           };
-          return '<span >' + a[t.MENU].title + "</span>"
+          return '<span >' + (a[t.MENU] ? a[t.MENU].title : '') + "</span>"
         }
       }, {
         field: "LAST_LOGIN",

@@ -35,10 +35,12 @@ class Jabatan extends MY_Controller
     {
         $id = $this->input->post('ID');
         $id = base64_decode($id);
+        $id_atasan = $this->input->post('id_atasan');
+        $id_atasan = $id_atasan === '' ? NULL : $id_atasan;
         
         $data = array(
             'NAMA_JABATAN'  => trim(htmlspecialchars($this->input->post('jabatan', TRUE))),
-            'ID_ATASAN'     => $this->input->post('id_atasan'),
+            'ID_ATASAN'     => $id_atasan,
             'ID_DIVISI'     => $this->input->post('id_divisi')
         );
 

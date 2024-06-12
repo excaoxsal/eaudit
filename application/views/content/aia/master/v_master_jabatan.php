@@ -38,10 +38,10 @@
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label class="col-form-label col-3 text-right">Atasan <sup class="text-danger">*</sup></label>
+                    <label class="col-form-label col-3 text-right">Atasan</label>
                     <div class="col-9">
                       <div class="form-label">
-                        <select class="form-control" id="id_atasan" name="id_atasan" required>
+                        <select class="form-control" id="id_atasan" name="id_atasan">
                           <option value="">--Pilih ATASAN--</option>
                           <?php foreach($list_atasan as $atasan){ ?>
                           <option value="<?= $atasan['ID_JABATAN'] ?>"><?= $atasan['NAMA_JABATAN'] ?></option>
