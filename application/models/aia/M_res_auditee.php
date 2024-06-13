@@ -141,13 +141,13 @@ class M_res_auditee extends CI_Model{
             "TM_DIVISI" d ON d."KODE" = ra."SUB_DIVISI"
         WHERE 
             ra."ID_HEADER" = ?
-            and ra."SUB_DIVISI" = (select "KODE" from "TM_DIVISI" where "ID_DIVISI" = ?)
+            
         
             
         ORDER BY
             ra."ID_MASTER_PERTANYAAN" ASC
         ';
-        $params = array($data,$user_divisi);
+        $params = array($data);
         }
         
     
