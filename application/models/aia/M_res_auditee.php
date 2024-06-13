@@ -45,7 +45,7 @@ class M_res_auditee extends CI_Model{
                 LEFT JOIN "TM_USER" la ON w."ID_LEAD_AUDITOR" = la."ID_USER"
                 LEFT JOIN "TM_ISO" i ON ra."ID_ISO" = i."ID_ISO"
                 JOIN "TM_DIVISI" d ON d."KODE" = ra."DIVISI"
-                WHERE d."KODE" = (select d."KODE_PARENT" from "TM_DIVISI" d where d."ID_DIVISI"  =' . $_SESSION['ID_DIVISI'] . ' )
+                WHERE d."ID_DIVISI" =' . $_SESSION['ID_DIVISI'] . ' 
                 AND d."STATUS" = \'1\'
                 
                 ORDER BY i."NOMOR_ISO", w."WAKTU_AUDIT_SELESAI" ASC
