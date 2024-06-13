@@ -21,7 +21,7 @@ class M_res_auditee extends CI_Model{
                 LEFT JOIN "WAKTU_AUDIT" w ON ra."ID_JADWAL" = w."ID_JADWAL"
                 JOIN "TM_USER" au ON w."ID_AUDITOR" = au."ID_USER"
                 LEFT JOIN "TM_USER" la ON w."ID_LEAD_AUDITOR" = la."ID_USER"
-                LEFT JOIN "M_ISO" i ON ra."ID_ISO" = i."ID_ISO"
+                LEFT JOIN "TM_ISO" i ON ra."ID_ISO" = i."ID_ISO"
                 JOIN "TM_DIVISI" d ON d."KODE" = ra."DIVISI"
                 
                 ORDER BY i."NOMOR_ISO", w."WAKTU_AUDIT_SELESAI" DESC
@@ -43,7 +43,7 @@ class M_res_auditee extends CI_Model{
                 LEFT JOIN "WAKTU_AUDIT" w ON ra."ID_JADWAL" = w."ID_JADWAL"
                 JOIN "TM_USER" au ON w."ID_AUDITOR" = au."ID_USER"
                 LEFT JOIN "TM_USER" la ON w."ID_LEAD_AUDITOR" = la."ID_USER"
-                LEFT JOIN "M_ISO" i ON ra."ID_ISO" = i."ID_ISO"
+                LEFT JOIN "TM_ISO" i ON ra."ID_ISO" = i."ID_ISO"
                 JOIN "TM_DIVISI" d ON d."KODE" = ra."DIVISI"
                 WHERE d."KODE" = (select d."KODE_PARENT" from "TM_DIVISI" d where d."ID_DIVISI"  =' . $_SESSION['ID_DIVISI'] . ' )
                 AND d."STATUS" = \'1\'
@@ -87,13 +87,13 @@ class M_res_auditee extends CI_Model{
         LEFT JOIN 
             "WAKTU_AUDIT" w ON ra."ID_JADWAL" = w."ID_JADWAL"
         LEFT JOIN 
-            "M_PERTANYAAN" m ON ra."ID_MASTER_PERTANYAAN" = m."ID_MASTER_PERTANYAAN"
+            "TM_PERTANYAAN" m ON ra."ID_MASTER_PERTANYAAN" = m."ID_MASTER_PERTANYAAN"
         JOIN 
             "TM_USER" au ON w."ID_AUDITOR" = au."ID_USER"
         LEFT JOIN 
             "TM_USER" la ON w."ID_LEAD_AUDITOR" = la."ID_USER"
         LEFT JOIN 
-            "M_ISO" i ON m."ID_ISO" = i."ID_ISO"
+            "TM_ISO" i ON m."ID_ISO" = i."ID_ISO"
         JOIN 
             "TM_DIVISI" d ON d."KODE" = ra."SUB_DIVISI"
         WHERE 
@@ -130,13 +130,13 @@ class M_res_auditee extends CI_Model{
         LEFT JOIN 
             "WAKTU_AUDIT" w ON ra."ID_JADWAL" = w."ID_JADWAL"
         LEFT JOIN 
-            "M_PERTANYAAN" m ON ra."ID_MASTER_PERTANYAAN" = m."ID_MASTER_PERTANYAAN"
+            "TM_PERTANYAAN" m ON ra."ID_MASTER_PERTANYAAN" = m."ID_MASTER_PERTANYAAN"
         JOIN 
             "TM_USER" au ON w."ID_AUDITOR" = au."ID_USER"
         LEFT JOIN 
             "TM_USER" la ON w."ID_LEAD_AUDITOR" = la."ID_USER"
         LEFT JOIN 
-            "M_ISO" i ON m."ID_ISO" = i."ID_ISO"
+            "TM_ISO" i ON m."ID_ISO" = i."ID_ISO"
         JOIN 
             "TM_DIVISI" d ON d."KODE" = ra."SUB_DIVISI"
         WHERE 
@@ -167,10 +167,10 @@ class M_res_auditee extends CI_Model{
         $this->db->select('ra.DIVISI KODE')
         ->from('RESPONSE_AUDITEE_D ra')
         ->join('WAKTU_AUDIT w','ra.ID_JADWAL=w.ID_JADWAL','left')
-        ->join('M_PERTANYAAN m','ra.ID_MASTER_PERTANYAAN=m.ID_MASTER_PERTANYAAN','left')
+        ->join('TM_PERTANYAAN m','ra.ID_MASTER_PERTANYAAN=m.ID_MASTER_PERTANYAAN','left')
         ->join('TM_USER au','w.ID_AUDITOR=au.ID_USER')
         ->join('TM_USER la','w.ID_LEAD_AUDITOR=la.ID_USER','left')
-        ->join('M_ISO i','m.ID_ISO=i.ID_ISO','left')
+        ->join('TM_ISO i','m.ID_ISO=i.ID_ISO','left')
         ->join('TM_DIVISI d','d.KODE=ra.DIVISI')
         ->where('KODE',$data);
         $query = $this->db->get();

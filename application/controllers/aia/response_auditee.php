@@ -227,9 +227,9 @@ class Response_auditee extends MY_Controller {
 	public function generate($data){
 		// echo($data);
 		// die;
-		$query = $this->db->select('*')->from('M_PERTANYAAN')->get();
+		$query = $this->db->select('*')->from('TM_PERTANYAAN')->get();
 		$query_divisi = $this->db->select('KODE')->from('WAKTU_AUDIT w')->join('TM_DIVISI d','d.ID_DIVISI=w.ID_DIVISI')->where('ID_JADWAL',$data)->get();
-		$query_iso = $this->db->select('ID_ISO')->from('M_ISO')->get();
+		$query_iso = $this->db->select('ID_ISO')->from('TM_ISO')->get();
 		$result_iso = $query_iso->result_array();
 		$query_bersih_h = $this->db->where('ID_JADWAL =', $data)->delete('RESPONSE_AUDITEE_D');
 		$query_bersih_d = $this->db->where('ID_JADWAL =', $data)->delete('RESPONSE_AUDITEE_H');
@@ -324,10 +324,10 @@ class Response_auditee extends MY_Controller {
 		)
 		->from('RESPONSE_AUDITEE_D ra')
 		->join('WAKTU_AUDIT w', 'ra."ID_JADWAL" = w."ID_JADWAL"', 'left')
-		->join('M_PERTANYAAN m', 'ra."ID_MASTER_PERTANYAAN" = m."ID_MASTER_PERTANYAAN"', 'left')
+		->join('TM_PERTANYAAN m', 'ra."ID_MASTER_PERTANYAAN" = m."ID_MASTER_PERTANYAAN"', 'left')
 		->join('TM_USER au', 'w."ID_AUDITOR" = au."ID_USER"')
 		->join('TM_USER la', 'w."ID_LEAD_AUDITOR" = la."ID_USER"', 'left')
-		->join('M_ISO i', 'm."ID_ISO" = i."ID_ISO"', 'left')
+		->join('TM_ISO i', 'm."ID_ISO" = i."ID_ISO"', 'left')
 		->join('TM_DIVISI d', 'd."KODE" = ra."SUB_DIVISI"')
 		->where('ra."ID_HEADER"', $datas)
 		
