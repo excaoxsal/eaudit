@@ -19,19 +19,23 @@ class Response_auditee extends MY_Controller {
 	public function index()
 	{
 		$datauser= $_SESSION;
+<<<<<<< Updated upstream
 		// var_dump($datauser);die;
+=======
+		
+		
+>>>>>>> Stashed changes
 		$data['list_status'] 	= $this->master_act->status();
 		$data['list_divisi'] 	= $this->m_res_au->get_divisi();
 		$data['menu']           = 'response_auditee';
         $data['title']          = 'Respon Auditee';
         $data['content']        = 'content/aia/v_response_auditee_header';
-		// var_dump($_SESSION);die;
+		
         $this->show($data);
 	}
 
 	public function detail($datas){
-		// var_dump($datas);die;
-		// var_dump($_SESSION);die;
+		
 		$data['list_divisi'] 	= $this->m_res_au->get_divisi();
 		$data['menu']           = 'response_auditee';
         $data['title']          = 'Respon Auditee';
@@ -46,16 +50,27 @@ class Response_auditee extends MY_Controller {
 	public function respon($data){
 		$request = $this->input->post();
 		date_default_timezone_set('Asia/Jakarta');
+<<<<<<< Updated upstream
 		// $aswd=date('Y-m-d H:i:s');echo $asw;
 		// die;
 		$id_re = $_REQUEST['ID_RE'];
 		// var_dump($request);die;
+=======
+        $ext = pathinfo($_FILES['file_excel']['name'], PATHINFO_EXTENSION);
+		// var_dump($ext);die;
+		$id_re = $_REQUEST['ID_RE'];
+		
+>>>>>>> Stashed changes
 		$current_date = date('Y-m-d');
 		$current_time = date('YmdHis');
 		$query_waktu=$this->db->select('WAKTU_AUDIT_AWAL,WAKTU_AUDIT_SELESAI')->from('WAKTU_AUDIT')->get();
 		$result_waktu= $query_waktu->result_array();
 		if($current_date>=$result_waktu['0']['WAKTU_AUDIT_AWAL']){
 			if($current_date<=$result_waktu['0']['WAKTU_AUDIT_SELESAI']){
+<<<<<<< Updated upstream
+=======
+				
+>>>>>>> Stashed changes
 				$config['file_name']        = "RESPON_AUDITEE".$current_time;
 				$config['upload_path'] = './storage/aia/'; // Lokasi penyimpanan file
 				$config['allowed_types'] = 'xls|xlsx'; // Jenis file yang diizinkan
@@ -66,23 +81,21 @@ class Response_auditee extends MY_Controller {
 				$this->upload->upload_path = $loadupload;
 				$this->upload->allowed_types = $eltype;
 				$this->upload->initialize($config);
-				$file_path = './storage/aia/'.$config['file_name'];
+				$file_path = base_url().'storage/aia/'.$config['file_name'].'.'.$ext;
 				$elupload = $this->upload->do_upload('file_excel');
 				$upload_data = $this->upload->data();
-				echo($file_path);
+				// echo($file_path);
 				$data_update = 
 					[
 					'RESPON'           			=> is_empty_return_null($request['RESPON']),
 					'FILE'           			=> is_empty_return_null($file_path)
 					];
-				// var_dump($data_update['FILE'][0]);die;
-				// var_dump($current_time);die;
-
+				
 				$this->db->set('FILE', $file_path);
 				$this->db->set('RESPONSE_AUDITEE', $data_update['RESPON'][0]);
 				$this->db->where('ID_RE', $id_re);
 				$update = $this->db->update('RESPONSE_AUDITEE_D');
-				// var_dump($update);die;
+				
 				if ($update){
 					$success_message = 'Data Respon Berhasil Disimpan.';
 					$this->session->set_flashdata('success', $success_message);
@@ -107,6 +120,12 @@ class Response_auditee extends MY_Controller {
 			$this->session->set_flashdata('error', $error_message);
 			redirect(base_url('aia/response_auditee/detail/'.$data));
 		}
+<<<<<<< Updated upstream
+=======
+		
+		
+
+>>>>>>> Stashed changes
 	}
 
 	public function chatbox($data){
@@ -197,6 +216,10 @@ class Response_auditee extends MY_Controller {
 	}
 	
 	public function generate($data){
+<<<<<<< Updated upstream
+=======
+		
+>>>>>>> Stashed changes
 		$query = $this->db->select('*')->from('TM_PERTANYAAN')->get();
 		$query_divisi = $this->db->select('KODE')->from('WAKTU_AUDIT w')->join('TM_DIVISI d','d.ID_DIVISI=w.ID_DIVISI')->where('ID_JADWAL',$data)->get();
 		$query_iso = $this->db->select('ID_ISO')->from('TM_ISO')->get();
@@ -240,8 +263,17 @@ class Response_auditee extends MY_Controller {
 				}	
 			}
 		}
+<<<<<<< Updated upstream
 		$querys = $this->db->select('ID_JADWAL')->from('RESPONSE_AUDITEE_D')->where('ID_JADWAL',$data)->get();
 		$resultq = $querys->result_array();
+=======
+		
+		
+		
+		$querys = $this->db->select('ID_JADWAL')->from('RESPONSE_AUDITEE_D')->where('ID_JADWAL',$data)->get();
+		$resultq = $querys->result_array();
+		
+>>>>>>> Stashed changes
 		
 		if (!empty($data_to_insert)) {
 			if(empty($resultq)){

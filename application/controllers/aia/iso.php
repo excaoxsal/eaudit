@@ -46,16 +46,19 @@ class Iso extends MY_Controller
 		$id_user = $data['id_user'];
 		$data['jadwal_list'] 	= $this->m_jadwal->jadwal_list($id_user);
         $data['data_iso'] = $dataiso;
+<<<<<<< Updated upstream
 		// print_r( $this->jsonIsoList() );
 		// die;
 		//var_dump($dataiso);
 		//die();
+=======
+		
+>>>>>>> Stashed changes
         $this->show($data);
     }
 
 	public function show_iso($iso){
-		// var_dump($iso);
-		// die;
+		
 		$datapertanyaan = $this->m_pertanyaan->show_iso($iso);
 		$eljson = json_encode($datapertanyaan);
 		$data['id_iso'] = $iso;
@@ -71,13 +74,7 @@ class Iso extends MY_Controller
 		$data['jadwal_list'] 	= $this->m_jadwal->jadwal_list($id_user);
         $data['data_iso'] = $dataiso;
 		$data['data_pertanyaan'] = $eljson;
-		// print_r( $this->jsonIsoList() );
-		// die;
-		// var_dump($dataiso);
-		// die();
-		// var_dump($_POST);
-		// die;
-		// $jsoncode =  $this->jsonPertanyaanList($iso);
+		
 		
         $this->show($data);
 	}
@@ -91,6 +88,7 @@ class Iso extends MY_Controller
 		
 		$this->upload->initialize($config);
 		$elupload = $this->upload->do_upload('file_excel');
+<<<<<<< Updated upstream
 		//var_dump($elupload);die;
 		if (!$elupload) {
 			// Jika upload gagal, tampilkan pesan error
@@ -104,6 +102,21 @@ class Iso extends MY_Controller
 			// echo'rest';die;
 			$file_data = $this->upload->data();		
 			$file_path = $base_url."./storage/aia/".$file_data['file_name'];
+=======
+		
+		if (!$elupload) {
+			// Jika upload gagal, tampilkan pesan error
+			$error = $this->upload->display_errors();
+			
+			// echo $error;die;
+			
+		} else {
+			// Jika upload berhasil, baca file Excel
+			
+			$file_data = $this->upload->data();		
+			$file_path = $base_url."./storage/aia/".$file_data['file_name'];
+			
+>>>>>>> Stashed changes
 			// Hapus file setelah selesai membaca
 		}
 
@@ -126,6 +139,10 @@ class Iso extends MY_Controller
 
 		// Loop through each row to read the data
 		$data = [];
+<<<<<<< Updated upstream
+=======
+		//for ($col = 0; $col < $highestRow-1; $col++) {
+>>>>>>> Stashed changes
 			for ($row = 0; $row <= $highestRow; $row++) {
 			
 				$kode_klausul = $worksheet->getCellByColumnAndRow(0, $row+2)->getValue();
@@ -136,6 +153,7 @@ class Iso extends MY_Controller
 				$auditee = $worksheet->getCellByColumnAndRow(5, $row+2)->getValue();
 				$pertanyaan = $worksheet->getCellByColumnAndRow(6, $row+2)->getValue();
 				if($kode_klausul!=""){
+<<<<<<< Updated upstream
 					if($auditee=="ALL"){
 						$query_all_divisi = $this->db->select('KODE')->from('TM_DIVISI')->where('IS_DIVISI','N')->get();
 						$result_divisi = $query_all_divisi->result_array();
@@ -166,6 +184,26 @@ class Iso extends MY_Controller
 						
 					}else{
 						$data[] = array(
+=======
+				if($auditee=="ALL"){
+					$query_all_divisi = $this->db->select('KODE')->from('TM_DIVISI')->where('IS_DIVISI','N')->get();
+					$result_divisi = $query_all_divisi->result_array();
+					// var_dump($result_divisi);die;
+					$data_divisi="";
+					for($i=0;$i<sizeof($result_divisi);$i++){
+						
+						
+						$data_divisi .=$result_divisi[$i]['KODE'];
+						if ($i < sizeof($result_divisi)-1){
+							$data_divisi.=",";
+						}
+						
+						
+					}
+					
+					$auditee = $data_divisi;
+					$data[] = array(
+>>>>>>> Stashed changes
 							'KODE_KLAUSUL'	=> is_empty_return_null($kode_klausul),
 							'LV1'			=> is_empty_return_null($lv1),
 							'LV2'			=> is_empty_return_null($lv2),
@@ -190,12 +228,46 @@ class Iso extends MY_Controller
 								];
 					$save = $this->m_pertanyaan->save($eldata);
 				}
+<<<<<<< Updated upstream
 
 			}
 			// var_dump($eldata);
 			// die;
 			$upload_data = $this->upload->data();
 			unlink($upload_data['full_path']);
+=======
+				
+				//$value = $worksheet->getCellByColumnAndRow($col, $row)->getValue();
+					
+					//$data[$row][$col] = $value;
+
+$eldata = [
+				'KODE_KLAUSUL'	=> is_empty_return_null($data[$row]['KODE_KLAUSUL']),
+				'LV1'			=> is_empty_return_null($data[$row]['LV1']),
+				'LV2'			=> is_empty_return_null($data[$row]['LV2']),
+				'LV3'			=> is_empty_return_null($data[$row]['LV3']),
+				'LV4'			=> is_empty_return_null($data[$row]['LV4']),
+				'AUDITEE'		=> is_empty_return_null($data[$row]['AUDITEE']),
+				'PERTANYAAN'	=> is_empty_return_null($data[$row]['PERTANYAAN']),
+				'ID_ISO'		=> is_empty_return_null($_POST['ID_ISO']),
+				
+			];
+$save = $this->m_pertanyaan->save($eldata);
+
+ //echo $eldata[];
+
+
+				}
+				
+				
+				
+				
+
+			}	
+			
+				$upload_data = $this->upload->data();
+				unlink($upload_data['full_path']);
+>>>>>>> Stashed changes
 			if($save==true){
 				$update = $this->m_iso->update($_POST['ID_ISO']);
 				$success_message = 'Data berhasil disimpan.';
@@ -207,6 +279,7 @@ class Iso extends MY_Controller
 				$this->session->set_flashdata('error', $error_message);
 			}
 	}
+
 
 
 }

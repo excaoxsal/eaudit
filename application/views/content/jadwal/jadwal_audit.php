@@ -62,7 +62,7 @@
                       <select class="form-control" id="datatable_search_status">
                         <option value="">All</option>
                         <?php foreach ($list_status as $status) { ?>
-                          <option value="<?= $status['STATUS'] ?>"><?= $status['STATUS'] ?></option>
+                          <option value="<?= $status['NAMA_DIVISI'] ?>"><?= $status['NAMA_DIVISI'] ?></option>
                         <?php } ?>
                       </select>
                     </div>
@@ -145,8 +145,9 @@
             }else {
               return (
                       '<a onclick="save(' + t.ID_JADWAL + ')" class="btn btn-sm btn-clean btn-icon" title="Generate"><i class="fa fa-refresh text-dark"></i></a>'+
+                      
                       '<a href="<?= base_url() ?>aia/jadwal/update/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit text-dark"></i></a>'+
-                      '<a href="<?= base_url() ?>aia/jadwal/hapus/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Hapus"><i class="fa fa-trash text-dark"></i></a>');
+                      '<a onclick="hapus(' + t.ID_JADWAL + ')" class="btn btn-sm btn-clean btn-icon" title="Generate"><i class="fa fa-trash text-dark"></i></a>');
             }
           },
           
@@ -192,6 +193,35 @@
           error: function(data) {
             // console.log(data)
             Swal.fire("Gagal menyimpan data!", "Terjadi kesalahan, silakan coba lagi.", "error");
+          }
+        });
+      }
+    });
+  }
+  function hapus(id) {
+    Swal.fire({
+      text: 'Apakah Anda yakin menghapus jadwal ini ?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya',
+      cancelButtonText: 'Batal'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: '<?= base_url() ?>aia/jadwal/hapus/' + id,
+          type: 'post',
+          data: { id: id },
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          success: function(data) {
+            window.location = data; 
+          },
+          error: function(data) {
+            // console.log(data)
+            Swal.fire("Gagal menghapus jadwal!", "Terjadi kesalahan, silakan coba lagi.", "error");
           }
         });
       }

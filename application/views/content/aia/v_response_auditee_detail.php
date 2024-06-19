@@ -24,6 +24,7 @@
           </div>
         </div>
         <div class="card-body">
+<<<<<<< Updated upstream
         <?php if ($this->session->flashdata('error')) { ?>
             <div class="alert alert-danger alert-dismissible text-left">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -40,6 +41,24 @@
             </div>
           </div>
           <?php } ?>
+=======
+				<?php if ($this->session->flashdata('error')) { ?>
+						<div class="alert alert-danger alert-dismissible text-left">
+								<button type="button" class="close" data-dismiss="alert" aria-hidden="true">Ã—</button>
+								<h4><i class="icon fa fa-ban text-white"></i> Error!</h4>
+								<?= $this->session->flashdata('error'); ?>
+						</div>
+					<?php } ?>
+					<?php if ($this->session->flashdata('success')) { ?>
+					<div class="input-group mb-3">
+						<div class="alert alert-success alert-dismissible" style="width: 100%;">
+								<button type="button" class="close" data-dismiss="alert" aria-hidden="true">Ã—</button>
+								<h6><i class="icon fa fa-check text-white"></i> Success!</h6>
+								<?= $this->session->flashdata('success'); ?>
+						</div>
+					</div>
+					<?php } ?>
+>>>>>>> Stashed changes
           <div class="mb-7">
             <div class="row align-items-center">
               <div class="col-lg-9 col-xl-8">
@@ -100,6 +119,7 @@
                 <input type="file" class="custom-file-input" name="file_excel" id="file_excel">
                 <label class="custom-file-label" for="customFile">Choose file</label>
               </div>
+              <label><a href="">Lampiran</a></label>
             </div>
           </div>
         </div>
@@ -252,17 +272,19 @@ function uploadFile(id_tl)
   function chatbox(id_tl)
   {
     $.post('<?= base_url('aia/response_auditee/updateStatus/') ?>'+id_tl, function(response) {
-        // Tangani respon jika diperlukan
+        
     });
     $.get(`<?= base_url('aia/response_auditee/getdatadetail/') ?>`+id_tl, function(data,status){
         const obj = JSON.parse(data);
+<<<<<<< Updated upstream
   console.log(obj);
+=======
+	console.log(obj);
+>>>>>>> Stashed changes
         $('#ID_RE_CHAT').val(id_tl);
         $('#KOMENTAR_1').val(obj.KOMENTAR_1);
         $('#KOMENTAR_2').val(obj.KOMENTAR_2);
-        // console.log(data);
-        //     alert(form_data);
-        // console.log(data.NOMOR_LHA);
+        
     });
     $('#modal_chat').modal('show');
   }
@@ -279,7 +301,7 @@ $(document).ready(function() {
   });
 
   $('#modal_upload').on('hidden.bs.modal', function() {
-    location.reload();
+    $("#kt_datatable").KTDatatable().reload();
   });
 });
 </script>

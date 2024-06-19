@@ -179,7 +179,7 @@ class M_res_auditee extends CI_Model{
 
     public function get_divisi(){
         // $eltrue = "NOT NULL";
-        $this->db->select('*')->from('TM_DIVISI')->where('KODE IS NOT NULL');
+        $this->db->select('*')->from('TM_DIVISI')->where('IS_DIVISI','Y');
         $query = $this->db->get();
         return $query->result_array();
     }

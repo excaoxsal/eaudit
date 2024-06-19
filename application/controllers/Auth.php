@@ -28,9 +28,9 @@ class Auth extends MY_Controller
 		$user_info 		= $this->master_act->user(['U.NIPP'=> $nipp]);
 
 		$recaptcha 		= $this->input->post('g-recaptcha-response');
-        if (!empty($recaptcha)) {
-            $rsp_recaptcha = $this->recaptcha->verifyResponse($recaptcha);
-            if (isset($rsp_recaptcha['success']) and $rsp_recaptcha['success'] === true) {
+        
+            
+            
                 if(count($user_info) > 0){
                 	if ($user_info[0]['STATUS'] == 2) {
                 		$err_msg = 'User tidak aktif. Silakan hubungi Admin.';
@@ -48,10 +48,8 @@ class Auth extends MY_Controller
                 }else{
                 	$err_msg = 'NIPP tidak terdaftar.';
                 }
-            }
-        }else{
-        	$err_msg = 'Captcha failed.';
-        }
+            
+        
         echo $err_msg;
     	// $message = '<div class="alert alert-danger alert-dismissible fade show text-left h-auto py-5 px-6 rounded-lg">
 		   //          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
