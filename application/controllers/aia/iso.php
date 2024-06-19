@@ -4,8 +4,6 @@ use PHPExcel\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 class Iso extends MY_Controller
 {
-
-
     public function __construct()
 	{
 		parent::__construct();
@@ -13,10 +11,11 @@ class Iso extends MY_Controller
 		$this->load->library('excel');
 		$this->load->model('perencanaan/M_tim_audit', 'm_tim_audit');
 		$this->load->model('aia/M_jadwal', 'm_jadwal');
-        $this->load->model('aia/M_iso','m_iso');
-        $this->load->model('aia/M_pertanyaan','m_pertanyaan');
+        $this->load->model('aia/M_Iso','m_iso');
+        $this->load->model('aia/M_Pertanyaan','m_pertanyaan');
 		$this->is_login();
 		if(!$this->is_auditor()) $this->load->view('/errors/html/err_401');
+
 	}
 
     function jsonIsoList() 
@@ -49,8 +48,8 @@ class Iso extends MY_Controller
         $data['data_iso'] = $dataiso;
 		// print_r( $this->jsonIsoList() );
 		// die;
-		// var_dump($dataiso);
-		// die();
+		//var_dump($dataiso);
+		//die();
         $this->show($data);
     }
 
@@ -84,43 +83,31 @@ class Iso extends MY_Controller
 	}
 
 	public function proses_upload() {
-		// var_dump($_POST['ID_ISO']);
-		// die;
-		// $nipp                       = $this->input->post('nipp');
 		$config['file_name']        = "upload_master_pertanyaan";
 		$config['upload_path'] = './storage/aia/'; // Lokasi penyimpanan file
 		$config['allowed_types'] = 'xls|xlsx'; // Jenis file yang diizinkan
-		$config['max_size'] = 1280000; // Ukuran maksimum file (dalam KB)\
-		$upload_path = './storage/aia/';
-		// if (!is_dir($upload_path)) {
-		// 	// die('The upload path does not exist: ' . $upload_path);
-		// }
-		// else{
-		// 	echo 'sukses';
-		// }
-		$eltype= $config['allowed_types'];
-		$loadupload = $config['upload_path'];
-		$this->upload->upload_path = $loadupload;
-		$this->upload->allowed_types = $eltype;
-		// $this->load->library('upload', $config);
+		$this->load->library('upload', $config);
+		$config['max_size'] = 1280000; // Ukuran maksimum file (dalam KB)
+		
 		$this->upload->initialize($config);
 		$elupload = $this->upload->do_upload('file_excel');
+		//var_dump($elupload);die;
 		if (!$elupload) {
 			// Jika upload gagal, tampilkan pesan error
 			$error = $this->upload->display_errors();
 			// var_dump($this->upload->allowed_types);
 			// echo $error;
 			// die();
-			// echo "test";
-		} else {
+			echo $error;die;
+		}else{
 			// Jika upload berhasil, baca file Excel
-			// echo'rest';
+			// echo'rest';die;
 			$file_data = $this->upload->data();		
-			$file_path = './storage/aia/'.$file_data['file_name'];
+			$file_path = $base_url."./storage/aia/".$file_data['file_name'];
 			// Hapus file setelah selesai membaca
 		}
 
-		$base_url = base_url();
+		
 		$this->m_pertanyaan->clean($_POST['ID_ISO']);
 		$inputFileName = $file_path;
 		$inputFileType = PHPExcel_IOFactory::identify($inputFileName);
@@ -137,9 +124,8 @@ class Iso extends MY_Controller
 		// Convert the column letter to a numeric index
 		$highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn);
 
-		// Loop through each row and column to read the data
+		// Loop through each row to read the data
 		$data = [];
-		for ($col = 0; $col < $highestRow-1; $col++) {
 			for ($row = 0; $row <= $highestRow; $row++) {
 			
 				$kode_klausul = $worksheet->getCellByColumnAndRow(0, $row+2)->getValue();
@@ -149,30 +135,37 @@ class Iso extends MY_Controller
 				$lv4 = $worksheet->getCellByColumnAndRow(4, $row+2)->getValue();
 				$auditee = $worksheet->getCellByColumnAndRow(5, $row+2)->getValue();
 				$pertanyaan = $worksheet->getCellByColumnAndRow(6, $row+2)->getValue();
-				
-				if($auditee=="ALL"){
-					$query_all_divisi = $this->db->select('KODE')->from('TM_DIVISI')->where('IS_DIVISI','N')->get();
-					$result_divisi = $query_all_divisi->result_array();
-					// var_dump($result_divisi);die;
-					$data_divisi="";
-					for($i=0;$i<sizeof($result_divisi);$i++){
-						
-						// var_dump($divisi['KODE']);die;
-						// $a+=1;
-						$data_divisi .=$result_divisi[$i]['KODE'];
-						if ($i < sizeof($result_divisi)-1){
-							$data_divisi.=",";
+				if($kode_klausul!=""){
+					if($auditee=="ALL"){
+						$query_all_divisi = $this->db->select('KODE')->from('TM_DIVISI')->where('IS_DIVISI','N')->get();
+						$result_divisi = $query_all_divisi->result_array();
+						// var_dump($result_divisi);die;
+						$data_divisi="";
+						for($i=0;$i<sizeof($result_divisi);$i++){
+							
+							// var_dump($divisi['KODE']);die;
+							// $a+=1;
+							$data_divisi .=$result_divisi[$i]['KODE'];
+							if ($i < sizeof($result_divisi)-1){
+								$data_divisi.=",";
+							}
 						}
 						// var_dump($data_divisi);die;
-						// 
-					// $values = $worksheet->getCellByColumnAndRow($cols-1, $rows-1)->getValue();
-					// $data_all[$rows-1][$cols-1] =$values;
-					// $saves = $this->m_pertanyaan->save($data_all[$a-1]);
+						$auditee = $data_divisi;
+						$data[] = array(
+								'KODE_KLAUSUL'	=> is_empty_return_null($kode_klausul),
+								'LV1'			=> is_empty_return_null($lv1),
+								'LV2'			=> is_empty_return_null($lv2),
+								'LV3'			=> is_empty_return_null($lv3),
+								'LV4'			=> is_empty_return_null($lv4),
+								'AUDITEE'		=> is_empty_return_null($auditee),
+								'PERTANYAAN'	=> is_empty_return_null($pertanyaan),
+								'ID_ISO'=>is_empty_return_null($_POST['ID_ISO']),
+								'ID_MASTER_PERTANYAAN' => is_empty_return_null('')
+							);
 						
-					}
-					// var_dump($data_divisi);die;
-					$auditee = $data_divisi;
-					$data[] = array(
+					}else{
+						$data[] = array(
 							'KODE_KLAUSUL'	=> is_empty_return_null($kode_klausul),
 							'LV1'			=> is_empty_return_null($lv1),
 							'LV2'			=> is_empty_return_null($lv2),
@@ -182,56 +175,27 @@ class Iso extends MY_Controller
 							'PERTANYAAN'	=> is_empty_return_null($pertanyaan),
 							'ID_ISO'=>is_empty_return_null($_POST['ID_ISO']),
 							'ID_MASTER_PERTANYAAN' => is_empty_return_null('')
-						);
-					
-				}else{
-					$data[] = array(
-						'KODE_KLAUSUL'	=> is_empty_return_null($kode_klausul),
-						'LV1'			=> is_empty_return_null($lv1),
-						'LV2'			=> is_empty_return_null($lv2),
-						'LV3'			=> is_empty_return_null($lv3),
-						'LV4'			=> is_empty_return_null($lv4),
-						'AUDITEE'		=> is_empty_return_null($auditee),
-						'PERTANYAAN'	=> is_empty_return_null($pertanyaan),
-						'ID_ISO'=>is_empty_return_null($_POST['ID_ISO']),
-						'ID_MASTER_PERTANYAAN' => is_empty_return_null('')
-					);
-					
-					
+						);	
+					}
+					$eldata = [
+									'KODE_KLAUSUL'	=> is_empty_return_null($data[$row]['KODE_KLAUSUL']),
+									'LV1'			=> is_empty_return_null($data[$row]['LV1']),
+									'LV2'			=> is_empty_return_null($data[$row]['LV2']),
+									'LV3'			=> is_empty_return_null($data[$row]['LV3']),
+									'LV4'			=> is_empty_return_null($data[$row]['LV4']),
+									'AUDITEE'		=> is_empty_return_null($data[$row]['AUDITEE']),
+									'PERTANYAAN'	=> is_empty_return_null($data[$row]['PERTANYAAN']),
+									'ID_ISO'		=> is_empty_return_null($_POST['ID_ISO']),
+									
+								];
+					$save = $this->m_pertanyaan->save($eldata);
 				}
-				
-				$value = $worksheet->getCellByColumnAndRow($col, $row)->getValue();
-					
-					$data[$row][$col] = $value;
-				
-				
 
-			}	
-			// var_dump($data[$col]);die;
-
-			$eldata = [
-				'KODE_KLAUSUL'	=> is_empty_return_null($data[$col]['KODE_KLAUSUL']),
-				'LV1'			=> is_empty_return_null($data[$col]['LV1']),
-				'LV2'			=> is_empty_return_null($data[$col]['LV2']),
-				'LV3'			=> is_empty_return_null($data[$col]['LV3']),
-				'LV4'			=> is_empty_return_null($data[$col]['LV4']),
-				'AUDITEE'		=> is_empty_return_null($data[$col]['AUDITEE']),
-				'PERTANYAAN'	=> is_empty_return_null($data[$col]['PERTANYAAN']),
-				'ID_ISO'		=> is_empty_return_null($_POST['ID_ISO']),
-				
-			];
-			
-				
-				// var_dump($data[$col]['LV1']);
-				// var_dump($eldata);die;
-				$save = $this->m_pertanyaan->save($eldata);
-				
-				
-		}
-				// var_dump($eldata);
-				// die;
-				$upload_data = $this->upload->data();
-				unlink($upload_data['full_path']);
+			}
+			// var_dump($eldata);
+			// die;
+			$upload_data = $this->upload->data();
+			unlink($upload_data['full_path']);
 			if($save==true){
 				$update = $this->m_iso->update($_POST['ID_ISO']);
 				$success_message = 'Data berhasil disimpan.';

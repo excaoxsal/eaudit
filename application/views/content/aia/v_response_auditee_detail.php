@@ -24,22 +24,22 @@
           </div>
         </div>
         <div class="card-body">
-				<?php if ($this->session->flashdata('error')) { ?>
-						<div class="alert alert-danger alert-dismissible text-left">
-								<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-								<h4><i class="icon fa fa-ban text-white"></i> Error!</h4>
-								<?= $this->session->flashdata('error'); ?>
-						</div>
-					<?php } ?>
-					<?php if ($this->session->flashdata('success')) { ?>
-					<div class="input-group mb-3">
-						<div class="alert alert-success alert-dismissible" style="width: 100%;">
-								<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-								<h6><i class="icon fa fa-check text-white"></i> Success!</h6>
-								<?= $this->session->flashdata('success'); ?>
-						</div>
-					</div>
-					<?php } ?>
+        <?php if ($this->session->flashdata('error')) { ?>
+            <div class="alert alert-danger alert-dismissible text-left">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h4><i class="icon fa fa-ban text-white"></i> Error!</h4>
+                <?= $this->session->flashdata('error'); ?>
+            </div>
+          <?php } ?>
+          <?php if ($this->session->flashdata('success')) { ?>
+          <div class="input-group mb-3">
+            <div class="alert alert-success alert-dismissible" style="width: 100%;">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h6><i class="icon fa fa-check text-white"></i> Success!</h6>
+                <?= $this->session->flashdata('success'); ?>
+            </div>
+          </div>
+          <?php } ?>
           <div class="mb-7">
             <div class="row align-items-center">
               <div class="col-lg-9 col-xl-8">
@@ -155,11 +155,11 @@
             <div class="col-12">
             <?php if ($is_auditor) { ?>
               <label>Message Auditor</label>
-              <textarea class="form-control" name="KOMENTAR_1" id="KOMENTAR_1"><?= $detail[0]['KOMENTAR_1']  ?></textarea>
+              <textarea class="form-control" name="KOMENTAR_1" id="KOMENTAR_1"></textarea>
             <?php } else {?>
             
               <label>Message Auditor</label>
-              <textarea readonly class="form-control" <?= $disabled ?> name="KOMENTAR_1" id="msg_auditor"><?= $detail[0]['KOMENTAR_1']  ?></textarea>
+              <textarea readonly class="form-control" <?= $disabled ?> name="KOMENTAR_1" id="KOMENTAR_1"></textarea>
             <?php } ?>
               
             </div>
@@ -256,6 +256,7 @@ function uploadFile(id_tl)
     });
     $.get(`<?= base_url('aia/response_auditee/getdatadetail/') ?>`+id_tl, function(data,status){
         const obj = JSON.parse(data);
+  console.log(obj);
         $('#ID_RE_CHAT').val(id_tl);
         $('#KOMENTAR_1').val(obj.KOMENTAR_1);
         $('#KOMENTAR_2').val(obj.KOMENTAR_2);
@@ -274,7 +275,7 @@ $(document).ready(function() {
 
   // Event handler untuk refresh halaman ketika modal ditutup
   $('#modal_chat').on('hidden.bs.modal', function() {
-    location.reload();
+    $("#kt_datatable").KTDatatable().reload();
   });
 
   $('#modal_upload').on('hidden.bs.modal', function() {

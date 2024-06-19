@@ -19,7 +19,6 @@ class Response_auditee extends MY_Controller {
 	public function index()
 	{
 		$datauser= $_SESSION;
-		
 		// var_dump($datauser);die;
 		$data['list_status'] 	= $this->master_act->status();
 		$data['list_divisi'] 	= $this->m_res_au->get_divisi();
@@ -47,21 +46,16 @@ class Response_auditee extends MY_Controller {
 	public function respon($data){
 		$request = $this->input->post();
 		date_default_timezone_set('Asia/Jakarta');
-		// // echo "Waktu server saat ini: " . date('Y-m-d H:i:s');
-		// echo date('Y-m-d');
 		// $aswd=date('Y-m-d H:i:s');echo $asw;
 		// die;
 		$id_re = $_REQUEST['ID_RE'];
 		// var_dump($request);die;
-
 		$current_date = date('Y-m-d');
 		$current_time = date('YmdHis');
 		$query_waktu=$this->db->select('WAKTU_AUDIT_AWAL,WAKTU_AUDIT_SELESAI')->from('WAKTU_AUDIT')->get();
 		$result_waktu= $query_waktu->result_array();
 		if($current_date>=$result_waktu['0']['WAKTU_AUDIT_AWAL']){
 			if($current_date<=$result_waktu['0']['WAKTU_AUDIT_SELESAI']){
-				// echo"SUSKES";
-				// var_dump($result_waktu['0']['WAKTU_AUDIT_AWAL']);die;
 				$config['file_name']        = "RESPON_AUDITEE".$current_time;
 				$config['upload_path'] = './storage/aia/'; // Lokasi penyimpanan file
 				$config['allowed_types'] = 'xls|xlsx'; // Jenis file yang diizinkan
@@ -71,7 +65,6 @@ class Response_auditee extends MY_Controller {
 				$loadupload = $config['upload_path'];
 				$this->upload->upload_path = $loadupload;
 				$this->upload->allowed_types = $eltype;
-				// $this->load->library('upload', $config);
 				$this->upload->initialize($config);
 				$file_path = './storage/aia/'.$config['file_name'];
 				$elupload = $this->upload->do_upload('file_excel');
@@ -114,20 +107,6 @@ class Response_auditee extends MY_Controller {
 			$this->session->set_flashdata('error', $error_message);
 			redirect(base_url('aia/response_auditee/detail/'.$data));
 		}
-		
-		// var_dump($elupload);
-		// die;
-		
-		// unlink($file_path);
-		// var_dump($elupload);
-		// die;
-		// if(!unlink($upload_data['full_path'])){
-		// 	echo "SUKSES'nt";
-		// }
-		// else{
-		// 	echo "!!!!!!!!!!!!!!!!!!!!";
-		// }
-
 	}
 
 	public function chatbox($data){
@@ -166,10 +145,6 @@ class Response_auditee extends MY_Controller {
 		
 
 	}
-	public function response_submit($data){
-		
-	}
-
 
 	function jsonResponAuditeeDetail($data) 
 	{
@@ -194,12 +169,9 @@ class Response_auditee extends MY_Controller {
 	}
 	function getFileUpload($id_tl)
     {
-
-        
             $query = $this->db->select('ID_RE, FILE, RESPONSE_AUDITEE')->from('RESPONSE_AUDITEE_D')
                         ->where('ID_RE', $id_tl)->get()->row();
-            echo json_encode($query);
-        
+            echo json_encode($query);   
     }
 
 	function jsonResponAuditee() 
@@ -225,8 +197,6 @@ class Response_auditee extends MY_Controller {
 	}
 	
 	public function generate($data){
-		// echo($data);
-		// die;
 		$query = $this->db->select('*')->from('TM_PERTANYAAN')->get();
 		$query_divisi = $this->db->select('KODE')->from('WAKTU_AUDIT w')->join('TM_DIVISI d','d.ID_DIVISI=w.ID_DIVISI')->where('ID_JADWAL',$data)->get();
 		$query_iso = $this->db->select('ID_ISO')->from('TM_ISO')->get();
@@ -248,15 +218,9 @@ class Response_auditee extends MY_Controller {
 		$kode_subdiv = array_column($result_subdiv, 'KODE');
 		$results = $query->result_array();
 		
-		
-		// var_dump($result_subdiv);die;
-		
-		// die;
-		
 		foreach ($results as $row) {
 			$data_items = explode(',', $row['AUDITEE']); // Pisahkan data berdasarkan koma
 			foreach ($data_items as $item) {
-				
 				
 				if(in_array(trim($item), $kode_subdiv)){
 					
@@ -272,21 +236,12 @@ class Response_auditee extends MY_Controller {
 						'ID_HEADER' => $result_header[0]['ID_HEADER']
 						
 					];
-					
-					
-					
 					// Bersihkan dan siapkan data untuk dimasukkan
 				}	
 			}
 		}
-		
-		// var_dump($data_to_insert);
-		// 	die;
-		
 		$querys = $this->db->select('ID_JADWAL')->from('RESPONSE_AUDITEE_D')->where('ID_JADWAL',$data)->get();
 		$resultq = $querys->result_array();
-		// var_dump($resultq);
-		// die;
 		
 		if (!empty($data_to_insert)) {
 			if(empty($resultq)){
@@ -298,9 +253,6 @@ class Response_auditee extends MY_Controller {
 				
 			}
 		}
-		
-		// var_dump($inserteldb);
-		// die;
 	}
 
 	public function export_excel($datas){
@@ -401,9 +353,4 @@ class Response_auditee extends MY_Controller {
 	function is_empty_return_null($value) {
 		return empty($value) ? NULL : $value;
 	}
-
-	
-
-	
-
 }

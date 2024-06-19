@@ -26,8 +26,6 @@ class Jadwal extends MY_Controller
 		$data['id_user']		= $this->session->ID_USER;
 		$id_user = $data['id_user'];
 		$data['jadwal_list'] 	= $this->m_jadwal->jadwal_list($id_user);
-		// var_dump($data);
-		// die();
         $this->show($data);
 	}
 	function jsonJadwalList() 
@@ -65,16 +63,9 @@ class Jadwal extends MY_Controller
 		$data_auditor 				= $this->master_act->auditor(['R.ID_ROLE' => 1]);
 		$data_lead_auditor			= $this->master_act->auditor(['R.ID_ROLE' => 5]);
 		$data_jadwal				= $this->m_jadwal->get_jadwal($id_jadwal,$_SESSION->ID_USER);
-		// var_dump($data_jadwal);
-		// var_dump($id_jadwal);
-		// var_dump($this->m_jadwal->get_jadwal($id_jadwal));
-		// die();
 		$data['data_auditor'] 		= $data_auditor;
 		$data['data_lead_auditor'] 	= $data_lead_auditor;
 		$data['data_jadwal']		= $data_jadwal;
-		// $nama = $data_jadwal[0]['NAMA_AUDITOR'];
-		// var_dump($data_jadwal);
-		// die();
 		$data['list_jenis_audit'] 	= $this->master_act->jenis_audit();
 		$data['list_divisi'] 		= $this->master_act->divisi();
 		$data['menu']           	= 'perencanaan';
@@ -105,11 +96,6 @@ class Jadwal extends MY_Controller
 	public function simpan()
 	{
 		$request = $this->input->post();
-		// $id_apm = $request['ID_APM'];
-		// print_r($request);
-		// die();
-		// var_dump($request);
-		// 	die();
 		$idjadwal = $request['ID_JADWAL'];
 		if($idjadwal!=null){
 			$data = [
