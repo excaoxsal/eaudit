@@ -18,7 +18,7 @@ class Divisi extends MY_Controller
         $data['menu']           = 'master-aia';
         $data['sub_menu']       = 'divisi';
         $data['title']          = 'Master Divisi';
-        $data['list_divisi']      = $this->aia_master_act->divisi();
+        $data['list_divisi']      = $this->aia_master_act->only_divisi();
         $data['is_divisi']      = $this->aia_master_act->is_divisi();
         //print_r($data['is_divisi']);die();
         $data['content']        = 'content/aia/master/v_master_divisi';

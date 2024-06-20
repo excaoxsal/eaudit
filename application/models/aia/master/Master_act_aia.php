@@ -26,6 +26,7 @@ class Master_act_aia extends CI_Model{
         $this->db->join("TM_DIVISI D", "D.ID_DIVISI = J.ID_DIVISI", "LEFT");
         $this->db->join("TM_JABATAN E", "J.ID_ATASAN = E.ID_JABATAN", "LEFT");
         $this->db->where('J.STATUS', 1);
+        $this->db->where('D.IS_DIVISI', 'Y');
         if($id!='') $this->db->where('J.ID_JABATAN', $id);
         $this->db->order_by('J.NAMA_JABATAN','ASC');
         $query=$this->db->get();
@@ -122,6 +123,19 @@ class Master_act_aia extends CI_Model{
             return $this->db->query($query)->result_array();
     }
 
+    public function only_divisi($id='')
+    {
+        $this->db->select('*');
+        $this->db->from('TM_DIVISI');
+        $this->db->where('IS_DIVISI IS NOT NULL');
+        $this->db->where('IS_DIVISI', 'Y');
+        if($id!='') $this->db->where('ID_DIVISI', $id);
+        $this->db->distinct('IS_DIVISI');
+        $this->db->order_by('NAMA_DIVISI','ASC');
+        $query=$this->db->get();
+        return $query->result_array();
+    }
+
     public function is_divisi($id='')
     {
         $this->db->select('IS_DIVISI');
@@ -155,6 +169,7 @@ class Master_act_aia extends CI_Model{
         $this->db->select('ID_MENU as MENU');
         $this->db->from('TM_USER');
         if($array_where!='') $this->db->where($array_where);
+        $this->db->where('ID_MENU IS NOT NULL');
         $this->db->distinct('ID_MENU');
         $this->db->order_by('ID_MENU','ASC');
         $query=$this->db->get();
