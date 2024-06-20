@@ -128,6 +128,7 @@
             <div class="col-12">
               <label>Respon</label>
               <textarea class="form-control" <?= $disabled ?> name="RESPON[]" id="RESPONSE_AUDITEE" readonly></textarea>
+              <label><a id="FILE" href="#" download>Download File</a></label>
             </div>
           </div>
         </div>
