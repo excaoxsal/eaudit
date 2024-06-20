@@ -304,38 +304,39 @@ class Response_auditee extends MY_Controller {
 		->setCategory('Export Data');
 
 	// Add header
-	$sheet = $spreadsheet->getActiveSheet();
-	$sheet->setCellValue('A1', 'NOMOR_ISO');
-	$sheet->setCellValue('B1', 'DIVISI');
-	$sheet->setCellValue('C1', 'SUB DIVISI');
-	$sheet->setCellValue('D1', 'WAKTU_AUDIT_AWAL');
-	$sheet->setCellValue('E1', 'WAKTU_AUDIT_SELESAI');
-	$sheet->setCellValue('F1', 'AUDITOR');
-	$sheet->setCellValue('G1', 'LEAD_AUDITOR');
-	$sheet->setCellValue('H1', 'PERTANYAAN');
-	$sheet->setCellValue('I1', 'KODE_KLAUSUL');
-	$sheet->setCellValue('J1', 'RESPONSE_AUDITEE');
-	$sheet->setCellValue('K1', 'KOMENTAR AUDITOR');
-	$sheet->setCellValue('L1', 'KOMENTAR AUDITEE');
-	$sheet->setCellValue('M1', 'FILE');
+	$spreadsheet->setActiveSheetIndex(0)
+	->setCellValue('A1', 'NOMOR_ISO')
+	->setCellValue('B1', 'DIVISI')
+	->setCellValue('C1', 'SUB DIVISI')
+	->setCellValue('D1', 'WAKTU_AUDIT_AWAL')
+	->setCellValue('E1', 'WAKTU_AUDIT_SELESAI')
+	->setCellValue('F1', 'AUDITOR')
+	->setCellValue('G1', 'LEAD_AUDITOR')
+	->setCellValue('H1', 'PERTANYAAN')
+	->setCellValue('I1', 'KODE_KLAUSUL')
+	->setCellValue('J1', 'RESPONSE_AUDITEE')
+	->setCellValue('K1', 'KOMENTAR AUDITOR')
+	->setCellValue('L1', 'KOMENTAR AUDITEE')
+	->setCellValue('M1', 'FILE');
 
 
 	// Add data
 	$row = 2;
 	foreach ($data as $datum) {
-		$sheet->setCellValue('A' . $row, $datum['NOMOR_ISO']);
-		$sheet->setCellValue('B' . $row, $datum['KODE_DIVISI']);
-		$sheet->setCellValue('C' . $row, $datum['NAMA_DIVISI']);
-		$sheet->setCellValue('D' . $row, $datum['WAKTU_AUDIT_AWAL']);
-		$sheet->setCellValue('E' . $row, $datum['WAKTU_AUDIT_SELESAI']);
-		$sheet->setCellValue('F' . $row, $datum['AUDITOR']);
-		$sheet->setCellValue('G' . $row, $datum['LEAD_AUDITOR']);
-		$sheet->setCellValue('H' . $row, $datum['PERTANYAAN']);
-		$sheet->setCellValue('I' . $row, $datum['KODE_KLAUSUL']);
-		$sheet->setCellValue('J' . $row, $datum['RESPONSE_AUDITEE']);
-		$sheet->setCellValue('K' . $row, $datum['KOMENTAR_AUDITOR']);
-		$sheet->setCellValue('L' . $row, $datum['KOMENTAR_AUDITEE']);
-		$sheet->setCellValue('M' . $row, $datum['FILE']);
+		$spreadsheet->setActiveSheetIndex(0)
+		->setCellValue('A' . $row, $datum['NOMOR_ISO'])
+		->setCellValue('B' . $row, $datum['KODE_DIVISI'])
+		->setCellValue('C' . $row, $datum['NAMA_DIVISI'])
+		->setCellValue('D' . $row, $datum['WAKTU_AUDIT_AWAL'])
+		->setCellValue('E' . $row, $datum['WAKTU_AUDIT_SELESAI'])
+		->setCellValue('F' . $row, $datum['AUDITOR'])
+		->setCellValue('G' . $row, $datum['LEAD_AUDITOR'])
+		->setCellValue('H' . $row, $datum['PERTANYAAN'])
+		->setCellValue('I' . $row, $datum['KODE_KLAUSUL'])
+		->setCellValue('J' . $row, $datum['RESPONSE_AUDITEE'])
+		->setCellValue('K' . $row, $datum['KOMENTAR_AUDITOR'])
+		->setCellValue('L' . $row, $datum['KOMENTAR_AUDITEE'])
+		->setCellValue('M' . $row, $datum['FILE']);
 		
 
 		$row++;
@@ -346,8 +347,13 @@ class Response_auditee extends MY_Controller {
 	header('Content-Disposition: attachment;filename="export_data.xlsx"');
 	header('Cache-Control: max-age=0');
 	header('Cache-Control: max-age=1'); // If you're serving to IE 9, set to 1
+	// If you're serving to IE over SSL, then the following may be needed
+	header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+	header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+	header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+	header ('Pragma: public'); // HTTP/1.0
 
-	$writer = PHPExcel_IOFactory::createWriter($spreadsheet, 'Excel5');;
+	$writer = PHPExcel_IOFactory::createWriter($spreadsheet, 'Excel2007');
 	$writer->save('php://output');
 	exit;
 	}

@@ -12,10 +12,6 @@
         <h5 class="text-dark font-weight-bold mt-2 mb-2 mr-5"><?= APK_NAME ?></h5>
         <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
         <span class="text-muted font-weight-bold mr-4">Detail Respon Auditee</span>
-        <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
-        <span class="text-muted font-weight-bold mr-4"><?=$detail['0']['NOMOR_ISO']?></span>
-        <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
-        <span class="text-muted font-weight-bold mr-4"><?=$detail['0']['KODE']?></span>
       </div>
     </div>
   </div>
@@ -104,7 +100,7 @@
                 <input type="file" class="custom-file-input" name="file_excel" id="file_excel">
                 <label class="custom-file-label" for="customFile">Choose file</label>
               </div>
-              <label><a href="">Lampiran</a></label>
+              <label><a id="FILE" href="#" download>Download File</a></label>
             </div>
           </div>
         </div>
@@ -173,11 +169,11 @@
             <div class="col-12">
             <?php if ($is_auditee) { ?>
               <label>Message Auditee</label>
-              <textarea class="form-control" <?= $disabled ?> name="KOMENTAR_2" id="KOMENTAR_2"></textarea>
+              <textarea class="form-control" <?= $disabled ?> name="KOMENTAR_2" id="KOMENTAR_2"><?= $detail[0]['KOMENTAR_2']  ?></textarea>
             <?php } else {?>
             
               <label>Message Auditee</label>
-              <textarea readonly class="form-control" <?= $disabled ?> name="KOMENTAR_2" id="KOMENTAR_2"></textarea>
+              <textarea readonly class="form-control" <?= $disabled ?> name="KOMENTAR_2" id="KOMENTAR_2"><?= $detail[0]['KOMENTAR_2']  ?></textarea>
             <?php } ?>
               
             </div>
@@ -248,7 +244,8 @@ function uploadFile(id_tl)
         const obj = JSON.parse(data);
         $('#ID_RE').val(id_tl);
         $('#RESPONSE_AUDITEE').val(obj.RESPONSE_AUDITEE);
-        $('#TANGGAL_LHA').val(obj.TANGGAL_LHA);
+        $('#FILE').val(obj.FILE);
+        $('#FILE').attr('href',obj.FILE);
         // console.log(data.NOMOR_LHA);
     });
     $('#modal_upload').modal('show');

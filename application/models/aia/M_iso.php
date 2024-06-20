@@ -8,7 +8,7 @@ class M_Iso extends CI_Model{
 
     public function get_iso(){
         
-        $this->db->select('*')->from('TM_ISO');
+        $this->db->select('*')->from('TM_ISO')->order_by('NOMOR_ISO', 'ASC');
         $query = $this->db->get();
         return $query->result_array();
     }
