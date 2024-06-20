@@ -12,6 +12,10 @@
         <h5 class="text-dark font-weight-bold mt-2 mb-2 mr-5"><?= APK_NAME ?></h5>
         <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
         <span class="text-muted font-weight-bold mr-4">Detail Respon Auditee</span>
+        <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
+        <span class="text-muted font-weight-bold mr-4"><?=$detail['0']['NOMOR_ISO']?></span>
+        <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
+        <span class="text-muted font-weight-bold mr-4"><?=$detail['0']['KODE']?></span>
       </div>
     </div>
   </div>
@@ -24,7 +28,6 @@
           </div>
         </div>
         <div class="card-body">
-<<<<<<< Updated upstream
         <?php if ($this->session->flashdata('error')) { ?>
             <div class="alert alert-danger alert-dismissible text-left">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -41,24 +44,6 @@
             </div>
           </div>
           <?php } ?>
-=======
-				<?php if ($this->session->flashdata('error')) { ?>
-						<div class="alert alert-danger alert-dismissible text-left">
-								<button type="button" class="close" data-dismiss="alert" aria-hidden="true">Ã—</button>
-								<h4><i class="icon fa fa-ban text-white"></i> Error!</h4>
-								<?= $this->session->flashdata('error'); ?>
-						</div>
-					<?php } ?>
-					<?php if ($this->session->flashdata('success')) { ?>
-					<div class="input-group mb-3">
-						<div class="alert alert-success alert-dismissible" style="width: 100%;">
-								<button type="button" class="close" data-dismiss="alert" aria-hidden="true">Ã—</button>
-								<h6><i class="icon fa fa-check text-white"></i> Success!</h6>
-								<?= $this->session->flashdata('success'); ?>
-						</div>
-					</div>
-					<?php } ?>
->>>>>>> Stashed changes
           <div class="mb-7">
             <div class="row align-items-center">
               <div class="col-lg-9 col-xl-8">
@@ -188,11 +173,11 @@
             <div class="col-12">
             <?php if ($is_auditee) { ?>
               <label>Message Auditee</label>
-              <textarea class="form-control" <?= $disabled ?> name="KOMENTAR_2" id="KOMENTAR_2"><?= $detail[0]['KOMENTAR_2']  ?></textarea>
+              <textarea class="form-control" <?= $disabled ?> name="KOMENTAR_2" id="KOMENTAR_2"></textarea>
             <?php } else {?>
             
               <label>Message Auditee</label>
-              <textarea readonly class="form-control" <?= $disabled ?> name="KOMENTAR_2" id="KOMENTAR_2"><?= $detail[0]['KOMENTAR_2']  ?></textarea>
+              <textarea readonly class="form-control" <?= $disabled ?> name="KOMENTAR_2" id="KOMENTAR_2"></textarea>
             <?php } ?>
               
             </div>
@@ -276,11 +261,7 @@ function uploadFile(id_tl)
     });
     $.get(`<?= base_url('aia/response_auditee/getdatadetail/') ?>`+id_tl, function(data,status){
         const obj = JSON.parse(data);
-<<<<<<< Updated upstream
   console.log(obj);
-=======
-	console.log(obj);
->>>>>>> Stashed changes
         $('#ID_RE_CHAT').val(id_tl);
         $('#KOMENTAR_1').val(obj.KOMENTAR_1);
         $('#KOMENTAR_2').val(obj.KOMENTAR_2);

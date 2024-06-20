@@ -19,12 +19,7 @@ class Response_auditee extends MY_Controller {
 	public function index()
 	{
 		$datauser= $_SESSION;
-<<<<<<< Updated upstream
 		// var_dump($datauser);die;
-=======
-		
-		
->>>>>>> Stashed changes
 		$data['list_status'] 	= $this->master_act->status();
 		$data['list_divisi'] 	= $this->m_res_au->get_divisi();
 		$data['menu']           = 'response_auditee';
@@ -42,35 +37,20 @@ class Response_auditee extends MY_Controller {
         $data['content']        = 'content/aia/v_response_auditee_detail';
 		$data['kode']			= $datas;	
 		$data['detail']			= $this->m_res_au->get_response_auditee_detail($datas);
-		$query = $this->m_res_au->get_response_auditee_detail($datas);
-		// var_dump($data);die;	
-
 		$this->show($data);
 	}
 	public function respon($data){
 		$request = $this->input->post();
 		date_default_timezone_set('Asia/Jakarta');
-<<<<<<< Updated upstream
-		// $aswd=date('Y-m-d H:i:s');echo $asw;
-		// die;
 		$id_re = $_REQUEST['ID_RE'];
-		// var_dump($request);die;
-=======
         $ext = pathinfo($_FILES['file_excel']['name'], PATHINFO_EXTENSION);
-		// var_dump($ext);die;
-		$id_re = $_REQUEST['ID_RE'];
-		
->>>>>>> Stashed changes
 		$current_date = date('Y-m-d');
 		$current_time = date('YmdHis');
 		$query_waktu=$this->db->select('WAKTU_AUDIT_AWAL,WAKTU_AUDIT_SELESAI')->from('WAKTU_AUDIT')->get();
 		$result_waktu= $query_waktu->result_array();
 		if($current_date>=$result_waktu['0']['WAKTU_AUDIT_AWAL']){
 			if($current_date<=$result_waktu['0']['WAKTU_AUDIT_SELESAI']){
-<<<<<<< Updated upstream
-=======
 				
->>>>>>> Stashed changes
 				$config['file_name']        = "RESPON_AUDITEE".$current_time;
 				$config['upload_path'] = './storage/aia/'; // Lokasi penyimpanan file
 				$config['allowed_types'] = 'xls|xlsx'; // Jenis file yang diizinkan
@@ -120,12 +100,9 @@ class Response_auditee extends MY_Controller {
 			$this->session->set_flashdata('error', $error_message);
 			redirect(base_url('aia/response_auditee/detail/'.$data));
 		}
-<<<<<<< Updated upstream
-=======
 		
 		
 
->>>>>>> Stashed changes
 	}
 
 	public function chatbox($data){
@@ -216,10 +193,7 @@ class Response_auditee extends MY_Controller {
 	}
 	
 	public function generate($data){
-<<<<<<< Updated upstream
-=======
 		
->>>>>>> Stashed changes
 		$query = $this->db->select('*')->from('TM_PERTANYAAN')->get();
 		$query_divisi = $this->db->select('KODE')->from('WAKTU_AUDIT w')->join('TM_DIVISI d','d.ID_DIVISI=w.ID_DIVISI')->where('ID_JADWAL',$data)->get();
 		$query_iso = $this->db->select('ID_ISO')->from('TM_ISO')->get();
@@ -263,17 +237,12 @@ class Response_auditee extends MY_Controller {
 				}	
 			}
 		}
-<<<<<<< Updated upstream
-		$querys = $this->db->select('ID_JADWAL')->from('RESPONSE_AUDITEE_D')->where('ID_JADWAL',$data)->get();
-		$resultq = $querys->result_array();
-=======
 		
 		
 		
 		$querys = $this->db->select('ID_JADWAL')->from('RESPONSE_AUDITEE_D')->where('ID_JADWAL',$data)->get();
 		$resultq = $querys->result_array();
 		
->>>>>>> Stashed changes
 		
 		if (!empty($data_to_insert)) {
 			if(empty($resultq)){

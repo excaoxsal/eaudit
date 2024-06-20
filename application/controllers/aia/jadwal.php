@@ -47,7 +47,7 @@ class Jadwal extends MY_Controller
 		$data['list_jenis_audit'] 	= $this->master_act->jenis_audit();
 		$data['list_divisi'] 		= $this->m_res_au->get_divisi();
 		$data['menu']           	= 'perencanaan-aia';
-		$data['sub_menu']      		= 'jadwal_audit';
+		$data['sub_menu']      		= 'Create Jadwal Audit';
 		
 		$data['title']          	= 'Create Jadwal Audit';
         $data['content']        	= 'content/jadwal/create';
@@ -62,23 +62,15 @@ class Jadwal extends MY_Controller
 		$data_auditor 				= $this->master_act->auditor(['R.ID_ROLE' => 1]);
 		$data_lead_auditor			= $this->master_act->auditor(['R.ID_ROLE' => 5]);
 		$data_jadwal				= $this->m_jadwal->get_jadwal($id_jadwal,$_SESSION->ID_USER);
-<<<<<<< Updated upstream
 		$data['data_auditor'] 		= $data_auditor;
 		$data['data_lead_auditor'] 	= $data_lead_auditor;
 		$data['data_jadwal']		= $data_jadwal;
-=======
-		
-		$data['data_auditor'] 		= $data_auditor;
-		$data['data_lead_auditor'] 	= $data_lead_auditor;
-		$data['data_jadwal']		= $data_jadwal;
-		
->>>>>>> Stashed changes
 		$data['list_jenis_audit'] 	= $this->master_act->jenis_audit();
 		$data['list_divisi'] 		= $this->m_res_au->get_divisi();
 		$data['menu']           	= 'perencanaan';
-		$data['sub_menu']      		= 'jadwal_audit';
+		$data['sub_menu']      		= 'Edit Jadwal Audit';
 		
-		$data['title']          	= 'Update Jadwal Audit';
+		$data['title']          	= 'Edit Jadwal Audit';
         $data['content']        	= 'content/jadwal/create';
 		
         $this->show($data);
