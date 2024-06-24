@@ -40,6 +40,10 @@ class User extends MY_Controller
         $id     = $this->input->post('ID');
         $id     = base64_decode($id);
         $nipp   = $this->input->post('nipp');
+        $atasan_i = $this->input->post('atasan_i');
+        if (empty($atasan_i)) {
+            $atasan_i = NULL;
+        }
         
         $data = array(
             'NAMA'              => trim(htmlspecialchars($this->input->post('nama', TRUE))),
@@ -47,13 +51,9 @@ class User extends MY_Controller
             'EMAIL'             => trim(htmlspecialchars($this->input->post('email', TRUE))),
             'ID_ROLE'           => $this->input->post('id_role'),
             'ID_MENU'           => $this->input->post('id_menu'),
-            'ATASAN_I'          => $this->input->post('atasan_i')
+            'ATASAN_I'          => $atasan_i
         );
-        if (empty($this->input->post('atasan_ii'))) {
-            $data['ATASAN_II'] = NULL;
-        } else {
-            $data['ATASAN_II'] = $this->input->post('atasan_ii');
-        }
+        
 
         if (!$id) {
             $data['NIPP']       = $nipp; 

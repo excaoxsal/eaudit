@@ -19,7 +19,9 @@ class Jabatan extends MY_Controller
         $data['sub_menu']       = 'jabatan';
         $data['title']          = 'Master Jabatan';
         $data['list_divisi']    = $this->aia_master_act->only_divisi();
-        $data['list_atasan']    = $this->aia_master_act->jabatan(); //print_r($data['list_atasan']);die();
+        $data['list_atasan']    = $this->aia_master_act->jabatan();
+        $data['is_aia']         = $this->aia_master_act->is_aia(); 
+        //print_r($data['is_aia']);die();
         $data['content']        = 'content/aia/master/v_master_jabatan';
         $this->show($data);
     }
@@ -41,7 +43,8 @@ class Jabatan extends MY_Controller
         $data = array(
             'NAMA_JABATAN'  => trim(htmlspecialchars($this->input->post('jabatan', TRUE))),
             'ID_ATASAN'     => $id_atasan,
-            'ID_DIVISI'     => $this->input->post('id_divisi')
+            'ID_DIVISI'     => $this->input->post('id_divisi'),
+            'IS_AIA'        => $this->input->post('is_aia')
         );
 
         if (!$id) {

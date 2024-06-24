@@ -99,23 +99,10 @@
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label class="col-form-label col-3 text-right">Atasan I <sup class="text-danger">*</sup></label>
+                    <label class="col-form-label col-3 text-right">Atasan I</label>
                     <div class="col-9">
                       <div class="form-label">
-                        <select class="form-control" id="atasan_i" name="atasan_i" required>
-                          <option value="">--Pilih Atasan--</option>
-                          <?php foreach($list_user as $user){ ?>
-                          <option value="<?= $user['ID_USER'] ?>"><?= $user['NAMA'] ?></option>
-                          <?php } ?>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label class="col-form-label col-3 text-right">Atasan II</label>
-                    <div class="col-9">
-                      <div class="form-label">
-                        <select class="form-control" id="atasan_ii" name="atasan_ii">
+                        <select class="form-control" id="atasan_i" name="atasan_i">
                           <option value="">--Pilih Atasan--</option>
                           <?php foreach($list_user as $user){ ?>
                           <option value="<?= $user['ID_USER'] ?>"><?= $user['NAMA'] ?></option>

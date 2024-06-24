@@ -27,6 +27,7 @@ class Master_act_aia extends CI_Model{
         $this->db->join("TM_JABATAN E", "J.ID_ATASAN = E.ID_JABATAN", "LEFT");
         $this->db->where('J.STATUS', 1);
         $this->db->where('D.IS_DIVISI', 'Y');
+        $this->db->where('J.IS_AIA', 1);
         if($id!='') $this->db->where('J.ID_JABATAN', $id);
         $this->db->order_by('J.NAMA_JABATAN','ASC');
         $query=$this->db->get();
