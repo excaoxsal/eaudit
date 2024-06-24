@@ -35,7 +35,9 @@ class Response_auditee extends MY_Controller {
 		$data['menu']           = 'response_auditee';
         $data['title']          = 'Respon Auditee';
         $data['content']        = 'content/aia/v_response_auditee_detail';
-		$data['kode']			= $datas;	
+		$data['kode']			= $datas;
+		// var_dump();die;
+		$data['role']			= $_SESSION['NAMA_ROLE'];
 		$data['detail']			= $this->m_res_au->get_response_auditee_detail($datas);
 		$this->show($data);
 	}
@@ -343,8 +345,9 @@ class Response_auditee extends MY_Controller {
 	}
 
 	// Redirect output to a client’s web browser (Xlsx)
+	$filename="export_data".$datum['NOMOR_ISO'].$datum['KODE_DIVISI'].".xlsx";
 	header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-	header('Content-Disposition: attachment;filename="export_data.xlsx"');
+	header('Content-Disposition: attachment;filename="'.$filename. '"');
 	header('Cache-Control: max-age=0');
 	header('Cache-Control: max-age=1'); // If you're serving to IE 9, set to 1
 	// If you're serving to IE over SSL, then the following may be needed

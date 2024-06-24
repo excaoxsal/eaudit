@@ -133,7 +133,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <input type="submit" class="btn btn-primary font-weight-bold" value="Submit">
+          
         </div>
       </form>
     </div>
@@ -188,11 +188,13 @@
     </div>
   </div>
 </div>
+<?= $is_auditee ?>
 <script type="text/javascript">
  "use strict";
 var KTDatatableJsonRemoteDemo = {
   init: function() 
   {
+    var role = '<?= $role ?>';
     var t;
     t = $("#kt_datatable").KTDatatable({
       data: {
@@ -229,8 +231,10 @@ var KTDatatableJsonRemoteDemo = {
           searchable: !1,
           overflow: "visible",
           template: function(t) {
+            var buttonTitle = role ==='AUDITOR'  ? 'Lihat"><i class="fa fa-eye text-dark' : 'Respon"><i class="fa fa-upload text-dark';
             var iconClass = t.STATUS == 1 ? 'color:red' : 'color:#000';
-          return '<a onclick="uploadFile(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon" title="Respon"><i class="fa fa-upload text-dark"></i></a><a onclick="chatbox(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>';
+            
+          return '<a onclick="uploadFile(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon" title="' + buttonTitle + '"></i></a><a onclick="chatbox(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>';
         }
         }]
     }), $("#kt_datatable_search_status").on("change", (function() {
@@ -245,7 +249,7 @@ function uploadFile(id_tl)
         const obj = JSON.parse(data);
         $('#ID_RE').val(id_tl);
         $('#RESPONSE_AUDITEE').val(obj.RESPONSE_AUDITEE);
-        $('#FILE').val(obj.FILE);
+        
         $('#FILE').attr('href',obj.FILE);
         // console.log(data.NOMOR_LHA);
     });
