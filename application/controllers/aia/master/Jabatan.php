@@ -20,8 +20,6 @@ class Jabatan extends MY_Controller
         $data['title']          = 'Master Jabatan';
         $data['list_divisi']    = $this->aia_master_act->only_divisi();
         $data['list_atasan']    = $this->aia_master_act->jabatan();
-        $data['is_aia']         = $this->aia_master_act->is_aia(); 
-        //print_r($data['is_aia']);die();
         $data['content']        = 'content/aia/master/v_master_jabatan';
         $this->show($data);
     }
