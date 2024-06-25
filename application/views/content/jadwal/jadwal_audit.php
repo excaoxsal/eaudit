@@ -56,17 +56,7 @@
                       </span>
                     </div>
                   </div>
-                  <div class="col-md-4 my-2 my-md-0">
-                    <div class="d-flex align-items-center">
-                      <label class="mr-3 mb-0 d-none d-md-block">Status:</label>
-                      <select class="form-control" id="datatable_search_status">
-                        <option value="">All</option>
-                        <?php foreach ($list_status as $status) { ?>
-                          <option value="<?= $status['NAMA_DIVISI'] ?>"><?= $status['NAMA_DIVISI'] ?></option>
-                        <?php } ?>
-                      </select>
-                    </div>
-                  </div>
+                  
                 </div>
               </div>
             </div>

@@ -12,6 +12,10 @@
         <h5 class="text-dark font-weight-bold mt-2 mb-2 mr-5"><?= APK_NAME ?></h5>
         <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
         <span class="text-muted font-weight-bold mr-4">Detail Respon Auditee</span>
+        <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
+        <span class="text-muted font-weight-bold mr-4"><?=$detail['0']['NOMOR_ISO']?></span>
+        <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
+        <span class="text-muted font-weight-bold mr-4"><?=$detail['0']['KODE']?></span>
       </div>
     </div>
   </div>
@@ -100,7 +104,7 @@
                 <input type="file" class="custom-file-input" name="file_excel" id="file_excel">
                 <label class="custom-file-label" for="customFile">Choose file</label>
               </div>
-              <label><a id="FILE" href="#" download>Download File</a></label>
+              <label><a id="FILE" href="#" download>Download File</a></label> <a href="#"><label for="">X</label></a>
             </div>
           </div>
         </div>
@@ -128,7 +132,7 @@
             <div class="col-12">
               <label>Respon</label>
               <textarea class="form-control" <?= $disabled ?> name="RESPON[]" id="RESPONSE_AUDITEE" readonly></textarea>
-              <label><a id="FILE" href="#" download>Download File</a></label>
+              <label><a id="FILE" href="#" download>Download File</a></label> <a href="#">X</a>
             </div>
           </div>
         </div>

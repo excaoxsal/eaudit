@@ -94,51 +94,58 @@ class Jadwal extends MY_Controller
 	public function simpan()
 	{
 		$request = $this->input->post();
+		// var_dump($request);die;
 		$idjadwal = $request['ID_JADWAL'];
-		if($idjadwal!=null){
-			$data = [
-				'ID_AUDITOR'           			=> is_empty_return_null($request['ID_AUDITOR']),
-				'ID_LEAD_AUDITOR'          		=> is_empty_return_null($request['ID_LEAD_AUDITOR']),
-				'WAKTU_AUDIT_AWAL' 				=> is_empty_return_null($request['WAKTU_AUDIT_AWAL']),
-				'WAKTU_AUDIT_SELESAI' 			=> is_empty_return_null($request['WAKTU_AUDIT_SELESAI']),
-				'ID_DIVISI'    					=> is_empty_return_null($request['ID_DIVISI']),
-				'ID_JADWAL'						=> is_empty_return_null($request['ID_JADWAL']),
-			];
-			
-			$update = $this->m_jadwal->update($data);
-			// var_dump($update);
-			// die();
-			if($update==true){
-				$success_message = 'Data berhasil diupdate.';
-				$this->session->set_flashdata('success', $success_message);
-				echo base_url('aia/jadwal/jadwal_audit');
-			}
-			else{
-				$error_message = 'keknya ga bisa update deh';
-				$this->session->set_flashdata('error', $error_message);
-			}
-			
+		if($request['WAKTU_AUDIT_SELESAI']<$request['WAKTU_AUDIT_AWAL']){
+			$error_message = 'Periode selesai tidak boleh kurang dari periode mulai';
+			$this->session->set_flashdata('error', $error_message);
 		}
 		else{
-			$data = [
-						'ID_AUDITOR'           			=> is_empty_return_null($request['ID_AUDITOR']),
-						'ID_LEAD_AUDITOR'          		=> is_empty_return_null($request['ID_LEAD_AUDITOR']),
-						'WAKTU_AUDIT_AWAL' 				=> is_empty_return_null($request['WAKTU_AUDIT_AWAL']),
-						'WAKTU_AUDIT_SELESAI' 			=> is_empty_return_null($request['WAKTU_AUDIT_SELESAI']),
-						'ID_DIVISI'    					=> is_empty_return_null($request['ID_DIVISI'])
-						// 'ID_JADWAL'						=> is_empty_return_null($request['ID_JADWAL'])
-			];
-			$save = $this->m_jadwal->save($data);
-			if($save==true){
-				$success_message = 'Data berhasil disimpan.';
-				$this->session->set_flashdata('success', $success_message);
-				echo base_url('aia/jadwal/jadwal_audit');
+			if($idjadwal!=null){
+				$data = [
+					'ID_AUDITOR'           			=> is_empty_return_null($request['ID_AUDITOR']),
+					'ID_LEAD_AUDITOR'          		=> is_empty_return_null($request['ID_LEAD_AUDITOR']),
+					'WAKTU_AUDIT_AWAL' 				=> is_empty_return_null($request['WAKTU_AUDIT_AWAL']),
+					'WAKTU_AUDIT_SELESAI' 			=> is_empty_return_null($request['WAKTU_AUDIT_SELESAI']),
+					'ID_DIVISI'    					=> is_empty_return_null($request['ID_DIVISI']),
+					'ID_JADWAL'						=> is_empty_return_null($request['ID_JADWAL']),
+				];
+				
+				$update = $this->m_jadwal->update($data);
+				
+				if($update==true){
+					$success_message = 'Data berhasil diupdate.';
+					$this->session->set_flashdata('success', $success_message);
+					echo base_url('aia/jadwal/jadwal_audit');
+				}
+				else{
+					$error_message = 'keknya ga bisa update deh';
+					$this->session->set_flashdata('error', $error_message);
+				}
+				
 			}
 			else{
-				$error_message = 'Silahkan cek kembali datanya';
-				$this->session->set_flashdata('error', $error_message);
+				$data = [
+							'ID_AUDITOR'           			=> is_empty_return_null($request['ID_AUDITOR']),
+							'ID_LEAD_AUDITOR'          		=> is_empty_return_null($request['ID_LEAD_AUDITOR']),
+							'WAKTU_AUDIT_AWAL' 				=> is_empty_return_null($request['WAKTU_AUDIT_AWAL']),
+							'WAKTU_AUDIT_SELESAI' 			=> is_empty_return_null($request['WAKTU_AUDIT_SELESAI']),
+							'ID_DIVISI'    					=> is_empty_return_null($request['ID_DIVISI'])
+							
+				];
+				$save = $this->m_jadwal->save($data);
+				if($save==true){
+					$success_message = 'Data berhasil disimpan.';
+					$this->session->set_flashdata('success', $success_message);
+					echo base_url('aia/jadwal/jadwal_audit');
+				}
+				else{
+					$error_message = 'Silahkan cek kembali datanya';
+					$this->session->set_flashdata('error', $error_message);
+				}
 			}
 		}
+		
 		
 		
 	}

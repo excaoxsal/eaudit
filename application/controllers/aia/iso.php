@@ -46,16 +46,12 @@ class Iso extends MY_Controller
 		$id_user = $data['id_user'];
 		$data['jadwal_list'] 	= $this->m_jadwal->jadwal_list($id_user);
         $data['data_iso'] = $dataiso;
-		// print_r( $this->jsonIsoList() );
-		// die;
-		//var_dump($dataiso);
-		//die();
+		
         $this->show($data);
     }
 
 	public function show_iso($iso){
-		// var_dump($iso);
-		// die;
+		
 		$datapertanyaan = $this->m_pertanyaan->show_iso($iso);
 		$eljson = json_encode($datapertanyaan);
 		$data['id_iso'] = $iso;
@@ -71,18 +67,20 @@ class Iso extends MY_Controller
 		$data['jadwal_list'] 	= $this->m_jadwal->jadwal_list($id_user);
         $data['data_iso'] = $dataiso;
 		$data['data_pertanyaan'] = $eljson;
-		// print_r( $this->jsonIsoList() );
-		// die;
-		// var_dump($dataiso);
-		// die();
-		// var_dump($_POST);
-		// die;
-		// $jsoncode =  $this->jsonPertanyaanList($iso);
+		// var_dump($datapertanyaan[0]['NOMOR_ISO']);die;
+		
 		
         $this->show($data);
 	}
 
-	public function proses_upload() {
+	public function getdataiso($id){
+		$query = $this->db->select('ID_ISO,NOMOR_ISO')->from('TM_ISO')
+                        ->where('ID_ISO', $id)->get()->row();
+		// var_dump($query);die;
+        echo json_encode($query); 
+	}
+
+	public function proses_upload() { 
 		$config['file_name']        = "upload_master_pertanyaan";
 		$config['upload_path'] = './storage/aia/'; // Lokasi penyimpanan file
 		$config['allowed_types'] = 'xls|xlsx'; // Jenis file yang diizinkan
@@ -91,17 +89,15 @@ class Iso extends MY_Controller
 		
 		$this->upload->initialize($config);
 		$elupload = $this->upload->do_upload('file_excel');
-		//var_dump($elupload);die;
+		// var_dump($_POST);die;
 		if (!$elupload) {
 			// Jika upload gagal, tampilkan pesan error
 			$error = $this->upload->display_errors();
-			// var_dump($this->upload->allowed_types);
-			// echo $error;
-			// die();
+			
 			echo $error;die;
 		}else{
 			// Jika upload berhasil, baca file Excel
-			// echo'rest';die;
+			
 			$file_data = $this->upload->data();		
 			$file_path = $base_url."./storage/aia/".$file_data['file_name'];
 			// Hapus file setelah selesai membaca
@@ -143,8 +139,7 @@ class Iso extends MY_Controller
 						$data_divisi="";
 						for($i=0;$i<sizeof($result_divisi);$i++){
 							
-							// var_dump($divisi['KODE']);die;
-							// $a+=1;
+							
 							$data_divisi .=$result_divisi[$i]['KODE'];
 							if ($i < sizeof($result_divisi)-1){
 								$data_divisi.=",";	
@@ -192,8 +187,7 @@ class Iso extends MY_Controller
 				}
 
 			}
-			// var_dump($eldata);
-			// die;
+			
 			$upload_data = $this->upload->data();
 			unlink($upload_data['full_path']);
 			if($save==true){

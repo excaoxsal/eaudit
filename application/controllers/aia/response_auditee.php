@@ -42,21 +42,25 @@ class Response_auditee extends MY_Controller {
 		$this->show($data);
 	}
 	public function respon($data){
+		
 		$request = $this->input->post();
 		date_default_timezone_set('Asia/Jakarta');
 		$id_re = $_REQUEST['ID_RE'];
         $ext = pathinfo($_FILES['file_excel']['name'], PATHINFO_EXTENSION);
 		$current_date = date('Y-m-d');
 		$current_time = date('YmdHis');
-		$query_waktu=$this->db->select('WAKTU_AUDIT_AWAL,WAKTU_AUDIT_SELESAI')->from('WAKTU_AUDIT')->get();
+		$query_waktu=$this->db->select('WAKTU_AUDIT_AWAL,WAKTU_AUDIT_SELESAI')->from('WAKTU_AUDIT W')
+		->join('RESPONSE_AUDITEE_H RE','W.ID_JADWAL=RE.ID_JADWAL')->where('RE.ID_HEADER',$data)
+		->get();
 		$result_waktu= $query_waktu->result_array();
+		// var_dump($current_date<=$result_waktu['0']['WAKTU_AUDIT_SELESAI']);var_dump($current_date,$result_waktu);var_dump($data);die;
 		if($current_date>=$result_waktu['0']['WAKTU_AUDIT_AWAL']){
 			if($current_date<=$result_waktu['0']['WAKTU_AUDIT_SELESAI']){
 				
 				$config['file_name']        = "RESPON_AUDITEE".$current_time;
 				$config['upload_path'] = './storage/aia/'; // Lokasi penyimpanan file
-				$config['allowed_types'] = 'xls|xlsx'; // Jenis file yang diizinkan
-				$config['max_size'] = 1280000; // Ukuran maksimum file (dalam KB)\
+				$config['allowed_types'] = 'xls|xlsx|pdf|doc|docx|ppt|pptx|jpg|jpeg|png'; // Jenis file yang diizinkan
+				$config['max_size'] = 15000; // Ukuran maksimum file (dalam KB)\
 				$upload_path = './storage/aia/';
 				$eltype= $config['allowed_types'];
 				$loadupload = $config['upload_path'];

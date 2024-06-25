@@ -12,6 +12,8 @@
         <h5 class="text-dark font-weight-bold mt-2 mb-2 mr-5"><?= APK_NAME ?></h5>
         <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
         <span class="text-muted font-weight-bold mr-4">Master Pertanyaan</span>
+        <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
+        <span class="text-muted font-weight-bold mr-4"><?=$pertanyaan[0]['NOMOR_ISO']?></span>
       </div>
     </div>
   </div>
@@ -104,6 +106,7 @@
 </div>
 <!-- end:modal -->
 
+
 <script type="text/javascript">
   "use strict";
   var KTDatatableJsonRemoteDemo = {
@@ -153,40 +156,7 @@
         {
           field: "PERTANYAAN",
           title: "PERTANYAAN"
-        },
-        
-
-
-        
-        // {
-        //   field: "NOMOR_SPA_SEQ",
-        //   title: "ID"
-        // }, {
-        //   field: "NAMA_DIVISI",
-        //   title: "Auditee"
-        // }, {
-        //   field: "NOMOR_SURAT",
-        //   title: "Nomor Surat"
-        // }, {
-        //   field: "STATUS",
-        //   title: "Status",
-        //   template: function(t) {
-        //     if (t.ID_STATUS == 3) {
-        //       if(t.APPROVER_COUNT == t.APPROVED_COUNT){
-        //         t.STATUS = 'Send';
-        //         t.CSS = 'success';
-        //         return '<span  style="border-radius:0" class="label font-weight-bold label-lg label-light-' + t.CSS + ' label-inline">' + t.STATUS + ' </span>';						
-        //       }else{
-        //         return '<span  style="border-radius:0" class="label font-weight-bold label-lg label-light-' + t.CSS + ' label-inline">' + t.STATUS + ' (' + t.APPROVED_COUNT + ' / ' + t.APPROVER_COUNT + ')</span>';
-        //       }
-        //     }
-        //     return '<span class="label font-weight-bold label-lg label-light-' + t.CSS + ' label-inline">' + t.STATUS + '</span>';
-        //   }
-        // }, 
-        
-        
-        
-          
+        }, 
       ]
       }), $("#datatable_search_status").on("change", (function() {
         t.search($(this).val().toLowerCase(), "STATUS")

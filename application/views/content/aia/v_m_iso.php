@@ -12,6 +12,7 @@
         <h5 class="text-dark font-weight-bold mt-2 mb-2 mr-5"><?= APK_NAME ?></h5>
         <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
         <span class="text-muted font-weight-bold mr-4">Master Pertanyaan</span>
+        
       </div>
     </div>
   </div>
@@ -77,7 +78,7 @@
           <i aria-hidden="true" class="ki ki-close"></i>
         </button>
       </div>
-      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/iso/proses_upload" enctype="multipart/form-data">
+      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/Iso/proses_upload" enctype="multipart/form-data">
         <div class="modal-body" style="height: auto">
 
           <div class="form-group row">
@@ -111,6 +112,45 @@
   </div>
 </div>
 <!-- end:modal -->
+<!-- Modal Upload ISO -->
+<div class="modal fade" id="modal_upload_iso" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Upload Master ISO</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <i aria-hidden="true" class="ki ki-close"></i>
+        </button>
+      </div>
+      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/Iso/proses_upload" enctype="multipart/form-data">
+        <div class="modal-body" style="height: auto">
+          <input type="hidden"  name="ID_RE" id="ID_RE">
+          <div class="form-group row">
+            <div class="col-12">
+              <label>Nomor ISO</label>
+              <input type="text" class="form-control" <?= $disabled ?> name="NOMOR_ISO" id="NOMOR_ISO" readonly></input>
+              <input type="text" class="form-control" <?= $disabled ?> name="ID_ISO" id="ID_ISO" hidden></input>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-12">
+              <label>Lampiran</label>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" name="file_excel" id="file_excel">
+                <label class="custom-file-label" for="customFile">Choose file</label>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <input type="submit" class="btn btn-primary font-weight-bold" value="Submit">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- End Modal Upload ISO -->
 
 <script type="text/javascript">
   "use strict";
@@ -120,7 +160,7 @@
       t = $("#datatable").KTDatatable({
         data: {
           type: "remote",
-          source: '<?= base_url() ?>aia/iso/jsonIsoList',
+          source: '<?= base_url() ?>aia/Iso/jsonIsoList',
           pageSize: 10
         },
         layout: {
@@ -137,31 +177,7 @@
           field: "NOMOR_ISO",
           title: "ISO"
         },
-        // {
-        //   field: "NOMOR_SPA_SEQ",
-        //   title: "ID"
-        // }, {
-        //   field: "NAMA_DIVISI",
-        //   title: "Auditee"
-        // }, {
-        //   field: "NOMOR_SURAT",
-        //   title: "Nomor Surat"
-        // }, {
-        //   field: "STATUS",
-        //   title: "Status",
-        //   template: function(t) {
-        //     if (t.ID_STATUS == 3) {
-        //       if(t.APPROVER_COUNT == t.APPROVED_COUNT){
-        //         t.STATUS = 'Send';
-        //         t.CSS = 'success';
-        //         return '<span  style="border-radius:0" class="label font-weight-bold label-lg label-light-' + t.CSS + ' label-inline">' + t.STATUS + ' </span>';						
-        //       }else{
-        //         return '<span  style="border-radius:0" class="label font-weight-bold label-lg label-light-' + t.CSS + ' label-inline">' + t.STATUS + ' (' + t.APPROVED_COUNT + ' / ' + t.APPROVER_COUNT + ')</span>';
-        //       }
-        //     }
-        //     return '<span class="label font-weight-bold label-lg label-light-' + t.CSS + ' label-inline">' + t.STATUS + '</span>';
-        //   }
-        // }, 
+        
         
         
         {
@@ -172,9 +188,8 @@
           searchable: !1,
           overflow: "visible",
           template: function(t) {
-            return '<a onclick="uploadFile(' + t.ID_ISO + ')" class="btn btn-sm btn-clean btn-icon"><i class="text-dark fa fa-upload"></i></a><a  href="<?= base_url() ?>aia/iso/show_iso/'+t.ID_ISO+'" class="btn btn-sm btn-clean btn-icon" title="Lihat"><i class="fa fa-eye text-dark"></i></a>'
-            // return '<a href="<?= base_url() ?>monitoring/entry/tindak_lanjut/' + t.ID_TL + '" class="btn btn-sm btn-clean btn-icon" title="Tindak Lanjut"><i class="text-dark fa fa-file-import"></i></a><a onclick="hapus(' + t.ID_TL + ')" class="btn btn-sm btn-clean btn-icon" title="Hapus"><i class="text-dark fa fa-trash"></i></a><a onclick="preview(' + t.TAHUN + ',' + t.ID_DIVISI + ', ' + t.ID_JENIS_AUDIT + ')" class="btn btn-sm btn-clean btn-icon" title="Preview"><i class="text-dark fa fa-eye"></i></a><a onclick="lha_final(' + t.ID_TL + ')" class="btn btn-sm btn-clean btn-icon" title="LHA Final"><i class="text-dark fa fa-file-word"></i></a>'
-            // return '<center><a href="<?= base_url() ?>perencanaan/kotak_masuk/spa/review/'+t.ID_SPA+'" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit"></i></a></center>'
+            return '<a onclick="uploadIso(' + t.ID_ISO + ')" class="btn btn-sm btn-clean btn-icon"><i class="text-dark fa fa-upload"></i></a><a  href="<?= base_url() ?>aia/Iso/show_iso/'+t.ID_ISO+'" class="btn btn-sm btn-clean btn-icon" title="Lihat"><i class="fa fa-eye text-dark"></i></a>'
+            
           }
         }
           
@@ -187,19 +202,32 @@
 
   function uploadFile(id_tl)
   {
-    $.get(`<?= base_url('aia/iso/proses_upload') ?>`+id_tl, function(data, status){
+    $.get(`<?= base_url('aia/Iso/proses_upload') ?>`+id_tl, function(data, status){
         const obj = JSON.parse(data);
         $('#id_tl').val(id_tl);
         $('#NOMOR_LHA').val(obj.NOMOR_LHA);
         $('#TANGGAL_LHA').val(obj.TANGGAL_LHA);
-        // console.log(data.NOMOR_LHA);
+        
     });
     $('#modal_upload').modal('show');
   }
 
+  function uploadIso(id_tl)
+  {
+    $.get(`<?= base_url('aia/Iso/getdataiso/') ?>`+id_tl, function(data, status){
+        const obj = JSON.parse(data);
+        $('#ID_ISO').val(id_tl);
+        $('#NOMOR_ISO').val(obj.NOMOR_ISO);
+        
+        $('#FILE').attr('href',obj.FILE);
+        // console.log(data.NOMOR_LHA);
+    });
+    $('#modal_upload_iso').modal('show');
+  }
+
   function lihat(id_tl)
   {
-    $.post(`<?= base_url('aia/iso/show_iso') ?>`+id_tl, function(data, status){
+    $.post(`<?= base_url('aia/Iso/show_iso') ?>`+id_tl, function(data, status){
         const obj = JSON.parse(data);
         $('#id_tl').val(id_tl);
         $('#NOMOR_LHA').val(obj.NOMOR_LHA);
