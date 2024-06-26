@@ -106,9 +106,22 @@ class Response_auditee extends MY_Controller {
 			$this->session->set_flashdata('error', $error_message);
 			redirect(base_url('aia/response_auditee/detail/'.$data));
 		}
+
+		
 		
 		
 
+	}
+	public function deletefile() {
+		$query = $this->db->select('FILE')->from('RESPONSE_AUDITEE_D')->where('ID_RE',$_POST['ID_RE'])->get();
+		// var_dump($query->result_array());
+		$file_path = $query->result_array();
+		// var_dump($file_path[0]['FILE']);die;
+		unlink($file_path[0]['FILE']);
+		$this->db->set('FILE', NULL);
+		$this->db->where('ID_RE', $_POST['ID_RE']);
+		$update = $this->db->update('RESPONSE_AUDITEE_D');
+		
 	}
 
 	public function chatbox($data){

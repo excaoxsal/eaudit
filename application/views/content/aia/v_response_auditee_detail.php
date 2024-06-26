@@ -104,7 +104,7 @@
                 <input type="file" class="custom-file-input" name="file_excel" id="file_excel">
                 <label class="custom-file-label" for="customFile">Choose file</label>
               </div>
-              <label><a id="FILE" href="#" download>Download File</a></label> <a href="#"><label for="">X</label></a>
+              <label><a id="FILE" href="#" download>Download File</a></label> <a onclick="deletefile()" href="#" class="btn btn-danger h-10" id="btnDelete">X</a>
             </div>
           </div>
         </div>
@@ -132,7 +132,7 @@
             <div class="col-12">
               <label>Respon</label>
               <textarea class="form-control" <?= $disabled ?> name="RESPON[]" id="RESPONSE_AUDITEE" readonly></textarea>
-              <label><a id="FILE" href="#" download>Download File</a></label> <a href="#">X</a>
+              <label><a id="FILE" href="#" download>Download File</a></label> 
             </div>
           </div>
         </div>
@@ -246,18 +246,60 @@ var KTDatatableJsonRemoteDemo = {
     })), $("#kt_datatable_search_status").selectpicker()
   }
 };
-
+var currentID_TL;
 function uploadFile(id_tl)
   {
+    currentID_TL = id_tl;
     $.get(`<?= base_url('aia/response_auditee/getFileUpload/') ?>`+id_tl, function(data, status){
         const obj = JSON.parse(data);
         $('#ID_RE').val(id_tl);
         $('#RESPONSE_AUDITEE').val(obj.RESPONSE_AUDITEE);
-        
-        $('#FILE').attr('href',obj.FILE);
+
+        if (obj.FILE && obj.FILE !== 'null') {
+          $('#FILE').attr('href', obj.FILE).show();
+          $('#btnDelete').show();
+        } else {
+          $('#FILE').hide();
+          $('#btnDelete').hide();
+        }
         // console.log(data.NOMOR_LHA);
     });
     $('#modal_upload').modal('show');
+  }
+
+
+  function deletefile(id, action)
+  {
+    Swal.fire({
+      text: 'Apakah Anda yakin menghapus file ini ?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya',
+      cancelButtonText: 'Batal'
+    }).then((result) => {
+      if (result.value) {
+        var obj = {ACTION: 'delete'};
+        
+        var form_data = $("#kt_form").serialize() + '&' + $.param(obj);
+        $.ajax({
+          url: '<?= base_url() ?>aia/response_auditee/deletefile/',
+          type: 'post',
+          data: form_data,
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          success: function(data) {
+            Swal.fire("Sukses!", "File berhasil terhapus", "success");
+            uploadFile(currentID_TL);
+          },
+          error: function(data){
+            Swal.fire("Gagal menyimpan data!", "Pastika semua kolom terisi!", "error");
+          }
+        });
+      }
+    })
   }
 
   function chatbox(id_tl)
