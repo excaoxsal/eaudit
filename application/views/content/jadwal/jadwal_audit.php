@@ -77,7 +77,7 @@
       t = $("#datatable").KTDatatable({
         data: {
           type: "remote",
-          source: '<?= base_url() ?>aia/jadwal/jsonJadwalList',
+          source: '<?= base_url() ?>aia/Jadwal/jsonJadwalList',
           pageSize: 10
         },
         layout: {
@@ -136,7 +136,7 @@
               return (
                       '<a onclick="save(' + t.ID_JADWAL + ')" class="btn btn-sm btn-clean btn-icon" title="Generate"><i class="fa fa-refresh text-dark"></i></a>'+
                       
-                      '<a href="<?= base_url() ?>aia/jadwal/update/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit text-dark"></i></a>'+
+                      '<a href="<?= base_url() ?>aia/Jadwal/update/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit text-dark"></i></a>'+
                       '<a onclick="hapus(' + t.ID_JADWAL + ')" class="btn btn-sm btn-clean btn-icon" title="Generate"><i class="fa fa-trash text-dark"></i></a>');
             }
           },
@@ -171,7 +171,7 @@
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: '<?= base_url() ?>aia/response_auditee/generate/' + id,
+          url: '<?= base_url() ?>aia/Response_auditee/generate/' + id,
           type: 'post',
           data: { id: id },
           headers: {
@@ -200,7 +200,7 @@
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: '<?= base_url() ?>aia/jadwal/hapus/' + id,
+          url: '<?= base_url() ?>aia/Jadwal/hapus/' + id,
           type: 'post',
           data: { id: id },
           headers: {

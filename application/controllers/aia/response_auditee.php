@@ -47,6 +47,7 @@ class Response_auditee extends MY_Controller {
 		date_default_timezone_set('Asia/Jakarta');
 		$id_re = $_REQUEST['ID_RE'];
         $ext = pathinfo($_FILES['file_excel']['name'], PATHINFO_EXTENSION);
+		
 		$current_date = date('Y-m-d');
 		$current_time = date('YmdHis');
 		$query_waktu=$this->db->select('WAKTU_AUDIT_AWAL,WAKTU_AUDIT_SELESAI')->from('WAKTU_AUDIT W')
@@ -56,7 +57,6 @@ class Response_auditee extends MY_Controller {
 		// var_dump($current_date<=$result_waktu['0']['WAKTU_AUDIT_SELESAI']);var_dump($current_date,$result_waktu);var_dump($data);die;
 		if($current_date>=$result_waktu['0']['WAKTU_AUDIT_AWAL']){
 			if($current_date<=$result_waktu['0']['WAKTU_AUDIT_SELESAI']){
-				
 				$config['file_name']        = "RESPON_AUDITEE".$current_time;
 				$config['upload_path'] = './storage/aia/'; // Lokasi penyimpanan file
 				$config['allowed_types'] = 'xls|xlsx|pdf|doc|docx|ppt|pptx|jpg|jpeg|png'; // Jenis file yang diizinkan
@@ -68,6 +68,7 @@ class Response_auditee extends MY_Controller {
 				$this->upload->allowed_types = $eltype;
 				$this->upload->initialize($config);
 				$file_path = base_url().'storage/aia/'.$config['file_name'].'.'.$ext;
+				
 				$elupload = $this->upload->do_upload('file_excel');
 				$upload_data = $this->upload->data();
 				// echo($file_path);
@@ -314,8 +315,8 @@ class Response_auditee extends MY_Controller {
 	$spreadsheet = new PHPExcel();
 
 	// Set document properties
-	$spreadsheet->getProperties()->setCreator('Your Name')
-		->setLastModifiedBy('Your Name')
+	$spreadsheet->getProperties()->setCreator('Aplikasi Internal Audit')
+		->setLastModifiedBy('Aplikasi Internal Audit')
 		->setTitle('Export Data')
 		->setSubject('Export Data')
 		->setDescription('Export data from database to Excel file')
@@ -354,8 +355,15 @@ class Response_auditee extends MY_Controller {
 		->setCellValue('I' . $row, $datum['KODE_KLAUSUL'])
 		->setCellValue('J' . $row, $datum['RESPONSE_AUDITEE'])
 		->setCellValue('K' . $row, $datum['KOMENTAR_AUDITOR'])
-		->setCellValue('L' . $row, $datum['KOMENTAR_AUDITEE'])
-		->setCellValue('M' . $row, $datum['FILE']);
+		->setCellValue('L' . $row, $datum['KOMENTAR_AUDITEE']);
+
+		if (!empty($datum['FILE'])) {
+            $spreadsheet->setActiveSheetIndex(0)
+                ->setCellValue('M' . $row, '=HYPERLINK("' . $datum['FILE'] . '";"Link File\n")');
+        } else {
+            $spreadsheet->setActiveSheetIndex(0)
+                ->setCellValue('M' . $row, 'No File');
+        }
 		
 
 		$row++;
@@ -366,7 +374,7 @@ class Response_auditee extends MY_Controller {
 	header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 	header('Content-Disposition: attachment;filename="'.$filename. '"');
 	header('Cache-Control: max-age=0');
-	header('Cache-Control: max-age=1'); // If you're serving to IE 9, set to 1
+	 // If you're serving to IE 9, set to 1
 	// If you're serving to IE over SSL, then the following may be needed
 	header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
 	header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified

@@ -160,7 +160,7 @@
         }
         var form_data = $("#kt_form").serialize() + '&' + $.param(obj);
         $.ajax({
-          url: '<?= base_url() ?>aia/jadwal/simpan/',
+          url: '<?= base_url() ?>aia/Jadwal/simpan/',
           type: 'post',
           data: form_data,
           headers: {
@@ -178,6 +178,6 @@
   }
 
   function back(id) { 
-    window.location = '<?= base_url() ?>aia/jadwal/jadwal_audit'
+    window.location = '<?= base_url() ?>aia/Jadwal/jadwal_audit'
   }
 </script>

@@ -220,7 +220,7 @@
         $('#NOMOR_ISO').val(obj.NOMOR_ISO);
         
         $('#FILE').attr('href',obj.FILE);
-        // console.log(data.NOMOR_LHA);
+        
     });
     $('#modal_upload_iso').modal('show');
   }
@@ -232,7 +232,7 @@
         $('#id_tl').val(id_tl);
         $('#NOMOR_LHA').val(obj.NOMOR_LHA);
         $('#TANGGAL_LHA').val(obj.TANGGAL_LHA);
-        // console.log(data.NOMOR_LHA);
+        
     });
     
   }

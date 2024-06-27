@@ -115,7 +115,7 @@
       t = $("#datatable").KTDatatable({
         data: {
           type: "remote",
-          source: '<?= base_url() ?>aia/iso/jsonPertanyaanList/<?=$id_iso?>',
+          source: '<?= base_url() ?>aia/Iso/jsonPertanyaanList/<?=$id_iso?>',
           pageSize: 10
         },
         layout: {
@@ -166,7 +166,7 @@
 
   function uploadFile(id_tl)
   {
-    $.get(`<?= base_url('aia/iso/proses_upload') ?>`+id_tl, function(data, status){
+    $.get(`<?= base_url('aia/Iso/proses_upload') ?>`+id_tl, function(data, status){
         const obj = JSON.parse(data);
         $('#id_tl').val(id_tl);
         $('#NOMOR_LHA').val(obj.NOMOR_LHA);

@@ -203,7 +203,7 @@ var KTDatatableJsonRemoteDemo = {
     t = $("#kt_datatable").KTDatatable({
       data: {
         type: "remote",
-        source: '<?= base_url() ?>aia/response_auditee/jsonResponAuditeeDetail/<?=$kode?>',
+        source: '<?= base_url() ?>aia/Response_auditee/jsonResponAuditeeDetail/<?=$kode?>',
         pageSize: 10
       },
       layout: {
@@ -284,7 +284,7 @@ function uploadFile(id_tl)
         
         var form_data = $("#kt_form").serialize() + '&' + $.param(obj);
         $.ajax({
-          url: '<?= base_url() ?>aia/response_auditee/deletefile/',
+          url: '<?= base_url() ?>aia/Response_auditee/deletefile/',
           type: 'post',
           data: form_data,
           headers: {
@@ -304,10 +304,10 @@ function uploadFile(id_tl)
 
   function chatbox(id_tl)
   {
-    $.post('<?= base_url('aia/response_auditee/updateStatus/') ?>'+id_tl, function(response) {
+    $.post('<?= base_url('aia/Response_auditee/updateStatus/') ?>'+id_tl, function(response) {
         
     });
-    $.get(`<?= base_url('aia/response_auditee/getdatadetail/') ?>`+id_tl, function(data,status){
+    $.get(`<?= base_url('aia/Response_auditee/getdatadetail/') ?>`+id_tl, function(data,status){
         const obj = JSON.parse(data);
   console.log(obj);
         $('#ID_RE_CHAT').val(id_tl);

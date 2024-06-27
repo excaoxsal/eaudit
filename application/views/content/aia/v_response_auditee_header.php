@@ -121,10 +121,8 @@ var KTDatatableJsonRemoteDemo = {
           searchable: !1,
           overflow: "visible",
           template: function(t) {
-            return '<a  href="<?= base_url() ?>aia/response_auditee/detail/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Lihat"><i class="fa fa-eye text-dark"></i></a><a  href="<?= base_url() ?>aia/response_auditee/export_excel/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Export"><i class="fa fa-download text-dark"></i></a>'
-            // return '<a href="<?= base_url() ?>monitoring/entry/tindak_lanjut/' + t.ID_TL + '" class="btn btn-sm btn-clean btn-icon" title="Tindak Lanjut"><i class="text-dark fa fa-file-import"></i></a><a onclick="hapus(' + t.ID_TL + ')" class="btn btn-sm btn-clean btn-icon" title="Hapus"><i class="text-dark fa fa-trash"></i></a><a onclick="preview(' + t.TAHUN + ',' + t.ID_DIVISI + ', ' + t.ID_JENIS_AUDIT + ')" class="btn btn-sm btn-clean btn-icon" title="Preview"><i class="text-dark fa fa-eye"></i></a><a onclick="lha_final(' + t.ID_TL + ')" class="btn btn-sm btn-clean btn-icon" title="LHA Final"><i class="text-dark fa fa-file-word"></i></a>'
-            // return '<center><a href="<?= base_url() ?>perencanaan/kotak_masuk/spa/review/'+t.ID_SPA+'" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit"></i></a></center>'
-          }
+            return '<a  href="<?= base_url() ?>aia/Response_auditee/detail/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Lihat"><i class="fa fa-eye text-dark"></i></a><a  href="<?= base_url() ?>aia/Response_auditee/export_excel/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Export"><i class="fa fa-download text-dark"></i></a>'
+            }
         }
         ]
     }), $("#kt_datatable_search_status").on("change", (function() {
