@@ -17,7 +17,7 @@ class User extends MY_Controller
     {
         $data['list_user']      = $this->aia_master_act->user(['U.STATUS'=>1]);
         $data['list_jabatan']   = $this->aia_master_act->jabatan();
-        $data['list_divisi']    = $this->aia_master_act->divisi();
+        $data['list_divisi']    = $this->aia_master_act->only_divisi();
         $data['list_role']      = $this->aia_master_act->role();
         $data['list_menu']      = $this->aia_master_act->menu();
         $data['menu']           = 'master-aia';

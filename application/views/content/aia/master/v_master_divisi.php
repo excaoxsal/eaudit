@@ -206,6 +206,8 @@
   }
 
   const update = (id) => {
+    $('#form')[0].reset();
+    $('input').val('');
     fetch(`<?= base_url() ?>aia/master/divisi/divisi_json?id=${id}`, {method:'POST'})
         .then(response => response.json())
         .then(data => {
@@ -215,6 +217,7 @@
               $('#is_cabang').prop('checked', true);
 
             if(data[0]['IS_DIVISI'] == 'N') {
+              $('#divisi').css('display', 'none');
               $('#subdiv').css('display', 'flex');
               $('#is_divisi').val(data[0]['IS_DIVISI']);
               $('#sub_divisi').val(data[0]['nama_sub_divisi']);
@@ -222,11 +225,13 @@
               $('#kode_sub_divisi').val(data[0]['KODE']);
             }
             else{
+              $('#subdiv').css('display', 'none');
               $('#divisi').css('display', 'flex');
               $('#is_divisi').val(data[0]['IS_DIVISI']);
               $('#divisi1').val(data[0]['nama_divisi']);
               $('#kode_divisi').val(data[0]['KODE']);
             }
+            
             $('#ID').val(btoa(data[0]['ID_DIVISI']));
             $('#accordion-title').html('Update Divisi');
             $('#save').html('Simpan perubahan');

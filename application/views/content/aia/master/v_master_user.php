@@ -179,7 +179,7 @@
 </div>
 <script type="text/javascript">
   $(document).ready(function() {
-    $('#id_jabatan, #id_role, #atasan_i, #atasan_ii, #datatable_search_divisi').select2().on('change', function (e) {
+    $('#id_jabatan, #id_role').select2().on('change', function (e) {
       $(this).valid();
     });
     $("#form").validate({
@@ -255,7 +255,6 @@
             $('#id_role').val(data[0]['ID_ROLE']).trigger('change');
             $('#id_menu').val(data[0]['MENU']).trigger('change');
             $('#atasan_i').val(data[0]['ID_ATASAN_I']).trigger('change');
-            $('#atasan_ii').val(data[0]['ID_ATASAN_II']).trigger('change');
 
             $('#accordion-title').html('Update User');
             $('#save').html('Simpan perubahan');
@@ -273,7 +272,7 @@
     $('#form')[0].reset(); 
     $('input').val('');
     $("#nipp").removeAttr("disabled"); 
-    $('#id_jabatan, #id_role, #atasan_i, #atasan_ii').trigger('change');
+    $('#id_jabatan, #id_role, #atasan_i').trigger('change');
     $('#datatable').KTDatatable('reload');
     $('#collapseOne3').removeClass('show');
     $('#headingOne3 .card-title').addClass('collapsed');
@@ -399,7 +398,7 @@ var KTDatatableJsonRemoteDemo = {
       t.search($(this).val().toLowerCase(), "NAMA_ROLE")
     })), $("#datatable_search_divisi").on("change", (function() {
       t.search($(this).val().toLowerCase(), "NAMA_DIVISI")
-    })), $("#datatable_search_status, #datatable_search_type").selectpicker()
+    })), $("#datatable_search_status, #datatable_search_type, #datatable_search_divisi").selectpicker()
   }
 };
 jQuery(document).ready((function() {
