@@ -132,7 +132,7 @@ class Iso extends MY_Controller
 				$auditee = $worksheet->getCellByColumnAndRow(5, $row+2)->getValue();
 				$pertanyaan = $worksheet->getCellByColumnAndRow(6, $row+2)->getValue();
 				if($kode_klausul!=""){
-					if($auditee=="ALL"){
+					if (stripos($auditee, "all") !== false){
 						$query_all_divisi = $this->db->select('KODE')->from('TM_DIVISI')->where('IS_DIVISI','N')->get();
 						$result_divisi = $query_all_divisi->result_array();
 						// var_dump($result_divisi);die;
