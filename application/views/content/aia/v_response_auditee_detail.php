@@ -88,7 +88,7 @@
           <i aria-hidden="true" class="ki ki-close"></i>
         </button>
       </div>
-      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/Response_auditee/respon/<?=$kode?>" enctype="multipart/form-data">
+      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/response_auditee/respon/<?=$kode?>" enctype="multipart/form-data">
         <div class="modal-body" style="height: auto">
           <input type="hidden"  name="ID_RE" id="ID_RE">
           <div class="form-group row">
@@ -125,7 +125,7 @@
           <i aria-hidden="true" class="ki ki-close"></i>
         </button>
       </div>
-      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/Response_auditee/respon/<?=$kode?>" enctype="multipart/form-data">
+      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/response_auditee/respon/<?=$kode?>" enctype="multipart/form-data">
         <div class="modal-body" style="height: auto">
           <input type="hidden"  name="ID_RE" id="ID_RE">
           <div class="form-group row">
@@ -154,7 +154,7 @@
           <i aria-hidden="true" class="ki ki-close"></i>
         </button>
       </div>
-      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/Response_auditee/chatbox/<?=$kode?>" enctype="multipart/form-data">
+      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/response_auditee/chatbox/<?=$kode?>" enctype="multipart/form-data">
         <div class="modal-body" style="height: auto">
           <input type="hidden"  name="ID_RE_CHAT" id="ID_RE_CHAT">
           <div class="form-group row">
@@ -250,7 +250,7 @@ var currentID_TL;
 function uploadFile(id_tl)
   {
     currentID_TL = id_tl;
-    $.get(`<?= base_url('aia/Response_auditee/getFileUpload/') ?>`+id_tl, function(data, status){
+    $.get(`<?= base_url('aia/response_auditee/getFileUpload/') ?>`+id_tl, function(data, status){
         const obj = JSON.parse(data);
         $('#ID_RE').val(id_tl);
         $('#RESPONSE_AUDITEE').val(obj.RESPONSE_AUDITEE);

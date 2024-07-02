@@ -24,7 +24,7 @@ class Jadwal extends MY_Controller
 		$data['menu']           = 'perencanaan-aia';
 		$data['sub_menu']       = 'jadwal_audit';
 		$data['title']          = 'List Jadwal Audit ISO';
-        $data['content']        = 'content/Jadwal/jadwal_audit';
+        $data['content']        = 'content/jadwal/jadwal_audit';
 		$data['id_user']		= $this->session->ID_USER;
 		$id_user = $data['id_user'];
 		$data['jadwal_list'] 	= $this->m_jadwal->jadwal_list($id_user);
@@ -50,7 +50,7 @@ class Jadwal extends MY_Controller
 		$data['sub_menu']      		= 'Create Jadwal Audit';
 		
 		$data['title']          	= 'Create Jadwal Audit';
-        $data['content']        	= 'content/Jadwal/create';
+        $data['content']        	= 'content/jadwal/create';
 		
         $this->show($data);
 	}
@@ -71,7 +71,7 @@ class Jadwal extends MY_Controller
 		$data['sub_menu']      		= 'Edit Jadwal Audit';
 		
 		$data['title']          	= 'Edit Jadwal Audit';
-        $data['content']        	= 'content/Jadwal/create';
+        $data['content']        	= 'content/jadwal/create';
 		
         $this->show($data);
 	}
@@ -116,7 +116,7 @@ class Jadwal extends MY_Controller
 				if($update==true){
 					$success_message = 'Data berhasil diupdate.';
 					$this->session->set_flashdata('success', $success_message);
-					echo base_url('aia/Jadwal/jadwal_audit');
+					echo base_url('aia/jadwal/jadwal_audit');
 				}
 				else{
 					$error_message = 'keknya ga bisa update deh';
@@ -137,7 +137,7 @@ class Jadwal extends MY_Controller
 				if($save==true){
 					$success_message = 'Data berhasil disimpan.';
 					$this->session->set_flashdata('success', $success_message);
-					echo base_url('aia/Jadwal/jadwal_audit');
+					echo base_url('aia/jadwal/jadwal_audit');
 				}
 				else{
 					$error_message = 'Silahkan cek kembali datanya';
@@ -167,7 +167,7 @@ class Jadwal extends MY_Controller
 			$this->db->trans_complete();
 			$success_message = 'Data berhasil dihapus.';
 			$this->session->set_flashdata('success', $success_message);
-			echo base_url('aia/Jadwal/jadwal_audit');
+			echo base_url('aia/jadwal/jadwal_audit');
 		}
 		
 	}
