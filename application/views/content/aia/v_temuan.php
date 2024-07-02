@@ -11,7 +11,7 @@
       <div class="d-flex align-items-center flex-wrap mr-2">
         <h5 class="text-dark font-weight-bold mt-2 mb-2 mr-5"><?= APK_NAME ?></h5>
         <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
-        <span class="text-muted font-weight-bold mr-4">Respon Auditee</span>
+        <span class="text-muted font-weight-bold mr-4">Hasil Temuan</span>
       </div>
     </div>
   </div>
@@ -20,7 +20,7 @@
       <div class="card card-custom">
         <div class="card-header flex-wrap border-0 pt-6 pb-0">
           <div class="card-title">
-            <h3 class="card-label">List Respon Auditee
+            <h3 class="card-label">List Hasil Temuan
           </div>
         </div>
         <div class="card-body">
@@ -121,7 +121,7 @@ var KTDatatableJsonRemoteDemo = {
           searchable: !1,
           overflow: "visible",
           template: function(t) {
-            return '<a  href="<?= base_url() ?>aia/Response_auditee/detail/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Lihat"><i class="fa fa-eye text-dark"></i></a><a  href="<?= base_url() ?>aia/Response_auditee/export_excel/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Export"><i class="fa fa-download text-dark"></i></a>'
+            return '<a  href="<?= base_url() ?>aia/Response_auditee/detail/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Lihat"><i class="fa fa-eye text-dark"></i></a><a  href="<?= base_url() ?>aia/Response_auditee/export_excel/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Export"><i class="fa fa-upload text-dark"></i></a>'
             }
         }
         ]
