@@ -11,23 +11,23 @@ class Jadwal extends MY_Controller
 		
 		$this->load->model('perencanaan/M_tim_audit', 'm_tim_audit');
 		$this->load->model('aia/M_jadwal', 'm_jadwal');
-		$this->load->model('aia/M_res_auditee', 'm_res_au');
 		$this->is_login();
 		if(!$this->is_auditor()) $this->load->view('/errors/html/err_401');
 	}
 
 	public function jadwal_audit()
 	{
-		$data['list_status'] 	= $this->m_res_au->get_divisi();
-		
+		$data['list_status'] 	= $this->master_act->status();
 		
 		$data['menu']           = 'perencanaan-aia';
 		$data['sub_menu']       = 'jadwal_audit';
 		$data['title']          = 'List Jadwal Audit ISO';
-        $data['content']        = 'content/Jadwal/jadwal_audit';
+        $data['content']        = 'content/jadwal/jadwal_audit';
 		$data['id_user']		= $this->session->ID_USER;
 		$id_user = $data['id_user'];
 		$data['jadwal_list'] 	= $this->m_jadwal->jadwal_list($id_user);
+		// var_dump($data);
+		// die();
         $this->show($data);
 	}
 	function jsonJadwalList() 
@@ -44,14 +44,17 @@ class Jadwal extends MY_Controller
 		$data_lead_auditor			= $this->master_act->auditor(['R.ID_ROLE' => 5]);
 		$data['data_auditor'] 		= $data_auditor;
 		$data['data_lead_auditor'] 	= $data_lead_auditor;
+		// $data['id_jadwal']			= $this->m_jadwal->get_jadwal($id);
 		$data['list_jenis_audit'] 	= $this->master_act->jenis_audit();
-		$data['list_divisi'] 		= $this->m_res_au->get_divisi();
+		$listdiv=$this->master_act->divisi();
+		$data['list_divisi'] 		= $listdiv;
 		$data['menu']           	= 'perencanaan-aia';
-		$data['sub_menu']      		= 'Create Jadwal Audit';
+		$data['sub_menu']      		= 'jadwal_audit';
 		
 		$data['title']          	= 'Create Jadwal Audit';
-        $data['content']        	= 'content/Jadwal/create';
-		
+        $data['content']        	= 'content/jadwal/create';
+		// var_dump($listdiv);
+		// die();
         $this->show($data);
 	}
 
@@ -62,17 +65,25 @@ class Jadwal extends MY_Controller
 		$data_auditor 				= $this->master_act->auditor(['R.ID_ROLE' => 1]);
 		$data_lead_auditor			= $this->master_act->auditor(['R.ID_ROLE' => 5]);
 		$data_jadwal				= $this->m_jadwal->get_jadwal($id_jadwal,$_SESSION->ID_USER);
+		// var_dump($data_jadwal);
+		// var_dump($id_jadwal);
+		// var_dump($this->m_jadwal->get_jadwal($id_jadwal));
+		// die();
 		$data['data_auditor'] 		= $data_auditor;
 		$data['data_lead_auditor'] 	= $data_lead_auditor;
 		$data['data_jadwal']		= $data_jadwal;
+		// $nama = $data_jadwal[0]['NAMA_AUDITOR'];
+		// var_dump($data_jadwal);
+		// die();
 		$data['list_jenis_audit'] 	= $this->master_act->jenis_audit();
-		$data['list_divisi'] 		= $this->m_res_au->get_divisi();
+		$data['list_divisi'] 		= $this->master_act->divisi();
 		$data['menu']           	= 'perencanaan';
-		$data['sub_menu']      		= 'Edit Jadwal Audit';
+		$data['sub_menu']      		= 'jadwal_audit';
 		
-		$data['title']          	= 'Edit Jadwal Audit';
-        $data['content']        	= 'content/Jadwal/create';
-		
+		$data['title']          	= 'Update Jadwal Audit';
+        $data['content']        	= 'content/jadwal/create';
+		// print_r($data['data_jadwal']);
+		// die();
         $this->show($data);
 	}
 
@@ -94,58 +105,56 @@ class Jadwal extends MY_Controller
 	public function simpan()
 	{
 		$request = $this->input->post();
-		// var_dump($request);die;
+		// $id_apm = $request['ID_APM'];
+		// print_r($request);
+		// die();
+		// var_dump($request);
+		// 	die();
 		$idjadwal = $request['ID_JADWAL'];
-		if($request['WAKTU_AUDIT_SELESAI']<$request['WAKTU_AUDIT_AWAL']){
-			$error_message = 'Periode selesai tidak boleh kurang dari periode mulai';
-			$this->session->set_flashdata('error', $error_message);
-		}
-		else{
-			if($idjadwal!=null){
-				$data = [
-					'ID_AUDITOR'           			=> is_empty_return_null($request['ID_AUDITOR']),
-					'ID_LEAD_AUDITOR'          		=> is_empty_return_null($request['ID_LEAD_AUDITOR']),
-					'WAKTU_AUDIT_AWAL' 				=> is_empty_return_null($request['WAKTU_AUDIT_AWAL']),
-					'WAKTU_AUDIT_SELESAI' 			=> is_empty_return_null($request['WAKTU_AUDIT_SELESAI']),
-					'ID_DIVISI'    					=> is_empty_return_null($request['ID_DIVISI']),
-					'ID_JADWAL'						=> is_empty_return_null($request['ID_JADWAL']),
-				];
-				
-				$update = $this->m_jadwal->update($data);
-				
-				if($update==true){
-					$success_message = 'Data berhasil diupdate.';
-					$this->session->set_flashdata('success', $success_message);
-					echo base_url('aia/Jadwal/jadwal_audit');
-				}
-				else{
-					$error_message = 'keknya ga bisa update deh';
-					$this->session->set_flashdata('error', $error_message);
-				}
-				
+		if($idjadwal!=null){
+			$data = [
+				'ID_AUDITOR'           			=> is_empty_return_null($request['ID_AUDITOR']),
+				'ID_LEAD_AUDITOR'          		=> is_empty_return_null($request['ID_LEAD_AUDITOR']),
+				'WAKTU_AUDIT_AWAL' 				=> is_empty_return_null($request['WAKTU_AUDIT_AWAL']),
+				'WAKTU_AUDIT_SELESAI' 			=> is_empty_return_null($request['WAKTU_AUDIT_SELESAI']),
+				'ID_DIVISI'    					=> is_empty_return_null($request['ID_DIVISI']),
+				'ID_JADWAL'						=> is_empty_return_null($request['ID_JADWAL']),
+			];
+			
+			$update = $this->m_jadwal->update($data);
+			// var_dump($update);
+			// die();
+			if($update==true){
+				$success_message = 'Data berhasil diupdate.';
+				$this->session->set_flashdata('success', $success_message);
+				echo base_url('aia/jadwal/jadwal_audit');
 			}
 			else{
-				$data = [
-							'ID_AUDITOR'           			=> is_empty_return_null($request['ID_AUDITOR']),
-							'ID_LEAD_AUDITOR'          		=> is_empty_return_null($request['ID_LEAD_AUDITOR']),
-							'WAKTU_AUDIT_AWAL' 				=> is_empty_return_null($request['WAKTU_AUDIT_AWAL']),
-							'WAKTU_AUDIT_SELESAI' 			=> is_empty_return_null($request['WAKTU_AUDIT_SELESAI']),
-							'ID_DIVISI'    					=> is_empty_return_null($request['ID_DIVISI'])
-							
-				];
-				$save = $this->m_jadwal->save($data);
-				if($save==true){
-					$success_message = 'Data berhasil disimpan.';
-					$this->session->set_flashdata('success', $success_message);
-					echo base_url('aia/Jadwal/jadwal_audit');
-				}
-				else{
-					$error_message = 'Silahkan cek kembali datanya';
-					$this->session->set_flashdata('error', $error_message);
-				}
+				$error_message = 'keknya ga bisa update deh';
+				$this->session->set_flashdata('error', $error_message);
+			}
+			
+		}
+		else{
+			$data = [
+						'ID_AUDITOR'           			=> is_empty_return_null($request['ID_AUDITOR']),
+						'ID_LEAD_AUDITOR'          		=> is_empty_return_null($request['ID_LEAD_AUDITOR']),
+						'WAKTU_AUDIT_AWAL' 				=> is_empty_return_null($request['WAKTU_AUDIT_AWAL']),
+						'WAKTU_AUDIT_SELESAI' 			=> is_empty_return_null($request['WAKTU_AUDIT_SELESAI']),
+						'ID_DIVISI'    					=> is_empty_return_null($request['ID_DIVISI'])
+						// 'ID_JADWAL'						=> is_empty_return_null($request['ID_JADWAL'])
+			];
+			$save = $this->m_jadwal->save($data);
+			if($save==true){
+				$success_message = 'Data berhasil disimpan.';
+				$this->session->set_flashdata('success', $success_message);
+				echo base_url('aia/jadwal/jadwal_audit');
+			}
+			else{
+				$error_message = 'Silahkan cek kembali datanya';
+				$this->session->set_flashdata('error', $error_message);
 			}
 		}
-		
 		
 		
 	}
@@ -167,7 +176,7 @@ class Jadwal extends MY_Controller
 			$this->db->trans_complete();
 			$success_message = 'Data berhasil dihapus.';
 			$this->session->set_flashdata('success', $success_message);
-			echo base_url('aia/Jadwal/jadwal_audit');
+			redirect($_SERVER['HTTP_REFERER']);
 		}
 		
 	}
