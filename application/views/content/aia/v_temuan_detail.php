@@ -237,9 +237,11 @@ var KTDatatableJsonRemoteDemo = {
           overflow: "visible",
           template: function(t) {
             var buttonTitle = role ==='AUDITOR'  ? 'Lihat"><i class="fa fa-eye text-dark' : 'Respon"><i class="fa fa-upload text-dark';
-            var iconClass = t.STATUS == 1 ? 'color:red' : 'color:#000';
             
-            return '<span class="label font-weight-bold label-lg label-light-deafault label-inline">1</span><a  href="<?= base_url() ?>aia/Temuan/approve/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Approve"><i class="fa fa-file-import text-dark"></i></a><a onclick="uploadFile(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon" title="Download"><i class="fa fa-file-pdf text-dark"></i></a>';
+            var approve = t.STATUS_APPROVE == 'Approved' ? 'color:green' : 'color:red';
+            
+            
+            return '<span class="label font-weight-bold label-lg label-light-default label-inline"style="'+approve+'">'+t.STATUS_APPROVE+'</span><a  href="<?= base_url() ?>aia/Temuan/approve/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Approve"><i class="fa fa-file-import text-dark"></i></a><a onclick="uploadFile(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon" title="Download"><i class="fa fa-file-pdf text-dark"></i></a>';
         }
         }]
     }), $("#kt_datatable_search_status").on("change", (function() {

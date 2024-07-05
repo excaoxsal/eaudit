@@ -121,7 +121,7 @@ var KTDatatableJsonRemoteDemo = {
           searchable: !1,
           overflow: "visible",
           template: function(t) {
-            return '<a  href="<?= base_url() ?>aia/Response_auditee/detail/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Lihat"><i class="fa fa-eye text-dark"></i></a><a  href="<?= base_url() ?>aia/Response_auditee/export_excel/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Export"><i class="fa fa-upload text-dark"></i></a>'
+            return '<a  href="<?= base_url() ?>aia/temuan/detail/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Lihat"><i class="fa fa-eye text-dark"></i></a><a  href="<?= base_url() ?>aia/Response_auditee/export_excel/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Upload"><i class="fa fa-upload text-dark"></i></a>'
             }
         }
         ]
