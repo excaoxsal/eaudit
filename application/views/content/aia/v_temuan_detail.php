@@ -1,3 +1,4 @@
+
 <style type="text/css">
   #kt_datatable_paginate{
 
@@ -203,7 +204,7 @@ var KTDatatableJsonRemoteDemo = {
     t = $("#kt_datatable").KTDatatable({
       data: {
         type: "remote",
-        source: '<?= base_url() ?>aia/Response_auditee/jsonResponAuditeeDetail/<?=$kode?>',
+        source: '<?= base_url() ?>aia/Temuan/jsonTemuanDetail/<?=$kode?>',
         pageSize: 10
       },
       layout: {
@@ -217,16 +218,16 @@ var KTDatatableJsonRemoteDemo = {
         key: "generalSearch"
       },
       columns: [{
-        field: "KODE_KLAUSUL",
+        field: "KLAUSUL",
         title: "Klausul"
       },
       {
-        field: "NAMA_DIVISI",
-        title: "SUB DIVISI"
+        field: "TEMUAN",
+        title: "Temuan"
       },
       {
-        field: "PERTANYAAN",
-        title: "Pertanyaan"
+        field: "STATUS_APPROVE",
+        title: "Status"
       },{
           field: "ID_ISO",
           title: "Action",
@@ -238,7 +239,7 @@ var KTDatatableJsonRemoteDemo = {
             var buttonTitle = role ==='AUDITOR'  ? 'Lihat"><i class="fa fa-eye text-dark' : 'Respon"><i class="fa fa-upload text-dark';
             var iconClass = t.STATUS == 1 ? 'color:red' : 'color:#000';
             
-          return '<a onclick="uploadFile(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon" title="' + buttonTitle + '"></i></a><a onclick="chatbox(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>';
+            return '<span class="label font-weight-bold label-lg label-light-deafault label-inline">1</span><a  href="<?= base_url() ?>aia/Temuan/approve/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Approve"><i class="fa fa-file-import text-dark"></i></a><a onclick="uploadFile(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon" title="Download"><i class="fa fa-file-pdf text-dark"></i></a>';
         }
         }]
     }), $("#kt_datatable_search_status").on("change", (function() {

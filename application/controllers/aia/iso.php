@@ -132,8 +132,36 @@ class Iso extends MY_Controller
 				$auditee = $worksheet->getCellByColumnAndRow(5, $row+2)->getValue();
 				$pertanyaan = $worksheet->getCellByColumnAndRow(6, $row+2)->getValue();
 				if($kode_klausul!=""){
-					if (stripos($auditee, "all") !== false){
-						$query_all_divisi = $this->db->select('KODE')->from('TM_DIVISI')->where('IS_DIVISI','N')->get();
+					if (stripos($auditee, "alldiv") !== false){
+						$query_all_divisi = $this->db->select('KODE')->from('TM_DIVISI')->where('IS_DIVISI','Y')->where('IS_CABANG','N')->get();
+						$result_divisi = $query_all_divisi->result_array();
+						// var_dump($result_divisi);die;
+						$data_divisi="";
+						for($i=0;$i<sizeof($result_divisi);$i++){
+							
+							
+							$data_divisi .=$result_divisi[$i]['KODE'];
+							if ($i < sizeof($result_divisi)-1){
+								$data_divisi.=",";	
+							}
+						}
+						// var_dump($data_divisi);die;
+						$auditee = $data_divisi;
+						$data[] = array(
+								'KODE_KLAUSUL'	=> is_empty_return_null($kode_klausul),
+								'LV1'			=> is_empty_return_null($lv1),
+								'LV2'			=> is_empty_return_null($lv2),
+								'LV3'			=> is_empty_return_null($lv3),
+								'LV4'			=> is_empty_return_null($lv4),
+								'AUDITEE'		=> is_empty_return_null($auditee),
+								'PERTANYAAN'	=> is_empty_return_null($pertanyaan),
+								'ID_ISO'=>is_empty_return_null($_POST['ID_ISO']),
+								'ID_MASTER_PERTANYAAN' => is_empty_return_null('')
+							);
+						
+					}
+					if (stripos($auditee, "allbm") !== false){
+						$query_all_divisi = $this->db->select('KODE')->from('TM_DIVISI')->where('KODEF_PARENT',$auditee)->get();
 						$result_divisi = $query_all_divisi->result_array();
 						// var_dump($result_divisi);die;
 						$data_divisi="";
@@ -160,17 +188,32 @@ class Iso extends MY_Controller
 							);
 						
 					}else{
+						$query_all_divisi = $this->db->select('KODE')->from('TM_DIVISI')->where('IS_DIVISI','Y')->where('IS_CABANG','Y')->get();
+						$result_divisi = $query_all_divisi->result_array();
+						// var_dump($result_divisi);die;
+						$data_divisi="";
+						for($i=0;$i<sizeof($result_divisi);$i++){
+							
+							
+							$data_divisi .=$result_divisi[$i]['KODE'];
+							if ($i < sizeof($result_divisi)-1){
+								$data_divisi.=",";	
+							}
+						}
+						// var_dump($data_divisi);die;
+						$auditee = $data_divisi;
 						$data[] = array(
-							'KODE_KLAUSUL'	=> is_empty_return_null($kode_klausul),
-							'LV1'			=> is_empty_return_null($lv1),
-							'LV2'			=> is_empty_return_null($lv2),
-							'LV3'			=> is_empty_return_null($lv3),
-							'LV4'			=> is_empty_return_null($lv4),
-							'AUDITEE'		=> is_empty_return_null($auditee),
-							'PERTANYAAN'	=> is_empty_return_null($pertanyaan),
-							'ID_ISO'=>is_empty_return_null($_POST['ID_ISO']),
-							'ID_MASTER_PERTANYAAN' => is_empty_return_null('')
-						);	
+								'KODE_KLAUSUL'	=> is_empty_return_null($kode_klausul),
+								'LV1'			=> is_empty_return_null($lv1),
+								'LV2'			=> is_empty_return_null($lv2),
+								'LV3'			=> is_empty_return_null($lv3),
+								'LV4'			=> is_empty_return_null($lv4),
+								'AUDITEE'		=> is_empty_return_null($auditee),
+								'PERTANYAAN'	=> is_empty_return_null($pertanyaan),
+								'ID_ISO'=>is_empty_return_null($_POST['ID_ISO']),
+								'ID_MASTER_PERTANYAAN' => is_empty_return_null('')
+							);
+						
 					}
 					$eldata = [
 									'KODE_KLAUSUL'	=> is_empty_return_null($data[$row]['KODE_KLAUSUL']),

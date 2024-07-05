@@ -358,11 +358,12 @@ class Response_auditee extends MY_Controller {
 		->setCellValue('L' . $row, $datum['KOMENTAR_AUDITEE']);
 
 		if (!empty($datum['FILE'])) {
+			$url = str_replace('http://', '', $datum['FILE']);
             $spreadsheet->setActiveSheetIndex(0)
-                ->setCellValue('M' . $row, '=HYPERLINK("' . $datum['FILE'] . '";"Link File\n")');
+            ->setCellValue('M' . $row, 'Download File');
+			$spreadsheet->getActiveSheet()->getCell('M' . $row)->getHyperlink()->setUrl('http://www.'.$url);
         } else {
-            $spreadsheet->setActiveSheetIndex(0)
-                ->setCellValue('M' . $row, 'No File');
+            $spreadsheet->setActiveSheetIndex(0)->setCellValue('M' . $row, 'No File');
         }
 		
 

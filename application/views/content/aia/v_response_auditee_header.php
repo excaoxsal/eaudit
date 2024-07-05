@@ -81,7 +81,7 @@ var KTDatatableJsonRemoteDemo = {
     t = $("#kt_datatable").KTDatatable({
       data: {
         type: "remote",
-        source: '<?= base_url() ?>aia/response_auditee/jsonResponAuditee',
+        source: '<?= base_url() ?>aia/Response_auditee/jsonResponAuditee',
         pageSize: 10
       },
       layout: {

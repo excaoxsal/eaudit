@@ -73,6 +73,40 @@
     </div>
   </div>
 </div>
+<!-- MODAL Respon -->
+
+<div class="modal fade" id="modal_upload" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Upload Temuan</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <i aria-hidden="true" class="ki ki-close"></i>
+        </button>
+      </div>
+      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/Temuan/uploadtemuan/<?=$kode?>" enctype="multipart/form-data">
+        <div class="modal-body" style="height: auto">
+          <input type="hidden"  name="ID_RE" id="ID_RE">
+          <div class="form-group row">
+            <div class="col-12">
+              <label>Lampiran</label>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" name="file_excel" id="file_excel">
+                <label class="custom-file-label" for="customFile">Choose file</label>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <input type="submit" class="btn btn-primary font-weight-bold" value="Submit">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+  
 <script type="text/javascript">
  "use strict";
 var KTDatatableJsonRemoteDemo = {
@@ -121,7 +155,7 @@ var KTDatatableJsonRemoteDemo = {
           searchable: !1,
           overflow: "visible",
           template: function(t) {
-            return '<a  href="<?= base_url() ?>aia/Response_auditee/detail/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Lihat"><i class="fa fa-eye text-dark"></i></a><a  href="<?= base_url() ?>aia/Response_auditee/export_excel/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Export"><i class="fa fa-upload text-dark"></i></a>'
+            return '<a  href="<?= base_url() ?>aia/Temuan/detail/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Lihat"><i class="fa fa-eye text-dark"></i></a><a onclick="uploadFile(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon" title="Upload"><i class="fa fa-upload text-dark"></i></a>'
             }
         }
         ]
@@ -133,4 +167,11 @@ var KTDatatableJsonRemoteDemo = {
 jQuery(document).ready((function() {
   KTDatatableJsonRemoteDemo.init()
 }));
+
+function uploadFile(id_tl)
+  {
+    
+    $('#modal_upload').modal('show');
+  }
+
 </script>

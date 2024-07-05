@@ -23,7 +23,7 @@
             <h3 class="card-label"><?= $title ?></h3>
           </div>
           <div class="card-toolbar">
-            <a href="<?= base_url() ?>aia/jadwal/create" class="btn btn-primary font-weight-bolder">
+            <a href="<?= base_url() ?>aia/Jadwal/create" class="btn btn-primary font-weight-bolder">
               <i class="fa fa-plus" style="font-size: 12px;"></i>&nbsp;&nbsp;&nbsp;&nbsp;Tambah Jadwal</a>
           </div>
         </div>
