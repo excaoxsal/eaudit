@@ -11,6 +11,7 @@ class Jadwal extends MY_Controller
 		
 		$this->load->model('perencanaan/M_tim_audit', 'm_tim_audit');
 		$this->load->model('aia/M_jadwal', 'm_jadwal');
+                $this->load->model('aia/master/Master_act_aia','aia_master_act');
 		$this->is_login();
 		if(!$this->is_auditor()) $this->load->view('/errors/html/err_401');
 	}
@@ -46,7 +47,8 @@ class Jadwal extends MY_Controller
 		$data['data_lead_auditor'] 	= $data_lead_auditor;
 		// $data['id_jadwal']			= $this->m_jadwal->get_jadwal($id);
 		$data['list_jenis_audit'] 	= $this->master_act->jenis_audit();
-		$listdiv=$this->master_act->divisi();
+		// $listdiv=$this->master_act->divisi();
+                $listdiv=$this->aia_master_act->only_divisi();
 		$data['list_divisi'] 		= $listdiv;
 		$data['menu']           	= 'perencanaan-aia';
 		$data['sub_menu']      		= 'jadwal_audit';

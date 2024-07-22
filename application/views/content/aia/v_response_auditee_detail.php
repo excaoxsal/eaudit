@@ -78,7 +78,7 @@
   </div>
 </div>
 <!-- MODAL Respon -->
-<?php if ($is_auditee) { ?>
+<?php if ($is_auditee && (strpos($this->session->NAMA_JABATAN, 'SM') === false || strpos($this->session->NAMA_JABATAN, 'ASM') !== false) && (strpos($this->session->NAMA_JABATAN, 'Branch Manager') === false)) { ?>
 <div class="modal fade" id="modal_upload" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
     <div class="modal-content">
@@ -172,7 +172,7 @@
           </div>
           <div class="form-group row">
             <div class="col-12">
-            <?php if ($is_auditee) { ?>
+            <?php if ($is_auditee){ ?>
               <label>Message Auditee</label>
               <textarea class="form-control" <?= $disabled ?> name="KOMENTAR_2" id="KOMENTAR_2"><?= $detail[0]['KOMENTAR_2']  ?></textarea>
             <?php } else {?>

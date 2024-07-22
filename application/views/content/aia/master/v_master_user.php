@@ -86,19 +86,6 @@
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label class="col-form-label col-3 text-right">Menu <sup class="text-danger">*</sup></label>
-                    <div class="col-9">
-                      <div class="form-label">
-                        <select class="form-control" id="id_menu" name="id_menu" required>
-                          <option value="">--Pilih Menu--</option>
-                          <?php foreach($list_menu as $menu){ ?>
-                          <option value="<?= $menu['MENU'] ?>"><?php if ($menu['MENU'] == '1') { echo "AMS"; } else if ($menu['MENU'] == '2') { echo "AIA"; } else {echo "ALL";} ?></option>
-                          <?php } ?>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-group row">
                     <label class="col-form-label col-3 text-right">Atasan I</label>
                     <div class="col-9">
                       <div class="form-label">
@@ -253,7 +240,6 @@
             $('#EMAIL').val(data[0]['EMAIL']);
             $('#id_jabatan').val(data[0]['ID_JABATAN']).trigger('change');
             $('#id_role').val(data[0]['ID_ROLE']).trigger('change');
-            $('#id_menu').val(data[0]['MENU']).trigger('change');
             $('#atasan_i').val(data[0]['ID_ATASAN_I']).trigger('change');
 
             $('#accordion-title').html('Update User');
@@ -332,23 +318,6 @@ var KTDatatableJsonRemoteDemo = {
       }, {
         field: "NAMA_ROLE",
         title: "Role"
-      },{
-        field: "MENU",
-        title: "Menu",
-        template: function(t) {
-          var a = {
-            3: {
-              title: "ALL"
-            },
-            2: {
-              title: "AIA"
-            },
-            1: {
-              title: "AMS"
-            }
-          };
-          return '<span >' + (a[t.MENU] ? a[t.MENU].title : '') + "</span>"
-        }
       }, {
         field: "LAST_LOGIN",
         title: "Last Login"

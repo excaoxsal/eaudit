@@ -63,20 +63,6 @@
                       </div>
                     </div>
                   </div>
-                  <input type="hidden" id="is_aia" name="is_aia" value="1">
-                  <!-- <div class="form-group row">
-                    <label class="col-form-label col-3 text-right">IS AIA? <sup class="text-danger">*</sup></label>
-                    <div class="col-9">
-                      <div class="form-label">
-                        <select class="form-control" id="is_aia" name="is_aia" required>
-                          <option value="">--Pilih--</option>
-                          <option value="1">Ya</option>
-                          <option value="0">Tidak</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div> -->
-                  <!-- <div class="separator separator-dashed mb-10"></div> -->
                   <div class="form-group row">
                     <label class="col-form-label col-3 text-right"></label>
                     <div class="col-9">
@@ -171,7 +157,6 @@
             $('#ID').val(btoa(data[0]['ID_JABATAN']));
             $('#id_atasan').val(data[0]['ID_ATASAN']).trigger('change');
             $('#id_divisi').val(data[0]['ID_DIVISI']).trigger('change');
-            $('#is_aia').val(data[0]['IS_AIA']).trigger('change');
 
             $('#accordion-title').html('Update Jabatan');
             $('#save').html('Simpan perubahan');

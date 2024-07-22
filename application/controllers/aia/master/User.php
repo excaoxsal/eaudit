@@ -50,7 +50,6 @@ class User extends MY_Controller
             'ID_JABATAN'        => $this->input->post('id_jabatan'),
             'EMAIL'             => trim(htmlspecialchars($this->input->post('email', TRUE))),
             'ID_ROLE'           => $this->input->post('id_role'),
-            'ID_MENU'           => $this->input->post('id_menu'),
             'ATASAN_I'          => $atasan_i
         );
         

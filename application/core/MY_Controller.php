@@ -35,7 +35,6 @@ class MY_Controller extends CI_Controller
         $data['is_auditee']         = $this->is_auditee();
         $data['is_user']            = $this->is_user();
         $data['is_aia']            = $this->is_aia();
-        $data['is_ams']            = $this->is_ams();
         $data['is_closing_audit']   = $this->is_closing_audit();
         $this->data = $data;
 
@@ -61,11 +60,6 @@ class MY_Controller extends CI_Controller
 
     protected function is_aia(){
         if(($this->session->MENU==2||$this->session->MENU==3) && $this->session->STATUS==1 && $this->session->ID_USER!=NULL && $this->session->NIPP!=NULL) return TRUE;
-        else return FALSE;
-    }
-
-    protected function is_ams(){
-        if(($this->session->MENU==1||$this->session->MENU==3) && $this->session->STATUS==1 && $this->session->ID_USER!=NULL && $this->session->NIPP!=NULL) return TRUE;
         else return FALSE;
     }
 
