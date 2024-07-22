@@ -12,7 +12,7 @@
       <div class="d-flex align-items-center flex-wrap mr-2">
         <h5 class="text-dark font-weight-bold mt-2 mb-2 mr-5"><?= APK_NAME ?></h5>
         <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
-        <span class="text-muted font-weight-bold mr-4">Detail Respon Auditee</span>
+        <span class="text-muted font-weight-bold mr-4">Temuan Detail</span>
         <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
         <span class="text-muted font-weight-bold mr-4"><?=$detail['0']['NOMOR_ISO']?></span>
         <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
@@ -89,23 +89,21 @@
           <i aria-hidden="true" class="ki ki-close"></i>
         </button>
       </div>
-      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/Response_auditee/respon/<?=$kode?>" enctype="multipart/form-data">
+      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/temuan/commitment/<?=$kode?>" enctype="multipart/form-data">
         <div class="modal-body" style="height: auto">
           <input type="hidden"  name="ID_RE" id="ID_RE">
           <div class="form-group row">
             <div class="col-12">
-              <label>Respon</label>
-              <textarea class="form-control" <?= $disabled ?> name="RESPON[]" id="RESPONSE_AUDITEE"></textarea>
+              <label>Tindakan Investigasi</label>
+              <textarea class="form-control" <?= $disabled ?> name="INVESTIGASI[]" id="INVESTIGASI"></textarea>
             </div>
-          </div>
-          <div class="form-group row">
             <div class="col-12">
-              <label>Lampiran</label>
-              <div class="custom-file">
-                <input type="file" class="custom-file-input" name="file_excel" id="file_excel">
-                <label class="custom-file-label" for="customFile">Choose file</label>
-              </div>
-              <label><a id="FILE" href="#" download>Download File</a></label> <a onclick="deletefile()" href="#" class="btn btn-danger h-10" id="btnDelete">X</a>
+              <label>Tindakan Perbaikan</label>
+              <textarea class="form-control" <?= $disabled ?> name="PERBAIKAN[]" id="PERBAIKAN"></textarea>
+            </div>
+            <div class="col-12">
+              <label>Tindakan Korektif</label>
+              <textarea class="form-control" <?= $disabled ?> name="KOREKTIF[]" id="KOREKTIF"></textarea>
             </div>
           </div>
         </div>
@@ -226,7 +224,7 @@ var KTDatatableJsonRemoteDemo = {
         title: "Temuan"
       },
       {
-        field: "STATUS_APPROVE",
+        field: "STATUS",
         title: "Status"
       },{
           field: "ID_ISO",
@@ -241,7 +239,7 @@ var KTDatatableJsonRemoteDemo = {
             var approve = t.STATUS_APPROVE == 'Approved' ? 'color:green' : 'color:red';
             
             
-            return '<span class="label font-weight-bold label-lg label-light-default label-inline"style="'+approve+'">'+t.STATUS_APPROVE+'</span><a  href="<?= base_url() ?>aia/Temuan/approve/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Approve"><i class="fa fa-file-import text-dark"></i></a><a onclick="uploadFile(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon" title="Download"><i class="fa fa-file-pdf text-dark"></i></a>';
+            return '<span class="label font-weight-bold label-lg label-light-default label-inline"style="'+approve+'">'+t.STATUS+'</span><a  onclick="uploadFile(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon" title="Entry Commitment"><i class="fa fa-file-import text-dark"></i></a><a onclick="uploadFile(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon" title="Download"><i class="fa fa-file-pdf text-dark"></i></a>';
         }
         }]
     }), $("#kt_datatable_search_status").on("change", (function() {
@@ -253,7 +251,7 @@ var currentID_TL;
 function uploadFile(id_tl)
   {
     currentID_TL = id_tl;
-    $.get(`<?= base_url('aia/Response_auditee/getFileUpload/') ?>`+id_tl, function(data, status){
+    $.get(`<?= base_url('aia/Temuan/getFileUpload/') ?>`+id_tl, function(data, status){
         const obj = JSON.parse(data);
         $('#ID_RE').val(id_tl);
         $('#RESPONSE_AUDITEE').val(obj.RESPONSE_AUDITEE);

@@ -1,4 +1,4 @@
-<div class="d-flex flex-row-fluid bgi-size-cover bgi-position-center h-100" style="background: url(<?= base_url('assets/img/bg/bg-gg.jpg') ?>) no-repeat;background-size: cover;">
+<div class="d-flex flex-row-fluid bgi-size-cover bgi-position-center h-100" style="background: url(<?= base_url('assets/img/bg/auditor.jpg') ?>) no-repeat;background-size: cover;">
   <div class="container">
     <div class="d-flex justify-content-between align-items-center border-bottom border-white py-7">
       <h3 class="h4 text-white mb-0">Hi, <?= $this->session->userdata('NAMA') ?>.</h3>

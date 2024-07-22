@@ -33,8 +33,8 @@ public function index()
 	public function detail($datas){
 		
 		$data['list_divisi'] 	= $this->m_res_au->get_divisi();
-		$data['menu']           = 'response_auditee';
-        $data['title']          = 'Respon Auditee';
+		$data['menu']           = 'temuan-aia';
+        $data['title']          = 'Temuan';
         $data['content']        = 'content/aia/v_temuan_detail';
 		$data['kode']			= $datas;
 		// var_dump();die;
@@ -74,9 +74,6 @@ public function index()
 			$file_path = $base_url."./storage/aia/".$file_data['file_name'];
 			// Hapus file setelah selesai membaca
 		}
-
-		
-		$this->m_pertanyaan->clean($_POST['ID_ISO']);
 		$inputFileName = $file_path;
 		$inputFileType = PHPExcel_IOFactory::identify($inputFileName);
 		$reader = PHPExcel_IOFactory::createReader($inputFileType);
@@ -97,65 +94,25 @@ public function index()
 			for ($row = 0; $row <= $highestRow; $row++) {
 			
 				$kode_klausul = $worksheet->getCellByColumnAndRow(0, $row+2)->getValue();
-				$lv1 = $worksheet->getCellByColumnAndRow(1, $row+2)->getValue();
-				$lv2 = $worksheet->getCellByColumnAndRow(2, $row+2)->getValue();
-				$lv3 = $worksheet->getCellByColumnAndRow(3, $row+2)->getValue();
-				$lv4 = $worksheet->getCellByColumnAndRow(4, $row+2)->getValue();
-				$auditee = $worksheet->getCellByColumnAndRow(5, $row+2)->getValue();
-				$pertanyaan = $worksheet->getCellByColumnAndRow(6, $row+2)->getValue();
+				$temuan = $worksheet->getCellByColumnAndRow(1, $row+2)->getValue();
+				
 				if($kode_klausul!=""){
-					if (stripos($auditee, "all") !== false){
-						$query_all_divisi = $this->db->select('KODE')->from('TM_DIVISI')->where('IS_DIVISI','N')->get();
-						$result_divisi = $query_all_divisi->result_array();
-						// var_dump($result_divisi);die;
-						$data_divisi="";
-						for($i=0;$i<sizeof($result_divisi);$i++){
-							
-							
-							$data_divisi .=$result_divisi[$i]['KODE'];
-							if ($i < sizeof($result_divisi)-1){
-								$data_divisi.=",";	
-							}
-						}
-						// var_dump($data_divisi);die;
-						$auditee = $data_divisi;
+					
 						$data[] = array(
-								'KODE_KLAUSUL'	=> is_empty_return_null($kode_klausul),
-								'LV1'			=> is_empty_return_null($lv1),
-								'LV2'			=> is_empty_return_null($lv2),
-								'LV3'			=> is_empty_return_null($lv3),
-								'LV4'			=> is_empty_return_null($lv4),
-								'AUDITEE'		=> is_empty_return_null($auditee),
-								'PERTANYAAN'	=> is_empty_return_null($pertanyaan),
-								'ID_ISO'=>is_empty_return_null($_POST['ID_ISO']),
-								'ID_MASTER_PERTANYAAN' => is_empty_return_null('')
-							);
-						
-					}else{
-						$data[] = array(
-							'KODE_KLAUSUL'	=> is_empty_return_null($kode_klausul),
-							'LV1'			=> is_empty_return_null($lv1),
-							'LV2'			=> is_empty_return_null($lv2),
-							'LV3'			=> is_empty_return_null($lv3),
-							'LV4'			=> is_empty_return_null($lv4),
-							'AUDITEE'		=> is_empty_return_null($auditee),
+							'KLAUSUL'	=> is_empty_return_null($kode_klausul),
+							'TEMUAN'		=> is_empty_return_null($temuan),
 							'PERTANYAAN'	=> is_empty_return_null($pertanyaan),
 							'ID_ISO'=>is_empty_return_null($_POST['ID_ISO']),
 							'ID_MASTER_PERTANYAAN' => is_empty_return_null('')
 						);	
-					}
+					
 					$eldata = [
-									'KODE_KLAUSUL'	=> is_empty_return_null($data[$row]['KODE_KLAUSUL']),
-									'LV1'			=> is_empty_return_null($data[$row]['LV1']),
-									'LV2'			=> is_empty_return_null($data[$row]['LV2']),
-									'LV3'			=> is_empty_return_null($data[$row]['LV3']),
-									'LV4'			=> is_empty_return_null($data[$row]['LV4']),
-									'AUDITEE'		=> is_empty_return_null($data[$row]['AUDITEE']),
-									'PERTANYAAN'	=> is_empty_return_null($data[$row]['PERTANYAAN']),
-									'ID_ISO'		=> is_empty_return_null($_POST['ID_ISO']),
+									'KLAUSUL'	=> is_empty_return_null($data[$row]['KLAUSUL']),
+									'TEMUAN'			=> is_empty_return_null($data[$row]['TEMUAN']),
+									'ID_RESPONSE'		=> is_empty_return_null($_POST['ID_RE']),
 									
 								];
-					$save = $this->m_pertanyaan->save($eldata);
+					$save = $this->m_temuan->save($eldata);
 				}
 
 			}
@@ -163,7 +120,6 @@ public function index()
 			$upload_data = $this->upload->data();
 			unlink($upload_data['full_path']);
 			if($save==true){
-				$update = $this->m_iso->update($_POST['ID_ISO']);
 				$success_message = 'Data berhasil disimpan.';
 				$this->session->set_flashdata('success', $success_message);
 				redirect($_SERVER['HTTP_REFERER']);
@@ -172,6 +128,35 @@ public function index()
 				$error_message = 'Silahkan cek kembali datanya';
 				$this->session->set_flashdata('error', $error_message);
 			}
+	}
+
+	public function commitment() {
+		$data_update = 
+			[
+			'INVESTIGASI'           			=> is_empty_return_null($request['INVESTIGASI']),
+			'PERBAIKAN'           				=> is_empty_return_null($request['PERBAIKAN']),
+			'KOREKTIF'           				=> is_empty_return_null($request['KOREKTIF']),
+			'TANGGAL'           				=> is_empty_return_null($request['TANGGAL']),
+			'FILE'           					=> is_empty_return_null($file_path)
+			];
+		var_dump($data_update);die;
+		$this->db->set('TANGGAL', $data_update['TANGGAL'][0]);
+		$this->db->set('KOREKTIF', $data_update['KOREKTIF'][0]);
+		$this->db->set('PERBAIKAN', $data_update['PERBAIKAN'][0]);
+		$this->db->set('INVESTIGASI', $data_update['INVESTIGASI'][0]);
+		$this->db->where('ID_RESPONSE', $request['ID_HEADER']);
+		$update = $this->db->update('TEMUAN_DETAIL');
+		if ($update){
+			$success_message = 'Data Respon Berhasil Disimpan.';
+			$this->session->set_flashdata('success', $success_message);
+			redirect(base_url('aia/temuan/detail/'.$request['ID_HEADER']));
+		}
+		else{
+			$error_message = 'Silahkan coba kembali';
+			$this->session->set_flashdata('error', $error_message);
+			redirect(base_url('aia/temuan/detail/'.$request['ID_HEADER']));
+		}
+		
 	}
 
 }
