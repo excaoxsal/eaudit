@@ -57,21 +57,26 @@ class Response_auditee extends MY_Controller {
 		// var_dump($current_date<=$result_waktu['0']['WAKTU_AUDIT_SELESAI']);var_dump($current_date,$result_waktu);var_dump($data);die;
 		if($current_date>=$result_waktu['0']['WAKTU_AUDIT_AWAL']){
 			if($current_date<=$result_waktu['0']['WAKTU_AUDIT_SELESAI']){
-				$config['file_name']        = "RESPON_AUDITEE".$current_time;
-				$config['upload_path'] = './storage/aia/'; // Lokasi penyimpanan file
-				$config['allowed_types'] = 'xls|xlsx|pdf|doc|docx|ppt|pptx|jpg|jpeg|png'; // Jenis file yang diizinkan
-				$config['max_size'] = 15000; // Ukuran maksimum file (dalam KB)\
-				$upload_path = './storage/aia/';
-				$eltype= $config['allowed_types'];
-				$loadupload = $config['upload_path'];
-				$this->upload->upload_path = $loadupload;
-				$this->upload->allowed_types = $eltype;
-				$this->upload->initialize($config);
-				$file_path = base_url().'storage/aia/'.$config['file_name'].'.'.$ext;
+				if($ext==""||$ext==null){
+					$file_path = null;
+				}else{	
+					$config['file_name']        = "RESPON_AUDITEE".$current_time;
+					$config['upload_path'] = './storage/aia/'; // Lokasi penyimpanan file
+					$config['allowed_types'] = 'xls|xlsx|pdf|doc|docx|ppt|pptx|jpg|jpeg|png|zip|rar'; // Jenis file yang diizinkan
+					$config['max_size'] = 15000; // Ukuran maksimum file (dalam KB)\
+					$upload_path = './storage/aia/';
+					$eltype= $config['allowed_types'];
+					$loadupload = $config['upload_path'];
+					$this->upload->upload_path = $loadupload;
+					$this->upload->allowed_types = $eltype;
+					$this->upload->initialize($config);
+					$file_path = base_url().'storage/aia/'.$config['file_name'].'.'.$ext;
+					
+					$elupload = $this->upload->do_upload('file_excel');
+					$upload_data = $this->upload->data();
+					// echo($file_path);
+				}
 				
-				$elupload = $this->upload->do_upload('file_excel');
-				$upload_data = $this->upload->data();
-				// echo($file_path);
 				$data_update = 
 					[
 					'RESPON'           			=> is_empty_return_null($request['RESPON']),
@@ -361,7 +366,7 @@ class Response_auditee extends MY_Controller {
 			$url = str_replace('http://', '', $datum['FILE']);
             $spreadsheet->setActiveSheetIndex(0)
             ->setCellValue('M' . $row, 'Download File');
-			$spreadsheet->getActiveSheet()->getCell('M' . $row)->getHyperlink()->setUrl('http://www.'.$url);
+			$spreadsheet->getActiveSheet()->getCell('M' . $row)->getHyperlink()->setUrl(''.$url);
         } else {
             $spreadsheet->setActiveSheetIndex(0)->setCellValue('M' . $row, 'No File');
         }
@@ -370,7 +375,7 @@ class Response_auditee extends MY_Controller {
 		$row++;
 	}
 
-	// Redirect output to a client’s web browser (Xlsx)
+	// Redirect output to a clientâ€™s web browser (Xlsx)
 	$filename="export_data".$datum['NOMOR_ISO'].$datum['KODE_DIVISI'].".xlsx";
 	header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 	header('Content-Disposition: attachment;filename="'.$filename. '"');

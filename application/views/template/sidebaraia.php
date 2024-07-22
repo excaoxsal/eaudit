@@ -5,6 +5,13 @@
       <h4 id="toggleButton" class="menu-text" >Menu AIA</h4>
       <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
     </li>
+
+    <li class="menu-item <?= isset($menu) ? $menu == 'home' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
+      <a href="<?= base_url('home') ?>" class="menu-link rounded mx-5 my-1">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" class="mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        <span class="menu-text">Home</span>
+      </a>
+    </li>
     
     <?php if ($is_auditor) { ?>
     
@@ -22,7 +29,7 @@
 
         <ul class="menu-subnav">
           <li class="menu-item menu-item-submenu <?= isset($sub_menu) ? $sub_menu == 'm_iso' ? 'menu-item-open menu-item-here' : '' : ''; ?>" aria-haspopup="true">
-            <a href="<?= base_url() ?>aia/Iso/" class="menu-link mx-5 my-1 rounded">
+            <a href="<?= base_url() ?>aia/iso/index" class="menu-link mx-5 my-1 rounded">
             
               <span class="menu-text">Pertanyaan</span>
             </a>
@@ -72,29 +79,7 @@
     </li>
 
 
-    <li  id="myList"  class="menu-item menu-item-submenu <?= isset($menu) ? $menu == 'temuan-aia' ? 'menu-item-open menu-item-here' : '' : ''; ?>" aria-haspopup="true" data-menu-toggle="hover">
-
-      <a href="javascript:;" class="menu-link menu-toggle mx-5 my-1 rounded">
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" class="mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clipboard"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
-        <span class="menu-text">Temuan</span>
-        <i class="menu-arrow"></i>
-      </a>
-
-      <div class="menu-submenu">
-        <i class="menu-arrow"></i>
-
-        <ul class="menu-subnav">
-          <li class="menu-item menu-item-submenu <?= isset($sub_menu) ? $sub_menu == 'temuan' ? 'menu-item-open menu-item-here' : '' : ''; ?>" aria-haspopup="true">
-            <a href="<?= base_url() ?>aia/Temuan/index" class="menu-link mx-5 my-1 rounded">
-            
-              <span class="menu-text">Hasil Temuan</span>
-            </a>
-          </li>
-          
-        </ul>
-      </div>
-    </li>
-
+    
     
       
     <?php } ?>

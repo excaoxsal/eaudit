@@ -4,7 +4,7 @@
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 
 <head>
-  
+
   <meta charset="utf-8" />
   <title><?= APK_NAME ?></title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -21,7 +21,10 @@
   <link href="<?= base_url('assets/css/themes/layout/brand/light7a50.css') ?>" rel="stylesheet" type="text/css" />
   <link href="<?= base_url('assets/css/themes/layout/aside/light7a50.css') ?>" rel="stylesheet" type="text/css" />
   <script src="https://kit.fontawesome.com/158ead05c1.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.tiny.cloud/1/nun9cyduwghfatmzjy7ljewsakpdfuqbu397iu0189kwkx5b/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+  <!--disable
   <script src="https://cdn.tiny.cloud/1/jifstdyvbxfuj36bqjivg4fsavgqqvvgoyltmvj5w1pq188t/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+	-->
   <!-- <script src="<?= base_url('assets/vendor/tinymce/js/tinymce/tinymce.min.js') ?>"></script> -->
   <script src="<?= base_url('assets/jquery/jquery.min.js') ?>"></script>
 
@@ -71,19 +74,15 @@
             </span>
           </button>
         </div>
-        
+
         <div class="aside-menu-wrapper flex-column-fluid" id="kt_aside_menu_wrapper">
+
           <div id="kt_aside_menu" class="aside-menu my-4" data-menu-vertical="1" data-menu-scroll="1" data-menu-dropdown-timeout="500">
-          <?php if ($is_ams) { ?>
-          <?php $this->load->view('template/sidebar') ?>
-          <?php } ?>
-          <?php if ($is_aia) { ?>
-          <?php $this->load->view('template/sidebaraia') ?>
-          <?php } ?>
+            <?php $this->load->view('template/sidebaraia') ?>
           </div>
         
         </div>
-        
+
       </div>
       <div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
 
@@ -263,7 +262,7 @@ function set_tinymce(tmce_id, value='', mode='')
   tinymce.init({
     selector: 'textarea#'+tmce_id,
     height : "200",
-    plugins: "image link lists charmap table preview importcss searchreplace autolink directionality visualblocks image link codesample code table charmap pagebreak nonbreaking insertdatetime advlist lists help charmap quickbars", 
+    plugins: "link lists charmap table preview importcss searchreplace autolink directionality visualblocks link codesample code table charmap pagebreak nonbreaking insertdatetime advlist lists help charmap quickbars", 
     toolbar: "formatgroup editgroup paragraphgroup insertgroup",
     toolbar_groups: {
         formatgroup: {
@@ -284,7 +283,7 @@ function set_tinymce(tmce_id, value='', mode='')
         insertgroup: {
             icon: 'plus',
             tooltip: 'Insert',
-            items: 'table image charmap pagebreak hr insertdatetime | link codesample code'
+            items: 'table charmap pagebreak hr insertdatetime | link codesample code'
         }
     },
     // skin: 'naked',
@@ -313,7 +312,8 @@ function set_tinymce(tmce_id, value='', mode='')
     setup: function(editor) {
       editor.on('init', function(e) {
         editor.setContent(value);
-        editor.mode.set(mode);
+        editor.save();
+        // editor.mode.set(mode);
       }).on('change', function(e) {
           validateTinyMCE(editor);
           editor.save();
@@ -360,24 +360,6 @@ async function prosesDataMaster(url)
   });
   return proses;
 }
-
-// Mendapatkan referensi elemen unordered list dan tombol
-var myList = document.getElementById('myList');
-var toggleButton = document.getElementById('toggleButton');
-
-// Menambahkan event listener untuk tombol
-toggleButton.addEventListener('click', function() {
-    // Mengecek apakah unordered list sedang ditampilkan atau disembunyikan
-    if (myList.style.display === 'none') {
-        // Jika disembunyikan, tampilkan kembali
-        myList.style.display = 'block';
-    } else {
-        // Jika ditampilkan, sembunyikan
-        myList.style.display = 'none';
-    }
-});
-
-
 </script>
 </body>
 </html>
