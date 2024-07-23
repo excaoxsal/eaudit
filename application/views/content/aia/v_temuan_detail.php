@@ -84,26 +84,36 @@
   <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Respon Auditee</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Entry Commitment</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <i aria-hidden="true" class="ki ki-close"></i>
         </button>
       </div>
       <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/temuan/commitment/<?=$kode?>" enctype="multipart/form-data">
         <div class="modal-body" style="height: auto">
-          <input type="hidden"  name="ID_RE" id="ID_RE">
+          <input type="hidden"  name="ID_RESPONSE" id="ID_RESPONSE">
           <div class="form-group row">
-            <div class="col-12">
-              <label>Tindakan Investigasi</label>
+            <label class="col-form-label col-md-2">Tindakan Investigasi</label>
+            <div class="col-md-10">
               <textarea class="form-control" <?= $disabled ?> name="INVESTIGASI[]" id="INVESTIGASI"></textarea>
             </div>
-            <div class="col-12">
-              <label>Tindakan Perbaikan</label>
+          </div>
+          <div class="form-group row">
+            <label class="col-form-label col-md-2">Tindakan Perbaikan</label>
+            <div class="col-md-10">
               <textarea class="form-control" <?= $disabled ?> name="PERBAIKAN[]" id="PERBAIKAN"></textarea>
             </div>
-            <div class="col-12">
-              <label>Tindakan Korektif</label>
+          </div>
+          <div class="form-group row">
+            <label class="col-form-label col-md-2">Tindakan Korektif</label>
+            <div class="col-md-10">
               <textarea class="form-control" <?= $disabled ?> name="KOREKTIF[]" id="KOREKTIF"></textarea>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-form-label col-md-2">Tanggal Kirim</label>
+            <div class="col-md-10">
+              <input type="date" class="form-control" name="TANGGAL[]" id="TANGGAL" placeholder="Select a date">
             </div>
           </div>
         </div>
@@ -227,7 +237,7 @@ var KTDatatableJsonRemoteDemo = {
         field: "STATUS",
         title: "Status"
       },{
-          field: "ID_ISO",
+          field: "ID_RESPONSE",
           title: "Action",
           class: "text-center",
           sortable: !1,
@@ -239,7 +249,7 @@ var KTDatatableJsonRemoteDemo = {
             var approve = t.STATUS_APPROVE == 'Approved' ? 'color:green' : 'color:red';
             
             
-            return '<span class="label font-weight-bold label-lg label-light-default label-inline"style="'+approve+'">'+t.STATUS+'</span><a  onclick="uploadFile(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon" title="Entry Commitment"><i class="fa fa-file-import text-dark"></i></a><a onclick="uploadFile(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon" title="Download"><i class="fa fa-file-pdf text-dark"></i></a>';
+            return '<span class="label font-weight-bold label-lg label-light-default label-inline"style="'+approve+'">'+t.STATUS+'</span><a  onclick="uploadFile(' + t.ID_RESPONSE + ')" class="btn btn-sm btn-clean btn-icon" title="Entry Commitment"><i class="fa fa-file-import text-dark"></i></a><a onclick="uploadFile(' + t.ID_RESPONSE + ')" class="btn btn-sm btn-clean btn-icon" title="Download"><i class="fa fa-file-pdf text-dark"></i></a>';
         }
         }]
     }), $("#kt_datatable_search_status").on("change", (function() {
@@ -253,8 +263,10 @@ function uploadFile(id_tl)
     currentID_TL = id_tl;
     $.get(`<?= base_url('aia/Temuan/getFileUpload/') ?>`+id_tl, function(data, status){
         const obj = JSON.parse(data);
-        $('#ID_RE').val(id_tl);
-        $('#RESPONSE_AUDITEE').val(obj.RESPONSE_AUDITEE);
+        $('#ID_RESPONSE').val(id_tl);
+        $('#INVESTIGASI').val(obj.INVESTIGASI);
+        $('#PERBAIKAN').val(obj.PERBAIKAN);
+        $('#KOREKTIF').val(obj.KOREKTIF);
 
         if (obj.FILE && obj.FILE !== 'null') {
           $('#FILE').attr('href', obj.FILE).show();

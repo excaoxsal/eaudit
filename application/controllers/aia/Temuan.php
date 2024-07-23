@@ -131,6 +131,8 @@ public function index()
 	}
 
 	public function commitment() {
+		$request = $this->input->post();
+		date_default_timezone_set('Asia/Jakarta');
 		$data_update = 
 			[
 			'INVESTIGASI'           			=> is_empty_return_null($request['INVESTIGASI']),
@@ -139,7 +141,7 @@ public function index()
 			'TANGGAL'           				=> is_empty_return_null($request['TANGGAL']),
 			'FILE'           					=> is_empty_return_null($file_path)
 			];
-		var_dump($data_update);die;
+		var_dump($request);die;
 		$this->db->set('TANGGAL', $data_update['TANGGAL'][0]);
 		$this->db->set('KOREKTIF', $data_update['KOREKTIF'][0]);
 		$this->db->set('PERBAIKAN', $data_update['PERBAIKAN'][0]);
