@@ -14,28 +14,28 @@ class M_Temuan extends CI_Model{
     }
 
     public function get_temuan_detail($data){
-        $elcoding = $data;
-
-
-        
+        $user_session = $_SESSION['NAMA_ROLE'];
+        if($user_session=="AUDITOR"){
             $sql = '
-        SELECT 
-           *
-        FROM 
-            "TEMUAN_DETAIL" ra
-        where 
-            "ID_RESPONSE" = ?
-        ';
+            SELECT "ID_TEMUAN", "ID_AUDITOR", "ID_LEAD_AUDITOR", "ID_AUDITEE", "ID_ATASAN_AUDITEE", "ID_JADWAL", "ID_RESPONSE", "STATUS", "KLAUSUL", "PERTANYAAN", "TEMUAN", "APPROVAL_COMMITMENT", "APPROVAL_TINDAKLANJUT", "INVESTIGASI", "PERBAIKAN", "KOREKTIF", "TANGGAL", "KOMENTAR_AUDITOR", "KOMENTAR_AUDITEE", "STATUS_KOMEN_AUDITOR" as "STATUS_KOMEN"
+            FROM "TEMUAN_DETAIL"
+            where 
+                "ID_RESPONSE" = ?
+            ORDER BY "ID_TEMUAN"
+            ';
+        }else{
+            $sql = '
+            SELECT "ID_TEMUAN", "ID_AUDITOR", "ID_LEAD_AUDITOR", "ID_AUDITEE", "ID_ATASAN_AUDITEE", "ID_JADWAL", "ID_RESPONSE", "STATUS", "KLAUSUL", "PERTANYAAN", "TEMUAN", "APPROVAL_COMMITMENT", "APPROVAL_TINDAKLANJUT", "INVESTIGASI", "PERBAIKAN", "KOREKTIF", "TANGGAL", "KOMENTAR_AUDITOR", "KOMENTAR_AUDITEE", "STATUS_KOMEN_AUDITEE" as "STATUS_KOMEN"
+            FROM "TEMUAN_DETAIL"
+            where 
+                "ID_RESPONSE" = ?
+            ORDER BY "ID_TEMUAN"
+            ';
+        }
         $params = array($data);
-        // Menyusun parameter untuk query
-        
-        
-        // Menjalankan query dengan parameter
         $query = $this->db->query($sql, $params);
-        // var_dump($query);die;
-        
-        // Mengambil hasil query sebagai array asosiatif
-    
         return $query->result_array();
     }
+
+    
 }

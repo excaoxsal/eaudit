@@ -170,9 +170,19 @@ jQuery(document).ready((function() {
 
 var currentID_TL;
 function uploadFile(id_tl)
-  {
-    currentID_TL = id_tl;
-    $.get(`<?= base_url('aia/Response_auditee/getFileUpload/') ?>`+id_tl, function(data, status){
+{
+  Swal.fire({
+    text: 'Apakah Anda mengunggah file ulang dan menghapus data yang sudah ada ?',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Ya',
+    cancelButtonText: 'Batal'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      currentID_TL = id_tl;
+      $.get(`<?= base_url('aia/Response_auditee/getFileUpload/') ?>` + id_tl, function(data, status) {
         const obj = JSON.parse(data);
         $('#ID_RE').val(id_tl);
         $('#RESPONSE_AUDITEE').val(obj.RESPONSE_AUDITEE);
@@ -185,7 +195,9 @@ function uploadFile(id_tl)
           $('#btnDelete').hide();
         }
         // console.log(data.NOMOR_LHA);
-    });
-    $('#modal_upload').modal('show');
-  }
+      });
+      $('#modal_upload').modal('show');
+    }
+  });
+}
 </script>

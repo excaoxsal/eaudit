@@ -39,7 +39,7 @@ public function index()
 		$data['kode']			= $datas;
 		// var_dump();die;
 		$data['role']			= $_SESSION['NAMA_ROLE'];
-		$data['detail']			= $this->m_res_au->get_response_auditee_detail($datas);
+		
 		$this->show($data);
 	}
 
@@ -129,8 +129,14 @@ public function index()
 				$this->session->set_flashdata('error', $error_message);
 			}
 	}
+	function getFileUpload($id_tl)
+    {
+            $query = $this->db->select('*')->from('TEMUAN_DETAIL')
+                        ->where('ID_TEMUAN', $id_tl)->get()->row();
+            echo json_encode($query);   
+    }
 
-	public function commitment() {
+	public function commitment($data) {
 		$request = $this->input->post();
 		date_default_timezone_set('Asia/Jakarta');
 		$data_update = 
@@ -138,25 +144,88 @@ public function index()
 			'INVESTIGASI'           			=> is_empty_return_null($request['INVESTIGASI']),
 			'PERBAIKAN'           				=> is_empty_return_null($request['PERBAIKAN']),
 			'KOREKTIF'           				=> is_empty_return_null($request['KOREKTIF']),
-			'TANGGAL'           				=> is_empty_return_null($request['TANGGAL']),
-			'FILE'           					=> is_empty_return_null($file_path)
+			'TANGGAL'           				=> is_empty_return_null($request['TANGGAL'])
 			];
-		var_dump($request);die;
-		$this->db->set('TANGGAL', $data_update['TANGGAL'][0]);
+		// var_dump($request);die;
+		$this->db->set('TANGGAL', $data_update['TANGGAL']);
 		$this->db->set('KOREKTIF', $data_update['KOREKTIF'][0]);
 		$this->db->set('PERBAIKAN', $data_update['PERBAIKAN'][0]);
 		$this->db->set('INVESTIGASI', $data_update['INVESTIGASI'][0]);
-		$this->db->where('ID_RESPONSE', $request['ID_HEADER']);
+		$this->db->set('STATUS', 'Commitment');
+		$this->db->where('ID_TEMUAN', $request['ID_TEMUAN']);
 		$update = $this->db->update('TEMUAN_DETAIL');
 		if ($update){
 			$success_message = 'Data Respon Berhasil Disimpan.';
 			$this->session->set_flashdata('success', $success_message);
-			redirect(base_url('aia/temuan/detail/'.$request['ID_HEADER']));
+			redirect(base_url('aia/temuan/detail/'.$data));
 		}
 		else{
 			$error_message = 'Silahkan coba kembali';
 			$this->session->set_flashdata('error', $error_message);
-			redirect(base_url('aia/temuan/detail/'.$request['ID_HEADER']));
+			redirect(base_url('aia/temuan/detail/'.$data));
+		}
+		
+	}
+
+	public function chatbox($data){
+		$request = $this->input->post();
+		// var_dump($request['KOMENTAR_AUDITOR']);die;
+		$data_update = [
+			'KOMENTAR_AUDITOR'           			=> is_empty_return_null($request['KOMENTAR_AUDITOR']),
+			'KOMENTAR_AUDITEE'          			=> is_empty_return_null($request['KOMENTAR_AUDITEE']),
+		];
+		// var_dump($request);die;	
+		$user_session = $_SESSION['NAMA_ROLE'];
+        if($user_session=="AUDITOR"){
+			$this->db->set('KOMENTAR_AUDITOR', $request['KOMENTAR_AUDITOR']);
+			$this->db->set('KOMENTAR_AUDITEE', $request['KOMENTAR_AUDITEE']);
+			$this->db->set('STATUS_KOMEN_AUDITEE', '1');
+			$this->db->where('ID_TEMUAN', $request['ID_TEMUAN']);
+			$elupdate = $this->db->update('TEMUAN_DETAIL');
+		}else{
+			$this->db->set('KOMENTAR_AUDITOR', $request['KOMENTAR_AUDITOR']);
+			$this->db->set('KOMENTAR_AUDITEE', $request['KOMENTAR_AUDITEE']);
+			$this->db->set('STATUS_KOMEN_AUDITOR', '1');
+			$this->db->where('ID_TEMUAN', $request['ID_TEMUAN']);
+			$elupdate = $this->db->update('TEMUAN_DETAIL');
+		}
+		 
+        
+		if($elupdate){
+			$success_message = 'Data Komentar Berhasil Diposting.';
+			$this->session->set_flashdata('success', $success_message);
+			redirect(base_url('aia/temuan/detail/'.$data));
+		}else{
+			$error_message = 'Gagal Silahakan coba lagi';
+			$this->session->set_flashdata('error', $error_message);
+			redirect(base_url('aia/temuan/detail/'.$data));
+		}
+		
+
+	}
+	function getdatadetail($id_tl) 
+	{
+		$user_session = $_SESSION['NAMA_ROLE'];
+		$user_divisi = $_SESSION['ID_DIVISI'];
+        if($user_session=="AUDITOR"){
+			$query = $this->db->select('ID_TEMUAN,KOMENTAR_AUDITOR,KOMENTAR_AUDITEE')->from('TEMUAN_DETAIL')->where('ID_TEMUAN', $id_tl)->get()->row();
+		}else{
+			$query = $this->db->select('ID_TEMUAN,KOMENTAR_AUDITOR,KOMENTAR_AUDITEE')->from('TEMUAN_DETAIL')->where('ID_TEMUAN', $id_tl)->get()->row();
+		}
+		// var_dump($query);die;
+        echo json_encode($query);
+	}
+	function updateStatus($data){
+		$user_session = $_SESSION['NAMA_ROLE'];
+		if($user_session=="AUDITOR"){
+			$this->db->set('"STATUS_KOMEN_AUDITOR"','0');
+			$this->db->where('ID_TEMUAN', $data);
+			$this->db->update('TEMUAN_DETAIL');
+		}
+		else{
+			$this->db->set('"STATUS_KOMEN_AUDITEE"','0');
+			$this->db->where('ID_TEMUAN', $data);
+			$this->db->update('TEMUAN_DETAIL');
 		}
 		
 	}

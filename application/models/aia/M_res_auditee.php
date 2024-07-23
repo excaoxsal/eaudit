@@ -55,14 +55,7 @@ class M_res_auditee extends CI_Model{
     }
 
     public function get_response_auditee_detail($data){
-        $elcoding = $data;
-        $elcoding_parts = explode('01', $elcoding);
-        $divisi = $elcoding_parts[0];
-        $id_iso = $elcoding_parts[1];
-        $id_jadwal = $elcoding_parts[2];
 		$user_session = $_SESSION['NAMA_ROLE'];
-		$user_divisi = $_SESSION['ID_DIVISI'];
-
         if($user_session=="AUDITOR"){
             $sql = '
         SELECT 
@@ -98,9 +91,6 @@ class M_res_auditee extends CI_Model{
             "TM_DIVISI" d ON d."KODE" = ra."SUB_DIVISI"
         WHERE 
             ra."ID_HEADER" = ?
-            
-        
-            
         ORDER BY
              ra."ID_RE" ASC
         ';
@@ -141,25 +131,12 @@ class M_res_auditee extends CI_Model{
             "TM_DIVISI" d ON d."KODE" = ra."SUB_DIVISI"
         WHERE 
             ra."ID_HEADER" = ?
-            
-        
-            
         ORDER BY
             ra."ID_MASTER_PERTANYAAN" ASC
         ';
         $params = array($data);
         }
-        
-    
-        // Menyusun parameter untuk query
-        
-        
-        // Menjalankan query dengan parameter
         $query = $this->db->query($sql, $params);
-        // var_dump($query);die;
-        
-        // Mengambil hasil query sebagai array asosiatif
-    
         return $query->result_array();
     }
 

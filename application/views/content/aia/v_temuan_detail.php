@@ -25,7 +25,7 @@
       <div class="card card-custom">
         <div class="card-header flex-wrap border-0 pt-6 pb-0">
           <div class="card-title">
-            <h3 class="card-label">List Respon Auditee 
+            <h3 class="card-label">List Temuan Detail 
           </div>
         </div>
         <div class="card-body">
@@ -91,7 +91,7 @@
       </div>
       <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/temuan/commitment/<?=$kode?>" enctype="multipart/form-data">
         <div class="modal-body" style="height: auto">
-          <input type="hidden"  name="ID_RESPONSE" id="ID_RESPONSE">
+          <input type="hidden"  name="ID_TEMUAN" id="ID_TEMUAN">
           <div class="form-group row">
             <label class="col-form-label col-md-2">Tindakan Investigasi</label>
             <div class="col-md-10">
@@ -111,9 +111,9 @@
             </div>
           </div>
           <div class="form-group row">
-            <label class="col-form-label col-md-2">Tanggal Kirim</label>
+            <label class="col-form-label col-md-2">Tanggal Implementasi</label>
             <div class="col-md-10">
-              <input type="date" class="form-control" name="TANGGAL[]" id="TANGGAL" placeholder="Select a date">
+              <input type="date" class="form-control" name="TANGGAL" id="TANGGAL" placeholder="Select a date">
             </div>
           </div>
         </div>
@@ -134,7 +134,7 @@
           <i aria-hidden="true" class="ki ki-close"></i>
         </button>
       </div>
-      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/Response_auditee/respon/<?=$kode?>" enctype="multipart/form-data">
+      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/temuan/commitment/<?=$kode?>" enctype="multipart/form-data">
         <div class="modal-body" style="height: auto">
           <input type="hidden"  name="ID_RE" id="ID_RE">
           <div class="form-group row">
@@ -163,18 +163,18 @@
           <i aria-hidden="true" class="ki ki-close"></i>
         </button>
       </div>
-      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/Response_auditee/chatbox/<?=$kode?>" enctype="multipart/form-data">
+      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/temuan/chatbox/<?=$kode?>" enctype="multipart/form-data">
         <div class="modal-body" style="height: auto">
-          <input type="hidden"  name="ID_RE_CHAT" id="ID_RE_CHAT">
+          <input type="hidden"  name="ID_TEMUAN" id="ID_TEMUAN">
           <div class="form-group row">
             <div class="col-12">
             <?php if ($is_auditor) { ?>
               <label>Message Auditor</label>
-              <textarea class="form-control" name="KOMENTAR_1" id="KOMENTAR_1"></textarea>
+              <textarea class="form-control" name="KOMENTAR_AUDITOR" id="KOMENTAR_AUDITOR"></textarea>
             <?php } else {?>
             
               <label>Message Auditor</label>
-              <textarea readonly class="form-control" <?= $disabled ?> name="KOMENTAR_1" id="KOMENTAR_1"></textarea>
+              <textarea readonly class="form-control" <?= $disabled ?> name="KOMENTAR_AUDITOR" id="KOMENTAR_AUDITOR"></textarea>
             <?php } ?>
               
             </div>
@@ -183,11 +183,74 @@
             <div class="col-12">
             <?php if ($is_auditee) { ?>
               <label>Message Auditee</label>
-              <textarea class="form-control" <?= $disabled ?> name="KOMENTAR_2" id="KOMENTAR_2"><?= $detail[0]['KOMENTAR_2']  ?></textarea>
+              <textarea class="form-control" <?= $disabled ?> name="KOMENTAR_AUDITEE" id="KOMENTAR_AUDITEE"><?= $detail[0]['KOMENTAR_AUDITEE']  ?></textarea>
             <?php } else {?>
             
               <label>Message Auditee</label>
-              <textarea readonly class="form-control" <?= $disabled ?> name="KOMENTAR_2" id="KOMENTAR_2"><?= $detail[0]['KOMENTAR_2']  ?></textarea>
+              <textarea readonly class="form-control" <?= $disabled ?> name="KOMENTAR_AUDITEE" id="KOMENTAR_AUDITEE"><?= $detail[0]['KOMENTAR_AUDITEE']  ?></textarea>
+            <?php } ?>
+              
+            </div>
+          </div>
+          
+        </div>
+        <div class="modal-footer">
+          <input type="submit" class="btn btn-primary font-weight-bold" value="Submit">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Modal Approve Commitment  -->
+ <!-- Untuk Approve Commitment hanya dimunculkan untuk ATASAN -->
+<div class="modal fade" id="modal_approve" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Approve Commitment</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <i aria-hidden="true" class="ki ki-close"></i>
+        </button>
+      </div>
+      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/temuan/chatbox/<?=$kode?>" enctype="multipart/form-data">
+        <div class="modal-body" style="height: auto">
+          <input type="hidden"  name="ID_TEMUAN" id="ID_TEMUAN">
+          <div class="form-group row">
+            <div class="col-12">
+            <select class="form-control select-dua" id="id_temuan" name="APPROVE_COMMITMENT">
+              <option value="1">Approve</option>
+              <option value="0">Reject</option>
+            </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-12">
+            <textarea class="form-control" name="ALASAN_KOMITMENT" id="ALASAN_KOMITMEN"></textarea>
+            </div>
+          </div>
+          
+          <div class="form-group row">
+            <div class="col-12">
+            <?php if ($is_auditor) { ?>
+              <label>Message Auditor</label>
+              <textarea class="form-control" name="KOMENTAR_AUDITOR" id="KOMENTAR_AUDITOR"></textarea>
+            <?php } else {?>
+            
+              <label>Message Auditor</label>
+              <textarea readonly class="form-control" <?= $disabled ?> name="KOMENTAR_AUDITOR" id="KOMENTAR_AUDITOR"></textarea>
+            <?php } ?>
+              
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-12">
+            <?php if ($is_auditee) { ?>
+              <label>Message Auditee</label>
+              <textarea class="form-control" <?= $disabled ?> name="KOMENTAR_AUDITEE" id="KOMENTAR_AUDITEE"><?= $detail[0]['KOMENTAR_AUDITEE']  ?></textarea>
+            <?php } else {?>
+            
+              <label>Message Auditee</label>
+              <textarea readonly class="form-control" <?= $disabled ?> name="KOMENTAR_AUDITEE" id="KOMENTAR_AUDITEE"><?= $detail[0]['KOMENTAR_AUDITEE']  ?></textarea>
             <?php } ?>
               
             </div>
@@ -234,10 +297,14 @@ var KTDatatableJsonRemoteDemo = {
         title: "Temuan"
       },
       {
+        field: "ID_RESPONSE",
+        title: "ID"
+      },
+      {
         field: "STATUS",
         title: "Status"
       },{
-          field: "ID_RESPONSE",
+          field: "ID_TEMUAN",
           title: "Action",
           class: "text-center",
           sortable: !1,
@@ -246,10 +313,14 @@ var KTDatatableJsonRemoteDemo = {
           template: function(t) {
             var buttonTitle = role ==='AUDITOR'  ? 'Lihat"><i class="fa fa-eye text-dark' : 'Respon"><i class="fa fa-upload text-dark';
             
-            var approve = t.STATUS_APPROVE == 'Approved' ? 'color:green' : 'color:red';
+            var approve = t.STATUS == 'Approved' ? 'color:green' : 'color:red"hidden="true';
+            var iconClass = t.STATUS_KOMEN == 1 ? 'color:red' : 'color:#000';
             
-            
-            return '<span class="label font-weight-bold label-lg label-light-default label-inline"style="'+approve+'">'+t.STATUS+'</span><a  onclick="uploadFile(' + t.ID_RESPONSE + ')" class="btn btn-sm btn-clean btn-icon" title="Entry Commitment"><i class="fa fa-file-import text-dark"></i></a><a onclick="uploadFile(' + t.ID_RESPONSE + ')" class="btn btn-sm btn-clean btn-icon" title="Download"><i class="fa fa-file-pdf text-dark"></i></a>';
+            return '<span class="label font-weight-bold label-lg label-light-default label-inline"style="'+approve+'">'+t.STATUS+'</span>'+
+            '<a onclick="approve(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="Approve Commitment"><i class="fa fa-file-circle-check text-dark"></i></a>'+
+            '<a onclick="uploadFile(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="Entry Commitment"><i class="fa fa-file-import text-dark"></i></a>'+
+            '<a onclick="uploadFile(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="Download"><i class="fa fa-file-pdf text-dark"></i></a>'+
+            '<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>';
         }
         }]
     }), $("#kt_datatable_search_status").on("change", (function() {
@@ -263,10 +334,11 @@ function uploadFile(id_tl)
     currentID_TL = id_tl;
     $.get(`<?= base_url('aia/Temuan/getFileUpload/') ?>`+id_tl, function(data, status){
         const obj = JSON.parse(data);
-        $('#ID_RESPONSE').val(id_tl);
+        $('#ID_TEMUAN').val(id_tl);
         $('#INVESTIGASI').val(obj.INVESTIGASI);
         $('#PERBAIKAN').val(obj.PERBAIKAN);
         $('#KOREKTIF').val(obj.KOREKTIF);
+        $('#TANGGAL').val(obj.TANGGAL);
 
         if (obj.FILE && obj.FILE !== 'null') {
           $('#FILE').attr('href', obj.FILE).show();
@@ -317,18 +389,26 @@ function uploadFile(id_tl)
 
   function chatbox(id_tl)
   {
-    $.post('<?= base_url('aia/Response_auditee/updateStatus/') ?>'+id_tl, function(response) {
+    $.post('<?= base_url('aia/temuan/updateStatus/') ?>'+id_tl, function(response) {
         
     });
-    $.get(`<?= base_url('aia/Response_auditee/getdatadetail/') ?>`+id_tl, function(data,status){
+    $.get(`<?= base_url('aia/temuan/getdatadetail/') ?>`+id_tl, function(data,status){
         const obj = JSON.parse(data);
   console.log(obj);
-        $('#ID_RE_CHAT').val(id_tl);
-        $('#KOMENTAR_1').val(obj.KOMENTAR_1);
-        $('#KOMENTAR_2').val(obj.KOMENTAR_2);
+        $('#ID_TEMUAN').val(id_tl);
+        $('#KOMENTAR_AUDITOR').val(obj.KOMENTAR_AUDITOR);
+        $('#KOMENTAR_AUDITEE').val(obj.KOMENTAR_AUDITEE);
         
     });
     $('#modal_chat').modal('show');
+  }
+  function approve(id_tl){
+    $.get(`<?= base_url('aia/temuan/getdatadetail/') ?>`+id_tl, function(data,status){
+        const obj = JSON.parse(data);
+  console.log(obj);
+        $('#ID_TEMUAN').val(id_tl);
+    });
+    $('#modal_approve').modal('show');
   }
 jQuery(document).ready((function() {
   KTDatatableJsonRemoteDemo.init()
