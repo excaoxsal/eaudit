@@ -13,6 +13,7 @@ class Temuan extends MY_Controller {
 		$this->load->model('aia/M_temuan', 'm_temuan');
 		$this->load->model('aia/M_res_auditee', 'm_res_au');
 		$this->load->model('aia/M_jadwal', 'm_jadwal');
+		$this->load->model('aia/master/Master_act_aia','aia_master_act');
 		$this->is_login();
 }
 
@@ -129,33 +130,47 @@ public function index()
 				$this->session->set_flashdata('error', $error_message);
 			}
 	}
-	function getFileUpload($id_tl)
+
+	function getCommitment($id_tl)
     {
             $query = $this->db->select('*')->from('TEMUAN_DETAIL')
                         ->where('ID_TEMUAN', $id_tl)->get()->row();
             echo json_encode($query);   
     }
 
+    function getAtasan($id_jabatan)
+    {
+        $query = $this->db->select('ID_ATASAN')
+                      ->from('TM_JABATAN')
+                      ->where('ID_JABATAN', $id_jabatan)
+                      ->get()
+                      ->row();
+    return json_encode($query);     
+    }
+
 	public function commitment($data) {
 		$request = $this->input->post();
+		$atasan_result = $this->getAtasan($_SESSION['ID_JABATAN']);
+		$atasan = json_decode($atasan_result, true);
 		date_default_timezone_set('Asia/Jakarta');
 		$data_update = 
 			[
 			'INVESTIGASI'           			=> is_empty_return_null($request['INVESTIGASI']),
 			'PERBAIKAN'           				=> is_empty_return_null($request['PERBAIKAN']),
 			'KOREKTIF'           				=> is_empty_return_null($request['KOREKTIF']),
-			'TANGGAL'           				=> is_empty_return_null($request['TANGGAL'])
+			'TANGGAL'           				=> is_empty_return_null($request['TANGGAL']),
+			'ID_ATASAN_AUDITEE' 				=> isset($atasan['ID_ATASAN']) ? $atasan['ID_ATASAN'] : null
 			];
-		// var_dump($request);die;
 		$this->db->set('TANGGAL', $data_update['TANGGAL']);
 		$this->db->set('KOREKTIF', $data_update['KOREKTIF'][0]);
 		$this->db->set('PERBAIKAN', $data_update['PERBAIKAN'][0]);
 		$this->db->set('INVESTIGASI', $data_update['INVESTIGASI'][0]);
 		$this->db->set('STATUS', 'Commitment');
+		$this->db->set('ID_ATASAN_AUDITEE', $data_update['ID_ATASAN_AUDITEE']);
 		$this->db->where('ID_TEMUAN', $request['ID_TEMUAN']);
 		$update = $this->db->update('TEMUAN_DETAIL');
 		if ($update){
-			$success_message = 'Data Respon Berhasil Disimpan.';
+			$success_message = 'Data Commitment Berhasil Disimpan.';
 			$this->session->set_flashdata('success', $success_message);
 			redirect(base_url('aia/temuan/detail/'.$data));
 		}
@@ -166,6 +181,36 @@ public function index()
 		}
 		
 	}
+
+	public function approval($data) {
+	    $request = $this->input->post();
+	    if (!isset($request['ID_TEMUAN'])) {
+	        $error_message = 'ID_TEMUAN is missing.';
+	        $this->session->set_flashdata('error', $error_message);
+	        redirect(base_url('aia/temuan/detail/'.$request['ID_TEMUAN']));
+	        return;
+	    }
+
+	    $data_update = [
+	        'APPROVAL_COMMITMENT' => $request['APPROVAL_COMMITMENT'],
+	        'KETERANGAN_ATASAN_AUDITEE' => is_empty_return_null($request['KETERANGAN_ATASAN_AUDITEE'])
+	    ];
+
+	    $this->db->set($data_update);
+	    $this->db->where('ID_TEMUAN', $request['ID_TEMUAN']);
+	    $update = $this->db->update('TEMUAN_DETAIL');
+
+	    if ($update) {
+	        $success_message = 'Status Sudah Berhasil Di Approve';
+	        $this->session->set_flashdata('success', $success_message);
+	    } else {
+	        $error_message = 'Status Gagal Di Approve ';
+	        $this->session->set_flashdata('error', $error_message);
+	    }
+
+	    redirect(base_url('aia/temuan/detail/'.$data));
+	}
+
 
 	public function chatbox($data){
 		$request = $this->input->post();
