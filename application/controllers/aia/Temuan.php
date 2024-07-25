@@ -33,13 +33,16 @@ public function index()
 
 	public function detail($datas){
 		
-		$data['list_divisi'] 	= $this->m_res_au->get_divisi();
-		$data['menu']           = 'temuan-aia';
-        $data['title']          = 'Temuan';
-        $data['content']        = 'content/aia/v_temuan_detail';
-		$data['kode']			= $datas;
+		$data['list_divisi'] 		= $this->m_res_au->get_divisi();
+
+		$data['list_temuan_header'] = $this->m_temuan->getAuditor_Lead($datas);
+		//print_r($data['list_temuan_header']);die();
+		$data['menu']           	= 'temuan-aia';
+        $data['title']          	= 'Temuan';
+        $data['content']        	= 'content/aia/v_temuan_detail';
+		$data['kode']				= $datas;
 		// var_dump();die;
-		$data['role']			= $_SESSION['NAMA_ROLE'];
+		$data['role']				= $_SESSION['NAMA_ROLE'];
 		
 		$this->show($data);
 	}
@@ -191,8 +194,16 @@ public function index()
 	        return;
 	    }
 
+	    $this->db->select('APPROVAL_COMMITMENT');
+	    $this->db->from('TEMUAN_DETAIL');
+	    $this->db->where('ID_TEMUAN', $request['ID_TEMUAN']);
+	    $current_value = $this->db->get()->row()->APPROVAL_COMMITMENT;
+	    
+	    // Tambahkan nilai baru ke nilai yang ada
+	    $new_value = $current_value + $request['APPROVAL_COMMITMENT'];
+
 	    $data_update = [
-	        'APPROVAL_COMMITMENT' => $request['APPROVAL_COMMITMENT'],
+	        'APPROVAL_COMMITMENT' => $new_value,
 	        'KETERANGAN_ATASAN_AUDITEE' => is_empty_return_null($request['KETERANGAN_ATASAN_AUDITEE'])
 	    ];
 

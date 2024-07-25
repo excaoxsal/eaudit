@@ -29,14 +29,17 @@ class MY_Controller extends CI_Controller
         }else{
             $data['notif_lainnya']= $this->main_act->notif_rekom();
         }
-        $data['tnotif_lain']  = count($data['notif_lainnya']);
-        $data['total_notif']  = count($result)+(int)$data['tnotif_lain'];
+        $data['tnotif_lain']        = count($data['notif_lainnya']);
+        $data['total_notif']        = count($result)+(int)$data['tnotif_lain'];
         $data['is_auditor']         = $this->is_auditor();
         $data['is_auditee']         = $this->is_auditee();
+        $data['is_atasan_auditee']  = $this->is_atasan_auditee();
+        $data['is_lead_auditor']    = $this->is_lead_auditor();
         $data['is_user']            = $this->is_user();
-        $data['is_aia']            = $this->is_aia();
+        $data['is_aia']             = $this->is_aia();
         $data['is_closing_audit']   = $this->is_closing_audit();
         $this->data = $data;
+
 
         return $this->load->view($this->main_layout, $this->data);
     }
@@ -57,6 +60,29 @@ class MY_Controller extends CI_Controller
         if(($this->session->ID_ROLE==2) && $this->session->STATUS==1 && $this->session->ID_USER!=NULL && $this->session->NIPP!=NULL) return TRUE;
         else return FALSE;
     }
+
+    protected function is_atasan_auditee()
+    {
+        $query = $this->db->select('ID_ATASAN')
+                      ->from('TM_JABATAN')
+                      ->where('ID_JABATAN', $this->session->ID_JABATAN)
+                      ->where('ID_DIVISI', $this->session->ID_DIVISI)
+                      ->get()
+                      ->row();
+        //print_r($query);die();
+        if ($query->ID_ATASAN === null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    protected function is_lead_auditor()
+    {
+        if(($this->session->ID_JABATAN==2035) && $this->session->STATUS==1 && $this->session->ID_USER!=NULL && $this->session->NIPP!=NULL) return TRUE;
+        else return FALSE;
+    }
+
 
     protected function is_aia(){
         if(($this->session->MENU==2||$this->session->MENU==3) && $this->session->STATUS==1 && $this->session->ID_USER!=NULL && $this->session->NIPP!=NULL) return TRUE;
