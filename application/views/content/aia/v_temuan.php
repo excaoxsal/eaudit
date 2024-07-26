@@ -155,7 +155,14 @@ var KTDatatableJsonRemoteDemo = {
           searchable: !1,
           overflow: "visible",
           template: function(t) {
-            return '<a  href="<?= base_url() ?>aia/temuan/detail/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Lihat"><i class="fa fa-eye text-dark"></i></a><a onclick="uploadFile(' + t.ID_HEADER + ')" class="btn btn-sm btn-clean btn-icon" title="Upload Temuan"><i class="fa fa-upload text-dark"></i></a>'
+              var isAuditor = <?php echo json_encode($is_auditor); ?>;
+              var isAuditee = <?php echo json_encode($is_auditee); ?>;
+
+              if (isAuditor){
+                return '<a  href="<?= base_url() ?>aia/temuan/detail/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Lihat"><i class="fa fa-eye text-dark"></i></a><a onclick="uploadFile(' + t.ID_HEADER + ')" class="btn btn-sm btn-clean btn-icon" title="Upload Temuan"><i class="fa fa-upload text-dark"></i></a>'
+              }else{
+                return '<a  href="<?= base_url() ?>aia/temuan/detail/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Lihat"><i class="fa fa-eye text-dark"></i></a>'
+              }
             }
         }
         ]

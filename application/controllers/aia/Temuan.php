@@ -187,25 +187,28 @@ public function index()
 
 	public function approval($data) {
 	    $request = $this->input->post();
-	    if (!isset($request['ID_TEMUAN'])) {
-	        $error_message = 'ID_TEMUAN is missing.';
-	        $this->session->set_flashdata('error', $error_message);
-	        redirect(base_url('aia/temuan/detail/'.$request['ID_TEMUAN']));
-	        return;
+
+	    if ($request['APPROVAL_COMMITMENT'] == 1){
+	    	$this->db->select('APPROVAL_COMMITMENT');
+		    $this->db->from('TEMUAN_DETAIL');
+		    $this->db->where('ID_TEMUAN', $request['ID_TEMUAN']);
+		    $current_value = $this->db->get()->row()->APPROVAL_COMMITMENT;
+		    
+		    // Tambahkan nilai baru ke nilai yang ada
+		    $new_value = $current_value + $request['APPROVAL_COMMITMENT'];
+		    $data_update = [
+		        'APPROVAL_COMMITMENT' 		=> $new_value,
+		        'KETERANGAN_ATASAN_AUDITEE' => is_empty_return_null($request['KETERANGAN_ATASAN_AUDITEE'])
+		    ];
+	    } else {
+	    	// Reject
+	    	$data_update = [
+		        'APPROVAL_COMMITMENT' 		=> $request['APPROVAL_COMMITMENT'],
+		        'STATUS' 					=> 'OPEN',
+		        'KETERANGAN_ATASAN_AUDITEE' => is_empty_return_null($request['KETERANGAN_ATASAN_AUDITEE'])
+		    ];
+	    	$new_value = $request['APPROVAL_COMMITMENT'];
 	    }
-
-	    $this->db->select('APPROVAL_COMMITMENT');
-	    $this->db->from('TEMUAN_DETAIL');
-	    $this->db->where('ID_TEMUAN', $request['ID_TEMUAN']);
-	    $current_value = $this->db->get()->row()->APPROVAL_COMMITMENT;
-	    
-	    // Tambahkan nilai baru ke nilai yang ada
-	    $new_value = $current_value + $request['APPROVAL_COMMITMENT'];
-
-	    $data_update = [
-	        'APPROVAL_COMMITMENT' => $new_value,
-	        'KETERANGAN_ATASAN_AUDITEE' => is_empty_return_null($request['KETERANGAN_ATASAN_AUDITEE'])
-	    ];
 
 	    $this->db->set($data_update);
 	    $this->db->where('ID_TEMUAN', $request['ID_TEMUAN']);
@@ -221,7 +224,6 @@ public function index()
 
 	    redirect(base_url('aia/temuan/detail/'.$data));
 	}
-
 
 	public function chatbox($data){
 		$request = $this->input->post();

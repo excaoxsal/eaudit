@@ -13,7 +13,7 @@ class M_Temuan extends CI_Model{
 		return $lastquery;
     }
 
-    public function getAuditor_NLead($data){
+    public function getAuditor_Lead($data){
         $sql = '
             SELECT DISTINCT
                 td."ID_TEMUAN",

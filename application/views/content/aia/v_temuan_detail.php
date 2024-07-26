@@ -285,6 +285,8 @@ var KTDatatableJsonRemoteDemo = {
         template: function(t) {
           if (t.APPROVAL_COMMITMENT === null || t.APPROVAL_COMMITMENT == 0) {
             return '<span>' + t.STATUS + '</span>';
+          }else if (t.APPROVAL_COMMITMENT == 3){
+            return '<span>Approval Commitment</span>';
           } else {
             return '<span>' + t.STATUS + ' (' + t.APPROVAL_COMMITMENT + '/3)</span>';
           }
@@ -305,7 +307,7 @@ var KTDatatableJsonRemoteDemo = {
             var isAuditor = <?php echo json_encode($is_auditor); ?>;
             var isAuditee = <?php echo json_encode($is_auditee); ?>;
             var isPICAuditor = <?php echo json_encode($list_temuan_header[0]['ID_AUDITOR']); ?>;
-            var isLeadPICAuditor = <?php echo json_encode($list_temuan_header[0]['ID_LEAD_AUDITOR']); ?>;
+            var isLeadPICAuditor = <?php echo json_encode($is_lead_auditor); ?>;
             var is_atasan_auditee = <?php echo json_encode($is_atasan_auditee); ?>;
             var is_lead_auditor = <?php echo json_encode($is_lead_auditor); ?>;
 
@@ -313,12 +315,12 @@ var KTDatatableJsonRemoteDemo = {
               if (t.STATUS == 'OPEN'){
                 console.log('a');
                 return '<span class="label font-weight-bold label-lg label-light-default label-inline"style="'+approve+'">'+t.STATUS+'</span>'+'<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>';
-              }else if(t.STATUS == 'Commitment' && t.APPROVAL_COMMITMENT !== 2){
+              }else if(t.STATUS == 'Commitment' && t.APPROVAL_COMMITMENT == 2 && isLeadPICAuditor){
                 console.log('b');
-                return '<span class="label font-weight-bold label-lg label-light-default label-inline"style="'+approve+'">'+t.STATUS+'</span>'+'<a onclick="viewCommitment(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Commitment"><i class="fa-solid fa-scroll text-dark"></i></a>'+'<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>';
+                return '<span class="label font-weight-bold label-lg label-light-default label-inline"style="'+approve+'">'+t.STATUS+'</span>'+'<a onclick="approve(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="Approve Commitment"><i class="fa fa-file-circle-check text-dark"></i></a>'+'<a onclick="viewCommitment(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Commitment"><i class="fa-solid fa-scroll text-dark"></i></a>'+'<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>';
               }else{
                 console.log('c');
-                return '<span class="label font-weight-bold label-lg label-light-default label-inline"style="'+approve+'">'+t.STATUS+'</span>'+'<a onclick="approve(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="Approve Commitment"><i class="fa fa-file-circle-check text-dark"></i></a>'+'<a onclick="viewCommitment(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Commitment"><i class="fa-solid fa-scroll text-dark"></i></a>'+'<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>';
+                return '<span class="label font-weight-bold label-lg label-light-default label-inline"style="'+approve+'">'+t.STATUS+'</span>'+'<a onclick="viewCommitment(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Commitment"><i class="fa-solid fa-scroll text-dark"></i></a>'+'<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>';
               }
             }else if (isAuditor){
               if (t.STATUS == 'OPEN'){
@@ -348,7 +350,13 @@ var KTDatatableJsonRemoteDemo = {
                 return '<span class="label font-weight-bold label-lg label-light-default label-inline"style="'+approve+'">'+t.STATUS+'</span>'+
               '<a onclick="entryCommitment(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="Entry Commitment"><i class="fa fa-file-import text-dark"></i></a>'+
               '<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>';
-                }else{
+                }else if(t.STATUS == 'Commitment' && t.APPROVAL_COMMITMENT == 3){
+              return '<span class="label font-weight-bold label-lg label-light-default label-inline"style="'+approve+'">'+t.STATUS+'</span>'+
+              '<a onclick="tindakLanjut(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="Evidence"><i class="fa fa-file-import text-dark"></i></a>'+
+              '<a onclick="viewCommitment(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Commitment"><i class="fa-solid fa-scroll text-dark"></i></a>'+
+              '<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>'+
+              '<a href="<?= base_url() ?>aia/temuan/export_pdf/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa fa-download text-dark"></i></a>';
+              }else{
               return '<span class="label font-weight-bold label-lg label-light-default label-inline"style="'+approve+'">'+t.STATUS+'</span>'+
               '<a onclick="viewCommitment(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Commitment"><i class="fa-solid fa-scroll text-dark"></i></a>'+
               '<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>';
