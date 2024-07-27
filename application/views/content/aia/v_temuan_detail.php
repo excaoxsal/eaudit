@@ -286,7 +286,7 @@ var KTDatatableJsonRemoteDemo = {
           if (t.APPROVAL_COMMITMENT === null || t.APPROVAL_COMMITMENT == 0) {
             return '<span>' + t.STATUS + '</span>';
           }else if (t.APPROVAL_COMMITMENT == 3){
-            return '<span>Approval Commitment</span>';
+            return '<span>'+t.STATUS+'</span>';
           } else {
             return '<span>' + t.STATUS + ' (' + t.APPROVAL_COMMITMENT + '/3)</span>';
           }

@@ -196,10 +196,20 @@ public function index()
 		    
 		    // Tambahkan nilai baru ke nilai yang ada
 		    $new_value = $current_value + $request['APPROVAL_COMMITMENT'];
-		    $data_update = [
-		        'APPROVAL_COMMITMENT' 		=> $new_value,
-		        'KETERANGAN_ATASAN_AUDITEE' => is_empty_return_null($request['KETERANGAN_ATASAN_AUDITEE'])
-		    ];
+			if ($new_value==3){
+				$data_update = [
+					'APPROVAL_COMMITMENT' 		=> $new_value,
+					'KETERANGAN_ATASAN_AUDITEE' => is_empty_return_null($request['KETERANGAN_ATASAN_AUDITEE']),
+					'STATUS'					=> 'AC'
+				];
+			}
+			else{
+				$data_update = [
+					'APPROVAL_COMMITMENT' 		=> $new_value,
+					'KETERANGAN_ATASAN_AUDITEE' => is_empty_return_null($request['KETERANGAN_ATASAN_AUDITEE'])
+				];
+			}
+		    
 	    } else {
 	    	// Reject
 	    	$data_update = [
