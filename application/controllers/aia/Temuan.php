@@ -138,24 +138,19 @@ public function index()
     {
             $query = $this->db->select('*')->from('TEMUAN_DETAIL')
                         ->where('ID_TEMUAN', $id_tl)->get()->row();
-            echo json_encode($query);   
-    }
-
-    function getAtasan($id_jabatan)
-    {
-        $query = $this->db->select('ID_ATASAN')
-                      ->from('TM_JABATAN')
-                      ->where('ID_JABATAN', $id_jabatan)
-                      ->get()
-                      ->row();
-    return json_encode($query);     
+            echo json_encode($query);
     }
 
 	public function commitment($data) {
 		$request = $this->input->post();
-		$atasan_result = $this->getAtasan($_SESSION['ID_JABATAN']);
+		$atasan_result = $this->m_temuan->getAtasan($_SESSION['ID_JABATAN']);
 		$atasan = json_decode($atasan_result, true);
 		date_default_timezone_set('Asia/Jakarta');
+		$status = $this->m_temuan->getStatus($request['ID_TEMUAN']);
+		$respObject = json_decode($status);
+    	// var_dump($respObject->STATUS);
+		// die();
+
 		$data_update = 
 			[
 			'INVESTIGASI'           			=> is_empty_return_null($request['INVESTIGASI']),
@@ -164,6 +159,13 @@ public function index()
 			'TANGGAL'           				=> is_empty_return_null($request['TANGGAL']),
 			'ID_ATASAN_AUDITEE' 				=> isset($atasan['ID_ATASAN']) ? $atasan['ID_ATASAN'] : null
 			];
+		// if($respObject->STATUS === 'AC'){
+		// 	$this->db->set('STATUS', 'TL');
+		// 	echo('a');die();
+		// }else{
+		// 	$this->db->set('STATUS', 'Commitment');
+		// 	echo('b');die();
+		// }
 		$this->db->set('TANGGAL', $data_update['TANGGAL']);
 		$this->db->set('KOREKTIF', $data_update['KOREKTIF'][0]);
 		$this->db->set('PERBAIKAN', $data_update['PERBAIKAN'][0]);
@@ -179,6 +181,79 @@ public function index()
 		}
 		else{
 			$error_message = 'Silahkan coba kembali';
+			$this->session->set_flashdata('error', $error_message);
+			redirect(base_url('aia/temuan/detail/'.$data));
+		}
+	}
+
+	public function tindakLanjut($data) {
+		$request = $this->input->post();
+		date_default_timezone_set('Asia/Jakarta');
+		$id_temuan = $_REQUEST['ID_TEMUAN'];
+        $ext = pathinfo($_FILES['upload_file']['name'], PATHINFO_EXTENSION);
+		
+		$current_date = date('Y-m-d');
+		$current_time = date('YmdHis');
+		$query_waktu=$this->db->select('WAKTU_AUDIT_AWAL,WAKTU_AUDIT_SELESAI')->from('WAKTU_AUDIT W')
+		->join('RESPONSE_AUDITEE_H RE','W.ID_JADWAL=RE.ID_JADWAL')->where('RE.ID_HEADER',$data)
+		->get();
+		$result_waktu= $query_waktu->result_array();
+		// var_dump($current_date<=$result_waktu['0']['WAKTU_AUDIT_SELESAI']);var_dump($current_date,$result_waktu);var_dump($data);die;
+		if($current_date>=$result_waktu['0']['WAKTU_AUDIT_AWAL']){
+			if($current_date<=$result_waktu['0']['WAKTU_AUDIT_SELESAI']){
+				if($ext==""||$ext==null){
+					$file_path = null;
+				}else{	
+					$config['file_name']        = "KETERANGAN_TL".$current_time;
+					$config['upload_path'] = './storage/aia/'; // Lokasi penyimpanan file
+					$config['allowed_types'] = 'xls|xlsx|pdf|doc|docx|ppt|pptx|jpg|jpeg|png|zip|rar'; // Jenis file yang diizinkan
+					$config['max_size'] = 15000; // Ukuran maksimum file (dalam KB)\
+					$upload_path = './storage/aia/';
+					$eltype= $config['allowed_types'];
+					$loadupload = $config['upload_path'];
+					$this->upload->upload_path = $loadupload;
+					$this->upload->allowed_types = $eltype;
+					$this->upload->initialize($config);
+					$file_path = base_url().'storage/aia/'.$config['file_name'].'.'.$ext;
+					
+					$elupload = $this->upload->do_upload('upload_file');
+					$upload_data = $this->upload->data();
+					// echo($file_path);
+				}
+				
+				$data_update = 
+					[
+					'KETERANGAN_TL'           			=> is_empty_return_null($request['KETERANGAN_TL']),
+					'FILE'           					=> is_empty_return_null($file_path)
+					];
+				
+				$this->db->set('FILE', $file_path);
+				$this->db->set('KETERANGAN_TL', $data_update['KETERANGAN_TL'][0]);
+				$this->db->set('STATUS', 'TL');
+				$this->db->where('ID_TEMUAN', $id_temuan);
+				$update = $this->db->update('TEMUAN_DETAIL');
+				
+				if ($update){
+					$success_message = 'Data Respon Berhasil Disimpan.';
+					$this->session->set_flashdata('success', $success_message);
+					redirect(base_url('aia/temuan/detail/'.$data));
+				}
+				else{
+					$error_message = 'Silahkan coba kembali';
+					$this->session->set_flashdata('error', $error_message);
+					redirect(base_url('aia/temuan/detail/'.$data));
+				}
+				
+			}
+			else{
+				$error_message = 'Anda sudah melewati batas waktu yang telah ditentukan';
+				$this->session->set_flashdata('error', $error_message);
+				redirect(base_url('aia/temuan/detail/'.$data));
+			}
+				
+		}
+		else{
+			$error_message = 'Waktu Audit belum dimulai';
 			$this->session->set_flashdata('error', $error_message);
 			redirect(base_url('aia/temuan/detail/'.$data));
 		}
@@ -218,6 +293,56 @@ public function index()
 		        'KETERANGAN_ATASAN_AUDITEE' => is_empty_return_null($request['KETERANGAN_ATASAN_AUDITEE'])
 		    ];
 	    	$new_value = $request['APPROVAL_COMMITMENT'];
+	    }
+
+	    $this->db->set($data_update);
+	    $this->db->where('ID_TEMUAN', $request['ID_TEMUAN']);
+	    $update = $this->db->update('TEMUAN_DETAIL');
+
+	    if ($update) {
+	        $success_message = 'Status Sudah Berhasil Di Approve';
+	        $this->session->set_flashdata('success', $success_message);
+	    } else {
+	        $error_message = 'Status Gagal Di Approve ';
+	        $this->session->set_flashdata('error', $error_message);
+	    }
+
+	    redirect(base_url('aia/temuan/detail/'.$data));
+	}
+
+	public function approvalTL($data) {
+	    $request = $this->input->post();
+
+	    if ($request['APPROVAL_TINDAKLANJUT'] == 1){
+	    	$this->db->select('APPROVAL_TINDAKLANJUT');
+		    $this->db->from('TEMUAN_DETAIL');
+		    $this->db->where('ID_TEMUAN', $request['ID_TEMUAN']);
+		    $current_value = $this->db->get()->row()->APPROVAL_TINDAKLANJUT;
+		    
+		    // Tambahkan nilai baru ke nilai yang ada
+		    $new_value = $current_value + $request['APPROVAL_TINDAKLANJUT'];
+			if ($new_value==3){
+				$data_update = [
+					'APPROVAL_TINDAKLANJUT' 	=> $new_value,
+					'KETERANGAN_TL_ATASAN' => is_empty_return_null($request['KETERANGAN_TL_ATASAN']),
+					'STATUS'					=> 'ATL'
+				];
+			}
+			else{
+				$data_update = [
+					'APPROVAL_TINDAKLANJUT' 	=> $new_value,
+					'KETERANGAN_TL_ATASAN' => is_empty_return_null($request['KETERANGAN_TL_ATASAN'])
+				];
+			}
+		    
+	    } else {
+	    	// Reject
+	    	$data_update = [
+		        'APPROVAL_TINDAKLANJUT' 		=> $request['APPROVAL_TINDAKLANJUT'],
+		        'STATUS' 						=> 'AC',
+		        'KETERANGAN_TL_ATASAN' 	=> is_empty_return_null($request['KETERANGAN_TL_ATASAN'])
+		    ];
+	    	$new_value = $request['APPROVAL_TINDAKLANJUT'];
 	    }
 
 	    $this->db->set($data_update);

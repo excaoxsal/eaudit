@@ -13,6 +13,23 @@ class M_Temuan extends CI_Model{
 		return $lastquery;
     }
 
+    public function getStatus($id_tl)
+    {
+            $query = $this->db->select('STATUS')->from('TEMUAN_DETAIL')
+                        ->where('ID_TEMUAN', $id_tl)->get()->row();
+            return json_encode($query); 
+    }
+
+    public function getAtasan($id_jabatan)
+    {
+        $query = $this->db->select('ID_ATASAN')
+                      ->from('TM_JABATAN')
+                      ->where('ID_JABATAN', $id_jabatan)
+                      ->get()
+                      ->row();
+    return json_encode($query);     
+    }
+
     public function getAuditor_Lead($data){
         $sql = '
             SELECT DISTINCT
