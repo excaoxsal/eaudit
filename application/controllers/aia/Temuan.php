@@ -262,6 +262,8 @@ public function index()
 
 	public function approval($data) {
 	    $request = $this->input->post();
+		// $current_date = date('Y-m-d H:i:s');
+		// var_dump($current_date);die;
 
 	    if ($request['APPROVAL_COMMITMENT'] == 1){
 	    	$this->db->select('APPROVAL_COMMITMENT');
@@ -274,8 +276,15 @@ public function index()
 			if ($new_value==3){
 				$data_update = [
 					'APPROVAL_COMMITMENT' 		=> $new_value,
-					'KETERANGAN_ATASAN_AUDITEE' => is_empty_return_null($request['KETERANGAN_ATASAN_AUDITEE']),
+					'KETERANGAN_LEAD_AUDITOR' => is_empty_return_null($request['KETERANGAN_ATASAN_AUDITEE']),
 					'STATUS'					=> 'AC'
+				];
+			}
+			else if ($new_value==2){
+				$data_update = [
+					'APPROVAL_COMMITMENT' 		=> $new_value,
+					'KETERANGAN_AUDITOR' => is_empty_return_null($request['KETERANGAN_ATASAN_AUDITEE']),
+					
 				];
 			}
 			else{
@@ -324,8 +333,14 @@ public function index()
 			if ($new_value==3){
 				$data_update = [
 					'APPROVAL_TINDAKLANJUT' 	=> $new_value,
-					'KETERANGAN_TL_ATASAN' => is_empty_return_null($request['KETERANGAN_TL_ATASAN']),
-					'STATUS'					=> 'ATL'
+					'KETERANGAN_TL_LEAD_AUDITOR' => is_empty_return_null($request['KETERANGAN_TL_ATASAN']),
+					'STATUS'					=> 'CLOSE'
+				];
+			}else if ($new_value==2){
+				$data_update = [
+					'APPROVAL_TINDAKLANJUT' 	=> $new_value,
+					'KETERANGAN_TL_AUDITOR' => is_empty_return_null($request['KETERANGAN_TL_ATASAN']),
+					
 				];
 			}
 			else{
@@ -359,6 +374,13 @@ public function index()
 
 	    redirect(base_url('aia/temuan/detail/'.$data));
 	}
+
+	function getFileEntry($id_tl)
+    {
+            $query = $this->db->select('ID_TEMUAN, FILE, KETERANGAN_TL')->from('TEMUAN_DETAIL')
+                        ->where('ID_TEMUAN', $id_tl)->get()->row();
+            echo json_encode($query);   
+    }
 
 	public function chatbox($data){
 		$request = $this->input->post();
