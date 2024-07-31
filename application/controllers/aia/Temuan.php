@@ -445,4 +445,11 @@ public function index()
 		
 	}
 
+	function export_pdf($id) {
+		$data['title']          = 'Print LKHA';
+        $data['content']        	= 'template/v_export_lkha';
+		$this->load->view('template/v_export_lkha',$data);
+		// redirect('template/v_export_lkha');
+	}
+
 }
