@@ -7,51 +7,17 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body link="blue" vlink="purple">
-  <table width="1253,60" border="0" cellpadding="0" cellspacing="0" style='width:940.20pt;border-collapse:collapse;table-layout:fixed;'>
-   <col width="84,93" style='mso-width-source:userset;mso-width-alt:3106;'/>
-   <col width="23,67" style='mso-width-source:userset;mso-width-alt:865;'/>
-   <col width="185,53" style='mso-width-source:userset;mso-width-alt:6784;'/>
-   <col width="53,40" style='mso-width-source:userset;mso-width-alt:1952;'/>
-   <col width="23,67" style='mso-width-source:userset;mso-width-alt:865;'/>
-   <col width="53,40" span="3" style='mso-width-source:userset;mso-width-alt:1952;'/>
-   <col width="27,13" style='mso-width-source:userset;mso-width-alt:992;'/>
-   <col width="28" style='mso-width-source:userset;mso-width-alt:1023;'/>
-   <col width="63" style='mso-width-source:userset;mso-width-alt:2303;'/>
-   <col width="56" style='mso-width-source:userset;mso-width-alt:2047;'/>
-   <col width="65,67" style='mso-width-source:userset;mso-width-alt:2401;'/>
-   <col width="24,53" style='mso-width-source:userset;mso-width-alt:897;'/>
-   <col width="53,40" style='mso-width-source:userset;mso-width-alt:1952;'/>
-   <col width="31,53" style='mso-width-source:userset;mso-width-alt:1153;'/>
-   <col width="70,93" style='mso-width-source:userset;mso-width-alt:2594;'/>
-   <col width="53,40" span="4" style='mso-width-source:userset;mso-width-alt:1952;'/>
-   <col width="88,40" style='width:66,30pt;'/>
-   <tr height="20" style='height:15.00pt;'>
-    <td class="xl65" height="20" width="294,13" colspan="3" style='height:15.00pt;width:220.60pt;mso-ignore:colspan;' x:str>PT.PELABUHAN TANJUNG PRIOK</td>
-    <td width="53,40" style='width:40.05pt;'></td>
-    <td width="23,67" style='width:17.75pt;'></td>
-    <td width="53,40" style='width:40.05pt;'></td>
-    <td width="53,40" style='width:40.05pt;'></td>
-    <td width="53,40" style='width:40.05pt;'></td>
-    <td width="27,13" style='width:20.35pt;'></td>
-    <td width="28" style='width:21.00pt;'></td>
-    <td width="63" style='width:47.25pt;'></td>
-    <td width="56" style='width:42.00pt;'></td>
-    <td width="65,67" style='width:49.25pt;'></td>
-    <td width="24,53" style='width:18.40pt;'></td>
-    <td width="53,40" style='width:40.05pt;'></td>
-    <td width="31,53" style='width:23.65pt;'></td>
-    <td width="70,93" style='width:53.20pt;'></td>
-    <td width="53,40" style='width:40.05pt;'></td>
-    <td width="53,40" style='width:40.05pt;'></td>
-    <td width="53,40" style='width:40.05pt;'></td>
-    <td width="53,40" style='width:40.05pt;'></td>
-    <td width="88,40" style='width:66.30pt;'></td>
+  <table width=""  cellpadding="0" cellspacing="0">
+   
+   <tr height="20" border="1" style='height:15.00pt;'>
+    <td class="xl65"  colspan="20">PT.PELABUHAN TANJUNG PRIOK</td>
+    
    </tr>
-   <tr height="63" style='height:47.25pt;mso-xlrowspan:3;'>
-    <td height="63" colspan="22" style='height:47.25pt;mso-ignore:colspan;'></td>
+   <tr height="63" style=''>
+    
    </tr>
    <tr height="17" style='height:12.75pt;'>
-    <td class="xl66" height="34" colspan="16" rowspan="2" style='height:25.50pt;border-right:.5pt solid #000000;border-bottom:none;' x:str>LAPORAN KETIDAK SESUAIAN HASIL AUDIT</td>
+    <td centered class="xl66" height="34" colspan="16" rowspan="2" x:str>LAPORAN KETIDAK SESUAIAN HASIL AUDIT</td>
     <td colspan="6" style='mso-ignore:colspan;'></td>
    </tr>
    <tr height="17" style='height:12.75pt;'>
@@ -63,17 +29,10 @@
     <td class="xl96"></td>
     <td colspan="6" style='mso-ignore:colspan;'></td>
    </tr>
-   <tr height="26" style='height:19.50pt;mso-height-source:userset;mso-height-alt:390;'>
+   <tr height="26" border ="0" style='height:19.50pt;mso-height-source:userset;mso-height-alt:390;'>
     <td class="xl71" height="26" style='height:19.50pt;' x:str>ORGANISASI</td>
     <td class="xl72" x:str>:</td>
-    <td class="xl73" x:str>PT.Pelabuhan Tanjung Priok</td>
-    <td class="xl73"></td>
-    <td class="xl73"></td>
-    <td class="xl73"></td>
-    <td class="xl73"></td>
-    <td class="xl73"></td>
-    <td class="xl73"></td>
-    <td class="xl73"></td>
+    <td class="xl73" x:str colspan="8">PT.Pelabuhan Tanjung Priok</td>
     <td class="xl71" x:str>LKS NO</td>
     <td class="xl72" x:str>:</td>
     <td class="xl97" x:str>LKHA-M1</td>

@@ -57,6 +57,22 @@ public function index()
 	}
 
 	public function proses_upload() { 
+		$this->db->select('FILE'); // Sesuaikan dengan nama kolom yang menyimpan nama file
+		$this->db->from('TEMUAN_DETAIL');
+		$this->db->where('ID_ISO', $_POST['ID_RE']);
+		$query = $this->db->get();
+		if ($query->num_rows() > 0) {
+			$result = $query->row();
+			// Hapus file fisik jika ada
+			if (file_exists($result->FILE)) {
+				unlink($file_path);
+			}
+		}
+		die;
+		// Hapus data dari database
+		$this->db->where('ID_ISO', $data);
+		$this->db->delete('TEMUAN_DETAIL');
+        
 		$config['file_name']        = "upload_master_pertanyaan";
 		$config['upload_path'] = './storage/aia/'; // Lokasi penyimpanan file
 		$config['allowed_types'] = 'xls|xlsx'; // Jenis file yang diizinkan
