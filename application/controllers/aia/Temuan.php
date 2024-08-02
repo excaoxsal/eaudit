@@ -59,7 +59,7 @@ public function index()
 	public function proses_upload() { 
 		$this->db->select('FILE'); // Sesuaikan dengan nama kolom yang menyimpan nama file
 		$this->db->from('TEMUAN_DETAIL');
-		$this->db->where('ID_ISO', $_POST['ID_RE']);
+		$this->db->where('ID_RESPONSE', $_POST['ID_RE']);
 		$query = $this->db->get();
 		if ($query->num_rows() > 0) {
 			$result = $query->row();
@@ -68,9 +68,9 @@ public function index()
 				unlink($file_path);
 			}
 		}
-		die;
+		
 		// Hapus data dari database
-		$this->db->where('ID_ISO', $data);
+		$this->db->where('ID_RESPONSE', $_POST['ID_RE']);
 		$this->db->delete('TEMUAN_DETAIL');
         
 		$config['file_name']        = "upload_master_pertanyaan";
@@ -245,7 +245,7 @@ public function index()
 				
 				$this->db->set('FILE', $file_path);
 				$this->db->set('KETERANGAN_TL', $data_update['KETERANGAN_TL'][0]);
-				$this->db->set('STATUS', 'TL');
+				$this->db->set('STATUS', 'Tindak Lanjut');
 				$this->db->where('ID_TEMUAN', $id_temuan);
 				$update = $this->db->update('TEMUAN_DETAIL');
 				
@@ -293,20 +293,22 @@ public function index()
 				$data_update = [
 					'APPROVAL_COMMITMENT' 		=> $new_value,
 					'KETERANGAN_LEAD_AUDITOR' => is_empty_return_null($request['KETERANGAN_ATASAN_AUDITEE']),
-					'STATUS'					=> 'AC'
+					'STATUS'					=> 'Commitment Approved',
+					'LOG_KIRIM'					=> 'Approval Commitment Lead Auditor'
 				];
 			}
 			else if ($new_value==2){
 				$data_update = [
 					'APPROVAL_COMMITMENT' 		=> $new_value,
 					'KETERANGAN_AUDITOR' => is_empty_return_null($request['KETERANGAN_ATASAN_AUDITEE']),
-					
+					'LOG_KIRIM'					=> 'Approval Commitment Auditor'
 				];
 			}
 			else{
 				$data_update = [
 					'APPROVAL_COMMITMENT' 		=> $new_value,
-					'KETERANGAN_ATASAN_AUDITEE' => is_empty_return_null($request['KETERANGAN_ATASAN_AUDITEE'])
+					'KETERANGAN_ATASAN_AUDITEE' => is_empty_return_null($request['KETERANGAN_ATASAN_AUDITEE']),
+					'LOG_KIRIM'					=> 'Approval Commitment Atasan Auditee'
 				];
 			}
 		    
@@ -315,7 +317,8 @@ public function index()
 	    	$data_update = [
 		        'APPROVAL_COMMITMENT' 		=> $request['APPROVAL_COMMITMENT'],
 		        'STATUS' 					=> 'OPEN',
-		        'KETERANGAN_ATASAN_AUDITEE' => is_empty_return_null($request['KETERANGAN_ATASAN_AUDITEE'])
+		        'KETERANGAN_ATASAN_AUDITEE' => is_empty_return_null($request['KETERANGAN_ATASAN_AUDITEE']),
+				'LOG_KIRIM'					=> 'Reject'
 		    ];
 	    	$new_value = $request['APPROVAL_COMMITMENT'];
 	    }
@@ -350,19 +353,21 @@ public function index()
 				$data_update = [
 					'APPROVAL_TINDAKLANJUT' 	=> $new_value,
 					'KETERANGAN_TL_LEAD_AUDITOR' => is_empty_return_null($request['KETERANGAN_TL_ATASAN']),
-					'STATUS'					=> 'CLOSE'
+					'STATUS'					=> 'CLOSE',
+					'LOG_KIRIM'					=> 'Approval Tindak Lanjut Lead Auditor'
 				];
 			}else if ($new_value==2){
 				$data_update = [
 					'APPROVAL_TINDAKLANJUT' 	=> $new_value,
 					'KETERANGAN_TL_AUDITOR' => is_empty_return_null($request['KETERANGAN_TL_ATASAN']),
-					
+					'LOG_KIRIM'					=> 'Approval Tindak Lanjut Auditor'
 				];
 			}
 			else{
 				$data_update = [
 					'APPROVAL_TINDAKLANJUT' 	=> $new_value,
-					'KETERANGAN_TL_ATASAN' => is_empty_return_null($request['KETERANGAN_TL_ATASAN'])
+					'KETERANGAN_TL_ATASAN' => is_empty_return_null($request['KETERANGAN_TL_ATASAN']),
+					'LOG_KIRIM'					=> 'Approval Tindak Lanjut Atasan Auditee'
 				];
 			}
 		    
@@ -370,7 +375,7 @@ public function index()
 	    	// Reject
 	    	$data_update = [
 		        'APPROVAL_TINDAKLANJUT' 		=> $request['APPROVAL_TINDAKLANJUT'],
-		        'STATUS' 						=> 'AC',
+		        'STATUS' 						=> 'Commitment Approved',
 		        'KETERANGAN_TL_ATASAN' 	=> is_empty_return_null($request['KETERANGAN_TL_ATASAN'])
 		    ];
 	    	$new_value = $request['APPROVAL_TINDAKLANJUT'];

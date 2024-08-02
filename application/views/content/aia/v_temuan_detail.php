@@ -369,11 +369,10 @@ var KTDatatableJsonRemoteDemo = {
             else{
               return '<span>' + t.STATUS + '</span>';
             }
-            
           } 
           else if (t.STATUS=="Commitment") {
             return '<span>' + t.STATUS + ' (' + t.APPROVAL_COMMITMENT + '/3)</span>';
-          } else if (t.STATUS=="AC") {
+          } else if (t.STATUS=="Commitment Approved") {
             return '<span>' + t.STATUS + '</span>';
           } 
         }
@@ -480,7 +479,9 @@ var KTDatatableJsonRemoteDemo = {
               if (t.STATUS == 'OPEN'){
                 console.log('g');
                 return '<span class="label font-weight-bold label-lg label-light-default label-inline"style="'+approve+'">'+t.STATUS+'</span>'+
-                '<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>';
+                '<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>'+
+                '<a onclick="a(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="far fa-file-alt" style="' + iconClass + '" title="Logs"></i></a>';
+                
               }else if(t.STATUS == 'Commitment' && t.APPROVAL_COMMITMENT == 0){
                 console.log('h');
                 return '<span class="label font-weight-bold label-lg label-light-default label-inline"style="'+approve+'">'+t.STATUS+'</span>'+
@@ -517,8 +518,9 @@ var KTDatatableJsonRemoteDemo = {
                 console.log('j');
                 return '<span class="label font-weight-bold label-lg label-light-default label-inline"style="'+approve+'">'+t.STATUS+'</span>'+
               '<a onclick="entryCommitment(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="Entry Commitment"><i class="fa fa-file-import text-dark"></i></a>'+
-              '<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>';
-                }else if(t.STATUS == 'AC' && t.APPROVAL_COMMITMENT == 3){
+              '<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>'+
+              '<a onclick="a(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="far fa-file-alt" style="' + iconClass + '" title="Logs"></i></a>';
+                }else if(t.STATUS == 'Commitment Approved' && t.APPROVAL_COMMITMENT == 3){
               return '<span class="label font-weight-bold label-lg label-light-default label-inline"style="'+approve+'">'+t.STATUS+'</span>'+
               '<a onclick="entryTL(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="Tindak Lanjut"><i class="fa fa-file-pen text-dark"></i></a>'+
               '<a onclick="viewCommitment(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Commitment"><i class="fa-solid fa-scroll text-dark"></i></a>'+
