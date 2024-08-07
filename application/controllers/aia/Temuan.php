@@ -31,18 +31,17 @@ public function index()
         $this->show($data);
 	}
 
-	public function detail($datas){
+	public function detail($id_response){
 		
 		$data['list_divisi'] 		= $this->m_res_au->get_divisi();
 
-		$data['list_temuan_header'] = $this->m_temuan->getAuditor_Lead($datas);
-		//print_r($data['list_temuan_header']);die();
+		$data['list_temuan_header'] = $this->m_temuan->getAuditor_Lead($id_response);
 		$data['menu']           	= 'temuan-aia';
         $data['title']          	= 'Temuan';
         $data['content']        	= 'content/aia/v_temuan_detail';
-		$data['kode']				= $datas;
-		// var_dump();die;
+		$data['kode']				= $id_response;
 		$data['role']				= $_SESSION['NAMA_ROLE'];
+		//print_r($_SESSION);die();
 		
 		$this->show($data);
 	}
@@ -55,6 +54,11 @@ public function index()
 		$query = $this->m_temuan->get_temuan_detail($data);
         echo json_encode($query);
 	}
+
+    public function getLog($data) {
+        $this->m_temuan->getLog($data);
+        //print_r($this->m_temuan->getLog($data));die();
+    }
 
 	public function proses_upload() { 
 		$this->db->select('FILE'); // Sesuaikan dengan nama kolom yang menyimpan nama file
@@ -157,15 +161,15 @@ public function index()
             echo json_encode($query);
     }
 
-	public function commitment($data) {
+	public function commitment($id_response) {
 		$request = $this->input->post();
 		$atasan_result = $this->m_temuan->getAtasan($_SESSION['ID_JABATAN']);
 		$atasan = json_decode($atasan_result, true);
 		date_default_timezone_set('Asia/Jakarta');
-		$status = $this->m_temuan->getStatus($request['ID_TEMUAN']);
-		$respObject = json_decode($status);
-    	// var_dump($respObject->STATUS);
-		// die();
+		// $status = $this->m_temuan->getStatus($request['ID_TEMUAN']);
+		// $respObject = json_decode($status);
+		$temuan_detail = $this->m_temuan->get_temuan_detail($id_response);
+    	
 
 		$data_update = 
 			[
@@ -173,15 +177,10 @@ public function index()
 			'PERBAIKAN'           				=> is_empty_return_null($request['PERBAIKAN']),
 			'KOREKTIF'           				=> is_empty_return_null($request['KOREKTIF']),
 			'TANGGAL'           				=> is_empty_return_null($request['TANGGAL']),
-			'ID_ATASAN_AUDITEE' 				=> isset($atasan['ID_ATASAN']) ? $atasan['ID_ATASAN'] : null
+			'ID_ATASAN_AUDITEE' 				=> isset($atasan['ID_ATASAN']) ? $atasan['ID_ATASAN'] : null,
+			'LOG_KIRIM'							=> 'Commitment Auditee'
 			];
-		// if($respObject->STATUS === 'AC'){
-		// 	$this->db->set('STATUS', 'TL');
-		// 	echo('a');die();
-		// }else{
-		// 	$this->db->set('STATUS', 'Commitment');
-		// 	echo('b');die();
-		// }
+
 		$this->db->set('TANGGAL', $data_update['TANGGAL']);
 		$this->db->set('KOREKTIF', $data_update['KOREKTIF'][0]);
 		$this->db->set('PERBAIKAN', $data_update['PERBAIKAN'][0]);
@@ -191,14 +190,15 @@ public function index()
 		$this->db->where('ID_TEMUAN', $request['ID_TEMUAN']);
 		$update = $this->db->update('TEMUAN_DETAIL');
 		if ($update){
+			$this->m_temuan->insertorupdate_pemeriksa($temuan_detail[0]['ID_TEMUAN'], $temuan_detail[0]);
 			$success_message = 'Data Commitment Berhasil Disimpan.';
 			$this->session->set_flashdata('success', $success_message);
-			redirect(base_url('aia/temuan/detail/'.$data));
+			redirect(base_url('aia/temuan/detail/'.$id_response));
 		}
 		else{
 			$error_message = 'Silahkan coba kembali';
 			$this->session->set_flashdata('error', $error_message);
-			redirect(base_url('aia/temuan/detail/'.$data));
+			redirect(base_url('aia/temuan/detail/'.$id_response));
 		}
 	}
 
@@ -240,7 +240,8 @@ public function index()
 				$data_update = 
 					[
 					'KETERANGAN_TL'           			=> is_empty_return_null($request['KETERANGAN_TL']),
-					'FILE'           					=> is_empty_return_null($file_path)
+					'FILE'           					=> is_empty_return_null($file_path),
+					'LOG_KIRIM'							=> 'Tindak Lanjut Auditee'
 					];
 				
 				$this->db->set('FILE', $file_path);
@@ -279,7 +280,7 @@ public function index()
 	public function approval($data) {
 	    $request = $this->input->post();
 		// $current_date = date('Y-m-d H:i:s');
-		// var_dump($current_date);die;
+		var_dump($request);die;
 
 	    if ($request['APPROVAL_COMMITMENT'] == 1){
 	    	$this->db->select('APPROVAL_COMMITMENT');
@@ -320,7 +321,7 @@ public function index()
 		        'KETERANGAN_ATASAN_AUDITEE' => is_empty_return_null($request['KETERANGAN_ATASAN_AUDITEE']),
 				'LOG_KIRIM'					=> 'Reject'
 		    ];
-	    	$new_value = $request['APPROVAL_COMMITMENT'];
+	    	//$new_value = $request['APPROVAL_COMMITMENT'];
 	    }
 
 	    $this->db->set($data_update);
@@ -328,6 +329,7 @@ public function index()
 	    $update = $this->db->update('TEMUAN_DETAIL');
 
 	    if ($update) {
+	    	$this->m_temuan->insertorupdate_pemeriksa($request['ID_TEMUAN'], $temuan_detail[0]);
 	        $success_message = 'Status Sudah Berhasil Di Approve';
 	        $this->session->set_flashdata('success', $success_message);
 	    } else {
@@ -351,34 +353,33 @@ public function index()
 		    $new_value = $current_value + $request['APPROVAL_TINDAKLANJUT'];
 			if ($new_value==3){
 				$data_update = [
-					'APPROVAL_TINDAKLANJUT' 	=> $new_value,
-					'KETERANGAN_TL_LEAD_AUDITOR' => is_empty_return_null($request['KETERANGAN_TL_ATASAN']),
-					'STATUS'					=> 'CLOSE',
-					'LOG_KIRIM'					=> 'Approval Tindak Lanjut Lead Auditor'
+					'APPROVAL_TINDAKLANJUT'			=> $new_value,
+					'KETERANGAN_TL_LEAD_AUDITOR' 	=> is_empty_return_null($request['KETERANGAN_TL_ATASAN']),
+					'STATUS'						=> 'CLOSE',
+					'LOG_KIRIM'						=> 'Approval Tindak Lanjut Lead Auditor'
 				];
 			}else if ($new_value==2){
 				$data_update = [
-					'APPROVAL_TINDAKLANJUT' 	=> $new_value,
-					'KETERANGAN_TL_AUDITOR' => is_empty_return_null($request['KETERANGAN_TL_ATASAN']),
-					'LOG_KIRIM'					=> 'Approval Tindak Lanjut Auditor'
+					'APPROVAL_TINDAKLANJUT' 		=> $new_value,
+					'KETERANGAN_TL_AUDITOR' 		=> is_empty_return_null($request['KETERANGAN_TL_ATASAN']),
+					'LOG_KIRIM'						=> 'Approval Tindak Lanjut Auditor'
 				];
-			}
-			else{
+			}else{
 				$data_update = [
-					'APPROVAL_TINDAKLANJUT' 	=> $new_value,
-					'KETERANGAN_TL_ATASAN' => is_empty_return_null($request['KETERANGAN_TL_ATASAN']),
-					'LOG_KIRIM'					=> 'Approval Tindak Lanjut Atasan Auditee'
+					'APPROVAL_TINDAKLANJUT' 		=> $new_value,
+					'KETERANGAN_TL_ATASAN' 			=> is_empty_return_null($request['KETERANGAN_TL_ATASAN']),
+					'LOG_KIRIM'						=> 'Approval Tindak Lanjut Atasan Auditee'
 				];
 			}
 		    
-	    } else {
+	    }else{
 	    	// Reject
 	    	$data_update = [
-		        'APPROVAL_TINDAKLANJUT' 		=> $request['APPROVAL_TINDAKLANJUT'],
-		        'STATUS' 						=> 'Commitment Approved',
-		        'KETERANGAN_TL_ATASAN' 	=> is_empty_return_null($request['KETERANGAN_TL_ATASAN'])
+		        'APPROVAL_TINDAKLANJUT' 			=> $request['APPROVAL_TINDAKLANJUT'],
+		        'STATUS' 							=> 'Commitment Approved',
+		        'KETERANGAN_TL_ATASAN' 				=> is_empty_return_null($request['KETERANGAN_TL_ATASAN'])
 		    ];
-	    	$new_value = $request['APPROVAL_TINDAKLANJUT'];
+	    	//$new_value = $request['APPROVAL_TINDAKLANJUT'];
 	    }
 
 	    $this->db->set($data_update);

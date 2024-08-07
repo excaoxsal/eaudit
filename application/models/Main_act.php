@@ -5,17 +5,17 @@ class Main_act extends CI_Model{
 
 	public function total_notif($id_user)
 	{
-		$query = $this->db->get_where('PEMERIKSA', array('STATUS' => 1, 'ID_USER' => $id_user));					
+		$query = $this->db->get_where('PEMERIKSA', array('STATUS_COMMITMENT' => 1, 'ID_USER' => $id_user));					
 		return $query->result_array();
 
 	}
 
-	public function notif_spa($id_user)
+	public function notif_atasanAuditee($id_user)
 	{
-		$query = $this->db->select('SPA.ID_SPA, SPA.NOMOR_SURAT, SPA.NOMOR_SPA_SEQ, SPA.PADA_TANGGAL')
+		$query = $this->db->select('*')
 							->from('PEMERIKSA P')
-							->join('SPA', 'SPA.ID_SPA = P.ID_PERENCANAAN', 'LEFT')
-							->where(array('P.STATUS' => 1, 'P.JENIS_PERENCANAAN' => 'SPA', 'P.ID_USER' => $id_user))
+							->join('TEMUAN_DETAIL', 'TEMUAN_DETAIL.ID_TEMUAN = P.ID_PERENCANAAN', 'LEFT')
+							->where(array('P.STATUS_COMMITMENT' => 1, 'P.JENIS_PERENCANAAN' => 'TEMUAN_DETAIL', 'P.ID_USER' => $id_user))
 				 			// ->order_by('', 'DESC')
 				 			->get();					
 		return $query->result_array();

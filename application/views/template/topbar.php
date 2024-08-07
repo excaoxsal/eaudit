@@ -31,16 +31,7 @@
   <div class="offcanvas-header offcanvas-header-navs d-flex align-items-center justify-content-between mb-5">
     <ul class="nav nav-bold nav-tabs nav-tabs-line nav-tabs-line-3x nav-tabs-primary flex-grow-1 px-10" role="tablist">
       <li class="nav-item">
-        <a class="nav-link active" data-toggle="tab" href="#log_spa">SPA (<?= $total_spa ?>)</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#log_apm">APM (<?= $total_apm ?>)</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#log_rcm">RCM (<?= $total_rcm ?>)</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#log_pka">PKA (<?= $total_pka ?>)</a>
+        <a class="nav-link active" data-toggle="tab" href="#log_spa">List Temuan Detail (<?= $total_atasanAuditee ?>)</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" data-toggle="tab" href="#log_lainnya">Tindak Lanjut (<?= $tnotif_lain ?>)</a>
@@ -57,7 +48,7 @@
     <div class="tab-content">
       <div class="tab-pane fade show pt-3 pr-5 mr-n5 active" id="log_spa" role="tabpanel">
 
-        <?php if ($total_spa < 1) { ?>
+        <?php if ($total_atasanAuditee < 1) { ?>
           <div class="d-flex align-items-center bg-light-secondary rounded p-5 mb-5">
             <div class="d-flex flex-column flex-grow-1 mr-2">
               <span class="font-weight-normal text-dark-75 font-size-lg mb-1">Tidak ada notifikasi.</span>
@@ -65,11 +56,11 @@
           </div>
         <?php } ?>
 
-        <?php foreach ($notif_spa as $data) { ?>
+        <?php foreach ($notif_atasanAuditee as $data) { ?>
           <div class="d-flex align-items-center bg-light-success rounded p-5 mb-5">
             <div class="d-flex flex-column flex-grow-1 mr-2">
-              <a href="<?= base_url() ?>perencanaan/spa/review?id=<?= base64_encode($data['ID_SPA']) ?>" class="font-weight-normal text-dark-75 text-hover-primary font-size-lg mb-1"><?= $data['NOMOR_SPA_SEQ'] ?></a>
-              <span class="text-muted font-size-sm"><?= tgl_indo($data['PADA_TANGGAL']) ?></span>
+              <a href="<?= base_url() ?>aia/temuan/detail/<?= $data['ID_RESPONSE'] ?>" class="font-weight-normal text-dark-75 text-hover-primary font-size-lg mb-1">TEMUAN</a>
+              <!-- <span class="text-muted font-size-sm"><?= tgl_indo($data['PADA_TANGGAL']) ?></span> -->
             </div>
           </div>
         <?php } ?>
