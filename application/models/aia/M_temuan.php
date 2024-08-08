@@ -147,12 +147,13 @@ class M_Temuan extends CI_Model{
          ->where('ID_TARGET', $id_target)
          ->where('LOG_KIRIM IS NOT NULL')
          ->get();
+         
 
-        if ($query->num_rows() > 0) {
-            return json_encode($query->result_array()); // Mengembalikan data sebagai array dan meng-encode ke JSON
+         if ($query->num_rows() > 0) {
+            echo json_encode($query->result_array()); // Mengembalikan data sebagai array dan meng-encode ke JSON
+        } else {
+            echo json_encode([]); // Mengembalikan array kosong jika tidak ada hasil 
         }
-
-        return json_encode([]); // Mengembalikan array kosong jika tidak ada hasil 
     }
 
     
