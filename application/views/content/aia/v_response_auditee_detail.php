@@ -99,9 +99,7 @@
           </div>
           <div class="form-group row">
             <div class="col-12">
-              <label>Lampiran 
-                <span style="color: red;">(Ukuran File Maksimal 15 MB)</span>
-              </label>
+              <label>Lampiran</label>
               <div class="custom-file">
                 <input type="file" class="custom-file-input" name="file_excel" id="file_excel">
                 <label class="custom-file-label" for="customFile">Choose file</label>
@@ -219,16 +217,6 @@ var KTDatatableJsonRemoteDemo = {
         key: "generalSearch"
       },
       columns: [{
-        field: "number",
-        title: "No.",
-        template: function(row, index) {
-            // Calculate the correct index for the current page
-            var currentPage = t.getCurrentPage();
-            var pageSize = t.options.data.pageSize;
-            return (currentPage - 1) * pageSize + (index + 1);
-        }
-      },
-      {
         field: "KODE_KLAUSUL",
         title: "Klausul"
       },
