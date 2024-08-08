@@ -71,10 +71,12 @@ class Response_auditee extends MY_Controller {
 					$this->upload->allowed_types = $eltype;
 					$this->upload->initialize($config);
 					$file_path = base_url().'storage/aia/'.$config['file_name'].'.'.$ext;
-					
-					$elupload = $this->upload->do_upload('file_excel');
-					$upload_data = $this->upload->data();
-					// echo($file_path);
+					if ( ! $this->upload->do_upload('file_excel'))
+	                {
+	                	$error_message = 'Gagal Upload File, Karena Batas Ukuran Maksimum Adalah 15 MB, <br>Silakan Di Upload Kembali';
+						$this->session->set_flashdata('error', $error_message);
+						redirect(base_url('aia/response_auditee/detail/'.$data));
+	                }
 				}
 				
 				$data_update = 
