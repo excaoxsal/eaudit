@@ -62,6 +62,7 @@ class MY_Controller extends CI_Controller
     }
 
     protected function is_atasan_auditee()
+    // (terdapat error, auditee terdefine menjadi atasan auditee jika data atasan di master jabatan untuk role auditee belum di isi)
     {
         $query = $this->db->select('ID_ATASAN')
                       ->from('TM_JABATAN')

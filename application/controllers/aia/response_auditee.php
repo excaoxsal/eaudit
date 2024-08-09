@@ -310,7 +310,7 @@ class Response_auditee extends MY_Controller {
 		->join('TM_ISO i', 'm."ID_ISO" = i."ID_ISO"', 'left')
 		->join('TM_DIVISI d', 'd."KODE" = ra."SUB_DIVISI"')
 		->where('ra."ID_HEADER"', $datas)
-		
+		->order_by('ra."ID_MASTER_PERTANYAAN"', 'ASC');
 		;
 
 	$query = $this->db->get();

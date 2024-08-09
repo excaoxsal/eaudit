@@ -34,7 +34,6 @@ public function index()
 	public function detail($id_response){
 		
 		$data['list_divisi'] 		= $this->m_res_au->get_divisi();
-
 		$data['list_temuan_header'] = $this->m_temuan->getAuditor_Lead($id_response);
 		$data['menu']           	= 'temuan-aia';
         $data['title']          	= 'Temuan';
@@ -169,6 +168,8 @@ public function index()
 		// $status = $this->m_temuan->getStatus($request['ID_TEMUAN']);
 		// $respObject = json_decode($status);
 		$temuan_detail = $this->m_temuan->get_temuan_detail($id_response);
+		// $temuan_header= $this->m_res_au->get_response_auditee_detail($id_response);
+		// print_r($this->m_res_au->get_response_auditee_detail($id_response));die();
     	
 
 		$data_update = 
@@ -191,6 +192,7 @@ public function index()
 		$update = $this->db->update('TEMUAN_DETAIL');
 		if ($update){
 			$this->m_temuan->insertorupdate_pemeriksa($temuan_detail[0]['ID_TEMUAN'], $temuan_detail[0]);
+			//print_r($this->m_temuan->insertorupdate_pemeriksa($temuan_detail[0]['ID_TEMUAN'], $temuan_detail[0]));die();
 			$success_message = 'Data Commitment Berhasil Disimpan.';
 			$this->session->set_flashdata('success', $success_message);
 			redirect(base_url('aia/temuan/detail/'.$id_response));
@@ -277,8 +279,15 @@ public function index()
 		
 	}
 
-	public function approval($data) {
+	public function approval($id_response) {
 	    $request = $this->input->post();
+	    //print_r($data);
+	    $array_where = [
+			'ID_PERENCANAAN' => $request['ID_TEMUAN'],
+			'JENIS_PERENCANAAN' => 'TEMUAN DETAIL'
+		];
+		$detail_temuan= $this->m_temuan->get_detail_temuan($id_response);
+		//print_r($detail_temuan[0]);die();
 		// $current_date = date('Y-m-d H:i:s');
 	    if ($request['APPROVAL_COMMITMENT'] == 1){
 	    	$this->db->select('APPROVAL_COMMITMENT');
@@ -301,7 +310,7 @@ public function index()
 					$new_value = $current_value;
 					$error_message = 'Gagal Approve dikarenakan Anda bukan Lead Auditor ';
 	        		$this->session->set_flashdata('error', $error_message);
-					redirect(base_url('aia/temuan/detail/'.$data));
+					redirect(base_url('aia/temuan/detail/'.$id_response));
 				}
 				
 			}
@@ -317,7 +326,7 @@ public function index()
 					$new_value = $current_value;
 					$error_message = 'Gagal Approve dikarenakan Anda bukan Auditor ';
 	        		$this->session->set_flashdata('error', $error_message);
-					redirect(base_url('aia/temuan/detail/'.$data));
+					redirect(base_url('aia/temuan/detail/'.$id_response));
 				}
 				
 			}
@@ -328,12 +337,14 @@ public function index()
 						'KETERANGAN_ATASAN_AUDITEE' => is_empty_return_null($request['KETERANGAN_ATASAN_AUDITEE']),
 						'LOG_KIRIM'					=> 'Approval Commitment Atasan Auditee'
 					];
+					$data_pemeriksa = ['STATUS_COMMITMENT' => 2, 'TANGGAL' => date('Y-m-d')];
+					$this->m_temuan->update($data_pemeriksa, $array_where, 'PEMERIKSA');
 				}
 				else{
 					$new_value = $current_value;
 					$error_message = 'Gagal Approve dikarenakan Anda bukan Atasan Auditee ';
 	        		$this->session->set_flashdata('error', $error_message);
-					redirect(base_url('aia/temuan/detail/'.$data));
+					redirect(base_url('aia/temuan/detail/'.$id_response));
 				}
 				
 			}
@@ -352,9 +363,10 @@ public function index()
 	    $this->db->set($data_update);
 	    $this->db->where('ID_TEMUAN', $request['ID_TEMUAN']);
 	    $update = $this->db->update('TEMUAN_DETAIL');
+	    
 
 	    if ($update) {
-	    	// $this->m_temuan->insertorupdate_pemeriksa($request['ID_TEMUAN'], $data_update[0]);
+	    	$this->m_temuan->insertorupdate_pemeriksa($request['ID_TEMUAN'], $detail_temuan[0]);
 	        $success_message = 'Status Sudah Berhasil Di Approve';
 	        $this->session->set_flashdata('success', $success_message);
 	    } else {
@@ -362,7 +374,7 @@ public function index()
 	        $this->session->set_flashdata('error', $error_message);
 	    }
 
-	    redirect(base_url('aia/temuan/detail/'.$data));
+	    redirect(base_url('aia/temuan/detail/'.$id_response));
 	}
 
 	public function approvalTL($data) {

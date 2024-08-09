@@ -18,9 +18,18 @@ class M_Temuan extends CI_Model{
 		return $lastquery;
     }
 
-    public function add($data, $table)
+    public function add($table, $data)
     {
-        $this->db->insert($table, $data);
+        // Debug information to ensure data structure is correct
+        log_message('debug', 'Data to insert: ' . print_r($data, true));
+        log_message('debug', 'Table name: ' . $table);
+
+        // Perform the insertion
+        if ($this->db->insert($table, $data)) {
+            log_message('debug', 'Insert successful');
+        } else {
+            log_message('error', 'Insert failed: ' . $this->db->_error_message());
+        }
     }
 
     public function update($data, $array_where, $table)
@@ -29,45 +38,46 @@ class M_Temuan extends CI_Model{
         $this->db->update($table, $data);
     }
 
-    public function insertorupdate_pemeriksa($id_temuan, $data, $update = false)
+    public function insertorupdate_pemeriksa($id_temuan, $data)
     {
-        $data_pemeriksa = [
-            'ID_PERENCANAAN'    => $id_temuan,
-            'JENIS_PERENCANAAN' => $this->_table,
-        ];
-        //print($_SESSION['ID_ATASAN_I']);die();
-        if ($data['STATUS']=='Commitment' && $data['APPROVAL_COMMITMENT'] == 0){
-            $data_notif['STATUS_COMMITMENT'] = 1;
-            $data_notif['ID_USER'] = $_SESSION['ID_ATASAN_I'];
-            //var_dump('a');die();
-        }else if($data['STATUS']=='Commitment' && $data['APPROVAL_COMMITMENT'] == 1){
-            $data_notif['STATUS_COMMITMENT'] = 1;
-            $data_notif['ID_USER'] = $data['ID_AUDITOR'];
-            //var_dump('b');die();
-        }else if($data['STATUS']=='Commitment' && $data['APPROVAL_COMMITMENT'] == 2){
-            $data_notif['STATUS_COMMITMENT'] = 1;
-            $data_notif['ID_USER'] = $data['ID_LEAD_AUDITOR'];
-            //var_dump('c');die();
-        }else if($data['STATUS']=='Tindak Lanjut' && $data['APPROVAL_TINDAKLANJUT'] == 0){
-            $data_notif['STATUS_TINDAKLANJUT'] = 1;
-            $data_notif['ID_USER'] = $_SESSION['ID_ATASAN_I'];
-            //var_dump('d');die();
-        }else if($data['STATUS']=='Tindak Lanjut' && $data['APPROVAL_TINDAKLANJUT'] == 1){
-            $data_notif['STATUS_TINDAKLANJUT'] = 1;
-            $data_notif['ID_USER'] = $data['ID_AUDITOR'];
-            //var_dump('e');die();
-        }else if($data['STATUS']=='Tindak Lanjut' && $data['APPROVAL_TINDAKLANJUT'] == 2){
-            $data_notif['STATUS_TINDAKLANJUT'] = 1;
-            $data_notif['ID_USER'] = $data['ID_LEAD_AUDITOR'];
-            //var_dump('f');die();
-        }
+        $data_pemeriksa['ID_PERENCANAAN'] = $id_temuan;
+        $data_pemeriksa['JENIS_PERENCANAAN'] = 'TEMUAN DETAIL';
 
-        if($update) {
-            $this->update($data_notif, $data_pemeriksa, 'PEMERIKSA');
-        }else {
-            $data_notif += $data_pemeriksa;
-            $this->add($data_notif,'PEMERIKSA');
+        $data_notif = [];
+        //print_r($data['ID_AUDITOR']);DIE();
+        //print_r($data['ID_LEAD_AUDITOR']);DIE();
+        //print_r($data['STATUS']);DIE();
+        //print_r($data['APPROVAL_COMMITMENT']);DIE();
+
+        if ($data['STATUS'] == 'OPEN' && $data['APPROVAL_COMMITMENT'] == 0) {
+            $data_notif['STATUS_COMMITMENT'] = 1;
+            $data_notif['ID_USER'] = $_SESSION['ID_ATASAN_I'];
+            //print_r('a');die();
+        } else if ($data['STATUS'] = 'Commitment' && $data['APPROVAL_COMMITMENT'] == 0) {
+            $data_notif['STATUS_COMMITMENT'] = 1;
+            $data_notif['ID_USER'] = $data['ID_AUDITOR'];
+            //print_r('b');die();
+        } else if ($data['STATUS'] == 'Commitment' && $data['APPROVAL_COMMITMENT'] == 1) {
+            $data_notif['STATUS_COMMITMENT'] = 1;
+            $data_notif['ID_USER'] = $data['ID_LEAD_AUDITOR'];
+            //print_r('c');die();
+        } else if ($data['STATUS'] == 'Commitment Approved' && $data['APPROVAL_TINDAKLANJUT'] == 0) {
+            $data_notif['STATUS_TINDAKLANJUT'] = 1;
+            $data_notif['ID_USER'] = $_SESSION['ID_ATASAN_I'];
+            //print_r('e');die();
+        } else if ($data['STATUS'] == 'Tindak Lanjut' && $data['APPROVAL_TINDAKLANJUT'] == 1) {
+            $data_notif['STATUS_TINDAKLANJUT'] = 1;
+            $data_notif['ID_USER'] = $data['ID_AUDITOR'];
+            //print_r('f');die();
+        } else if ($data['STATUS'] == 'Tindak Lanjut' && $data['APPROVAL_TINDAKLANJUT'] == 2) {
+            $data_notif['STATUS_TINDAKLANJUT'] = 1;
+            $data_notif['ID_USER'] = $data['ID_LEAD_AUDITOR'];
+            //print_r('g');die();
         }
+            //print_r($data_notif);DIE();
+            $data_notif1 = array_merge($data_notif, $data_pemeriksa);
+            //print_r($data_notif1);DIE();
+            $this->add('PEMERIKSA', $data_notif1);
     }
 
     public function getStatus($id_tl)
@@ -141,6 +151,26 @@ class M_Temuan extends CI_Model{
         return $query->result_array();
     }
 
+    public function get_detail_temuan($data){
+        $sql = '
+        SELECT DISTINCT
+            wa."ID_AUDITOR",
+            wa."ID_LEAD_AUDITOR",
+            t."STATUS",
+            t."APPROVAL_COMMITMENT",
+            t."APPROVAL_TINDAKLANJUT"
+        FROM
+            "TEMUAN_DETAIL" t
+            INNER JOIN "RESPONSE_AUDITEE_D" ra ON ra."ID_HEADER" = t."ID_RESPONSE"
+            INNER JOIN "WAKTU_AUDIT" wa ON ra."ID_JADWAL" = wa."ID_JADWAL"
+        WHERE
+            t."ID_RESPONSE" = ?
+        ';
+        $params = array($data);
+        $query = $this->db->query($sql, $params);
+        return $query->result_array();
+    }
+    
     public function getLog($id_target) {
         $query = $this->db->select("LOG_KIRIM, to_char(\"WAKTU\", 'YYYY-MM-DD HH24:MI:SS') AS formatted_timestamp")
          ->from('LOG_TEMUAN')

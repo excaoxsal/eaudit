@@ -15,7 +15,7 @@ class Main_act extends CI_Model{
 		$query = $this->db->select('*')
 							->from('PEMERIKSA P')
 							->join('TEMUAN_DETAIL', 'TEMUAN_DETAIL.ID_TEMUAN = P.ID_PERENCANAAN', 'LEFT')
-							->where(array('P.STATUS_COMMITMENT' => 1, 'P.JENIS_PERENCANAAN' => 'TEMUAN_DETAIL', 'P.ID_USER' => $id_user))
+							->where(array('P.STATUS_COMMITMENT' => 1, 'P.JENIS_PERENCANAAN' => 'TEMUAN DETAIL', 'P.ID_USER' => $id_user))
 				 			// ->order_by('', 'DESC')
 				 			->get();					
 		return $query->result_array();
