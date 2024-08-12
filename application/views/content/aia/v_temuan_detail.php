@@ -494,7 +494,7 @@ var KTDatatableJsonRemoteDemo = {
                 '<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>'+
                 '<a onclick="log(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="far fa-file-alt text-dark" title="Logs"></i></a>'; 
               }else if(t.STATUS == 'CLOSE' && t.APPROVAL_COMMITMENT == 3 && t.APPROVAL_TINDAKLANJUT == 3 && isPICAuditor == sessionUserId){
-                return ''+
+                return 'aswd'+
                 '<a onclick="viewTL(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Tindak Lanjut"><i class="fa-solid fa-file-alt text-dark"></i></a>'+
                 '<a onclick="viewCommitment(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Commitment"><i class="fa-solid fa-scroll text-dark"></i></a>'+
                 '<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>'+

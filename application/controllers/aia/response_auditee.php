@@ -87,6 +87,7 @@ class Response_auditee extends MY_Controller {
 				
 				$this->db->set('FILE', $file_path);
 				$this->db->set('RESPONSE_AUDITEE', $data_update['RESPON'][0]);
+				$this->db->set('LOG_KIRIM', 'Chat');
 				$this->db->where('ID_RE', $id_re);
 				$update = $this->db->update('RESPONSE_AUDITEE_D');
 				
@@ -145,12 +146,14 @@ class Response_auditee extends MY_Controller {
 			$this->db->set('KOMENTAR_1', $request['KOMENTAR_1']);
 			$this->db->set('KOMENTAR_2', $request['KOMENTAR_2']);
 			$this->db->set('STATUS_AUDITEE', '1');
+			$this->db->set('LOG_KIRIM', 'Chat');
 			$this->db->where('ID_RE', $request['ID_RE_CHAT']);
 			$elupdate = $this->db->update('RESPONSE_AUDITEE_D');
 		}else{
 			$this->db->set('KOMENTAR_1', $request['KOMENTAR_1']);
 			$this->db->set('KOMENTAR_2', $request['KOMENTAR_2']);
 			$this->db->set('STATUS_AUDITOR', '1');
+			$this->db->set('LOG_KIRIM', 'Chat');
 			$this->db->where('ID_RE', $request['ID_RE_CHAT']);
 			$elupdate = $this->db->update('RESPONSE_AUDITEE_D');
 		}
@@ -208,11 +211,13 @@ class Response_auditee extends MY_Controller {
 		$user_session = $_SESSION['NAMA_ROLE'];
 		if($user_session=="AUDITOR"){
 			$this->db->set('STATUS_AUDITOR','0');
+			$this->db->set('LOG_KIRIM', 'Read_chat');
 			$this->db->where('ID_RE', $data);
 			$this->db->update('RESPONSE_AUDITEE_D');
 		}
 		else{
 			$this->db->set('STATUS_AUDITEE','0');
+			$this->db->set('LOG_KIRIM', 'Read_chat');
 			$this->db->where('ID_RE', $data);
 			$this->db->update('RESPONSE_AUDITEE_D');
 		}
@@ -220,7 +225,6 @@ class Response_auditee extends MY_Controller {
 	}
 	
 	public function generate($data){
-		
 		$query = $this->db->select('*')->from('TM_PERTANYAAN')->get();
 		$query_divisi = $this->db->select('KODE')->from('WAKTU_AUDIT w')->join('TM_DIVISI d','d.ID_DIVISI=w.ID_DIVISI')->where('ID_JADWAL',$data)->get();
 		$query_iso = $this->db->select('ID_ISO')->from('TM_ISO')->get();
@@ -257,7 +261,8 @@ class Response_auditee extends MY_Controller {
 						'ID_MASTER_PERTANYAAN' => $row['ID_MASTER_PERTANYAAN'],
 						'ID_JADWAL' => $data,
 						'SUB_DIVISI' => trim($item),
-						'ID_HEADER' => $result_header[0]['ID_HEADER']
+						'ID_HEADER' => $result_header[0]['ID_HEADER'],
+						'LOG_KIRIM' =>'Generate Jadwal by ID_USER '.$_SESSION['ID_USER']
 						
 					];
 					// Bersihkan dan siapkan data untuk dimasukkan

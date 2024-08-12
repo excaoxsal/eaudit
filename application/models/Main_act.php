@@ -21,6 +21,28 @@ class Main_act extends CI_Model{
 		return $query->result_array();
 	}
 
+	public function notif_auditor($id_user)
+	{
+		$query = $this->db->select('*')
+							->from('PEMERIKSA P')
+							->join('TEMUAN_DETAIL', 'TEMUAN_DETAIL.ID_TEMUAN = P.ID_PERENCANAAN', 'LEFT')
+							->where(array('P.STATUS_COMMITMENT' => 2, 'P.JENIS_PERENCANAAN' => 'TEMUAN DETAIL', 'P.ID_USER' => $id_user))
+				 			// ->order_by('', 'DESC')
+				 			->get();					
+		return $query->result_array();
+	}
+
+	public function notif_lead_auditor($id_user)
+	{
+		$query = $this->db->select('*')
+							->from('PEMERIKSA P')
+							->join('TEMUAN_DETAIL', 'TEMUAN_DETAIL.ID_TEMUAN = P.ID_PERENCANAAN', 'LEFT')
+							->where(array('P.STATUS_COMMITMENT' => 3, 'P.JENIS_PERENCANAAN' => 'TEMUAN DETAIL', 'P.ID_USER' => $id_user))
+				 			// ->order_by('', 'DESC')
+				 			->get();					
+		return $query->result_array();
+	}
+
 	public function notif_apm($id_user)
 	{
 		$query = $this->db->select('A.NAMA_AUDIT, A.ID_APM, A.TGL_PERIODE_MULAI, A.TGL_PERIODE_SELESAI')

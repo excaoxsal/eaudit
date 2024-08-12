@@ -16,10 +16,15 @@ class MY_Controller extends CI_Controller
     {
         $result               = $this->main_act->total_notif($this->session->userdata('ID_USER'));
         $data['notif_atasanAuditee']    = $this->main_act->notif_atasanAuditee($this->session->userdata('ID_USER'));
+        $data['notif_auditor']    = $this->main_act->notif_auditor($this->session->userdata('ID_USER'));
+        $data['notif_leadauditor']    = $this->main_act->notif_lead_auditor($this->session->userdata('ID_USER'));
+
         $data['notif_apm']    = $this->main_act->notif_apm($this->session->userdata('ID_USER'));
         $data['notif_rcm']    = $this->main_act->notif_rcm($this->session->userdata('ID_USER'));
         $data['notif_pka']    = $this->main_act->notif_pka($this->session->userdata('ID_USER'));
         $data['total_atasanAuditee']    = count($data['notif_atasanAuditee']);
+        $data['total_auditor']    = count($data['notif_auditor']);
+        $data['total_leadauditor']    = count($data['notif_leadauditor']);
         $data['total_apm']    = count($data['notif_apm']);
         $data['total_rcm']    = count($data['notif_rcm']);
         $data['total_pka']    = count($data['notif_pka']);

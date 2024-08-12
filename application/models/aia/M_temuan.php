@@ -40,24 +40,19 @@ class M_Temuan extends CI_Model{
 
     public function insertorupdate_pemeriksa($id_temuan, $data)
     {
-        $data_pemeriksa['ID_PERENCANAAN'] = $id_temuan;
-        $data_pemeriksa['JENIS_PERENCANAAN'] = 'TEMUAN DETAIL';
-
         $data_notif = [];
-        //print_r($data['ID_AUDITOR']);DIE();
-        //print_r($data['ID_LEAD_AUDITOR']);DIE();
-        //print_r($data['STATUS']);DIE();
-        //print_r($data['APPROVAL_COMMITMENT']);DIE();
+        $data_notif['ID_PERENCANAAN'] = $id_temuan;
+        $data_notif['JENIS_PERENCANAAN'] = 'TEMUAN DETAIL';
 
         if ($data['STATUS'] == 'OPEN' && $data['APPROVAL_COMMITMENT'] == 0) {
             $data_notif['STATUS_COMMITMENT'] = 1;
             $data_notif['ID_USER'] = $_SESSION['ID_ATASAN_I'];
-            //print_r('a');die();
-        } else if ($data['STATUS'] = 'Commitment' && $data['APPROVAL_COMMITMENT'] == 0) {
+            // print_r($data_notif);die();
+        } else if ($data['STATUS'] = 'Commitment' && $data['APPROVAL_COMMITMENT'] == 1) {
             $data_notif['STATUS_COMMITMENT'] = 1;
             $data_notif['ID_USER'] = $data['ID_AUDITOR'];
             //print_r('b');die();
-        } else if ($data['STATUS'] == 'Commitment' && $data['APPROVAL_COMMITMENT'] == 1) {
+        } else if ($data['STATUS'] == 'Commitment' && $data['APPROVAL_COMMITMENT'] == 2) {
             $data_notif['STATUS_COMMITMENT'] = 1;
             $data_notif['ID_USER'] = $data['ID_LEAD_AUDITOR'];
             //print_r('c');die();
@@ -74,10 +69,12 @@ class M_Temuan extends CI_Model{
             $data_notif['ID_USER'] = $data['ID_LEAD_AUDITOR'];
             //print_r('g');die();
         }
+        
+            // var_dump($data_notif);die;   
+            // $data_notif = array_merge($data_notif, $data_pemeriksa);
+            $this->db->insert('PEMERIKSA',$data_notif);
             //print_r($data_notif);DIE();
-            $data_notif1 = array_merge($data_notif, $data_pemeriksa);
-            //print_r($data_notif1);DIE();
-            $this->add('PEMERIKSA', $data_notif1);
+        
     }
 
     public function getStatus($id_tl)
