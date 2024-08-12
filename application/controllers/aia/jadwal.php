@@ -42,21 +42,19 @@ class Jadwal extends MY_Controller
 		
 		$data['list_user'] 			= $this->master_act->user(['U.STATUS' => 1]);
 		$data_auditor 				= $this->master_act->auditor(['R.ID_ROLE' => 1]);
-		$data_lead_auditor			= $this->master_act->auditor(['R.ID_ROLE' => 5]);
+		$data_lead_auditor			= $this->master_act->auditor(['J.ID_JABATAN' => 2035]);
 		$data['data_auditor'] 		= $data_auditor;
 		$data['data_lead_auditor'] 	= $data_lead_auditor;
 		// $data['id_jadwal']			= $this->m_jadwal->get_jadwal($id);
 		$data['list_jenis_audit'] 	= $this->master_act->jenis_audit();
 		// $listdiv=$this->master_act->divisi();
-                $listdiv=$this->aia_master_act->only_divisi();
+        $listdiv=$this->aia_master_act->only_divisi();
 		$data['list_divisi'] 		= $listdiv;
 		$data['menu']           	= 'perencanaan-aia';
 		$data['sub_menu']      		= 'jadwal_audit';
 		
 		$data['title']          	= 'Create Jadwal Audit';
         $data['content']        	= 'content/jadwal/create';
-		// var_dump($listdiv);
-		// die();
         $this->show($data);
 	}
 
@@ -65,12 +63,8 @@ class Jadwal extends MY_Controller
 		
 		$data['list_user'] 			= $this->master_act->user(['U.STATUS' => 1]);
 		$data_auditor 				= $this->master_act->auditor(['R.ID_ROLE' => 1]);
-		$data_lead_auditor			= $this->master_act->auditor(['R.ID_ROLE' => 5]);
+		$data_lead_auditor			= $this->master_act->auditor(['J.ID_JABATAN' => 2035]);
 		$data_jadwal				= $this->m_jadwal->get_jadwal($id_jadwal,$_SESSION->ID_USER);
-		// var_dump($data_jadwal);
-		// var_dump($id_jadwal);
-		// var_dump($this->m_jadwal->get_jadwal($id_jadwal));
-		// die();
 		$data['data_auditor'] 		= $data_auditor;
 		$data['data_lead_auditor'] 	= $data_lead_auditor;
 		$data['data_jadwal']		= $data_jadwal;
@@ -108,10 +102,6 @@ class Jadwal extends MY_Controller
 	{
 		$request = $this->input->post();
 		// $id_apm = $request['ID_APM'];
-		// print_r($request);
-		// die();
-		// var_dump($request);
-		// 	die();
 		$idjadwal = $request['ID_JADWAL'];
 		if($idjadwal!=null){
 			$data = [
@@ -124,8 +114,6 @@ class Jadwal extends MY_Controller
 			];
 			
 			$update = $this->m_jadwal->update($data);
-			// var_dump($update);
-			// die();
 			if($update==true){
 				$success_message = 'Data berhasil diupdate.';
 				$this->session->set_flashdata('success', $success_message);
@@ -135,7 +123,6 @@ class Jadwal extends MY_Controller
 				$error_message = 'keknya ga bisa update deh';
 				$this->session->set_flashdata('error', $error_message);
 			}
-			
 		}
 		else{
 			$data = [

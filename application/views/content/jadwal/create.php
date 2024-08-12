@@ -41,7 +41,7 @@
             <label class="col-form-label col-3 text-left">Auditor</label>
             <div class="col-8">
               <select class="form-control select-dua" id="id_auditor" name="ID_AUDITOR">
-                <option value="<?= $data_jadwal['0']['ID_AUDITOR']?>"><?= $data_jadwal['0']['NAMA_AUDITOR']?></option>
+                <!-- <option value="<?= $data_jadwal['0']['ID_AUDITOR']?>"><?= $data_jadwal['0']['NAMA_AUDITOR']?></option> -->
                 <option value="">--Pilih Auditor--</option>
                 <?php foreach ($data_auditor as $auditor) { ?>
                   <option value="<?= $auditor['ID_USER'] ?>"><?= $auditor['NAMA'] ?></option>
@@ -53,10 +53,10 @@
             <label class="col-form-label col-3 text-left">Lead Auditor</label>
             <div class="col-8">
               <select class="form-control select-dua" id="id_lead_auditor" name="ID_LEAD_AUDITOR">
-                <option value="<?= $data_jadwal['0']['ID_AUDITOR']?>"><?= $data_jadwal['0']['NAMA_LEAD_AUDITOR']?></option>
-                <option value="">--Pilih Auditor--</option>
-                <?php foreach ($data_auditor as $auditor) { ?>
-                  <option value="<?= $auditor['ID_USER'] ?>"><?= $auditor['NAMA'] ?></option>
+                <!-- <option value="<?= $data_jadwal['0']['ID_LEAD']?>"><?= $data_jadwal['0']['NAMA_LEAD_AUDITOR']?></option> -->
+                <option value="">--Pilih Lead Auditor--</option>
+                <?php foreach ($data_lead_auditor as $lead_auditor) { ?>
+                  <option value="<?= $lead_auditor['ID_USER'] ?>"><?= $lead_auditor['NAMA'] ?></option>
                 <?php } ?>
               </select>
               <input type="hidden" value="<?= $data_jadwal['0']['ID_JADWAL']?>" name="ID_JADWAL"></input>
@@ -127,6 +127,16 @@
         alert("Waktu Audit Selesai tidak boleh kurang dari Waktu Audit Awal. Silakan pilih tanggal yang lebih besar.");
         this.value = '';
       }
+    });
+
+    $(document).ready(function() {
+        // Assuming $data_jadwal['0']['ID_LEAD_AUDITOR'] is provided by your AJAX response or a server-side variable
+        var selectedLeadAuditorID = "<?= $data_jadwal['0']['ID_LEAD']; ?>";
+        var selectedAuditorID = "<?= $data_jadwal['0']['ID_AUDITOR']; ?>";
+
+        // Set the selected value in the dropdown
+        $('#id_auditor').val(selectedAuditorID).change();
+        $('#id_lead_auditor').val(selectedLeadAuditorID).change();
     });
 
     function formatDate(date) {
