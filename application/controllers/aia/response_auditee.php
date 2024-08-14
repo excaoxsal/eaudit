@@ -291,32 +291,35 @@ class Response_auditee extends MY_Controller {
 	public function export_excel($datas){
 		$this->load->database();
         $this->load->library('session');
-		$this->db->select('
-		i."NOMOR_ISO",
-		ra."DIVISI" AS "KODE_DIVISI",
-		d."NAMA_DIVISI",
-		w."WAKTU_AUDIT_AWAL",
-		w."WAKTU_AUDIT_SELESAI",
-		au."NAMA" AS "AUDITOR",
-		la."NAMA" AS "LEAD_AUDITOR",
-		m."PERTANYAAN",
-		m."KODE_KLAUSUL",
-		ra."RESPONSE_AUDITEE",
-		ra."KOMENTAR_1" as "KOMENTAR_AUDITOR",
-		ra."KOMENTAR_2" as "KOMENTAR_AUDITEE",
-		ra."FILE"
-		'
-		)
-		->from('RESPONSE_AUDITEE_D ra')
-		->join('WAKTU_AUDIT w', 'ra."ID_JADWAL" = w."ID_JADWAL"', 'left')
-		->join('TM_PERTANYAAN m', 'ra."ID_MASTER_PERTANYAAN" = m."ID_MASTER_PERTANYAAN"', 'left')
-		->join('TM_USER au', 'w."ID_AUDITOR" = au."ID_USER"')
-		->join('TM_USER la', 'w."ID_LEAD_AUDITOR" = la."ID_USER"', 'left')
-		->join('TM_ISO i', 'm."ID_ISO" = i."ID_ISO"', 'left')
-		->join('TM_DIVISI d', 'd."KODE" = ra."SUB_DIVISI"')
-		->where('ra."ID_HEADER"', $datas)
-		->order_by('ra."ID_MASTER_PERTANYAAN"', 'ASC');
-		;
+		$this->db->select("
+			
+            i.\"NOMOR_ISO\",
+			ra.\"DIVISI\" AS \"KODE_DIVISI\",
+			d.\"NAMA_DIVISI\",
+			w.\"WAKTU_AUDIT_AWAL\",
+			w.\"WAKTU_AUDIT_SELESAI\",
+			au.\"NAMA\" AS \"AUDITOR\",
+			la.\"NAMA\" AS \"LEAD_AUDITOR\",
+			m.\"PERTANYAAN\",
+			m.\"KODE_KLAUSUL\",
+			ra.\"RESPONSE_AUDITEE\",
+			ra.\"KOMENTAR_1\" as \"KOMENTAR_AUDITOR\",
+			ra.\"KOMENTAR_2\" as \"KOMENTAR_AUDITEE\",
+			ra.\"FILE\",
+            CAST(COALESCE(SPLIT_PART(m.\"KODE_KLAUSUL\", '.', 1), '0') AS DECIMAL) AS a,
+            CAST(COALESCE(SPLIT_PART(m.\"KODE_KLAUSUL\", '.', 2), '0') AS DECIMAL) AS b,
+            CAST(COALESCE(NULLIF(SPLIT_PART(m.\"KODE_KLAUSUL\", '.', 3), ''), '0') AS DECIMAL) AS c,
+			ROW_NUMBER() OVER (ORDER BY \"KODE_KLAUSUL\") AS \"NO\",
+        ", false);
+        $this->db->from('"RESPONSE_AUDITEE_D" ra');
+        $this->db->join('"WAKTU_AUDIT" w', 'ra."ID_JADWAL" = w."ID_JADWAL"', 'left');
+        $this->db->join('"TM_PERTANYAAN" m', 'ra."ID_MASTER_PERTANYAAN" = m."ID_MASTER_PERTANYAAN"', 'left');
+        $this->db->join('"TM_USER" au', 'w."ID_AUDITOR" = au."ID_USER"', 'left');
+        $this->db->join('"TM_USER" la', 'w."ID_LEAD_AUDITOR" = la."ID_USER"', 'left');
+        $this->db->join('"TM_ISO" i', 'm."ID_ISO" = i."ID_ISO"', 'left');
+        $this->db->join('"TM_DIVISI" d', 'd."KODE" = ra."SUB_DIVISI"', 'left');
+        $this->db->where('ra."ID_HEADER"', $datas);
+        $this->db->order_by('a, b, c');
 
 	$query = $this->db->get();
 	$data = $query->result_array();
@@ -337,42 +340,44 @@ class Response_auditee extends MY_Controller {
 
 	// Add header
 	$spreadsheet->setActiveSheetIndex(0)
-	->setCellValue('A1', 'NOMOR_ISO')
-	->setCellValue('B1', 'DIVISI')
-	->setCellValue('C1', 'SUB DIVISI')
-	->setCellValue('D1', 'WAKTU_AUDIT_AWAL')
-	->setCellValue('E1', 'WAKTU_AUDIT_SELESAI')
-	->setCellValue('F1', 'AUDITOR')
-	->setCellValue('G1', 'LEAD_AUDITOR')
-	->setCellValue('H1', 'PERTANYAAN')
-	->setCellValue('I1', 'KODE_KLAUSUL')
-	->setCellValue('J1', 'RESPONSE_AUDITEE')
-	->setCellValue('K1', 'KOMENTAR AUDITOR')
-	->setCellValue('L1', 'KOMENTAR AUDITEE')
-	->setCellValue('M1', 'FILE');
+	->setCellValue('A1', 'NO')
+	->setCellValue('B1', 'NOMOR_ISO')
+	->setCellValue('C1', 'DIVISI')
+	->setCellValue('D1', 'SUB DIVISI')
+	->setCellValue('E1', 'WAKTU_AUDIT_AWAL')
+	->setCellValue('F1', 'WAKTU_AUDIT_SELESAI')
+	->setCellValue('G1', 'AUDITOR')
+	->setCellValue('H1', 'LEAD_AUDITOR')
+	->setCellValue('I1', 'PERTANYAAN')
+	->setCellValue('J1', 'KODE_KLAUSUL')
+	->setCellValue('K1', 'RESPONSE_AUDITEE')
+	->setCellValue('L1', 'KOMENTAR AUDITOR')
+	->setCellValue('M1', 'KOMENTAR AUDITEE')
+	->setCellValue('N1', 'FILE');
 
 
 	// Add data
 	$row = 2;
 	foreach ($data as $datum) {
 		$spreadsheet->setActiveSheetIndex(0)
-		->setCellValue('A' . $row, $datum['NOMOR_ISO'])
-		->setCellValue('B' . $row, $datum['KODE_DIVISI'])
-		->setCellValue('C' . $row, $datum['NAMA_DIVISI'])
-		->setCellValue('D' . $row, $datum['WAKTU_AUDIT_AWAL'])
-		->setCellValue('E' . $row, $datum['WAKTU_AUDIT_SELESAI'])
-		->setCellValue('F' . $row, $datum['AUDITOR'])
-		->setCellValue('G' . $row, $datum['LEAD_AUDITOR'])
-		->setCellValue('H' . $row, $datum['PERTANYAAN'])
-		->setCellValue('I' . $row, $datum['KODE_KLAUSUL'])
-		->setCellValue('J' . $row, $datum['RESPONSE_AUDITEE'])
-		->setCellValue('K' . $row, $datum['KOMENTAR_AUDITOR'])
-		->setCellValue('L' . $row, $datum['KOMENTAR_AUDITEE']);
+		->setCellValue('A' . $row, $datum['NO'])
+		->setCellValue('B' . $row, $datum['NOMOR_ISO'])
+		->setCellValue('C' . $row, $datum['KODE_DIVISI'])
+		->setCellValue('D' . $row, $datum['NAMA_DIVISI'])
+		->setCellValue('E' . $row, $datum['WAKTU_AUDIT_AWAL'])
+		->setCellValue('F' . $row, $datum['WAKTU_AUDIT_SELESAI'])
+		->setCellValue('G' . $row, $datum['AUDITOR'])
+		->setCellValue('H' . $row, $datum['LEAD_AUDITOR'])
+		->setCellValue('I' . $row, $datum['PERTANYAAN'])
+		->setCellValue('J' . $row, $datum['KODE_KLAUSUL'])
+		->setCellValue('K' . $row, $datum['RESPONSE_AUDITEE'])
+		->setCellValue('L' . $row, $datum['KOMENTAR_AUDITOR'])
+		->setCellValue('M' . $row, $datum['KOMENTAR_AUDITEE']);
 
 		if (!empty($datum['FILE'])) {
 			$url = str_replace('http://', '', $datum['FILE']);
             $spreadsheet->setActiveSheetIndex(0)
-            ->setCellValue('M' . $row, 'Download File');
+            ->setCellValue('N' . $row, 'Download File');
 			$spreadsheet->getActiveSheet()->getCell('M' . $row)->getHyperlink()->setUrl(''.$url);
         } else {
             $spreadsheet->setActiveSheetIndex(0)->setCellValue('M' . $row, 'No File');
