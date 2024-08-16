@@ -87,7 +87,7 @@ class Response_auditee extends MY_Controller {
 				
 				$this->db->set('FILE', $file_path);
 				$this->db->set('RESPONSE_AUDITEE', $data_update['RESPON'][0]);
-				$this->db->set('LOG_KIRIM', 'Chat');
+				$this->db->set('LOG_KIRIM', 'Response');
 				$this->db->where('ID_RE', $id_re);
 				$update = $this->db->update('RESPONSE_AUDITEE_D');
 				
@@ -237,6 +237,7 @@ class Response_auditee extends MY_Controller {
 				'DIVISI' => $result_divisi[0]['KODE'],
 				'ID_ISO' => $iso['ID_ISO'],
 				'ID_JADWAL' => $data,
+				'LOG_KIRIM' => 'Generate Jadwal by ID_USER '.$_SESSION['ID_USER']													 
 			];
 			$sql_header=$this->db->insert('RESPONSE_AUDITEE_H', $insert_header);
 		}
@@ -308,8 +309,8 @@ class Response_auditee extends MY_Controller {
 			ra.\"FILE\",
             CAST(COALESCE(SPLIT_PART(m.\"KODE_KLAUSUL\", '.', 1), '0') AS DECIMAL) AS a,
             CAST(COALESCE(SPLIT_PART(m.\"KODE_KLAUSUL\", '.', 2), '0') AS DECIMAL) AS b,
-            CAST(COALESCE(NULLIF(SPLIT_PART(m.\"KODE_KLAUSUL\", '.', 3), ''), '0') AS DECIMAL) AS c,
-			ROW_NUMBER() OVER (ORDER BY \"KODE_KLAUSUL\") AS \"NO\",
+            CAST(COALESCE(NULLIF(SPLIT_PART(m.\"KODE_KLAUSUL\", '.', 3), ''), '0') AS DECIMAL) AS c
+			
         ", false);
         $this->db->from('"RESPONSE_AUDITEE_D" ra');
         $this->db->join('"WAKTU_AUDIT" w', 'ra."ID_JADWAL" = w."ID_JADWAL"', 'left');
@@ -360,7 +361,7 @@ class Response_auditee extends MY_Controller {
 	$row = 2;
 	foreach ($data as $datum) {
 		$spreadsheet->setActiveSheetIndex(0)
-		->setCellValue('A' . $row, $datum['NO'])
+		->setCellValue('A' . $row, $row-1)
 		->setCellValue('B' . $row, $datum['NOMOR_ISO'])
 		->setCellValue('C' . $row, $datum['KODE_DIVISI'])
 		->setCellValue('D' . $row, $datum['NAMA_DIVISI'])
@@ -375,12 +376,13 @@ class Response_auditee extends MY_Controller {
 		->setCellValue('M' . $row, $datum['KOMENTAR_AUDITEE']);
 
 		if (!empty($datum['FILE'])) {
-			$url = str_replace('http://', '', $datum['FILE']);
+			//$url = str_replace('http://', '', $datum['FILE']);
+			$url = $datum['FILE'];		 
             $spreadsheet->setActiveSheetIndex(0)
             ->setCellValue('N' . $row, 'Download File');
-			$spreadsheet->getActiveSheet()->getCell('M' . $row)->getHyperlink()->setUrl(''.$url);
+			$spreadsheet->getActiveSheet()->getCell('N' . $row)->getHyperlink()->setUrl(''.$url);
         } else {
-            $spreadsheet->setActiveSheetIndex(0)->setCellValue('M' . $row, 'No File');
+            $spreadsheet->setActiveSheetIndex(0)->setCellValue('N' . $row, 'No File');
         }
 		
 
