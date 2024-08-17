@@ -379,6 +379,9 @@ var KTDatatableJsonRemoteDemo = {
         field: "TEMUAN",
         title: "Temuan"
       },{
+        field: "KATEGORI",
+        title: "KAtegori"
+      },{
         field: "STATUS",
         title: "Status",
         template: function(t) {
@@ -419,8 +422,14 @@ var KTDatatableJsonRemoteDemo = {
             var isLeadPICAuditor = <?php echo json_encode($is_lead_auditor); ?>;
             var is_atasan_auditee = <?php echo json_encode($is_atasan_auditee); ?>;
             var is_lead_auditor = <?php echo json_encode($is_lead_auditor); ?>;
-            
-            if(is_lead_auditor){
+            if(t.KATEGORI=='OBSERVASI'){
+              return ''+
+              '<a href="<?= base_url() ?>aia/temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
+              '<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>'+
+              '<a onclick="log(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="far fa-file-alt text-dark" title="Logs"></i></a>';
+            }
+            else{
+              if(is_lead_auditor){
               if (t.STATUS == 'OPEN'){
                 console.log('a');
                 return '<span class="label font-weight-bold label-lg label-light-default label-inline"style="'+approve+'">'+t.STATUS+'</span>'+
@@ -592,6 +601,8 @@ var KTDatatableJsonRemoteDemo = {
               '<a onclick="log(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="far fa-file-alt text-dark" title="Logs"></i></a>';
               }
             }
+            }
+            
           }
         }]
     }), $("#kt_datatable_search_status").on("change", (function() {

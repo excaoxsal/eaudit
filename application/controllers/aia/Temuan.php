@@ -118,6 +118,7 @@ public function index()
 			
 				$kode_klausul = $worksheet->getCellByColumnAndRow(0, $row+2)->getValue();
 				$temuan = $worksheet->getCellByColumnAndRow(1, $row+2)->getValue();
+				$kategori = $worksheet->getCellByColumnAndRow(2, $row+2)->getValue();
 				
 				if($kode_klausul!=""){
 					
@@ -133,6 +134,8 @@ public function index()
 									'KLAUSUL'	=> is_empty_return_null($data[$row]['KLAUSUL']),
 									'TEMUAN'			=> is_empty_return_null($data[$row]['TEMUAN']),
 									'ID_RESPONSE'		=> is_empty_return_null($_POST['ID_RE']),
+									'KATEGORI'	=> is_empty_return_null($data[$row['KATEGORI']]),
+
 									
 								];
 					$save = $this->m_temuan->save($eldata);
