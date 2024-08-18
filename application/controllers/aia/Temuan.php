@@ -40,7 +40,7 @@ public function index()
         $data['content']        	= 'content/aia/v_temuan_detail';
 		$data['kode']				= $id_response;
 		$data['role']				= $_SESSION['NAMA_ROLE'];
-		//print_r($_SESSION);die();
+		//print_r($detail_temuan);die();
 		
 		$this->show($data);
 	}
@@ -194,8 +194,7 @@ public function index()
 		$this->db->where('ID_TEMUAN', $request['ID_TEMUAN']);
 		$update = $this->db->update('TEMUAN_DETAIL');
 		if ($update){
-			$this->m_temuan->insertorupdate_pemeriksa($temuan_detail[0]['ID_TEMUAN'], $temuan_detail[0]);
-			//print_r($this->m_temuan->insertorupdate_pemeriksa($temuan_detail[0]['ID_TEMUAN'], $temuan_detail[0]));die();
+			$this->m_temuan->insert_pemeriksa($temuan_detail[0]['ID_TEMUAN'], $temuan_detail[0]);
 			$success_message = 'Data Commitment Berhasil Disimpan.';
 			$this->session->set_flashdata('success', $success_message);
 			redirect(base_url('aia/temuan/detail/'.$id_response));
@@ -209,73 +208,56 @@ public function index()
 
 	public function tindakLanjut($data) {
 		$request = $this->input->post();
+		$temuan_detail = $this->m_temuan->get_temuan_detail($data);
+		$array_where = [
+			'ID_PERENCANAAN' => $request['ID_TEMUAN'],
+			'JENIS_PERENCANAAN' => 'TEMUAN DETAIL',
+			'ID_USER' => $_SESSION['ID_ATASAN_I']
+		];
 		date_default_timezone_set('Asia/Jakarta');
 		$id_temuan = $_REQUEST['ID_TEMUAN'];
         $ext = pathinfo($_FILES['upload_file']['name'], PATHINFO_EXTENSION);
 		
 		$current_date = date('Y-m-d');
 		$current_time = date('YmdHis');
-		$query_waktu=$this->db->select('WAKTU_AUDIT_AWAL,WAKTU_AUDIT_SELESAI')->from('WAKTU_AUDIT W')
-		->join('RESPONSE_AUDITEE_H RE','W.ID_JADWAL=RE.ID_JADWAL')->where('RE.ID_HEADER',$data)
-		->get();
-		$result_waktu= $query_waktu->result_array();
-		// var_dump($current_date<=$result_waktu['0']['WAKTU_AUDIT_SELESAI']);var_dump($current_date,$result_waktu);var_dump($data);die;
-		if($current_date>=$result_waktu['0']['WAKTU_AUDIT_AWAL']){
-			if($current_date<=$result_waktu['0']['WAKTU_AUDIT_SELESAI']){
-				if($ext==""||$ext==null){
-					$file_path = null;
-				}else{	
-					$config['file_name']        = "KETERANGAN_TL".$current_time;
-					$config['upload_path'] = './storage/aia/'; // Lokasi penyimpanan file
-					$config['allowed_types'] = 'xls|xlsx|pdf|doc|docx|ppt|pptx|jpg|jpeg|png|zip|rar'; // Jenis file yang diizinkan
-					$config['max_size'] = 15000; // Ukuran maksimum file (dalam KB)\
-					$upload_path = './storage/aia/';
-					$eltype= $config['allowed_types'];
-					$loadupload = $config['upload_path'];
-					$this->upload->upload_path = $loadupload;
-					$this->upload->allowed_types = $eltype;
-					$this->upload->initialize($config);
-					$file_path = base_url().'storage/aia/'.$config['file_name'].'.'.$ext;
-					
-					$elupload = $this->upload->do_upload('upload_file');
-					$upload_data = $this->upload->data();
-					// echo($file_path);
-				}
+
+		$config['file_name']        = "KETERANGAN_TL".$current_time;
+		$config['upload_path'] = './storage/aia/'; // Lokasi penyimpanan file
+		$config['allowed_types'] = 'xls|xlsx|pdf|doc|docx|ppt|pptx|jpg|jpeg|png|zip|rar'; // Jenis file yang diizinkan
+		$config['max_size'] = 15000; // Ukuran maksimum file (dalam KB)\
+		$upload_path = './storage/aia/';
+		$eltype= $config['allowed_types'];
+		$loadupload = $config['upload_path'];
+		$this->upload->upload_path = $loadupload;
+		$this->upload->allowed_types = $eltype;
+		$this->upload->initialize($config);
+		$file_path = base_url().'storage/aia/'.$config['file_name'].'.'.$ext;
+		
+		$elupload = $this->upload->do_upload('upload_file');
+		$upload_data = $this->upload->data();
 				
-				$data_update = 
-					[
-					'KETERANGAN_TL'           			=> is_empty_return_null($request['KETERANGAN_TL']),
-					'FILE'           					=> is_empty_return_null($file_path),
-					'LOG_KIRIM'							=> 'Tindak Lanjut Auditee'
-					];
-				
-				$this->db->set('FILE', $file_path);
-				$this->db->set('KETERANGAN_TL', $data_update['KETERANGAN_TL'][0]);
-				$this->db->set('STATUS', 'Tindak Lanjut');
-				$this->db->where('ID_TEMUAN', $id_temuan);
-				$update = $this->db->update('TEMUAN_DETAIL');
-				
-				if ($update){
-					$success_message = 'Data Respon Berhasil Disimpan.';
-					$this->session->set_flashdata('success', $success_message);
-					redirect(base_url('aia/temuan/detail/'.$data));
-				}
-				else{
-					$error_message = 'Silahkan coba kembali';
-					$this->session->set_flashdata('error', $error_message);
-					redirect(base_url('aia/temuan/detail/'.$data));
-				}
-				
-			}
-			else{
-				$error_message = 'Anda sudah melewati batas waktu yang telah ditentukan';
-				$this->session->set_flashdata('error', $error_message);
-				redirect(base_url('aia/temuan/detail/'.$data));
-			}
-				
+		$data_update = 
+			[
+			'KETERANGAN_TL'           			=> is_empty_return_null($request['KETERANGAN_TL']),
+			'FILE'           					=> is_empty_return_null($file_path),
+			'LOG_KIRIM'							=> 'Tindak Lanjut Auditee'
+			];
+		
+		$this->db->set('FILE', $file_path);
+		$this->db->set('KETERANGAN_TL', $data_update['KETERANGAN_TL'][0]);
+		$this->db->set('STATUS', 'Tindak Lanjut');
+		$this->db->where('ID_TEMUAN', $id_temuan);
+		$update = $this->db->update('TEMUAN_DETAIL');
+		
+		if ($update){
+			$data_pemeriksa = ['STATUS_TINDAKLANJUT' => 1, 'TANGGAL' => date('Y-m-d')];
+			$this->m_temuan->update($data_pemeriksa, $array_where, 'PEMERIKSA');
+			$success_message = 'Data Respon Berhasil Disimpan.';
+			$this->session->set_flashdata('success', $success_message);
+			redirect(base_url('aia/temuan/detail/'.$data));
 		}
 		else{
-			$error_message = 'Waktu Audit belum dimulai';
+			$error_message = 'Silahkan coba kembali';
 			$this->session->set_flashdata('error', $error_message);
 			redirect(base_url('aia/temuan/detail/'.$data));
 		}
@@ -284,14 +266,12 @@ public function index()
 
 	public function approval($id_response) {
 	    $request = $this->input->post();
-	    //print_r($data);
 	    $array_where = [
 			'ID_PERENCANAAN' => $request['ID_TEMUAN'],
-			'JENIS_PERENCANAAN' => 'TEMUAN DETAIL'
+			'JENIS_PERENCANAAN' => 'TEMUAN DETAIL',
+			'ID_USER' => $_SESSION['ID_USER']
 		];
 		$detail_temuan= $this->m_temuan->get_detail_temuan($id_response);
-		//print_r($detail_temuan[0]);die();
-		// $current_date = date('Y-m-d H:i:s');
 	    if ($request['APPROVAL_COMMITMENT'] == 1){
 	    	$this->db->select('APPROVAL_COMMITMENT');
 		    $this->db->from('TEMUAN_DETAIL');
@@ -308,6 +288,8 @@ public function index()
 						'STATUS'					=> 'Commitment Approved',
 						'LOG_KIRIM'					=> 'Approval Commitment Lead Auditor'
 					];
+					$data_pemeriksa = ['STATUS_COMMITMENT' => 2, 'TANGGAL' => date('Y-m-d')];
+					$this->m_temuan->update($data_pemeriksa, $array_where, 'PEMERIKSA');
 				}
 				else{
 					$new_value = $current_value;
@@ -324,6 +306,8 @@ public function index()
 						'KETERANGAN_AUDITOR' => is_empty_return_null($request['KETERANGAN_ATASAN_AUDITEE']),
 						'LOG_KIRIM'					=> 'Approval Commitment Auditor'
 					];
+					$data_pemeriksa = ['STATUS_COMMITMENT' => 2, 'TANGGAL' => date('Y-m-d')];
+					$this->m_temuan->update($data_pemeriksa, $array_where, 'PEMERIKSA');
 				}
 				else{
 					$new_value = $current_value;
@@ -361,15 +345,20 @@ public function index()
 				'LOG_KIRIM'					=> 'Reject'
 		    ];
 	    	//$new_value = $request['APPROVAL_COMMITMENT'];
+	    	$array_where = [
+				'ID_PERENCANAAN' => $request['ID_TEMUAN'],
+				'JENIS_PERENCANAAN' => 'TEMUAN DETAIL'
+			];
+	    	$data_pemeriksa = ['STATUS_COMMITMENT' => 0, 'TANGGAL' => date('Y-m-d')];
+			$this->m_temuan->update($data_pemeriksa, $array_where, 'PEMERIKSA');
 	    }
 
 	    $this->db->set($data_update);
 	    $this->db->where('ID_TEMUAN', $request['ID_TEMUAN']);
 	    $update = $this->db->update('TEMUAN_DETAIL');
-	    
 
 	    if ($update) {
-	    	$this->m_temuan->insertorupdate_pemeriksa($request['ID_TEMUAN'], $detail_temuan[0]);
+	    	$this->m_temuan->insert_pemeriksa($request['ID_TEMUAN'], $detail_temuan[0]);
 	        $success_message = 'Status Sudah Berhasil Di Approve';
 	        $this->session->set_flashdata('success', $success_message);
 	    } else {
@@ -380,8 +369,15 @@ public function index()
 	    redirect(base_url('aia/temuan/detail/'.$id_response));
 	}
 
-	public function approvalTL($data) {
+	public function approvalTL($id_response) {
 	    $request = $this->input->post();
+	    $detail_temuan= $this->m_temuan->get_detail_temuan($id_response);
+	    $array_where = [
+			'ID_PERENCANAAN' => $request['ID_TEMUAN'],
+			'JENIS_PERENCANAAN' => 'TEMUAN DETAIL',
+			'ID_USER' => $_SESSION['ID_USER']
+		];
+		//var_dump($_SESSION['ID_AUDITOR']);die();
 
 	    if ($request['APPROVAL_TINDAKLANJUT'] == 1){
 	    	$this->db->select('APPROVAL_TINDAKLANJUT');
@@ -398,18 +394,43 @@ public function index()
 					'STATUS'						=> 'CLOSE',
 					'LOG_KIRIM'						=> 'Approval Tindak Lanjut Lead Auditor'
 				];
+				$data_pemeriksa = ['STATUS_TINDAKLANJUT' => 2, 'TANGGAL' => date('Y-m-d')];
+				$this->m_temuan->update($data_pemeriksa, $array_where, 'PEMERIKSA');
 			}else if ($new_value==2){
 				$data_update = [
 					'APPROVAL_TINDAKLANJUT' 		=> $new_value,
 					'KETERANGAN_TL_AUDITOR' 		=> is_empty_return_null($request['KETERANGAN_TL_ATASAN']),
 					'LOG_KIRIM'						=> 'Approval Tindak Lanjut Auditor'
 				];
+				$data_pemeriksa1 = ['STATUS_TINDAKLANJUT' => 2, 'TANGGAL' => date('Y-m-d')];
+				$this->m_temuan->update($data_pemeriksa1, $array_where, 'PEMERIKSA');
+
+				$array_whereNext = [
+					'ID_PERENCANAAN' => $request['ID_TEMUAN'],
+					'JENIS_PERENCANAAN' => 'TEMUAN DETAIL',
+					'ID_USER' => $detail_temuan[0]['ID_LEAD_AUDITOR']
+				];
+
+				$data_pemeriksa2 = ['STATUS_TINDAKLANJUT' => 1, 'TANGGAL' => date('Y-m-d')];
+				$this->m_temuan->update($data_pemeriksa2, $array_whereNext, 'PEMERIKSA');
 			}else{
 				$data_update = [
 					'APPROVAL_TINDAKLANJUT' 		=> $new_value,
 					'KETERANGAN_TL_ATASAN' 			=> is_empty_return_null($request['KETERANGAN_TL_ATASAN']),
 					'LOG_KIRIM'						=> 'Approval Tindak Lanjut Atasan Auditee'
 				];
+				$data_pemeriksa1 = ['STATUS_TINDAKLANJUT' => 2, 'TANGGAL' => date('Y-m-d')];
+				$this->m_temuan->update($data_pemeriksa1, $array_where, 'PEMERIKSA');
+
+				$array_whereNext = [
+					'ID_PERENCANAAN' => $request['ID_TEMUAN'],
+					'JENIS_PERENCANAAN' => 'TEMUAN DETAIL',
+					'ID_USER' => $detail_temuan[0]['ID_AUDITOR']
+				];
+
+				$data_pemeriksa2 = ['STATUS_TINDAKLANJUT' => 1, 'TANGGAL' => date('Y-m-d')];
+				$this->m_temuan->update($data_pemeriksa2, $array_whereNext, 'PEMERIKSA');
+
 			}
 		    
 	    }else{
@@ -420,6 +441,12 @@ public function index()
 		        'KETERANGAN_TL_ATASAN' 				=> is_empty_return_null($request['KETERANGAN_TL_ATASAN'])
 		    ];
 	    	//$new_value = $request['APPROVAL_TINDAKLANJUT'];
+	    	$array_where = [
+				'ID_PERENCANAAN' => $request['ID_TEMUAN'],
+				'JENIS_PERENCANAAN' => 'TEMUAN DETAIL'
+			];
+	    	$data_pemeriksa = ['STATUS_TINDAKLANJUT' => 0, 'TANGGAL' => date('Y-m-d')];
+			$this->m_temuan->update($data_pemeriksa, $array_where, 'PEMERIKSA');
 	    }
 
 	    $this->db->set($data_update);
@@ -434,7 +461,7 @@ public function index()
 	        $this->session->set_flashdata('error', $error_message);
 	    }
 
-	    redirect(base_url('aia/temuan/detail/'.$data));
+	    redirect(base_url('aia/temuan/detail/'.$id_response));
 	}
 
 	function getFileEntry($id_tl)

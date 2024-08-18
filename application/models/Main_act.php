@@ -5,19 +5,28 @@ class Main_act extends CI_Model{
 
 	public function total_notif($id_user)
 	{
-		$query = $this->db->get_where('PEMERIKSA', array('STATUS_COMMITMENT' => 1, 'ID_USER' => $id_user));					
-		return $query->result_array();
+		$this->db->group_start()
+         ->where('STATUS_COMMITMENT', 1)
+         ->or_where('STATUS_TINDAKLANJUT', 1)
+         ->group_end();
 
+		$this->db->where('ID_USER', $id_user);
+
+		$query = $this->db->get('PEMERIKSA');
+		return $query->result_array();
 	}
 
 	public function notif_atasanAuditee($id_user)
 	{
 		$query = $this->db->select('*')
-							->from('PEMERIKSA P')
-							->join('TEMUAN_DETAIL', 'TEMUAN_DETAIL.ID_TEMUAN = P.ID_PERENCANAAN', 'LEFT')
-							->where(array('P.STATUS_COMMITMENT' => 1, 'P.JENIS_PERENCANAAN' => 'TEMUAN DETAIL', 'P.ID_USER' => $id_user))
-				 			// ->order_by('', 'DESC')
-				 			->get();					
+                  ->from('PEMERIKSA P')
+                  ->join('TEMUAN_DETAIL', 'TEMUAN_DETAIL.ID_TEMUAN = P.ID_PERENCANAAN', 'LEFT')
+                  ->where("(P.STATUS_COMMITMENT = 1 OR P.STATUS_TINDAKLANJUT = 1)")
+                  ->where('P.ID_USER', $id_user)
+                  ->where('P.JENIS_PERENCANAAN', 'TEMUAN DETAIL')
+                  // ->order_by('', 'DESC')
+                  ->get();
+
 		return $query->result_array();
 	}
 

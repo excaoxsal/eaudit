@@ -33,9 +33,6 @@
       <li class="nav-item">
         <a class="nav-link active" data-toggle="tab" href="#log_spa">List Temuan Detail (<?= $total_atasanAuditee ?>)</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#log_lainnya">Tindak Lanjut (<?= $tnotif_lain ?>)</a>
-      </li>
     </ul>
     <div class="offcanvas-close mt-n1 pr-5">
       <a href="#" class="btn btn-xs btn-icon btn-light btn-hover-primary" id="kt_quick_panel_close">
@@ -78,57 +75,6 @@
             <div class="d-flex flex-column flex-grow-1 mr-2">
               <a href="<?= base_url() ?>perencanaan/apm/review/<?= $data['ID_APM'] ?>?review=true&sts-approver=1" class="font-weight-normal text-dark-75 text-hover-primary font-size-lg mb-1"><?= $data['NAMA_AUDIT'] ?></a>
               <span class="text-muted font-size-sm"><?= tgl_indo($data['TGL_PERIODE_MULAI']) ?> - <?= tgl_indo($data['TGL_PERIODE_SELESAI']) ?></span>
-            </div>
-          </div>
-        <?php } ?>
-      </div>
-      <div class="tab-pane fade show pt-3 pr-5 mr-n5" id="log_rcm" role="tabpanel">
-        <?php if ($total_rcm < 1) { ?>
-          <div class="d-flex align-items-center bg-light-secondary rounded p-5 mb-5">
-            <div class="d-flex flex-column flex-grow-1 mr-2">
-              <span class="font-weight-normal text-dark-75 font-size-lg mb-1">Tidak ada notifikasi.</span>
-            </div>
-          </div>
-        <?php } ?>
-        <?php foreach ($notif_rcm as $data) { ?>
-          <div class="d-flex align-items-center bg-light-warning rounded p-5 mb-5">
-            <div class="d-flex flex-column flex-grow-1 mr-2">
-              <a href="<?= base_url() ?>perencanaan/rcm/review/<?= $data[ID_RCM] ?>?review=true&sts-approver=1" class="font-weight-normal text-dark-75 text-hover-primary font-size-lg mb-1"><?= $data['NOMOR_SURAT'] ?></a>
-              <span class="text-muted font-size-sm"><?= tgl_indo($data['TGL_PERIODE_MULAI']) ?> - <?= tgl_indo($data['TGL_PERIODE_SELESAI']) ?></span>
-            </div>
-          </div>
-        <?php } ?>
-      </div>
-      <div class="tab-pane fade show pt-3 pr-5 mr-n5" id="log_pka" role="tabpanel">
-        <?php if ($total_pka < 1) { ?>
-          <div class="d-flex align-items-center bg-light-secondary rounded p-5 mb-5">
-            <div class="d-flex flex-column flex-grow-1 mr-2">
-              <span class="font-weight-normal text-dark-75 font-size-lg mb-1">Tidak ada notifikasi.</span>
-            </div>
-          </div>
-        <?php } ?>
-        <?php foreach ($notif_pka as $data) { ?>
-          <div class="d-flex align-items-center bg-light-info rounded p-5 mb-5">
-            <div class="d-flex flex-column flex-grow-1 mr-2">
-              <a href="<?= base_url() ?>perencanaan/pka/review/<?= $data['ID_PKA'] ?>?review=true" class="font-weight-normal text-dark-75 text-hover-primary font-size-lg mb-1"><?= $data['NOMOR_PKA'] ?></a>
-              <span class="text-muted font-size-sm"><?= tgl_indo($data['TANGGAL']) ?></span>
-            </div>
-          </div>
-        <?php } ?>
-      </div>
-      <div class="tab-pane fade show pt-3 pr-5 mr-n5" id="log_lainnya" role="tabpanel">
-        <?php if ($tnotif_lain < 1) { ?>
-          <div class="d-flex align-items-center bg-light-secondary rounded p-5 mb-5">
-            <div class="d-flex flex-column flex-grow-1 mr-2">
-              <span class="font-weight-normal text-dark-75 font-size-lg mb-1">Tidak ada notifikasi.</span>
-            </div>
-          </div>
-        <?php } ?>
-        <?php foreach ($notif_lainnya as $data) { ?>
-          <div class="d-flex align-items-center bg-light-danger rounded p-5 mb-5">
-            <div class="d-flex flex-column flex-grow-1 mr-2">
-              <a href="<?= base_url('monitoring/update_hasil_monitoring/hasil_monitoring/').$data['ID_TL'].'/'.$data['ID_REKOMENDASI'] ?>" class="font-weight-normal text-dark-75 text-hover-primary font-size-lg mb-1">Update Hasil Monitoring - <b><?= $data['NAMA_DIVISI'] ?></b></a>
-              <span class="text-muted font-size-sm"><?= $data['updated_at'] ?></span>
             </div>
           </div>
         <?php } ?>

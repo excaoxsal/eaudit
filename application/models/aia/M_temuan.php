@@ -38,7 +38,7 @@ class M_Temuan extends CI_Model{
         $this->db->update($table, $data);
     }
 
-    public function insertorupdate_pemeriksa($id_temuan, $data)
+    public function insert_pemeriksa($id_temuan, $data)
     {
         $data_notif = [];
         $data_notif['ID_PERENCANAAN'] = $id_temuan;
@@ -48,33 +48,18 @@ class M_Temuan extends CI_Model{
             $data_notif['STATUS_COMMITMENT'] = 1;
             $data_notif['ID_USER'] = $_SESSION['ID_ATASAN_I'];
             // print_r($data_notif);die();
-        } else if ($data['STATUS'] = 'Commitment' && $data['APPROVAL_COMMITMENT'] == 1) {
+        } else if ($data['STATUS'] == 'Commitment' && $data['APPROVAL_COMMITMENT'] == 0) {
             $data_notif['STATUS_COMMITMENT'] = 1;
             $data_notif['ID_USER'] = $data['ID_AUDITOR'];
-            //print_r('b');die();
-        } else if ($data['STATUS'] == 'Commitment' && $data['APPROVAL_COMMITMENT'] == 2) {
+            // print_r('b');die();
+        } else if ($data['STATUS'] == 'Commitment' && $data['APPROVAL_COMMITMENT'] == 1) {
             $data_notif['STATUS_COMMITMENT'] = 1;
             $data_notif['ID_USER'] = $data['ID_LEAD_AUDITOR'];
-            //print_r('c');die();
-        } else if ($data['STATUS'] == 'Commitment Approved' && $data['APPROVAL_TINDAKLANJUT'] == 0) {
-            $data_notif['STATUS_TINDAKLANJUT'] = 1;
-            $data_notif['ID_USER'] = $_SESSION['ID_ATASAN_I'];
-            //print_r('e');die();
-        } else if ($data['STATUS'] == 'Tindak Lanjut' && $data['APPROVAL_TINDAKLANJUT'] == 1) {
-            $data_notif['STATUS_TINDAKLANJUT'] = 1;
-            $data_notif['ID_USER'] = $data['ID_AUDITOR'];
-            //print_r('f');die();
-        } else if ($data['STATUS'] == 'Tindak Lanjut' && $data['APPROVAL_TINDAKLANJUT'] == 2) {
-            $data_notif['STATUS_TINDAKLANJUT'] = 1;
-            $data_notif['ID_USER'] = $data['ID_LEAD_AUDITOR'];
-            //print_r('g');die();
+            // print_r('c');die();
+        } else {
+            return False;
         }
-        
-            // var_dump($data_notif);die;   
-            // $data_notif = array_merge($data_notif, $data_pemeriksa);
             $this->db->insert('PEMERIKSA',$data_notif);
-            //print_r($data_notif);DIE();
-        
     }
 
     public function getStatus($id_tl)
