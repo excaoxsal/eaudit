@@ -111,7 +111,6 @@ public function index()
 
 		// Convert the column letter to a numeric index
 		$highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn);
-
 		// Loop through each row to read the data
 		$data = [];
 			for ($row = 0; $row <= $highestRow; $row++) {
@@ -127,17 +126,17 @@ public function index()
 							'TEMUAN'		=> is_empty_return_null($temuan),
 							'PERTANYAAN'	=> is_empty_return_null($pertanyaan),
 							'ID_ISO'=>is_empty_return_null($_POST['ID_ISO']),
-							'ID_MASTER_PERTANYAAN' => is_empty_return_null('')
+							'ID_MASTER_PERTANYAAN' => is_empty_return_null(''),
+							'KATEGORI' =>is_empty_return_null($kategori)
 						);	
 					
 					$eldata = [
 									'KLAUSUL'	=> is_empty_return_null($data[$row]['KLAUSUL']),
 									'TEMUAN'			=> is_empty_return_null($data[$row]['TEMUAN']),
 									'ID_RESPONSE'		=> is_empty_return_null($_POST['ID_RE']),
-									'KATEGORI'	=> is_empty_return_null($data[$row['KATEGORI']]),
-
-									
+									'KATEGORI'	=> is_empty_return_null($data[$row]['KATEGORI'])
 								];
+								
 					$save = $this->m_temuan->save($eldata);
 				}
 

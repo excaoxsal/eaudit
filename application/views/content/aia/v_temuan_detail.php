@@ -265,6 +265,31 @@
       </div>
       <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/temuan/approval/<?=$kode?>" enctype="multipart/form-data">
         <div class="modal-body" style="height: auto">
+          
+          <div class="form-group row">
+            <label class="col-form-label col-md-2">Tindakan Investigasi</label>
+            <div class="col-md-10">
+              <textarea class="form-control" disabled name="INVESTIGASI[]" id="APINVESTIGASI"></textarea>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-form-label col-md-2">Tindakan Perbaikan</label>
+            <div class="col-md-10">
+              <textarea class="form-control" disabled name="PERBAIKAN[]" id="APPERBAIKAN"></textarea>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-form-label col-md-2">Tindakan Korektif</label>
+            <div class="col-md-10">
+              <textarea class="form-control" disabled name="KOREKTIF[]" id="APKOREKTIF"></textarea>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-form-label col-md-2">Tanggal Implementasi</label>
+            <div class="col-md-10">
+              <input type="date" class="form-control" disabled name="TANGGAL" id="APTANGGAL" placeholder="Select a date">
+            </div>
+          </div>
           <input type="hidden"  name="ID_TEMUAN" id="ID_TEMUAN_APPROVAL1">
           <div class="form-group row">
             <div class="col-12">
@@ -288,8 +313,8 @@
   </div>
 </div>
 <!-- End Modal Approve Commitment  -->
-<!-- Start Modal Approve Commitment  -->
- <!-- Untuk Approve Commitment hanya dimunculkan untuk ATASAN -->
+<!-- Start Modal Approve TL  -->
+ <!-- Untuk Approve TL hanya dimunculkan untuk ATASAN -->
 <div class="modal fade" id="modal_approveTL" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
     <div class="modal-content">
@@ -380,7 +405,7 @@ var KTDatatableJsonRemoteDemo = {
         title: "Temuan"
       },{
         field: "KATEGORI",
-        title: "KAtegori"
+        title: "Kategori"
       },{
         field: "STATUS",
         title: "Status",
@@ -761,6 +786,14 @@ function chatbox(id_tl) {
   function approve(id_tl){
     console.log(id_tl);
     $('#ID_TEMUAN_APPROVAL1').val(id_tl);
+    $.get(`<?= base_url('aia/Temuan/getCommitment/') ?>` + id_tl, function(data, status) {
+        const obj = JSON.parse(data);
+        $('#ID_TEMUAN').val(id_tl);
+        $('#APINVESTIGASI').val(obj.INVESTIGASI);
+        $('#APPERBAIKAN').val(obj.PERBAIKAN);
+        $('#APKOREKTIF').val(obj.KOREKTIF);
+        $('#APTANGGAL').val(obj.TANGGAL);
+      });
     $('#modal_approve').modal('show');
   }
   function approveTL(id_tl){

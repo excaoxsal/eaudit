@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laporan Ketidaksesuaian Hasil Audit</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="<?= base_url('assets/css/1.css') ?>">
+    
 </head>
 <body link="blue" vlink="purple">
   <table width=""  cellpadding="0" cellspacing="0">
