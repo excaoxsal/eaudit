@@ -537,7 +537,7 @@ public function index()
 
 	function export_pdf($id) {
 		$data['title']          = 'Print LKHA';
-        $data['content']        	= 'template/v_export_lkha';
+        $data['content']        = 'template/v_export_lkha';
 
 		$query = $this->db->select('la.NAMA as NAMA_LEAD_AUDITOR, a.NAMA as NAMA_AUDITOR,aud.NAMA as AUDITEE,aaud.NAMA as ATASAN_AUDITEE, w.WAKTU_AUDIT_AWAL,w.WAKTU_AUDIT_SELESAI,td.KATEGORI,td.TANGGAL,td.INVESTIGASI,td.PERBAIKAN,td.KOREKTIF,i.NOMOR_ISO')->from('TEMUAN_DETAIL td')
 		->join('TM_USER la','la.ID_USER=td.ID_LEAD_AUDITOR')
@@ -564,10 +564,36 @@ public function index()
 		$data['']=$data_respon[0][''];
 		$data['']=$data_respon[0][''];
 
-		
-		// var_dump($data);die;
-		$this->load->view('template/v_export_lkha',$data);
-		// redirect('template/v_export_lkha');
+        $pdf = new PDF('P', 'mm', 'A4', true, 'UTF-8', false);
+
+        // Setel informasi dokumen
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor('PT. PELABUHAN TANJUNG PRIOK');
+        $pdf->SetTitle('Laporan Ketidaksesuaian Hasil Audit');
+        $pdf->SetSubject('Laporan Audit');
+
+        // Setel margin
+        $pdf->SetMargins(15, 27, 15);
+        $pdf->SetHeaderMargin(5);
+        $pdf->SetFooterMargin(10);
+
+        // Setel auto page breaks
+        $pdf->SetAutoPageBreak(TRUE, 25);
+
+        // Tambah halaman baru
+        $pdf->AddPage();
+
+        // Setel font
+        $pdf->SetFont('helvetica', '', 10);
+
+        // Isi konten HTML
+        $html = $this->load->view('template/v_export_lkha', [], true);
+        // $html = $this->load->view('cetakpdf', $data, true);
+
+        // Cetak HTML ke dalam PDF
+        $pdf->writeHTML($html, true, false, true, false, '');
+
+        $pdf->Output('laporan_ketidaksesuaian.pdf', 'I');
 	}
 
 }
