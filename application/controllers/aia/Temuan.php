@@ -181,15 +181,17 @@ public function index()
 			'KOREKTIF'           				=> is_empty_return_null($request['KOREKTIF']),
 			'TANGGAL'           				=> is_empty_return_null($request['TANGGAL']),
 			'ID_ATASAN_AUDITEE' 				=> isset($atasan['ID_ATASAN']) ? $atasan['ID_ATASAN'] : null,
+			'ID_AUDITEE'						=> is_empty_return_null($_SESSION['ID_USER']),
 			'LOG_KIRIM'							=> 'Commitment Auditee'
 			];
-
+		// var_dump($data_update);die;
 		$this->db->set('TANGGAL', $data_update['TANGGAL']);
 		$this->db->set('KOREKTIF', $data_update['KOREKTIF'][0]);
 		$this->db->set('PERBAIKAN', $data_update['PERBAIKAN'][0]);
 		$this->db->set('INVESTIGASI', $data_update['INVESTIGASI'][0]);
 		$this->db->set('STATUS', 'Commitment');
 		$this->db->set('ID_ATASAN_AUDITEE', $data_update['ID_ATASAN_AUDITEE']);
+		$this->db->set('ID_AUDITEE', $data_update['ID_AUDITEE']);
 		$this->db->where('ID_TEMUAN', $request['ID_TEMUAN']);
 		$update = $this->db->update('TEMUAN_DETAIL');
 		if ($update){
@@ -536,6 +538,34 @@ public function index()
 	function export_pdf($id) {
 		$data['title']          = 'Print LKHA';
         $data['content']        	= 'template/v_export_lkha';
+
+		$query = $this->db->select('la.NAMA as NAMA_LEAD_AUDITOR, a.NAMA as NAMA_AUDITOR,aud.NAMA as AUDITEE,aaud.NAMA as ATASAN_AUDITEE, w.WAKTU_AUDIT_AWAL,w.WAKTU_AUDIT_SELESAI,td.KATEGORI,td.TANGGAL,td.INVESTIGASI,td.PERBAIKAN,td.KOREKTIF,i.NOMOR_ISO')->from('TEMUAN_DETAIL td')
+		->join('TM_USER la','la.ID_USER=td.ID_LEAD_AUDITOR')
+		->join('TM_USER a','a.ID_USER=td.ID_AUDITOR')
+		->join('TM_USER aaud','td.ID_ATASAN_AUDITEE=aaud.ID_JABATAN','left')
+		->join('TM_USER aud','aud.ID_USER=td.ID_AUDITEE','left')
+		->join('WAKTU_AUDIT w','w.ID_JADWAL=td.ID_JADWAL')
+		->join('RESPONSE_AUDITEE_H reh','reh.ID_HEADER=td.ID_RESPONSE')
+		->join('TM_ISO i','i.ID_ISO=reh.ID_ISO')
+		// ->join('TM_PERTANYAAN p','i.ID_ISO=p.ID_ISO','left')
+
+		->where('ID_TEMUAN',$id)->get();
+		$data_respon = $query->result_array();
+		$data['id'] = $data_respon[0]['ID_TEMUAN'];
+		$data['auditor'] = $data_respon[0]['NAMA_AUDITOR'];
+		$data['lead_auditor'] = $data_respon[0]['NAMA_LEAD_AUDITOR'];
+		$data['investigasi']=$data_respon[0]['INVESTIGASI'];
+		$data['perbaikan']=$data_respon[0]['PERBAIKAN'];
+		$data['korektif']=$data_respon[0]['KOREKTIF'];
+		$data['tanggal']=$data_respon[0]['TANGGAL'];
+		$data['auditee']=$data_respon[0]['NAMA_USER'];
+		$data['atasan_auditee']=$data_respon[0]['ATASAN_AUDITEE'];
+		$data['nomor_iso']=$data_respon[0]['NOMOR_ISO'];
+		$data['']=$data_respon[0][''];
+		$data['']=$data_respon[0][''];
+
+		
+		// var_dump($data);die;
 		$this->load->view('template/v_export_lkha',$data);
 		// redirect('template/v_export_lkha');
 	}

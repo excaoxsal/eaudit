@@ -4,30 +4,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laporan Ketidaksesuaian Hasil Audit</title>
-    <link rel="stylesheet" href="<?= base_url('assets/css/1.css') ?>">
+    <!-- <link rel="stylesheet" href="<?= base_url('assets/css/1.css') ?>"> -->
     
 </head>
 <body link="blue" vlink="purple">
-  <table width=""  cellpadding="0" cellspacing="0">
+  <!-- <table width=""  cellpadding="0" cellspacing="0">
    
    <tr height="20" border="1" style='height:15.00pt;'>
     <td class="xl65"  colspan="20">PT.PELABUHAN TANJUNG PRIOK</td>
     
    </tr>
-   <tr height="63" style=''>
+   <tr height="63" style=''> 
     
    </tr>
+  </table> -->
+
+
+<table border="1">
+  <tr style="border-bottom:.5pt solid #000000;">
+    <td  colspan="6">LAPORAN KETIDAK SESUAIAN HASIL AUDIT</td>
+  </tr>
+  <tr>
+  <td>ORGANISASI</td>
+  <td>PT.Pelabuhan Tanjung Priok</td>
+  <td>LKS no1</td>
+  <td>LKHA-M1</td>
+  </tr>
+  <tr>
+    <td>Lokasi</td>
+    <td>PTP</td>
+    <td>Auditor</td>
+    <td>Budi</td>
+  </tr>
+  <tr>
+    <td colspan="6" center>a</td>
+  </tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  
+
+</table>
+<!-- <table>
    <tr height="17" style='height:12.75pt;'>
-    <td centered class="xl66" height="34" colspan="16" rowspan="2" x:str>LAPORAN KETIDAK SESUAIAN HASIL AUDIT</td>
-    <td colspan="6" style='mso-ignore:colspan;'></td>
-   </tr>
-   <tr height="17" style='height:12.75pt;'>
-    <td colspan="6" style='mso-ignore:colspan;'></td>
+    <td centered class="xl66" height="34" colspan="16" rowspan="2">LAPORAN KETIDAK SESUAIAN HASIL AUDIT</td>
    </tr>
    <tr height="20" style='height:15.00pt;'>
-    <td class="xl69" height="20" style='height:15.00pt;'></td>
-    <td class="xl70" colspan="14" style='mso-ignore:colspan;'></td>
-    <td class="xl96"></td>
     <td colspan="6" style='mso-ignore:colspan;'></td>
    </tr>
    <tr height="26" border ="0" style='height:19.50pt;mso-height-source:userset;mso-height-alt:390;'>
@@ -42,7 +104,7 @@
     <td class="xl98"></td>
     <td colspan="6" style='mso-ignore:colspan;'></td>
    </tr>
-   <tr height="26" style='height:19.50pt;mso-height-source:userset;mso-height-alt:390;'>
+   <tr height="26" style='height:17.50pt;mso-height-source:userset;mso-height-alt:390;'>
     <td class="xl74" height="26" style='height:19.50pt;' x:str>LOKASI</td>
     <td class="xl75" x:str>:</td>
     <td class="xl76" colspan="5" style='mso-ignore:colspan;' x:str>Sub Divisi Pemeliharaan dan Pengembangan Hardware</td>
@@ -51,11 +113,11 @@
     <td class="xl65"></td>
     <td class="xl74" x:str>AUDITOR</td>
     <td class="xl75" x:str>:</td>
-    <td class="xl99" colspan="3" rowspan="2" style='border-right:none;border-bottom:.5pt solid #000000;' x:fmla="='[LIST TEMUAN MUTU]#REF'!F9" x:err="#REF!">#REF!</td>
-    <td class="xl100"></td>
+    <td class="xl99" colspan="3" rowspan="1"  x:fmla="='[LIST TEMUAN MUTU]#REF'!F9" x:err="#REF!"><?= $auditor ?></td>
+    <td class="xl100" style='border-right:1;'></td>
     <td></td>
     <td class="xl107"></td>
-    <td colspan="4" style='mso-ignore:colspan;'></td>
+    <td colspan="4" style='border-right:1;'></td>
    </tr>
    <tr height="26" style='height:19.50pt;mso-height-source:userset;mso-height-alt:390;'>
     <td class="xl69" height="26" style='height:19.50pt;' x:str>TANGGAL<span style='mso-spacerun:yes;'>&nbsp;</span></td>
@@ -70,7 +132,7 @@
     <td class="xl70"></td>
     <td class="xl69"></td>
     <td class="xl70"></td>
-    <td class="xl96"></td>
+    
     <td></td>
     <td class="xl107"></td>
     <td colspan="4" style='mso-ignore:colspan;'></td>
@@ -105,7 +167,7 @@
     <td colspan="4" style='mso-ignore:colspan;'></td>
    </tr>
    <tr height="41" style='height:30.75pt;mso-height-source:userset;mso-height-alt:615;'>
-    <td class="xl81" height="205" colspan="16" rowspan="5" style='height:153.75pt;border-right:.5pt solid #000000;border-bottom:.5pt solid #000000;' x:str>ISO 9001:2015<br/>Klausul 4.3<br/>Menentukan lingkup sistem manajemen mutu<br/>Klausul 6.2.<br/>Sasaran Mutu dan Perencanaan untuk Mencapainya<br/><br/>SOP yang berlaku untuk Sub. Divisi IT Hardware terjadi tumpang tindih dengan SOP dari subdivisi lain yaitu IT Software.</td>
+    <td class="xl81" height="205" colspan="16" rowspan="5" style='height:153.75pt;border-right:.5pt solid #000000;border-bottom:.5pt solid #000000;' x:str><?=$nomor_iso?><br/>Klausul 4.3<br/>Menentukan lingkup sistem manajemen mutu<br/>Klausul 6.2.<br/>Sasaran Mutu dan Perencanaan untuk Mencapainya<br/><br/>SOP yang berlaku untuk Sub. Divisi IT Hardware terjadi tumpang tindih dengan SOP dari subdivisi lain yaitu IT Software.</td>
     <td></td>
     <td class="xl107"></td>
     <td colspan="4" style='mso-ignore:colspan;'></td>
@@ -131,7 +193,7 @@
     <td class="xl85" rowspan="4" style='border-right:none;border-bottom:.5pt solid #000000;' x:str>:</td>
     <td class="xl65" colspan="2" style='mso-ignore:colspan;'></td>
     <td class="xl86" colspan="2" rowspan="2" x:str>Nama <br/>Lead Auditor</td>
-    <td class="xl102" colspan="2" rowspan="2" x:str>: Yessi Sevryani</td>
+    <td class="xl102" colspan="2" rowspan="2" x:str>: <?= $lead_auditor ?></td>
     <td class="xl85" rowspan="4" style='border-right:none;border-bottom:.5pt solid #000000;' x:str>Tanggal :</td>
     <td class="xl103" colspan="3" rowspan="4" style='border-right:none;border-bottom:.5pt solid #000000;' x:fmla="=C10" x:str="'10 Agustus 2023">10 Agustus 2023</td>
     <td class="xl100"></td>
@@ -145,7 +207,7 @@
    <tr height="20" style='height:15.00pt;'>
     <td class="xl65" colspan="2" style='mso-ignore:colspan;'></td>
     <td class="xl86" colspan="2" rowspan="2" x:str>Nama <br/>Auditor</td>
-    <td class="xl102" colspan="2" rowspan="2" style='border-right:none;border-bottom:.5pt solid #000000;' x:str>: Rendy M</td>
+    <td class="xl102" colspan="2" rowspan="2" style='border-right:none;border-bottom:.5pt solid #000000;' x:str>: <?= $auditor ?></td>
     <td class="xl100"></td>
     <td colspan="6" style='mso-ignore:colspan;'></td>
    </tr>
@@ -217,7 +279,7 @@
     <td colspan="6" style='mso-ignore:colspan;'></td>
    </tr>
    <tr height="22" style='height:16.50pt;mso-height-source:userset;mso-height-alt:330;'>
-    <td class="xl90" height="82" colspan="16" rowspan="4" style='height:61.50pt;border-right:.5pt solid #000000;border-bottom:none;' x:str>Ditemukan bahwa di Sub Divisi Pemeliharaan dan Pengembangan Hardware SOP yang ada saat ini masih menyatu dalam SOP Sistem Informasi dan belum di pisahkan dengan Sub Divisi Dukungan Sistem.</td>
+    <td class="xl90" height="82" colspan="16" rowspan="4" style='height:61.50pt;border-right:.5pt solid #000000;border-bottom:none;' x:str><?=$investigasi?></td>
     <td colspan="6" style='mso-ignore:colspan;'></td>
    </tr>
    <tr height="21" style='height:15.75pt;mso-height-source:userset;mso-height-alt:315;'>
@@ -247,7 +309,7 @@
     <td colspan="6" style='mso-ignore:colspan;'></td>
    </tr>
    <tr height="21" style='height:15.75pt;mso-height-source:userset;mso-height-alt:315;'>
-    <td class="xl90" height="84" colspan="16" rowspan="4" style='height:63.00pt;border-right:.5pt solid #000000;border-bottom:none;' x:str>Akan dilakukan inventarisasi dan mengevaluasi terhadap SOP yang telah ada di Divisi Sistem Informasi</td>
+    <td class="xl90" height="84" colspan="16" rowspan="4" style='height:63.00pt;border-right:.5pt solid #000000;border-bottom:none;' x:str><?=$perbaikan?></td>
     <td colspan="6" style='mso-ignore:colspan;'></td>
    </tr>
    <tr height="21" style='height:15.75pt;mso-height-source:userset;mso-height-alt:315;'>
@@ -277,7 +339,7 @@
     <td colspan="6" style='mso-ignore:colspan;'></td>
    </tr>
    <tr height="21" style='height:15.75pt;mso-height-source:userset;mso-height-alt:315;'>
-    <td class="xl90" height="84" colspan="16" rowspan="4" style='height:63.00pt;border-right:.5pt solid #000000;border-bottom:.5pt solid #000000;' x:str>Akan dilakukan pemisahan SOP Sistem Informasi antara Sub Divisi Pemeliharaan dan Pemeliharaan Hardware dengan Sub Dvisi Dukungan Sistem agar tidak terjadi tumpang tindih.</td>
+    <td class="xl90" height="84" colspan="16" rowspan="4" style='height:63.00pt;border-right:.5pt solid #000000;border-bottom:.5pt solid #000000;' x:str><?=$korektif?></td>
     <td colspan="6" style='mso-ignore:colspan;'></td>
    </tr>
    <tr height="21" style='height:15.75pt;mso-height-source:userset;mso-height-alt:315;'>
@@ -295,7 +357,7 @@
     <td class="xl73" colspan="2" style='mso-ignore:colspan;'></td>
     <td class="xl88" rowspan="2" x:str>Nama</td>
     <td class="xl88" rowspan="2" x:str>:</td>
-    <td class="xl106" colspan="2" rowspan="2" x:fmla="=J23" x:str>Atiq Muzzaki, <br/>Nazar Fardian</td>
+    <td class="xl106" colspan="2" rowspan="2" x:fmla="=J23" x:str><?=$auditee?> <br/>Nazar Fardian</td>
     <td class="xl88" colspan="2" rowspan="4" style='border-right:none;border-bottom:.5pt solid #000000;' x:str>Tanggal Implementasi</td>
     <td class="xl88" rowspan="4" style='border-right:none;border-bottom:.5pt solid #000000;' x:str>:</td>
     <td class="xl73"></td>
@@ -314,7 +376,7 @@
     <td class="xl65" colspan="2" style='mso-ignore:colspan;'></td>
     <td class="xl85" rowspan="2" style='border-right:none;border-bottom:.5pt solid #000000;' x:str>Nama</td>
     <td class="xl85" rowspan="2" style='border-right:none;border-bottom:.5pt solid #000000;' x:str>:</td>
-    <td class="xl106" colspan="2" rowspan="2" x:fmla="=J25" x:str>Amie Maulana</td>
+    <td class="xl106" colspan="2" rowspan="2" x:fmla="=J25" x:str><?=$atasan_auditee?></td>
     <td class="xl65" colspan="2" style='mso-ignore:colspan;border-right:.5pt solid #000000;border-bottom:none;' x:str><span style='mso-spacerun:yes;'>&nbsp;</span>. . . . . . . . . . . . <span style='display:none;'>.</span></td>
     <td colspan="6" style='mso-ignore:colspan;'></td>
    </tr>
@@ -362,7 +424,7 @@
     <td class="xl85" rowspan="4" style='border-right:none;border-bottom:.5pt solid #000000;' x:str>:</td>
     <td class="xl65" colspan="2" style='mso-ignore:colspan;'></td>
     <td class="xl86" colspan="2" rowspan="2" x:str>Nama <br/>Lead Auditor</td>
-    <td class="xl99" colspan="2" rowspan="2" x:fmla="=J19" x:str>: Yessi Sevryani</td>
+    <td class="xl99" colspan="2" rowspan="2" x:fmla="=J19" x:str>: <?=$lead_auditor?></td>
     <td class="xl85" colspan="2" rowspan="4" style='border-right:none;border-bottom:.5pt solid #000000;' x:str>Tanggal Implementasi</td>
     <td class="xl85" rowspan="4" style='border-right:none;border-bottom:.5pt solid #000000;' x:str>:</td>
     <td class="xl65"></td>
@@ -378,14 +440,14 @@
    <tr height="21" style='height:15.75pt;mso-height-source:userset;mso-height-alt:315;'>
     <td class="xl65" colspan="2" style='mso-ignore:colspan;'></td>
     <td class="xl86" colspan="2" rowspan="2" style='border-right:none;border-bottom:.5pt solid #000000;' x:str>Nama <br/>Auditor</td>
-    <td class="xl99" colspan="2" rowspan="2" style='border-right:none;border-bottom:.5pt solid #000000;' x:fmla="=J21" x:str>: Rendy M</td>
+    <td class="xl99" colspan="2" rowspan="2" style='border-right:none;border-bottom:.5pt solid #000000;' x:fmla="=J21" x:str>: <?=$auditor?><?$auditor?></td>
     <td class="xl65"></td>
     <td class="xl100"></td>
     <td colspan="6" style='mso-ignore:colspan;'></td>
    </tr>
    <tr height="21" style='height:15.75pt;mso-height-source:userset;mso-height-alt:315;'>
     <td class="xl70" colspan="2" style='mso-ignore:colspan;' x:str><span style='mso-spacerun:yes;'>&nbsp;</span>. . . . . . . . . . . . . . . .<span style='display:none;'><span style='mso-spacerun:yes;'>&nbsp;&nbsp;</span>.</span></td>
-    <td class="xl70" colspan="2" style='mso-ignore:colspan;border-right:.5pt solid #000000;border-bottom:.5pt solid #000000;' x:str><span style='mso-spacerun:yes;'>&nbsp;</span>. . . . . . . . . . . . <span style='display:none;'>.</span></td>
+    <td class="xl70" colspan="2" style='mso-ignore:colspan;border-right:.5pt solid #000000;border-bottom:.5pt solid #000000;' x:str><span style='mso-spacerun:yes;'>&nbsp;</span><?=$tanggal?><span style='display:none;'>.</span></td>
     <td colspan="6" style='mso-ignore:colspan;'></td>
    </tr>
    <![if supportMisalignedColumns]>
@@ -409,5 +471,5 @@
     </tr>
    <![endif]>
   </table>
- </body>
+ </body>-->
 </html>
