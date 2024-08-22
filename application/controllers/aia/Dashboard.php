@@ -19,7 +19,7 @@ class Dashboard extends MY_Controller
     {
         $data['menu']       = 'dashboard';
         $data['list_ja']    = $this->master_act->jenis_audit();
-
+        $iso = $this->m_dashboard->getIso();
         $years  = $this->m_status_tl->getYearTl();
         $years_ = (!empty($years)) ? max($years)['TAHUN'] : date('Y');
 
@@ -29,12 +29,42 @@ class Dashboard extends MY_Controller
         $data['list_divisi']    = $this->m_status_tl->getAuditeeTl($year);
         $data['rekap']          = $this->data($year, $divisi);
         //$data['rekom']              = $this->m_status_tl->rekomDashboard($year, $divisi);
+        $data['iso']          = $iso;
         $data['years']          = $years;
         $data['year_filter']    = $year;
         $data['auditee']        = $divisi;
         $data['data_table']     = $this->m_status_tl->temuanDashboard($year, $divisi);
 
         $this->load->view('/content/aia/v_dashboard', $data);
+    }
+
+    public function getTemuanData() {
+        // Query untuk mendapatkan data kasus dari provinsi di Jawa
+        $iso = $this->input->get('iso');
+        // var_dump($iso);die;
+        $query = $this->db->query('
+            SELECT 
+                i."NOMOR_ISO",
+                SUM(CASE WHEN t."STATUS" = \'CLOSE\' THEN 1 ELSE 0 END) AS SUDAH_CLOSED,
+                SUM(CASE WHEN t."STATUS" != \'CLOSE\' THEN 1 ELSE 0 END) AS BELUM_CLOSED
+            FROM 
+                "TEMUAN_DETAIL" t
+            JOIN 
+                "RESPONSE_AUDITEE_H" h ON t."ID_RESPONSE" = h."ID_HEADER"
+            left JOIN
+                "TM_ISO" i on h."ID_ISO" = i."ID_ISO" 
+            WHERE 
+                i."ID_ISO" = '.$iso.'
+            GROUP BY 
+                i."NOMOR_ISO"
+        ');
+
+        // Mengubah hasil query menjadi array
+        $data = $query->result_array();
+        // var_dump($data);die;
+
+        // Mengirim data dalam format JSON untuk digunakan di chart
+        echo json_encode($data);
     }
 
     public function data($year, $divisi)
@@ -112,7 +142,7 @@ class Dashboard extends MY_Controller
 
         $charts         = array('TEMUAN' => $temuan, 'REKOMENDASI' => $rekomendasi);
         
-        var_dump($rekap,$grand_total,$charts);die;
+        // var_dump($rekap,$grand_total,$charts);die;
         return array('REKAP' => $rekap, 'TOTAL' => $grand_total, 'CHARTS' => $charts);
     }
     

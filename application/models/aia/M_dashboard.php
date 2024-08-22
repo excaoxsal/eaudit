@@ -15,6 +15,10 @@ class M_dashboard extends CI_Model
         $exec     = $this->db->query($query);
         return $exec->result_array();
     }
+    function getIso() {
+        $query = 'SELECT "ID_ISO","NOMOR_ISO" FROM "TM_ISO"';
+        return $this->db->query($query)->result_array();
+    }
 
     public function getJenisAudit()
     {
@@ -32,7 +36,7 @@ class M_dashboard extends CI_Model
 
     public function getTemuan($id)
     {
-        $query = 'SELECT tt."ID" FROM "TL_TEMUAN" tt LEFT JOIN "TL_ENTRY" te ON te."ID_TL" = tt."ID_TL" WHERE te."SELESAI" = 0 AND tt."STATUS" = 1 AND tt."ID_TL" = '.$id;
+        $query = 'SELECT tt."ID" FROM "TEMUAN_DETAIL" tt WHERE tt."SELESAI" = 0 AND tt."STATUS" = 1 AND tt."ID_TL" = '.$id;
         return $this->db->query($query)->result_array();
         // return $this->db->select('ID')->where('STATUS', 1)->where('ID_TL', $id)->get('TL_TEMUAN')->result_array();
     }

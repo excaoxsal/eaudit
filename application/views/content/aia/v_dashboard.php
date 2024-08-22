@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dahboard TL</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
     <link href="<?= base_url() ?>assets/plugins/custom/datatables/datatables.bundle7a50.css?v=7.2.7" rel="stylesheet" type="text/css" />
@@ -50,6 +51,11 @@
                                     <select class="form-control form-control-solid form-control-lg" id="year">
                                         <?php foreach ($years as $year) { ?>
                                             <option value="<?= $year['TAHUN'] ?>"><?= $year['TAHUN'] ?></option>
+                                        <?php } ?>
+                                    </select>
+                                    <select class="form-control form-control-solid form-control-lg" id="iso">
+                                        <?php foreach ($iso as $i) { ?>
+                                            <option value="<?= $i['ID_ISO'] ?>"><?= $i['NOMOR_ISO'] ?></option>
                                         <?php } ?>
                                     </select>
                                 </div>
@@ -132,6 +138,9 @@
                         </table>
                         <hr />
                         <div class="row mb-0 pb-0">
+                            <div class="col-12">
+                                <div id="google_chart_div"></div>
+                            </div>
                             <div class="col-4">
                                 <div id="charttemuan" class="w-100" style="height:300px"></div>
                             </div>
@@ -212,14 +221,82 @@
             </div>
             <!-- end content -->
         </div>
+        <div>
+            <canvas id="myChart"></canvas>
+        </div>
     </div>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        
+        google.charts.load('current', {packages: ['corechart', 'bar']});
+        google.charts.setOnLoadCallback(drawStackedChart);
+
+        function drawStackedChart() {
+            var selectedIso = $('#iso').val();
+            // Mengambil data dari controller menggunakan AJAX
+            $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanData'); ?>", {iso: selectedIso}, function(data) {
+                var chartData = [];
+                chartData.push(['NOMOR_ISO', 'Sudah Close', 'Belum Close']);
+
+                $.each(data, function(index, value) {
+                    chartData.push([value.nomor_iso, parseInt(value.selesai), parseInt(value.belum_selesai)]);
+                });
+
+                var dataTable = google.visualization.arrayToDataTable(chartData);
+
+                var options = {
+                    isStacked: true,
+                    height: 400,
+                    title: 'Jumlah Kasus Selesai dan Belum Selesai di Provinsi Jawa',
+                    hAxis: {
+                        title: 'Total Temuan',
+                        minValue: 0,
+                    },
+                    vAxis: {
+                        title: 'Nomor ISO'
+                    },
+                    legend: { position: 'top', maxLines: 3 }
+                };
+
+                var chart = new google.visualization.BarChart(document.getElementById('google_chart_div'));
+                chart.draw(dataTable, options);
+            });
+        }
+        $('#iso').change(function() {
+            drawStackedChart(); // Refresh the chart when the selected province changes
+        });
+    </script>
+
+    <script>
+        const ctx = document.getElementById('myChart');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            datasets: [{
+                label: '# of Votes',
+                data: [12, 19, 3, 5, 2, 3],
+                borderWidth: 1
+            }]
+            },
+            options: {
+            scales: {
+                y: {
+                beginAtZero: true
+                }
+            }
+            }
+        });
+    </script>
+
 
     <script src="<?= base_url() ?>assets/plugins/global/plugins.bundle7a50.js?v=7.2.7"></script>
     <script src="<?= base_url() ?>assets/plugins/custom/prismjs/prismjs.bundle7a50.js?v=7.2.7"></script>
     <script src="<?= base_url() ?>assets/js/scripts.bundle7a50.js?v=7.2.7"></script>
 
     <script src="<?= base_url() ?>assets/js/pages/custom/user/edit-user7a50.js?v=7.2.7"></script>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    
     <script type="text/javascript">
       $(document).ready(function() {
         $('#year, #auditee').select2().on('change', function (e) {} );
@@ -244,12 +321,13 @@
 
             const chartTemuan = function() {
                 var data = google.visualization.arrayToDataTable([
-                    ['Task', 'Hours per Day'],
+                    ['Task', 'Temuan'],
                     <?= $rekap['CHARTS']['TEMUAN'] ?>
                 ]);
 
                 var options = {
-                    title: 'Prosentasi Jumlah Temuan',
+                    title: 'ISO 9001',
+                    'isStacked' : true,
                     'width':400,
                         'height':300
                 };
