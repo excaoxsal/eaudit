@@ -55,6 +55,7 @@
                                     </select>
                                     <select class="form-control form-control-solid form-control-lg" id="iso">
                                         <?php foreach ($iso as $i) { ?>
+                                            <option value="ALL">ALL</option>
                                             <option value="<?= $i['ID_ISO'] ?>"><?= $i['NOMOR_ISO'] ?></option>
                                         <?php } ?>
                                     </select>
@@ -139,7 +140,10 @@
                         <hr />
                         <div class="row mb-0 pb-0">
                             <div class="col-12">
-                                <div id="google_chart_div"></div>
+                                <div id="charttemuaniso"></div>
+                            </div>
+                            <div class="col-12">
+                                <div id="charttemuandivisi"></div>
                             </div>
                             <div class="col-4">
                                 <div id="charttemuan" class="w-100" style="height:300px"></div>
@@ -236,10 +240,10 @@
             // Mengambil data dari controller menggunakan AJAX
             $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanData'); ?>", {iso: selectedIso}, function(data) {
                 var chartData = [];
-                chartData.push(['NOMOR_ISO', 'Sudah Close', 'Belum Close']);
+                chartData.push(['NOMOR_ISO', 'SUDAH_CLOSED', 'BELUM_CLOSED']);
 
                 $.each(data, function(index, value) {
-                    chartData.push([value.nomor_iso, parseInt(value.selesai), parseInt(value.belum_selesai)]);
+                    chartData.push([value.NOMOR_ISO, parseInt(value.SUDAH_CLOSED), parseInt(value.BELUM_CLOSED)]);
                 });
 
                 var dataTable = google.visualization.arrayToDataTable(chartData);
@@ -247,7 +251,7 @@
                 var options = {
                     isStacked: true,
                     height: 400,
-                    title: 'Jumlah Kasus Selesai dan Belum Selesai di Provinsi Jawa',
+                    title: 'Jumlah Temuan Sudah Close dan Belum Close Berdasarkan ISO',
                     hAxis: {
                         title: 'Total Temuan',
                         minValue: 0,
@@ -258,7 +262,48 @@
                     legend: { position: 'top', maxLines: 3 }
                 };
 
-                var chart = new google.visualization.BarChart(document.getElementById('google_chart_div'));
+                var chart = new google.visualization.ColumnChart(document.getElementById('charttemuaniso'));
+                chart.draw(dataTable, options);
+            });
+        }
+        $('#iso').change(function() {
+            drawStackedChart(); // Refresh the chart when the selected province changes
+        });
+    </script>
+
+<script type="text/javascript">
+        
+        google.charts.load('current', {packages: ['corechart', 'bar']});
+        google.charts.setOnLoadCallback(drawStackedChart);
+
+        function drawStackedChart() {
+            var selectedIso = $('#iso').val();
+            // Mengambil data dari controller menggunakan AJAX
+            $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataDivisi'); ?>", {iso: selectedIso}, function(data) {
+                var chartData = [];
+                chartData.push(['NAMA_DIVISI', 'SUDAH_CLOSED', 'BELUM_CLOSED']);
+
+                $.each(data, function(index, value) {
+                    chartData.push([value.NAMA_DIVISI, parseInt(value.SUDAH_CLOSED), parseInt(value.BELUM_CLOSED)]);
+                });
+
+                var dataTable = google.visualization.arrayToDataTable(chartData);
+
+                var options = {
+                    isStacked: true,
+                    height: 400,
+                    title: 'Jumlah Temuan Sudah Close dan Belum Close Berdasarkan Divisi',
+                    hAxis: {
+                        title: 'Total Temuan',
+                        minValue: 0,
+                    },
+                    vAxis: {
+                        title: 'NAMA_DIVISI'
+                    },
+                    legend: { position: 'top', maxLines: 3 }
+                };
+
+                var chart = new google.visualization.ColumnChart(document.getElementById('charttemuandivisi'));
                 chart.draw(dataTable, options);
             });
         }

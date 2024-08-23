@@ -112,12 +112,26 @@ public function index()
 		// Convert the column letter to a numeric index
 		$highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn);
 		// Loop through each row to read the data
+		
+		$query_lain = $this->db->select('la."ID_USER" as ID_LEAD_AUDITOR, a."ID_USER" as ID_AUDITOR,w."ID_JADWAL"')->from('"WAKTU_AUDIT" w')
+		->join('"TM_USER" la','la.ID_USER=w.ID_LEAD_AUDITOR')
+		->join('"TM_USER" a','a.ID_USER=w.ID_AUDITOR')
+		->join('"RESPONSE_AUDITEE_H" reh','reh."ID_JADWAL"=w."ID_JADWAL"')
+		->where('reh."ID_HEADER"',$_POST['ID_RE'])->get();
+		$data_lain=$query_lain->result_array();
+		// $upload_data = $this->upload->data();
+		// 	unlink($upload_data['full_path']);
+		// var_dump($data_lain);die;
+
 		$data = [];
 			for ($row = 0; $row <= $highestRow; $row++) {
 			
 				$kode_klausul = $worksheet->getCellByColumnAndRow(0, $row+2)->getValue();
 				$temuan = $worksheet->getCellByColumnAndRow(1, $row+2)->getValue();
 				$kategori = $worksheet->getCellByColumnAndRow(2, $row+2)->getValue();
+				if($kategori=="OBSERVASI"){
+					$status="CLOSE";
+				}
 				
 				if($kode_klausul!=""){
 					
@@ -127,6 +141,10 @@ public function index()
 							'PERTANYAAN'	=> is_empty_return_null($pertanyaan),
 							'ID_ISO'=>is_empty_return_null($_POST['ID_ISO']),
 							'ID_MASTER_PERTANYAAN' => is_empty_return_null(''),
+							'ID_AUDITOR'=>is_empty_return_null($data_lain[0]['ID_AUDITOR']),
+							'ID_LEAD_AUDITOR'=>is_empty_return_null($data_lain[0]['ID_LEAD_AUDITOR']),
+							'ID_JADWAL'=>is_empty_return_null($data_lain[0]['ID_JADWAL']),
+							'STATUS' =>is_empty_return_null($status),
 							'KATEGORI' =>is_empty_return_null($kategori)
 						);	
 					
@@ -134,6 +152,10 @@ public function index()
 									'KLAUSUL'	=> is_empty_return_null($data[$row]['KLAUSUL']),
 									'TEMUAN'			=> is_empty_return_null($data[$row]['TEMUAN']),
 									'ID_RESPONSE'		=> is_empty_return_null($_POST['ID_RE']),
+									'ID_AUDITOR'=>is_empty_return_null($data_lain[0]['ID_AUDITOR']),
+									'ID_LEAD_AUDITOR'=>is_empty_return_null($data_lain[0]['ID_LEAD_AUDITOR']),
+									'ID_JADWAL'=>is_empty_return_null($data_lain[0]['ID_JADWAL']),
+									'STATUS' =>is_empty_return_null($status),
 									'KATEGORI'	=> is_empty_return_null($data[$row]['KATEGORI'])
 								];
 								
@@ -539,7 +561,12 @@ public function index()
 		$data['title']          = 'Print LKHA';
         $data['content']        = 'template/v_export_lkha';
 
-		$query = $this->db->select('la.NAMA as NAMA_LEAD_AUDITOR, a.NAMA as NAMA_AUDITOR,aud.NAMA as AUDITEE,aaud.NAMA as ATASAN_AUDITEE, w.WAKTU_AUDIT_AWAL,w.WAKTU_AUDIT_SELESAI,td.KATEGORI,td.TANGGAL,td.INVESTIGASI,td.PERBAIKAN,td.KOREKTIF,i.NOMOR_ISO')->from('TEMUAN_DETAIL td')
+		$query = $this->db->select('la.NAMA as NAMA_LEAD_AUDITOR, a.NAMA as NAMA_AUDITOR,aud.NAMA as AUDITEE,aaud.NAMA as ATASAN_AUDITEE, 
+		w.WAKTU_AUDIT_AWAL,w.WAKTU_AUDIT_SELESAI,
+		td.KATEGORI,td.TANGGAL,td.INVESTIGASI,td.PERBAIKAN,td.KOREKTIF,td.ID_TEMUAN,
+		d.NAMA_DIVISI,
+		i.NOMOR_ISO,i.ID_ISO')
+		->from('TEMUAN_DETAIL td')
 		->join('TM_USER la','la.ID_USER=td.ID_LEAD_AUDITOR')
 		->join('TM_USER a','a.ID_USER=td.ID_AUDITOR')
 		->join('TM_USER aaud','td.ID_ATASAN_AUDITEE=aaud.ID_JABATAN','left')
@@ -547,7 +574,8 @@ public function index()
 		->join('WAKTU_AUDIT w','w.ID_JADWAL=td.ID_JADWAL')
 		->join('RESPONSE_AUDITEE_H reh','reh.ID_HEADER=td.ID_RESPONSE')
 		->join('TM_ISO i','i.ID_ISO=reh.ID_ISO')
-		// ->join('TM_PERTANYAAN p','i.ID_ISO=p.ID_ISO','left')
+		->join('TM_PERTANYAAN p','i.ID_ISO=p.ID_ISO','left')
+		->join('TM_DIVISI d','d.KODE=reh.DIVISI','left')
 
 		->where('ID_TEMUAN',$id)->get();
 		$data_respon = $query->result_array();
@@ -561,10 +589,22 @@ public function index()
 		$data['auditee']=$data_respon[0]['NAMA_USER'];
 		$data['atasan_auditee']=$data_respon[0]['ATASAN_AUDITEE'];
 		$data['nomor_iso']=$data_respon[0]['NOMOR_ISO'];
+		$data['kategori']=$data_respon[0]['KATEGORI'];
+		$data['divisi']=$data_respon[0]['NAMA_DIVISI'];
+		$data['id_temuan']=$data_respon[0]['ID_TEMUAN'];
 		$data['']=$data_respon[0][''];
-		$data['']=$data_respon[0][''];
+		if($data_respon[0]['ID_ISO']==1){
+			$data['kode_lks']="M";
+		}else if($data_respon[0]['ID_ISO']==2){
+			$data['kode_lks']="L";
+		}else if($data_respon[0]['ID_ISO']==3){
+			$data['kode_lks']="S";
+		}else if($data_respon[0]['ID_ISO']==4){
+			$data['kode_lks']="K3";
+		}
 
         $pdf = new PDF('P', 'mm', 'A4', true, 'UTF-8', false);
+		// var_dump($data);die;
 		$this->load->view('template/v_export_lkha',$data);
         // Setel informasi dokumen
         // $pdf->SetCreator(PDF_CREATOR);

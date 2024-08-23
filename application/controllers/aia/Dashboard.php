@@ -42,22 +42,73 @@ class Dashboard extends MY_Controller
         // Query untuk mendapatkan data kasus dari provinsi di Jawa
         $iso = $this->input->get('iso');
         // var_dump($iso);die;
-        $query = $this->db->query('
+        if($iso=="ALL"){
+            $query = $this->db->query('
             SELECT 
                 i."NOMOR_ISO",
-                SUM(CASE WHEN t."STATUS" = \'CLOSE\' THEN 1 ELSE 0 END) AS SUDAH_CLOSED,
-                SUM(CASE WHEN t."STATUS" != \'CLOSE\' THEN 1 ELSE 0 END) AS BELUM_CLOSED
+                SUM(CASE WHEN t."STATUS" = \'CLOSE\' THEN 1 ELSE 0 END) AS "SUDAH_CLOSED",
+                SUM(CASE WHEN t."STATUS" != \'CLOSE\' THEN 1 ELSE 0 END) AS "BELUM_CLOSED"
             FROM 
                 "TEMUAN_DETAIL" t
             JOIN 
                 "RESPONSE_AUDITEE_H" h ON t."ID_RESPONSE" = h."ID_HEADER"
-            left JOIN
+            right JOIN
+                "TM_ISO" i on h."ID_ISO" = i."ID_ISO" 
+            GROUP BY 
+                i."NOMOR_ISO"
+        ');
+        }
+        else{
+            $query = $this->db->query('
+            SELECT 
+                i."NOMOR_ISO",
+                SUM(CASE WHEN t."STATUS" = \'CLOSE\' THEN 1 ELSE 0 END) AS "SUDAH_CLOSED",
+                SUM(CASE WHEN t."STATUS" != \'CLOSE\' THEN 1 ELSE 0 END) AS "BELUM_CLOSED"
+            FROM 
+                "TEMUAN_DETAIL" t
+            JOIN 
+                "RESPONSE_AUDITEE_H" h ON t."ID_RESPONSE" = h."ID_HEADER"
+            right JOIN
                 "TM_ISO" i on h."ID_ISO" = i."ID_ISO" 
             WHERE 
                 i."ID_ISO" = '.$iso.'
             GROUP BY 
                 i."NOMOR_ISO"
         ');
+        }
+
+        
+        
+
+        // Mengubah hasil query menjadi array
+        $data = $query->result_array();
+        // var_dump($data);die;
+
+        // Mengirim data dalam format JSON untuk digunakan di chart
+        echo json_encode($data);
+    }
+
+    public function getTemuanDataDivisi() {
+        // Query untuk mendapatkan data kasus dari provinsi di Jawa
+        $iso = $this->input->get('iso');
+        // var_dump($iso);die;
+        $query = $this->db->query('
+            SELECT 
+                d."NAMA_DIVISI",
+                SUM(CASE WHEN t."STATUS" = \'CLOSE\' THEN 1 ELSE 0 END) AS "SUDAH_CLOSED",
+                SUM(CASE WHEN t."STATUS" != \'CLOSE\' THEN 1 ELSE 0 END) AS "BELUM_CLOSED"
+            FROM 
+                "TEMUAN_DETAIL" t
+            JOIN 
+                "RESPONSE_AUDITEE_H" h ON t."ID_RESPONSE" = h."ID_HEADER"
+            right JOIN
+                "TM_DIVISI" d on h."DIVISI" = d."KODE_PARENT" 
+            GROUP BY 
+                d."NAMA_DIVISI"
+        ');
+
+        
+        
 
         // Mengubah hasil query menjadi array
         $data = $query->result_array();
