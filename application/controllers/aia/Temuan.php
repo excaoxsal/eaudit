@@ -605,35 +605,35 @@ public function index()
 
         $pdf = new PDF('P', 'mm', 'A4', true, 'UTF-8', false);
 		// var_dump($data);die;
-		$this->load->view('template/v_export_lkha',$data);
+		//$this->load->view('template/v_export_lkha',$data);
         // Setel informasi dokumen
-        // $pdf->SetCreator(PDF_CREATOR);
-        // $pdf->SetAuthor('PT. PELABUHAN TANJUNG PRIOK');
-        // $pdf->SetTitle('Laporan Ketidaksesuaian Hasil Audit');
-        // $pdf->SetSubject('Laporan Audit');
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor('PT. PELABUHAN TANJUNG PRIOK');
+        $pdf->SetTitle('Laporan Ketidaksesuaian Hasil Audit');
+        $pdf->SetSubject('Laporan Audit');
 
-        // // Setel margin
-        // $pdf->SetMargins(15, 27, 15);
-        // $pdf->SetHeaderMargin(5);
-        // $pdf->SetFooterMargin(10);
+        // Setel margin
+        $pdf->SetMargins(15, 20, 15);
+        $pdf->SetHeaderMargin(5);
+        $pdf->SetFooterMargin(5);
 
-        // // Setel auto page breaks
-        // $pdf->SetAutoPageBreak(TRUE, 25);
+        // Setel auto page breaks
+        $pdf->SetAutoPageBreak(TRUE, 15);
 
         // // Tambah halaman baru
-        // $pdf->AddPage();
+        $pdf->AddPage();
 
-        // // Setel font
-        // $pdf->SetFont('helvetica', '', 10);
+        // Setel font
+        $pdf->SetFont('helvetica', '', 10);
 
         // // Isi konten HTML
-        // $html = $this->load->view('template/v_export_lkha', [], true);
+        $html = $this->load->view('template/v_export_lkha', $data, true);
         // // $html = $this->load->view('cetakpdf', $data, true);
 
-        // // Cetak HTML ke dalam PDF
-        // $pdf->writeHTML($html, true, false, true, false, '');
+        // Cetak HTML ke dalam PDF
+        $pdf->writeHTML($html, true, false, true, false, '');
 
-        // $pdf->Output('laporan_ketidaksesuaian.pdf', 'I');
+        $pdf->Output('laporan_ketidaksesuaian.pdf', 'I');
 	}
 
 }

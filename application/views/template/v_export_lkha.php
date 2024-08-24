@@ -18,10 +18,7 @@
 <body>
     <table>
         <tr>
-            <td colspan="20" class="center"><b>PT. PELABUHAN TANJUNG PRIOK</b></td>
-        </tr>
-        <tr>
-            <td colspan="20" class="center" style="height: 40px;"></td>
+            <td colspan="20" class="center" style="height: 40px;"><b>PT. PELABUHAN TANJUNG PRIOK</b><br/><img src="<?= base_url() ?>assets/img/logos/ptp.png" width="120px" /></td>
         </tr>
         <tr>
             <td colspan="20" class="center" style="height: 30px;"><b>LAPORAN KETIDAK SESUAIAN HASIL AUDIT</b></td>
@@ -66,7 +63,7 @@
         <tr>
             <td colspan="4"><b>Tanda tangan Atasan Langsung Auditee:</b></td>
             <td colspan="4"></td>
-            <td colspan="12">Nama : Amie Maulana<br/>Tanggal Implementasi:</td>
+            <td colspan="12">Nama : <?php echo $atasan_auditee; ?><br/>Tanggal Implementasi:</td>
         </tr>
         <tr>
             <td colspan="20" class="center" style="height: 15px;"><b>(DIISI OLEH AUDITEE)</b></td>
@@ -100,7 +97,7 @@
         <tr>
             <td colspan="4"><b>Tanda tangan Atasan Langsung Auditee:</b></td>
             <td colspan="4"></td>
-            <td colspan="12">Nama : Amie Maulana<br/>Tanggal Implementasi:</td>
+            <td colspan="12">Nama : <?php echo $atasan_auditee; ?><br/>Tanggal Implementasi:</td>
         </tr>
         <tr>
             <td colspan="20" style="height: 30px;"><b>KOMENTAR PEMERIKSAAN :</b><br/></td>
