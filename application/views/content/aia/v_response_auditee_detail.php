@@ -224,7 +224,7 @@ var KTDatatableJsonRemoteDemo = {
         template: function(row, index) {
             // Calculate the correct index for the current page
             var currentPage = t.getCurrentPage();
-            var pageSize = t.options.data.pageSize;
+            var pageSize = t.getPageSize();
             return (currentPage - 1) * pageSize + (index + 1);
         }
       },
