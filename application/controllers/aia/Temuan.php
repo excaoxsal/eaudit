@@ -122,7 +122,7 @@ public function index()
 		// $upload_data = $this->upload->data();
 		// 	unlink($upload_data['full_path']);
 		// var_dump($data_lain);die;
-
+		
 		$data = [];
 			for ($row = 0; $row <= $highestRow; $row++) {
 			
@@ -131,6 +131,8 @@ public function index()
 				$kategori = $worksheet->getCellByColumnAndRow(2, $row+2)->getValue();
 				if($kategori=="OBSERVASI"){
 					$status="CLOSE";
+				}else{
+					$status="OPEN";
 				}
 				
 				if($kode_klausul!=""){
@@ -564,7 +566,7 @@ public function index()
 		$query = $this->db->select('la.NAMA as NAMA_LEAD_AUDITOR, a.NAMA as NAMA_AUDITOR,aud.NAMA as AUDITEE,aaud.NAMA as ATASAN_AUDITEE, 
 		w.WAKTU_AUDIT_AWAL,w.WAKTU_AUDIT_SELESAI,
 		td.KATEGORI,td.TANGGAL,td.INVESTIGASI,td.PERBAIKAN,td.KOREKTIF,td.ID_TEMUAN,
-		d.NAMA_DIVISI,
+		d.NAMA_DIVISI,d.KODE,
 		i.NOMOR_ISO,i.ID_ISO')
 		->from('TEMUAN_DETAIL td')
 		->join('TM_USER la','la.ID_USER=td.ID_LEAD_AUDITOR')
@@ -591,6 +593,7 @@ public function index()
 		$data['nomor_iso']=$data_respon[0]['NOMOR_ISO'];
 		$data['kategori']=$data_respon[0]['KATEGORI'];
 		$data['divisi']=$data_respon[0]['NAMA_DIVISI'];
+		$data['kode_divisi']=$data_respon[0]['KODE'];
 		$data['id_temuan']=$data_respon[0]['ID_TEMUAN'];
 		$data['']=$data_respon[0][''];
 		if($data_respon[0]['ID_ISO']==1){

@@ -18,7 +18,7 @@
 <body>
     <table>
         <tr>
-            <td colspan="20" class="center" style="height: 40px;"><b>PT. PELABUHAN TANJUNG PRIOK</b><br/><img src="<?= base_url() ?>assets/img/logos/ptp.png" width="120px" /></td>
+            <td colspan="20" class="right" style="height: 40px;"><b></b><br/><img src="<?= base_url() ?>assets/img/logos/ptp.png" width="120px" /></td>
         </tr>
         <tr>
             <td colspan="20" class="center" style="height: 30px;"><b>LAPORAN KETIDAK SESUAIAN HASIL AUDIT</b></td>
@@ -27,7 +27,7 @@
             <td colspan="3"><b>ORGANISASI </b></td>
             <td colspan="8">PT. Pelabuhan Tanjung Priok</td>
             <td colspan="3"><b>LKS NO </b></td>
-            <td colspan="6">LKHA-<?=$kode_lks?><?=$id_temuan?></td>
+            <td colspan="6"><?=$kode_divisi?>-<?=$kode_lks?>-<?=$id_temuan?></td>
         </tr>
         <tr>
             <td colspan="3"><b>LOKASI </b></td>
