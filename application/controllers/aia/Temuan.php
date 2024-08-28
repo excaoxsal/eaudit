@@ -565,7 +565,7 @@ public function index()
 
 		$query = $this->db->select('la.NAMA as NAMA_LEAD_AUDITOR, a.NAMA as NAMA_AUDITOR,aud.NAMA as AUDITEE,aaud.NAMA as ATASAN_AUDITEE, 
 		w.WAKTU_AUDIT_AWAL,w.WAKTU_AUDIT_SELESAI,
-		td.KATEGORI,td.TANGGAL,td.INVESTIGASI,td.PERBAIKAN,td.KOREKTIF,td.ID_TEMUAN,
+		td.KATEGORI,td.TANGGAL,td.INVESTIGASI,td.PERBAIKAN,td.KOREKTIF,td.ID_TEMUAN,td.POINT,td.KETERANGAN_TL_LEAD_AUDITOR,EXTRACT(YEAR FROM "CREATED_AT") as "WAKTU",
 		d.NAMA_DIVISI,d.KODE,
 		i.NOMOR_ISO,i.ID_ISO')
 		->from('TEMUAN_DETAIL td')
@@ -578,7 +578,6 @@ public function index()
 		->join('TM_ISO i','i.ID_ISO=reh.ID_ISO')
 		->join('TM_PERTANYAAN p','i.ID_ISO=p.ID_ISO','left')
 		->join('TM_DIVISI d','d.KODE=reh.DIVISI','left')
-
 		->where('ID_TEMUAN',$id)->get();
 		$data_respon = $query->result_array();
 		$data['id'] = $data_respon[0]['ID_TEMUAN'];
@@ -595,6 +594,10 @@ public function index()
 		$data['divisi']=$data_respon[0]['NAMA_DIVISI'];
 		$data['kode_divisi']=$data_respon[0]['KODE'];
 		$data['id_temuan']=$data_respon[0]['ID_TEMUAN'];
+		$data['point']=$data_respon[0]['POINT'];
+		$data['tahun']=$data_respon[0]['WAKTU'];
+		$data['komen_lead']=$data_respon[0]["KETERANGAN_TL_LEAD_AUDITOR"];
+		$data['komen_au']=$data_respon[0]["KETERANGAN_TL_AUDITOR"];
 		$data['']=$data_respon[0][''];
 		if($data_respon[0]['ID_ISO']==1){
 			$data['kode_lks']="M";
@@ -608,7 +611,7 @@ public function index()
 
         $pdf = new PDF('P', 'mm', 'A4', true, 'UTF-8', false);
 		// var_dump($data);die;
-		//$this->load->view('template/v_export_lkha',$data);
+		return $this->load->view('template/v_export_lkha',$data);
         // Setel informasi dokumen
         $pdf->SetCreator(PDF_CREATOR);
         $pdf->SetAuthor('PT. PELABUHAN TANJUNG PRIOK');

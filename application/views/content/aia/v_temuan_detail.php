@@ -337,10 +337,10 @@
             <div class="col-12">
               <label>Lampiran</label>
               <div class="custom-file" id="FILE_APPROVE_TL">
-                <input type="file" class="custom-file-input" name="upload_file" id="upload_file_tl">
+                <input type="file" class="custom-file-input" name="upload_file" id="upload_file_tl_approve">
                 <label class="custom-file-label" for="customFile">Choose file</label>
               </div>
-              <label><a id="FILE" href="#" download>Download File</a></label> <a onclick="deletefile()" href="#" class="btn btn-danger h-10" id="btnDelete">X</a>
+              <label><a id="FILE_TL_APPROVE" href="#" download>Download File</a></label> <a onclick="deletefile()" href="#" class="btn btn-danger h-10" id="btnDeleteApp">X</a>
             </div>
           </div>
           <input type="hidden"  name="ID_TEMUAN" id="ID_TEMUAN_APPROVALTL">
@@ -544,7 +544,7 @@ var KTDatatableJsonRemoteDemo = {
                   '<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>'+
                   '<a onclick="log(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="far fa-file-alt text-dark" title="Logs"></i></a>'; 
                 }else if(t.STATUS == 'CLOSE' && t.APPROVAL_COMMITMENT == 3 && t.APPROVAL_TINDAKLANJUT == 3 && isPICAuditor == sessionUserId){
-                  return 'aswd'+
+                  return ''+
                   '<a onclick="viewTL(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Tindak Lanjut"><i class="fa-solid fa-file-alt text-dark"></i></a>'+
                   '<a onclick="viewCommitment(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Commitment"><i class="fa-solid fa-scroll text-dark"></i></a>'+
                   '<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>'+
@@ -819,14 +819,17 @@ function chatbox(id_tl) {
       $.get(`<?= base_url('aia/Temuan/getFileEntry/') ?>` + id_tl, function(data, status) {
         const obj = JSON.parse(data);
         $('#ID_TEMUAN_ENTRY').val(id_tl);
+        $('#ID_TEMUAN_ENTRY').val(id_tl);
+        $('#FILE_APPROVE_TL').hide();
+        $('#btnDeleteApp').hide();
         $('#KETERANGAN_APPROVE_TL').val(obj.KETERANGAN_TL);
         if (obj.FILE && obj.FILE !== 'null') {
-          $('#FILE_APPROVE_TL').attr('href', obj.FILE).show();
-          $('#FILE_TL').show();
+          $('#FILE_TL_APPROVE').attr('href', obj.FILE).show();
           $('#btnDelete').show();
           $('#btnSubmitTL').show();
 
         } else {
+          $('#FILE_TL').hide();
           $('#FILE').hide();
           $('#btnDelete').hide();
           

@@ -27,7 +27,7 @@
             <td colspan="3"><b>ORGANISASI </b></td>
             <td colspan="8">PT. Pelabuhan Tanjung Priok</td>
             <td colspan="3"><b>LKS NO </b></td>
-            <td colspan="6"><?=$kode_divisi?>-<?=$kode_lks?>-<?=$id_temuan?></td>
+            <td colspan="6">LKHA-<?=$kode_divisi?>-<?=$kode_lks?><?=$point?>-<?=$tahun?></td>
         </tr>
         <tr>
             <td colspan="3"><b>LOKASI </b></td>
@@ -100,7 +100,7 @@
             <td colspan="12">Nama : <?php echo $atasan_auditee; ?><br/>Tanggal Implementasi:</td>
         </tr>
         <tr>
-            <td colspan="20" style="height: 30px;"><b>KOMENTAR PEMERIKSAAN :</b><br/></td>
+            <td colspan="20" style="height: 30px;"><b>KOMENTAR PEMERIKSAAN : </b><?=$komen_lead?><br/></td>
         </tr>
         <tr>
             <td colspan="4"><b>Tanda tangan Auditor:</b></td>
