@@ -29,7 +29,7 @@
         <tr>
             <td colspan="3"><b>ORGANISASI </b></td>
             <td colspan="8">PT. Pelabuhan Tanjung Priok</td>
-            <td colspan="3"><b>LKS NO </b></td>
+            <td colspan="3"><b>LKHA NO </b></td>
             <td colspan="6"><?=$kode_divisi?>-<?=$kode_lks?><?=$point?>-<?=$tahun?></td>
         </tr>
         <tr>
@@ -72,15 +72,15 @@
             <td colspan="20" class="center" style="height: 15px;"><b>(DIISI OLEH AUDITEE)</b></td>
         </tr>
         <tr>
-            <td colspan="4"><b>TINDAKAN INVESTIGASI:</b></td>
+            <td colspan="4" style="height: 45px;"><b>TINDAKAN INVESTIGASI:</b></td>
             <td colspan="16"><?=$investigasi?></td>
         </tr>
         <tr>
-            <td colspan="4"><b>TINDAKAN PERBAIKAN:</b></td>
+            <td colspan="4" style="height: 45px;"><b>TINDAKAN PERBAIKAN:</b></td>
             <td colspan="16"><?=$perbaikan?></td>
         </tr>
         <tr>
-            <td colspan="4"><b>TINDAKAN KOREKTIF:</b></td>
+            <td colspan="4" style="height: 45px;"><b>TINDAKAN KOREKTIF:</b></td>
             <td colspan="16"><?=$korektif?></td>
         </tr>
         <tr>
