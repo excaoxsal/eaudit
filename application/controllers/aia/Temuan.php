@@ -398,7 +398,7 @@ public function index()
 	    $request = $this->input->post();
 	    $detail_temuan= $this->m_temuan->get_detail_temuan($id_response);
 	    $array_where = [
-			'ID_PERENCANAAN' => $request['ID_TEMUAN'],
+			'ID_PERENCANAAN' => $request['ID_TEMUAN_APPROVE_TL'],
 			'JENIS_PERENCANAAN' => 'TEMUAN DETAIL',
 			'ID_USER' => $_SESSION['ID_USER']
 		];
@@ -407,7 +407,7 @@ public function index()
 	    if ($request['APPROVAL_TINDAKLANJUT'] == 1){
 	    	$this->db->select('APPROVAL_TINDAKLANJUT');
 		    $this->db->from('TEMUAN_DETAIL');
-		    $this->db->where('ID_TEMUAN', $request['ID_TEMUAN']);
+		    $this->db->where('ID_TEMUAN', $request['ID_TEMUAN_APPROVE_TL']);
 		    $current_value = $this->db->get()->row()->APPROVAL_TINDAKLANJUT;
 		    
 		    // Tambahkan nilai baru ke nilai yang ada
@@ -431,7 +431,7 @@ public function index()
 				$this->m_temuan->update($data_pemeriksa1, $array_where, 'PEMERIKSA');
 
 				$array_whereNext = [
-					'ID_PERENCANAAN' => $request['ID_TEMUAN'],
+					'ID_PERENCANAAN' => $request['ID_TEMUAN_APPROVE_TL'],
 					'JENIS_PERENCANAAN' => 'TEMUAN DETAIL',
 					'ID_USER' => $detail_temuan[0]['ID_LEAD_AUDITOR']
 				];
@@ -448,7 +448,7 @@ public function index()
 				$this->m_temuan->update($data_pemeriksa1, $array_where, 'PEMERIKSA');
 
 				$array_whereNext = [
-					'ID_PERENCANAAN' => $request['ID_TEMUAN'],
+					'ID_PERENCANAAN' => $request['ID_TEMUAN_APPROVE_TL'],
 					'JENIS_PERENCANAAN' => 'TEMUAN DETAIL',
 					'ID_USER' => $detail_temuan[0]['ID_AUDITOR']
 				];
@@ -467,7 +467,7 @@ public function index()
 		    ];
 	    	//$new_value = $request['APPROVAL_TINDAKLANJUT'];
 	    	$array_where = [
-				'ID_PERENCANAAN' => $request['ID_TEMUAN'],
+				'ID_PERENCANAAN' => $request['ID_TEMUAN_APPROVE_TL'],
 				'JENIS_PERENCANAAN' => 'TEMUAN DETAIL'
 			];
 	    	$data_pemeriksa = ['STATUS_TINDAKLANJUT' => 0, 'TANGGAL' => date('Y-m-d')];
@@ -475,7 +475,7 @@ public function index()
 	    }
 
 	    $this->db->set($data_update);
-	    $this->db->where('ID_TEMUAN', $request['ID_TEMUAN']);
+	    $this->db->where('ID_TEMUAN', $request['ID_TEMUAN_APPROVE_TL']);
 	    $update = $this->db->update('TEMUAN_DETAIL');
 
 	    if ($update) {
@@ -485,6 +485,7 @@ public function index()
 	        $error_message = 'Status Gagal Di Approve ';
 	        $this->session->set_flashdata('error', $error_message);
 	    }
+		var_dump($data_update);die;
 
 	    redirect(base_url('aia/temuan/detail/'.$id_response));
 	}
@@ -611,7 +612,7 @@ public function index()
 
         $pdf = new PDF('P', 'mm', 'A4', true, 'UTF-8', false);
 		// var_dump($data);die;
-		// return $this->load->view('template/v_export_lkha',$data);
+		return $this->load->view('template/v_export_lkha',$data);
         // Setel informasi dokumen
         $pdf->SetCreator(PDF_CREATOR);
         $pdf->SetAuthor('PT. PELABUHAN TANJUNG PRIOK');

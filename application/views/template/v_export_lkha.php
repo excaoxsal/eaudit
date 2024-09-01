@@ -27,13 +27,13 @@
             <td colspan="20" class="center" style="height: 30px;"><b>LAPORAN KETIDAK SESUAIAN HASIL AUDIT</b></td>
         </tr>
         <tr>
-            <td colspan="3"><b>ORGANISASI </b></td>
+            <td colspan="3"><b>DIVISI/CABANG </b></td>
             <td colspan="8">PT. Pelabuhan Tanjung Priok</td>
             <td colspan="3"><b>LKHA NO </b></td>
             <td colspan="6"><?=$kode_divisi?>-<?=$kode_lks?><?=$point?>-<?=$tahun?></td>
         </tr>
         <tr>
-            <td colspan="3"><b>LOKASI </b></td>
+            <td colspan="3"><b>UNIT KERJA </b></td>
             <td colspan="8"><?=$divisi?></td>
             <td colspan="3"><b>AUDITOR </b></td>
             <td colspan="6"><?php echo $auditor; ?></td>
@@ -66,10 +66,14 @@
         <tr>
             <td colspan="4" style="height: 45px;"><b>Tanda tangan Atasan Langsung Auditee:</b></td>
             <td colspan="4"></td>
-            <td colspan="12">Nama : <?php echo $atasan_auditee; ?><br/>Tanggal Implementasi :</td>
+            <td colspan="12">Nama : <?php echo $atasan_auditee; ?>
         </tr>
         <tr>
             <td colspan="20" class="center" style="height: 15px;"><b>(DIISI OLEH AUDITEE)</b></td>
+        </tr>
+        <tr>
+            <td colspan="4"><b>TANGGAL IMPLEMENTASI :</b></td>
+            <td colspan="12 ">1</td>
         </tr>
         <tr>
             <td colspan="4" style="height: 45px;"><b>TINDAKAN INVESTIGASI:</b></td>
@@ -92,6 +96,10 @@
             <td colspan="4" style="height: 45px;"><b>Tanda tangan Atasan Langsung Auditee:</b></td>
             <td colspan="4"></td>
             <td colspan="12">Nama : <?php echo $atasan_auditee; ?><br/>Tanggal Implementasi :</td>
+        </tr>
+        <tr>
+            <td colspan="4"><b>TANGGAL CLOSING AUDITEE :</b></td>
+            <td colspan="12 ">1</td>
         </tr>
         <tr>
             <td colspan="20" style="height: 30px;"><b>KOMENTAR PEMERIKSAAN : </b><?=$komen_lead?><br/></td>

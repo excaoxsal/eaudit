@@ -91,6 +91,12 @@
         <div class="modal-body" style="height: auto">
           <input type="hidden"  name="ID_TEMUAN" id="ID_TEMUAN">
           <div class="form-group row">
+            <label class="col-form-label col-md-2">Tanggal Implementasi</label>
+            <div class="col-md-10">
+              <input type="date" class="form-control" name="TANGGAL" id="TANGGAL" placeholder="Select a date">
+            </div>
+          </div>
+          <div class="form-group row">
             <label class="col-form-label col-md-2">Tindakan Investigasi</label>
             <div class="col-md-10">
               <textarea class="form-control" <?= $disabled ?> name="INVESTIGASI[]" id="INVESTIGASI"></textarea>
@@ -108,12 +114,7 @@
               <textarea class="form-control" <?= $disabled ?> name="KOREKTIF[]" id="KOREKTIF"></textarea>
             </div>
           </div>
-          <div class="form-group row">
-            <label class="col-form-label col-md-2">Tanggal Implementasi</label>
-            <div class="col-md-10">
-              <input type="date" class="form-control" name="TANGGAL" id="TANGGAL" placeholder="Select a date">
-            </div>
-          </div>
+          
         </div>
         <div class="modal-footer">
           <input type="submit" class="btn btn-primary font-weight-bold" value="Submit">
