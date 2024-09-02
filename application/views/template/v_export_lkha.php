@@ -5,10 +5,11 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            border: 2px solid #000;
         }
-        td, th {
-            border: 1px solid #000;
-            padding: 5px;
+        tr, td {
+            border: 0.1em solid #000;
+
         }
         .center {
             text-align: center;
@@ -56,7 +57,7 @@
         <tr>
             <td colspan="4" style="height: 45px;"><b>Tanda tangan Auditor:</b></td>
             <td colspan="4"></td>
-            <td colspan="12">Nama Lead Auditor : <?php echo $lead_auditor; ?><br/>Nama Auditor : <?php echo $auditor; ?><br/>Tanggal : <br/></td>
+            <td colspan="12">Nama Lead Auditor : <?php echo $lead_auditor; ?><br/>Nama Auditor : <?php echo $auditor; ?></td>
         </tr>
         <tr>
             <td colspan="4" style="height: 45px;"><b>Tanda tangan Auditee:</b></td>
@@ -66,14 +67,14 @@
         <tr>
             <td colspan="4" style="height: 45px;"><b>Tanda tangan Atasan Langsung Auditee:</b></td>
             <td colspan="4"></td>
-            <td colspan="12">Nama : <?php echo $atasan_auditee; ?>
+            <td colspan="12">Nama : <?php echo $atasan_auditee; ?></td>
         </tr>
         <tr>
             <td colspan="20" class="center" style="height: 15px;"><b>(DIISI OLEH AUDITEE)</b></td>
         </tr>
         <tr>
             <td colspan="4"><b>TANGGAL IMPLEMENTASI :</b></td>
-            <td colspan="12 ">1</td>
+            <td colspan="16"><?php echo $tanggal_implementasi; ?></td>
         </tr>
         <tr>
             <td colspan="4" style="height: 45px;"><b>TINDAKAN INVESTIGASI:</b></td>
@@ -95,11 +96,11 @@
         <tr>
             <td colspan="4" style="height: 45px;"><b>Tanda tangan Atasan Langsung Auditee:</b></td>
             <td colspan="4"></td>
-            <td colspan="12">Nama : <?php echo $atasan_auditee; ?><br/>Tanggal Implementasi :</td>
+            <td colspan="12">Nama : <?php echo $atasan_auditee; ?></td>
         </tr>
         <tr>
             <td colspan="4"><b>TANGGAL CLOSING AUDITEE :</b></td>
-            <td colspan="12 ">1</td>
+            <td colspan="16"><?php echo $closedate;?></td>
         </tr>
         <tr>
             <td colspan="20" style="height: 30px;"><b>KOMENTAR PEMERIKSAAN : </b><?=$komen_lead?><br/></td>

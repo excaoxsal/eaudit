@@ -566,7 +566,7 @@ public function index()
 
 		$query = $this->db->select('la.NAMA as NAMA_LEAD_AUDITOR, a.NAMA as NAMA_AUDITOR,aud.NAMA as AUDITEE,aaud.NAMA as ATASAN_AUDITEE, 
 		w.WAKTU_AUDIT_AWAL,w.WAKTU_AUDIT_SELESAI,
-		td.KATEGORI,td.TANGGAL,td.INVESTIGASI,td.PERBAIKAN,td.KOREKTIF,td.ID_TEMUAN,td.POINT,td.KETERANGAN_TL_LEAD_AUDITOR,EXTRACT(YEAR FROM "CREATED_AT") as "WAKTU",
+		td.KATEGORI,,td.CREATED_AT,td.TANGGAL,td.WAKTU_TL_LEADAUDITOR,td.INVESTIGASI,td.PERBAIKAN,td.KOREKTIF,td.ID_TEMUAN,td.POINT,td.KETERANGAN_TL_LEAD_AUDITOR,EXTRACT(YEAR FROM "CREATED_AT") as "WAKTU",
 		d.NAMA_DIVISI,d.KODE,
 		i.NOMOR_ISO,i.ID_ISO')
 		->from('TEMUAN_DETAIL td')
@@ -587,7 +587,10 @@ public function index()
 		$data['investigasi']=$data_respon[0]['INVESTIGASI'];
 		$data['perbaikan']=$data_respon[0]['PERBAIKAN'];
 		$data['korektif']=$data_respon[0]['KOREKTIF'];
-		$data['tanggal']=$data_respon[0]['TANGGAL'];
+		$data['tanggal']=date("d-m-Y", strtotime($data_respon[0]['CREATED_AT']));
+		$implementasiDate = isset($data_respon[0]['TANGGAL']) && !empty($data_respon[0]['TANGGAL']) ? $data_respon[0]['TANGGAL'] : null;
+		$data['tanggal_implementasi']=$implementasiDate ? date("d-m-Y", strtotime($implementasiDate)) : null;
+		$data['closedate']=date("d-m-Y", strtotime($data_respon[0]['WAKTU_TL_LEADAUDITOR']));
 		$data['auditee']=$data_respon[0]['NAMA_USER'];
 		$data['atasan_auditee']=$data_respon[0]['ATASAN_AUDITEE'];
 		$data['nomor_iso']=$data_respon[0]['NOMOR_ISO'];
@@ -612,12 +615,14 @@ public function index()
 
         $pdf = new PDF('P', 'mm', 'A4', true, 'UTF-8', false);
 		// var_dump($data);die;
-		return $this->load->view('template/v_export_lkha',$data);
+		// return $this->load->view('template/v_export_lkha',$data);
         // Setel informasi dokumen
         $pdf->SetCreator(PDF_CREATOR);
         $pdf->SetAuthor('PT. PELABUHAN TANJUNG PRIOK');
         $pdf->SetTitle('Laporan Ketidaksesuaian Hasil Audit');
         $pdf->SetSubject('Laporan Audit');
+
+        $pdf->setPrintHeader(false);
 
         // Setel margin
         $pdf->SetMargins(15, 20, 15);
@@ -631,7 +636,7 @@ public function index()
         $pdf->AddPage();
 
         // Setel font
-        $pdf->SetFont('helvetica', '', 10);
+        $pdf->SetFont('helvetica', '', 8);
 
         // // Isi konten HTML
         $html = $this->load->view('template/v_export_lkha', $data, true);
