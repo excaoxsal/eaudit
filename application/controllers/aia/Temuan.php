@@ -566,7 +566,7 @@ public function index()
 
 		$query = $this->db->select('la.NAMA as NAMA_LEAD_AUDITOR, a.NAMA as NAMA_AUDITOR,aud.NAMA as AUDITEE,aaud.NAMA as ATASAN_AUDITEE, 
 		w.WAKTU_AUDIT_AWAL,w.WAKTU_AUDIT_SELESAI,
-		td.KATEGORI,,td.CREATED_AT,td.TANGGAL,td.WAKTU_TL_LEADAUDITOR,td.INVESTIGASI,td.PERBAIKAN,td.KOREKTIF,td.ID_TEMUAN,td.POINT,td.KETERANGAN_TL_LEAD_AUDITOR,EXTRACT(YEAR FROM "CREATED_AT") as "WAKTU",
+		td.KATEGORI,,td.CREATED_AT,td.TANGGAL,td.WAKTU_TL_LEADAUDITOR,td.INVESTIGASI,td.PERBAIKAN,td.KOREKTIF,td.ID_TEMUAN,td.KLAUSUL,td.TEMUAN,td.POINT,td.KETERANGAN_TL_LEAD_AUDITOR,EXTRACT(YEAR FROM "CREATED_AT") as "WAKTU",
 		d.NAMA_DIVISI,d.KODE,
 		i.NOMOR_ISO,i.ID_ISO')
 		->from('TEMUAN_DETAIL td')
@@ -581,7 +581,7 @@ public function index()
 		->join('TM_DIVISI d','d.KODE=reh.DIVISI','left')
 		->where('ID_TEMUAN',$id)->get();
 		$data_respon = $query->result_array();
-		$data['id'] = $data_respon[0]['ID_TEMUAN'];
+		//$data['id'] = $data_respon[0]['ID_TEMUAN'];
 		$data['auditor'] = $data_respon[0]['NAMA_AUDITOR'];
 		$data['lead_auditor'] = $data_respon[0]['NAMA_LEAD_AUDITOR'];
 		$data['investigasi']=$data_respon[0]['INVESTIGASI'];
@@ -591,13 +591,15 @@ public function index()
 		$implementasiDate = isset($data_respon[0]['TANGGAL']) && !empty($data_respon[0]['TANGGAL']) ? $data_respon[0]['TANGGAL'] : null;
 		$data['tanggal_implementasi']=$implementasiDate ? date("d-m-Y", strtotime($implementasiDate)) : null;
 		$data['closedate']=date("d-m-Y", strtotime($data_respon[0]['WAKTU_TL_LEADAUDITOR']));
-		$data['auditee']=$data_respon[0]['NAMA_USER'];
+		$data['auditee']=$data_respon[0]['AUDITEE'];
 		$data['atasan_auditee']=$data_respon[0]['ATASAN_AUDITEE'];
 		$data['nomor_iso']=$data_respon[0]['NOMOR_ISO'];
 		$data['kategori']=$data_respon[0]['KATEGORI'];
 		$data['divisi']=$data_respon[0]['NAMA_DIVISI'];
 		$data['kode_divisi']=$data_respon[0]['KODE'];
 		$data['id_temuan']=$data_respon[0]['ID_TEMUAN'];
+		$data['temuan']=$data_respon[0]['TEMUAN'];
+		$data['klausul']=$data_respon[0]['KLAUSUL'];
 		$data['point']=$data_respon[0]['POINT'];
 		$data['tahun']=$data_respon[0]['WAKTU'];
 		$data['komen_lead']=$data_respon[0]["KETERANGAN_TL_LEAD_AUDITOR"];
@@ -614,8 +616,8 @@ public function index()
 		}
 
         $pdf = new PDF('P', 'mm', 'A4', true, 'UTF-8', false);
-		// var_dump($data);die;
-		// return $this->load->view('template/v_export_lkha',$data);
+		//var_dump($data['auditee']);die;
+		//return $this->load->view('template/v_export_lkha',$data);
         // Setel informasi dokumen
         $pdf->SetCreator(PDF_CREATOR);
         $pdf->SetAuthor('PT. PELABUHAN TANJUNG PRIOK');

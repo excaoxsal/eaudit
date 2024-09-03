@@ -25,7 +25,7 @@
               <div class="card-header" id="headingOne3">
                 <div class="card-title collapsed" id="accordion-title" data-toggle="collapse" data-target="#collapseOne3" aria-expanded="false">Add User</div>
               </div>
-              <form class="form" id="form" method="post">
+              <form class="form" id="form" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="ID" id="ID">
                 <div id="collapseOne3" class="collapse" data-parent="#accordionExample3" style="">
                 <div class="card-body">
@@ -95,6 +95,14 @@
                           <option value="<?= $user['ID_USER'] ?>"><?= $user['NAMA'] ?></option>
                           <?php } ?>
                         </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-form-label col-3 text-right">Tanda Tangan</label>
+                    <div class="col-9">
+                      <div class="form-label">
+                        <input type="file" class="form-control" name="tanda_tangan" id="tanda_tangan">
                       </div>
                     </div>
                   </div>

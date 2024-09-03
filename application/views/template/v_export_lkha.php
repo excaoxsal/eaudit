@@ -52,7 +52,7 @@
             <td colspan="13"><?=$kategori?></td>
         </tr>
         <tr>
-            <td colspan="20"><?=$nomor_iso?><br/>Klausul 4.3<br/>Menentukan lingkup sistem manajemen mutu<br/>Klausul 6.2.<br/>Sasaran Mutu dan Perencanaan untuk Mencapainya<br/><br/>SOP yang berlaku untuk Sub. Divisi IT Hardware terjadi tumpang tindih dengan SOP dari subdivisi lain yaitu IT Software.</td>
+            <td colspan="20"><?=$nomor_iso?><br/>Klausul <?=$klausul?><br/><?=$temuan?></td>
         </tr>
         <tr>
             <td colspan="4" style="height: 45px;"><b>Tanda tangan Auditor:</b></td>
@@ -62,7 +62,7 @@
         <tr>
             <td colspan="4" style="height: 45px;"><b>Tanda tangan Auditee:</b></td>
             <td colspan="4"></td>
-            <td colspan="12">Nama : Atiq Muzzaki</td>
+            <td colspan="12">Nama : <?php echo $auditee; ?></td>
         </tr>
         <tr>
             <td colspan="4" style="height: 45px;"><b>Tanda tangan Atasan Langsung Auditee:</b></td>
@@ -91,7 +91,7 @@
         <tr>
             <td colspan="4" style="height: 45px;"><b>Tanda tangan Auditee:</b></td>
             <td colspan="4"></td>
-            <td colspan="12">Nama : Atiq Muzzaki</td>
+            <td colspan="12">Nama : <?php echo $auditee; ?></td>
         </tr>
         <tr>
             <td colspan="4" style="height: 45px;"><b>Tanda tangan Atasan Langsung Auditee:</b></td>

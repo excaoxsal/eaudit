@@ -7,6 +7,7 @@ class User extends MY_Controller
     public function __construct()
     {
         parent::__construct();
+        $this->load->library('upload');
         $this->is_login();
         $this->is_auditor();
         $this->load->model('aia/master/Master_act_aia','aia_master_act');
@@ -44,15 +45,32 @@ class User extends MY_Controller
         if (empty($atasan_i)) {
             $atasan_i = NULL;
         }
+
+        $config['file_name']        = 'Tanda Tangan'.'-'.date('Ymd').'-'.trim(htmlspecialchars($this->input->post('nama', TRUE)));
+        $config['upload_path'] = './storage/aia/';
+        $config['allowed_types'] = 'gif|jpg|png';
+        $config['max_size'] = 2048;
+        $ext = pathinfo($_FILES['tanda_tangan']['name'], PATHINFO_EXTENSION);
+        //print_r($config);die();
+        $this->upload->initialize($config);
+        print_r($_FILES);die();
+        if (!$this->upload->do_upload('tanda_tangan')) {
+            $error = array('error' => $this->upload->display_errors());
+            print_r($error);die();
+        } else {
+            $file_data = $this->upload->data();     
+            $file_path = base_url().$config['upload_path'].$config['file_name'].'.'.$ext;
+            print_r("b");die();
+        }
         
         $data = array(
             'NAMA'              => trim(htmlspecialchars($this->input->post('nama', TRUE))),
             'ID_JABATAN'        => $this->input->post('id_jabatan'),
             'EMAIL'             => trim(htmlspecialchars($this->input->post('email', TRUE))),
             'ID_ROLE'           => $this->input->post('id_role'),
-            'ATASAN_I'          => $atasan_i
+            'ATASAN_I'          => $atasan_i,
+            'FILE'              => is_empty_return_null($file_path)
         );
-        
 
         if (!$id) {
             $data['NIPP']       = $nipp; 
