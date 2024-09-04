@@ -46,23 +46,40 @@ class User extends MY_Controller
             $atasan_i = NULL;
         }
 
-        $config['file_name']        = 'Tanda Tangan'.'-'.date('Ymd').'-'.trim(htmlspecialchars($this->input->post('nama', TRUE)));
-        $config['upload_path'] = './storage/aia/';
+        // Use the user ID in the file name to ensure it remains consistent
+        $file_name = 'Tanda_Tangan'.'-'.date('Ymd').'-'.$id;
+        $config['file_name'] = $file_name;
+        $config['upload_path'] = 'storage/aia/';
         $config['allowed_types'] = 'gif|jpg|png';
-        $config['max_size'] = 2048;
+        $config['max_size'] = 2 * 1024; // 2 MB in KB
         $ext = pathinfo($_FILES['tanda_tangan']['name'], PATHINFO_EXTENSION);
-        //print_r($config);die();
+
         $this->upload->initialize($config);
-        print_r($_FILES);die();
+        
+        $file_path = null;
         if (!$this->upload->do_upload('tanda_tangan')) {
             $error = array('error' => $this->upload->display_errors());
-            print_r($error);die();
+            // Handle the error if needed
         } else {
+            // First, retrieve the old file path from the database
+            if ($id) {
+                $old_data = $this->db->get_where('TM_USER', ['ID_USER' => $id])->row();
+                $old_file_path = str_replace(base_url(), '', $old_data->FILE);
+
+                // Check if the old file exists and delete it
+                if (file_exists($old_file_path)) {
+                    unlink($old_file_path);
+                }
+            }
+
+            // Upload the new file
             $file_data = $this->upload->data();     
-            $file_path = base_url().$config['upload_path'].$config['file_name'].'.'.$ext;
-            print_r("b");die();
+            $file_path = base_url().$config['upload_path'].$file_name.'.'.$ext;
+
+            // Move the uploaded file to the correct location with the consistent file name
+            rename($file_data['full_path'], $config['upload_path'].$file_name.'.'.$ext);
         }
-        
+
         $data = array(
             'NAMA'              => trim(htmlspecialchars($this->input->post('nama', TRUE))),
             'ID_JABATAN'        => $this->input->post('id_jabatan'),
@@ -73,8 +90,8 @@ class User extends MY_Controller
         );
 
         if (!$id) {
-            $data['NIPP']       = $nipp; 
-            $data['PASSWORD']   = password_hash('123456', PASSWORD_DEFAULT); //default password 123456
+            $data['NIPP']       = $nipp;
+            $data['PASSWORD']   = password_hash('AIA@2024', PASSWORD_DEFAULT); //default password AIA2024 
             $data['CREATED_BY'] = $this->session->ID_USER;
             $cek_user           = $this->db->get_where('TM_USER', ['NIPP' => $nipp])->result();
             if($cek_user) $response['status'] = 'exists';

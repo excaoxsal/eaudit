@@ -103,6 +103,7 @@
                     <div class="col-9">
                       <div class="form-label">
                         <input type="file" class="form-control" name="tanda_tangan" id="tanda_tangan">
+                        <img id="signaturePreview" src="" alt="Tanda Tangan" style="max-height: 100px; margin-top: 10px; display: none;">
                       </div>
                     </div>
                   </div>
@@ -173,38 +174,53 @@
   </div>
 </div>
 <script type="text/javascript">
+
   $(document).ready(function() {
-    $('#id_jabatan, #id_role').select2().on('change', function (e) {
-      $(this).valid();
-    });
-    $("#form").validate({
-      errorClass: 'text-danger is-invalid',
-      invalidHandler: function(event, validator) {
-        KTUtil.scrollTop();
-      },
-      submitHandler: function () {
-        var id, title;
-        id = $('#ID').val();
-        if(id=='') title = 'Simpan data?';
-        else title = 'Simpan perubahan?';
-        Toast.fire({
-          title: title,
-          icon: 'question',
-          showCancelButton: true
-        }).then((result) => {
-          if (result.isConfirmed) {
-            prosesDataMaster("<?= base_url('aia/master/user/post') ?>").then( function(data){
-              var obj = JSON.parse(data); 
-              if(obj.status=='OK'){
-                ToastTopRightTimer.fire({ icon: 'success', title: 'Proses Berhasil! '+obj.msg })
-                _reloadData();
-              }
-            } )
+      $('#id_jabatan, #id_role').select2().on('change', function (e) {
+        $(this).valid();
+      });
+
+      $("#form").validate({
+          errorClass: 'text-danger is-invalid',
+          invalidHandler: function(event, validator) {
+              KTUtil.scrollTop();
+          },
+          submitHandler: function(form) { // Changed this line
+              var id = $('#ID').val();
+              var title = id === '' ? 'Simpan data?' : 'Simpan perubahan?';
+
+              Toast.fire({
+                  title: title,
+                  icon: 'question',
+                  showCancelButton: true
+              }).then((result) => {
+                  if (result.isConfirmed) {
+                      // Handle form submission via ajax
+                      var formData = new FormData(form); // Create FormData object from the form
+
+                      $.ajax({
+                          url: "<?= base_url('aia/master/user/post') ?>",
+                          type: 'POST',
+                          data: formData,
+                          processData: false, // Prevent jQuery from automatically transforming the data into a query string
+                          contentType: false, // Prevent jQuery from overriding the content type header
+                          success: function(response) {
+                              var obj = JSON.parse(response);
+                              if (obj.status === 'OK') {
+                                  ToastTopRightTimer.fire({ icon: 'success', title: 'Proses Berhasil! ' + obj.msg });
+                                  _reloadData();
+                              }
+                          },
+                          error: function(xhr, status, error) {
+                              console.log(error);
+                          }
+                      });
+                  }
+              });
           }
-        })
-      }
-    });
+      });
   });
+
 
   function action(act, id_user) 
   {
@@ -243,12 +259,18 @@
         .then(data => {
             $('#ID').val(btoa(data[0]['ID_USER']));
             $('#nipp').val(data[0]['NIPP']);
-            $("#nipp").attr("disabled", "disabled"); 
+            $("#nipp").attr("readonly", "readonly");
             $('#NAMA').val(data[0]['NAMA']);
             $('#EMAIL').val(data[0]['EMAIL']);
             $('#id_jabatan').val(data[0]['ID_JABATAN']).trigger('change');
             $('#id_role').val(data[0]['ID_ROLE']).trigger('change');
             $('#atasan_i').val(data[0]['ID_ATASAN_I']).trigger('change');
+
+            if(data[0]['FILE']) {
+                $('#signaturePreview').attr('src', data[0]['FILE']).show();
+            } else {
+                $('#signaturePreview').hide(); // Hide the preview if there's no signature
+            }
 
             $('#accordion-title').html('Update User');
             $('#save').html('Simpan perubahan');

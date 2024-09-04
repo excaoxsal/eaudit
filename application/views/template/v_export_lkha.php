@@ -56,17 +56,23 @@
         </tr>
         <tr>
             <td colspan="4" style="height: 45px;"><b>Tanda tangan Auditor:</b></td>
-            <td colspan="4"></td>
+            <td colspan="4" class="center">
+              <img src="<?php echo $ttd_auditor; ?>" alt="Tanda Tangan Auditor" style="height: 45px;"/>
+            </td>
             <td colspan="12">Nama Lead Auditor : <?php echo $lead_auditor; ?><br/>Nama Auditor : <?php echo $auditor; ?></td>
         </tr>
         <tr>
             <td colspan="4" style="height: 45px;"><b>Tanda tangan Auditee:</b></td>
-            <td colspan="4"></td>
+            <td colspan="4" class="center">
+              <img src="<?php echo $ttd_auditee; ?>" alt="Tanda Tangan Auditee" style="height: 45px;"/>
+            </td>
             <td colspan="12">Nama : <?php echo $auditee; ?></td>
         </tr>
         <tr>
             <td colspan="4" style="height: 45px;"><b>Tanda tangan Atasan Langsung Auditee:</b></td>
-            <td colspan="4"></td>
+            <td colspan="4" class="center">
+              <img src="<?php echo $ttd_atasan_auditee; ?>" alt="Tanda Tangan Atasan Auditee" style="height: 45px;"/>
+            </td>
             <td colspan="12">Nama : <?php echo $atasan_auditee; ?></td>
         </tr>
         <tr>
@@ -90,12 +96,16 @@
         </tr>
         <tr>
             <td colspan="4" style="height: 45px;"><b>Tanda tangan Auditee:</b></td>
-            <td colspan="4"></td>
+            <td colspan="4" class="center">
+              <img src="<?php echo $ttd_auditee; ?>" alt="Tanda Tangan Auditee" style="height: 45px;"/>
+            </td>
             <td colspan="12">Nama : <?php echo $auditee; ?></td>
         </tr>
         <tr>
             <td colspan="4" style="height: 45px;"><b>Tanda tangan Atasan Langsung Auditee:</b></td>
-            <td colspan="4"></td>
+            <td colspan="4" class="center">
+              <img src="<?php echo $ttd_atasan_auditee; ?>" alt="Tanda Tangan Atasan Auditee" style="height: 45px;"/>
+            </td>
             <td colspan="12">Nama : <?php echo $atasan_auditee; ?></td>
         </tr>
         <tr>
@@ -107,7 +117,9 @@
         </tr>
         <tr>
             <td colspan="4" style="height: 45px;"><b>Tanda tangan Auditor:</b></td>
-            <td colspan="4"></td>
+            <td colspan="4" class="center">
+              <img src="<?php echo $ttd_auditor; ?>" alt="Tanda Tangan Auditor" style="height: 45px;"/>
+            </td>
             <td colspan="12">Nama Lead Auditor : <?php echo $lead_auditor; ?><br/>Nama Auditor : <?php echo $auditor; ?><br/>Tanggal Implementasi : <?php echo $tanggal; ?><br/></td>
         </tr>
     </table>

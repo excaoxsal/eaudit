@@ -564,7 +564,7 @@ public function index()
 		$data['title']          = 'Print LKHA';
         $data['content']        = 'template/v_export_lkha';
 
-		$query = $this->db->select('la.NAMA as NAMA_LEAD_AUDITOR, a.NAMA as NAMA_AUDITOR,aud.NAMA as AUDITEE,aaud.NAMA as ATASAN_AUDITEE, 
+		$query = $this->db->select('la.NAMA as NAMA_LEAD_AUDITOR, la.FILE as TTD_LEAD_AUDITOR, a.NAMA as NAMA_AUDITOR, a.FILE as TTD_AUDITOR, aud.NAMA as AUDITEE, aud.FILE as TTD_AUDITEE, aaud.NAMA as ATASAN_AUDITEE, aaud.FILE as TTD_ATASAN_AUDITEE,
 		w.WAKTU_AUDIT_AWAL,w.WAKTU_AUDIT_SELESAI,
 		td.KATEGORI,,td.CREATED_AT,td.TANGGAL,td.WAKTU_TL_LEADAUDITOR,td.INVESTIGASI,td.PERBAIKAN,td.KOREKTIF,td.ID_TEMUAN,td.KLAUSUL,td.TEMUAN,td.POINT,td.KETERANGAN_TL_LEAD_AUDITOR,EXTRACT(YEAR FROM "CREATED_AT") as "WAKTU",
 		d.NAMA_DIVISI,d.KODE,
@@ -583,7 +583,9 @@ public function index()
 		$data_respon = $query->result_array();
 		//$data['id'] = $data_respon[0]['ID_TEMUAN'];
 		$data['auditor'] = $data_respon[0]['NAMA_AUDITOR'];
+		$data['ttd_auditor'] = $data_respon[0]['TTD_AUDITOR'];
 		$data['lead_auditor'] = $data_respon[0]['NAMA_LEAD_AUDITOR'];
+		$data['ttd_lead_auditor'] = $data_respon[0]['TTD_LEAD_AUDITOR'];
 		$data['investigasi']=$data_respon[0]['INVESTIGASI'];
 		$data['perbaikan']=$data_respon[0]['PERBAIKAN'];
 		$data['korektif']=$data_respon[0]['KOREKTIF'];
@@ -592,7 +594,9 @@ public function index()
 		$data['tanggal_implementasi']=$implementasiDate ? date("d-m-Y", strtotime($implementasiDate)) : null;
 		$data['closedate']=date("d-m-Y", strtotime($data_respon[0]['WAKTU_TL_LEADAUDITOR']));
 		$data['auditee']=$data_respon[0]['AUDITEE'];
+		$data['ttd_auditee'] = $data_respon[0]['TTD_AUDITEE'];
 		$data['atasan_auditee']=$data_respon[0]['ATASAN_AUDITEE'];
+		$data['ttd_atasan_auditee'] = $data_respon[0]['TTD_ATASAN_AUDITEE'];
 		$data['nomor_iso']=$data_respon[0]['NOMOR_ISO'];
 		$data['kategori']=$data_respon[0]['KATEGORI'];
 		$data['divisi']=$data_respon[0]['NAMA_DIVISI'];
@@ -630,6 +634,8 @@ public function index()
         $pdf->SetMargins(15, 20, 15);
         $pdf->SetHeaderMargin(5);
         $pdf->SetFooterMargin(5);
+
+        $pdf->setCellPaddings( $left = '', $top = '0.5', $right = '', $bottom = '');
 
         // Setel auto page breaks
         $pdf->SetAutoPageBreak(TRUE, 15);
