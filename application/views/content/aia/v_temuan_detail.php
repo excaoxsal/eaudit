@@ -327,7 +327,7 @@
       </div>
       <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/temuan/approvalTL/<?=$kode?>" enctype="multipart/form-data">
         <div class="modal-body" style="height: auto">
-          <input type="hidden"  name="ID_TEMUAN" id="ID_TEMUAN_APPROVE_TL">
+          <input type="hidden"  name="ID_TEMUAN_APPROVE_TL" id="ID_TEMUAN_APPROVE_TL">
           <div class="form-group row">
             <div class="col-12">
               <label>Keterangan</label>

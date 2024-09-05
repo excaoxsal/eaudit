@@ -412,49 +412,77 @@ public function index()
 		    
 		    // Tambahkan nilai baru ke nilai yang ada
 		    $new_value = $current_value + $request['APPROVAL_TINDAKLANJUT'];
+			
 			if ($new_value==3){
-				$data_update = [
-					'APPROVAL_TINDAKLANJUT'			=> $new_value,
-					'KETERANGAN_TL_LEAD_AUDITOR' 	=> is_empty_return_null($request['KETERANGAN_TL_ATASAN']),
-					'STATUS'						=> 'CLOSE',
-					'LOG_KIRIM'						=> 'Approval Tindak Lanjut Lead Auditor'
-				];
-				$data_pemeriksa = ['STATUS_TINDAKLANJUT' => 2, 'TANGGAL' => date('Y-m-d')];
-				$this->m_temuan->update($data_pemeriksa, $array_where, 'PEMERIKSA');
+				if($this->is_lead_auditor()){
+					$data_update = [
+						'APPROVAL_TINDAKLANJUT'			=> $new_value,
+						'KETERANGAN_TL_LEAD_AUDITOR' 	=> is_empty_return_null($request['KETERANGAN_TL_ATASAN']),
+						'STATUS'						=> 'CLOSE',
+						'LOG_KIRIM'						=> 'Approval Tindak Lanjut Lead Auditor'
+					];
+					$data_pemeriksa = ['STATUS_TINDAKLANJUT' => 2, 'TANGGAL' => date('Y-m-d')];
+					$this->m_temuan->update($data_pemeriksa, $array_where, 'PEMERIKSA');
+				}
+				else{
+					$new_value = $current_value;
+					$error_message = 'Gagal Approve dikarenakan Anda bukan Lead Auditor ';
+	        		$this->session->set_flashdata('error', $error_message);
+					redirect(base_url('aia/temuan/detail/'.$id_response));
+				}
+				
 			}else if ($new_value==2){
-				$data_update = [
-					'APPROVAL_TINDAKLANJUT' 		=> $new_value,
-					'KETERANGAN_TL_AUDITOR' 		=> is_empty_return_null($request['KETERANGAN_TL_ATASAN']),
-					'LOG_KIRIM'						=> 'Approval Tindak Lanjut Auditor'
-				];
-				$data_pemeriksa1 = ['STATUS_TINDAKLANJUT' => 2, 'TANGGAL' => date('Y-m-d')];
-				$this->m_temuan->update($data_pemeriksa1, $array_where, 'PEMERIKSA');
-
-				$array_whereNext = [
-					'ID_PERENCANAAN' => $request['ID_TEMUAN_APPROVE_TL'],
-					'JENIS_PERENCANAAN' => 'TEMUAN DETAIL',
-					'ID_USER' => $detail_temuan[0]['ID_LEAD_AUDITOR']
-				];
-
-				$data_pemeriksa2 = ['STATUS_TINDAKLANJUT' => 1, 'TANGGAL' => date('Y-m-d')];
-				$this->m_temuan->update($data_pemeriksa2, $array_whereNext, 'PEMERIKSA');
+				if($this->is_auditor()){
+					$data_update = [
+						'APPROVAL_TINDAKLANJUT' 		=> $new_value,
+						'KETERANGAN_TL_AUDITOR' 		=> is_empty_return_null($request['KETERANGAN_TL_ATASAN']),
+						'LOG_KIRIM'						=> 'Approval Tindak Lanjut Auditor'
+					];
+					$data_pemeriksa1 = ['STATUS_TINDAKLANJUT' => 2, 'TANGGAL' => date('Y-m-d')];
+					$this->m_temuan->update($data_pemeriksa1, $array_where, 'PEMERIKSA');
+	
+					$array_whereNext = [
+						'ID_PERENCANAAN' => $request['ID_TEMUAN_APPROVE_TL'],
+						'JENIS_PERENCANAAN' => 'TEMUAN DETAIL',
+						'ID_USER' => $detail_temuan[0]['ID_LEAD_AUDITOR']
+					];
+	
+					$data_pemeriksa2 = ['STATUS_TINDAKLANJUT' => 1, 'TANGGAL' => date('Y-m-d')];
+					$this->m_temuan->update($data_pemeriksa2, $array_whereNext, 'PEMERIKSA');
+				}
+				else{
+					$new_value = $current_value;
+					$error_message = 'Gagal Approve dikarenakan Anda bukan Auditor ';
+	        		$this->session->set_flashdata('error', $error_message);
+					redirect(base_url('aia/temuan/detail/'.$id_response));
+				}
+				
 			}else{
-				$data_update = [
-					'APPROVAL_TINDAKLANJUT' 		=> $new_value,
-					'KETERANGAN_TL_ATASAN' 			=> is_empty_return_null($request['KETERANGAN_TL_ATASAN']),
-					'LOG_KIRIM'						=> 'Approval Tindak Lanjut Atasan Auditee'
-				];
-				$data_pemeriksa1 = ['STATUS_TINDAKLANJUT' => 2, 'TANGGAL' => date('Y-m-d')];
-				$this->m_temuan->update($data_pemeriksa1, $array_where, 'PEMERIKSA');
-
-				$array_whereNext = [
-					'ID_PERENCANAAN' => $request['ID_TEMUAN_APPROVE_TL'],
-					'JENIS_PERENCANAAN' => 'TEMUAN DETAIL',
-					'ID_USER' => $detail_temuan[0]['ID_AUDITOR']
-				];
-
-				$data_pemeriksa2 = ['STATUS_TINDAKLANJUT' => 1, 'TANGGAL' => date('Y-m-d')];
-				$this->m_temuan->update($data_pemeriksa2, $array_whereNext, 'PEMERIKSA');
+				if($this->is_atasan_auditee()){
+					$data_update = [
+						'APPROVAL_TINDAKLANJUT' 		=> $new_value,
+						'KETERANGAN_TL_ATASAN' 			=> is_empty_return_null($request['KETERANGAN_TL_ATASAN']),
+						'LOG_KIRIM'						=> 'Approval Tindak Lanjut Atasan Auditee'
+					];
+					$data_pemeriksa1 = ['STATUS_TINDAKLANJUT' => 2, 'TANGGAL' => date('Y-m-d')];
+					$this->m_temuan->update($data_pemeriksa1, $array_where, 'PEMERIKSA');
+	
+					$array_whereNext = [
+						'ID_PERENCANAAN' => $request['ID_TEMUAN_APPROVE_TL'],
+						'JENIS_PERENCANAAN' => 'TEMUAN DETAIL',
+						'ID_USER' => $detail_temuan[0]['ID_AUDITOR']
+					];
+	
+					$data_pemeriksa2 = ['STATUS_TINDAKLANJUT' => 1, 'TANGGAL' => date('Y-m-d')];
+					$this->m_temuan->update($data_pemeriksa2, $array_whereNext, 'PEMERIKSA');
+				}
+				else{
+					$new_value = $current_value;
+					$error_message = 'Gagal Approve dikarenakan Anda bukan Atasan Auditee ';
+	        		$this->session->set_flashdata('error', $error_message);
+					redirect(base_url('aia/temuan/detail/'.$id_response));
+				}
+				
 
 			}
 		    
@@ -473,7 +501,7 @@ public function index()
 	    	$data_pemeriksa = ['STATUS_TINDAKLANJUT' => 0, 'TANGGAL' => date('Y-m-d')];
 			$this->m_temuan->update($data_pemeriksa, $array_where, 'PEMERIKSA');
 	    }
-
+		// var_dump($data_update,$request['ID_TEMUAN_APPROVE_TL']);die;		
 	    $this->db->set($data_update);
 	    $this->db->where('ID_TEMUAN', $request['ID_TEMUAN_APPROVE_TL']);
 	    $update = $this->db->update('TEMUAN_DETAIL');
@@ -485,7 +513,6 @@ public function index()
 	        $error_message = 'Status Gagal Di Approve ';
 	        $this->session->set_flashdata('error', $error_message);
 	    }
-		var_dump($data_update);die;
 
 	    redirect(base_url('aia/temuan/detail/'.$id_response));
 	}
@@ -621,7 +648,7 @@ public function index()
 
         $pdf = new PDF('P', 'mm', 'A4', true, 'UTF-8', false);
 		//var_dump($data['auditee']);die;
-		//return $this->load->view('template/v_export_lkha',$data);
+		// return $this->load->view('template/v_export_lkha',$data);
         // Setel informasi dokumen
         $pdf->SetCreator(PDF_CREATOR);
         $pdf->SetAuthor('PT. PELABUHAN TANJUNG PRIOK');
