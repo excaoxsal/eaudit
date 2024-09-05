@@ -225,6 +225,7 @@ class Response_auditee extends MY_Controller {
 	}
 	
 	public function generate($data){
+  
 		$query = $this->db->select('*')->from('TM_PERTANYAAN')->get();
 		$query_divisi = $this->db->select('KODE')->from('WAKTU_AUDIT w')->join('TM_DIVISI d','d.ID_DIVISI=w.ID_DIVISI')->where('ID_JADWAL',$data)->get();
 		$query_iso = $this->db->select('ID_ISO')->from('TM_ISO')->get();
@@ -321,6 +322,7 @@ class Response_auditee extends MY_Controller {
         $this->db->join('"TM_DIVISI" d', 'd."KODE" = ra."SUB_DIVISI"', 'left');
         $this->db->where('ra."ID_HEADER"', $datas);
         $this->db->order_by('a, b, c');
+        $this->db->order_by('ra."ID_MASTER_PERTANYAAN"', 'ASC');
 
 	$query = $this->db->get();
 	$data = $query->result_array();
