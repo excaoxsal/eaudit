@@ -589,7 +589,7 @@ public function index()
 
 		$query = $this->db->select('la.NAMA as NAMA_LEAD_AUDITOR, la.FILE as TTD_LEAD_AUDITOR, a.NAMA as NAMA_AUDITOR, a.FILE as TTD_AUDITOR, aud.NAMA as AUDITEE, aud.FILE as TTD_AUDITEE, aaud.NAMA as ATASAN_AUDITEE, aaud.FILE as TTD_ATASAN_AUDITEE,
 		w.WAKTU_AUDIT_AWAL,w.WAKTU_AUDIT_SELESAI,
-		td.KATEGORI,,td.CREATED_AT,td.TANGGAL,td.WAKTU_TL_LEADAUDITOR,td.INVESTIGASI,td.PERBAIKAN,td.KOREKTIF,td.ID_TEMUAN,td.KLAUSUL,td.TEMUAN,td.POINT,td.KETERANGAN_TL_LEAD_AUDITOR,EXTRACT(YEAR FROM "CREATED_AT") as "WAKTU",
+		td.KATEGORI,td.APPROVAL_TINDAKLANJUT,td.CREATED_AT,td.TANGGAL,td.WAKTU_TL_LEADAUDITOR,td.INVESTIGASI,td.PERBAIKAN,td.KOREKTIF,td.ID_TEMUAN,td.KLAUSUL,td.TEMUAN,td.POINT,td.KETERANGAN_TL_LEAD_AUDITOR,EXTRACT(YEAR FROM "CREATED_AT") as "WAKTU",
 		d.NAMA_DIVISI,d.KODE,
 		i.NOMOR_ISO,i.ID_ISO')
 		->from('TEMUAN_DETAIL td')
@@ -629,6 +629,7 @@ public function index()
 		$data['klausul']=$data_respon[0]['KLAUSUL'];
 		$data['point']=$data_respon[0]['POINT'];
 		$data['tahun']=$data_respon[0]['WAKTU'];
+		$data['approval_tindaklanjut']=$data_respon[0]['APPROVAL_TINDAKLANJUT'];
 		$data['komen_lead']=$data_respon[0]["KETERANGAN_TL_LEAD_AUDITOR"];
 		$data['komen_au']=$data_respon[0]["KETERANGAN_TL_AUDITOR"];
 		$data['']=$data_respon[0][''];

@@ -267,7 +267,7 @@
             $('#atasan_i').val(data[0]['ID_ATASAN_I']).trigger('change');
 
             if(data[0]['FILE']) {
-                $('#signaturePreview').attr('src', data[0]['FILE']).show();
+                $('#signaturePreview').attr('src', data[0]['FILE']).show().trigger('change');
             } else {
                 $('#signaturePreview').hide(); // Hide the preview if there's no signature
             }
@@ -287,7 +287,7 @@
     KTUtil.scrollTop();
     $('#form')[0].reset(); 
     $('input').val('');
-    $("#nipp").removeAttr("disabled"); 
+    $("#nipp").removeAttr("readonly"); 
     $('#id_jabatan, #id_role, #atasan_i').trigger('change');
     $('#datatable').KTDatatable('reload');
     $('#collapseOne3').removeClass('show');
