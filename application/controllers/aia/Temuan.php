@@ -130,6 +130,7 @@ public function index()
 	        $kode_klausul = $worksheet->getCellByColumnAndRow(0, $row + 2)->getValue();
 	        $temuan = $worksheet->getCellByColumnAndRow(1, $row + 2)->getValue();
 	        $kategori = $worksheet->getCellByColumnAndRow(2, $row + 2)->getValue();
+	        $unitkerja = $worksheet->getCellByColumnAndRow(3, $row + 2)->getValue();
 	        $status = ($kategori == "OBSERVASI") ? "CLOSE" : "OPEN";
 
 	        if ($kode_klausul != "") {
@@ -143,6 +144,7 @@ public function index()
 	                'ID_LEAD_AUDITOR' => is_empty_return_null($data_lain[0]['ID_LEAD_AUDITOR']),
 	                'ID_JADWAL' => is_empty_return_null($data_lain[0]['ID_JADWAL']),
 	                'STATUS' => is_empty_return_null($status),
+	                'SUB_DIVISI' => is_empty_return_null($unitkerja),
 	                'KATEGORI' => is_empty_return_null($kategori)
 	            );
 
@@ -154,6 +156,7 @@ public function index()
 	                'ID_LEAD_AUDITOR' => is_empty_return_null($data_lain[0]['ID_LEAD_AUDITOR']),
 	                'ID_JADWAL' => is_empty_return_null($data_lain[0]['ID_JADWAL']),
 	                'STATUS' => is_empty_return_null($status),
+	                'SUB_DIVISI' => is_empty_return_null($unitkerja),
 	                'KATEGORI' => is_empty_return_null($data[$row]['KATEGORI'])
 	            ];
 
@@ -591,6 +594,7 @@ public function index()
 		w.WAKTU_AUDIT_AWAL,w.WAKTU_AUDIT_SELESAI,
 		td.KATEGORI,td.APPROVAL_TINDAKLANJUT,td.CREATED_AT,td.TANGGAL,td.WAKTU_TL_LEADAUDITOR,td.INVESTIGASI,td.PERBAIKAN,td.KOREKTIF,td.ID_TEMUAN,td.KLAUSUL,td.TEMUAN,td.POINT,td.KETERANGAN_TL_LEAD_AUDITOR,EXTRACT(YEAR FROM "CREATED_AT") as "WAKTU",
 		d.NAMA_DIVISI,d.KODE,
+		sd.NAMA_DIVISI as SUB_DIVISI,
 		i.NOMOR_ISO,i.ID_ISO')
 		->from('TEMUAN_DETAIL td')
 		->join('TM_USER la','la.ID_USER=td.ID_LEAD_AUDITOR')
@@ -602,6 +606,7 @@ public function index()
 		->join('TM_ISO i','i.ID_ISO=reh.ID_ISO')
 		->join('TM_PERTANYAAN p','i.ID_ISO=p.ID_ISO','left')
 		->join('TM_DIVISI d','d.KODE=reh.DIVISI','left')
+		->join('TM_DIVISI sd','td.SUB_DIVISI=sd.KODE','left')
 		->where('ID_TEMUAN',$id)->get();
 		$data_respon = $query->result_array();
 		//$data['id'] = $data_respon[0]['ID_TEMUAN'];
@@ -632,6 +637,7 @@ public function index()
 		$data['approval_tindaklanjut']=$data_respon[0]['APPROVAL_TINDAKLANJUT'];
 		$data['komen_lead']=$data_respon[0]["KETERANGAN_TL_LEAD_AUDITOR"];
 		$data['komen_au']=$data_respon[0]["KETERANGAN_TL_AUDITOR"];
+		$data['sub_divisi']=$data_respon[0]['SUB_DIVISI'];
 		$data['']=$data_respon[0][''];
 		if($data_respon[0]['ID_ISO']==1){
 			$data['kode_lks']="M";
@@ -645,7 +651,7 @@ public function index()
 
         $pdf = new PDF('P', 'mm', 'A4', true, 'UTF-8', false);
 		//var_dump($data['auditee']);die;
-		// return $this->load->view('template/v_export_lkha',$data);
+		return $this->load->view('template/v_export_lkha',$data);
         // Setel informasi dokumen
         $pdf->SetCreator(PDF_CREATOR);
         $pdf->SetAuthor('PT. PELABUHAN TANJUNG PRIOK');

@@ -38,7 +38,7 @@ class Dashboard extends MY_Controller
         $this->load->view('/content/aia/v_dashboard', $data);
     }
 
-    public function getTemuanData() {
+    public function getTemuanDataIso() {
         // Query untuk mendapatkan data kasus dari provinsi di Jawa
         $iso = $this->input->get('iso');
         // var_dump($iso);die;

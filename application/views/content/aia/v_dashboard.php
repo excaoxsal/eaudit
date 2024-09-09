@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dahboard TL</title>
+    <title>Dashboard TL</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
@@ -54,8 +54,8 @@
                                         <?php } ?>
                                     </select>
                                     <select class="form-control form-control-solid form-control-lg" id="iso">
-                                        <?php foreach ($iso as $i) { ?>
                                             <option value="ALL">ALL</option>
+                                            <?php foreach ($iso as $i) { ?>
                                             <option value="<?= $i['ID_ISO'] ?>"><?= $i['NOMOR_ISO'] ?></option>
                                         <?php } ?>
                                     </select>
@@ -76,36 +76,7 @@
                 </div>
 
                 <!-- filter -->
-                <div class="card card-custom mt-2">
-                    <div class="card-body py-5">
-                        <div class="row">
-                            <div class="col-2 text-center">
-                                <h4>TOTAL TEMUAN</h4>
-                                <h1><?= $rekap['TOTAL']['TEMUAN'] ?></h1>
-                            </div>
-                            <div class="col-2 text-center">
-                                <h4>TOTAL REKOMENDASI</h4>
-                                <h1><?= $rekap['TOTAL']['REKOMENDASI'] ?></h1>
-                            </div>
-                            <div class="col-2 text-center">
-                                <h4>TOTAL SELESAI</h4>
-                                <h1><?= $rekap['TOTAL']['SELESAI'] ?></h1>
-                            </div>
-                            <div class="col-2 text-center">
-                                <h4>TOTAL STL</h4>
-                                <h1><?= $rekap['TOTAL']['STL'] ?></h1>
-                            </div>
-                            <div class="col-2 text-center">
-                                <h4>TOTAL BTL</h4>
-                                <h1><?= $rekap['TOTAL']['BTL'] ?></h1>
-                            </div>
-                            <div class="col-2 text-center">
-                                <h4>TOTAL TPTD</h4>
-                                <h1><?= $rekap['TOTAL']['TPTD'] ?></h1>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
 
                 <!-- table & charts -->
                 <div class="card card-custom mt-2">
@@ -233,12 +204,12 @@
     <script type="text/javascript">
         
         google.charts.load('current', {packages: ['corechart', 'bar']});
-        google.charts.setOnLoadCallback(drawStackedChart);
+        google.charts.setOnLoadCallback(drawStackedChartIso);
 
-        function drawStackedChart() {
+        function drawStackedChartIso() {
             var selectedIso = $('#iso').val();
             // Mengambil data dari controller menggunakan AJAX
-            $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanData'); ?>", {iso: selectedIso}, function(data) {
+            $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataIso'); ?>", {iso: selectedIso}, function(data) {
                 var chartData = [];
                 chartData.push(['NOMOR_ISO', 'SUDAH_CLOSED', 'BELUM_CLOSED']);
 
@@ -267,16 +238,16 @@
             });
         }
         $('#iso').change(function() {
-            drawStackedChart(); // Refresh the chart when the selected province changes
+            drawStackedChartIso(); // Refresh the chart when the selected province changes
         });
     </script>
 
 <script type="text/javascript">
         
         google.charts.load('current', {packages: ['corechart', 'bar']});
-        google.charts.setOnLoadCallback(drawStackedChart);
+        google.charts.setOnLoadCallback(drawStackedChartDivisi);
 
-        function drawStackedChart() {
+        function drawStackedChartDivisi() {
             var selectedIso = $('#iso').val();
             // Mengambil data dari controller menggunakan AJAX
             $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataDivisi'); ?>", {iso: selectedIso}, function(data) {
@@ -308,7 +279,7 @@
             });
         }
         $('#iso').change(function() {
-            drawStackedChart(); // Refresh the chart when the selected province changes
+            drawStackedChartDivisi(); // Refresh the chart when the selected province changes
         });
     </script>
 
