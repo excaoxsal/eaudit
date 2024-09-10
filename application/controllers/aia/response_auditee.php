@@ -284,7 +284,7 @@ class Response_auditee extends MY_Controller {
 				$this->m_jadwal->update_status($data);
 				$success_message = 'Data telah berhasil di-generate.';
 				$this->session->set_flashdata('success', $success_message);
-				echo base_url('aia/jadwal/jadwal_audit');
+				redirect(base_url('aia/jadwal/jadwal_audit'));
 				
 			}
 		}
