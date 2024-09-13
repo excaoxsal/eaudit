@@ -416,11 +416,14 @@ var KTDatatableJsonRemoteDemo = {
         key: "generalSearch"
       },
       columns: [{
-        field: "NO",
-        title: "NO"
-      },{
-        field: "NOMOR_LKHA",
-        title: "NOMOR LKHA"
+        field: "number",
+        title: "No.",
+        template: function(row, index) {
+            // Calculate the correct index for the current page
+            var currentPage = t.getCurrentPage();
+            var pageSize = t.getPageSize();
+            return (currentPage - 1) * pageSize + (index + 1);
+        }
       },{
         field: "TEMUAN",
         title: "Temuan"
