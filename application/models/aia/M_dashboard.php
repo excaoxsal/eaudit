@@ -20,6 +20,57 @@ class M_dashboard extends CI_Model
         return $this->db->query($query)->result_array();
     }
 
+
+    public function getTemuanByDivisi()
+    {
+        $this->db->select('d.NAMA_DIVISI as divisi, 
+                           SUM(CASE WHEN t."STATUS" = \'CLOSE\' THEN 1 ELSE 0 END) AS sudah_closed,
+                           SUM(CASE WHEN t."STATUS" != \'CLOSE\' THEN 1 ELSE 0 END) AS belum_closed,
+                           i.NOMOR_ISO as ISO, t.SUB_DIVISI');
+        $this->db->from('TEMUAN_DETAIL t');
+        $this->db->join('RESPONSE_AUDITEE_H h','t.ID_RESPONSE = h.ID_HEADER','left');
+        $this->db->join('TM_DIVISI d', 'd.KODE = h.DIVISI', 'left');
+        $this->db->join('TM_ISO i','i.ID_ISO=h.ID_ISO','left');
+        $this->db->group_by('d.NAMA_DIVISI, ISO, t.SUB_DIVISI');
+        $query = $this->db->get();
+        
+        $results = [];
+        foreach ($query->result() as $row) {
+            $results[] = [
+                'divisi' => $row->divisi,
+                'iso9001' => [
+                    'closed' => ($row->ISO == '9001') ? $row->sudah_closed : 0,
+                    'open' => ($row->ISO == '9001') ? $row->belum_closed : 0,
+                    'total' => ($row->ISO == '9001') ? ($row->sudah_closed + $row->belum_closed) : 0
+                ],
+                'sub_divisi' => ($row->SUB_DIVISI) ? $this->getSubDivisi($row->divisi, $row->ISO) : []
+            ];
+        }
+
+        return $results;
+    }
+
+    public function getSubDivisi($divisi, $iso)
+    {
+        $this->db->select('t.SUB_DIVISI');
+        $this->db->from('TEMUAN_DETAIL t');
+        $this->db->join('RESPONSE_AUDITEE_H h','ID_RESPONSE" = h.ID_HEADER','left');
+        $this->db->join('DIVISI d', 'd.KODE = h.DIVISI', 'left');
+        $this->db->join('TM_ISO i','i.ID_ISO=h.ID_ISO','left');
+        $this->db->where('d.NAMA_DIVISI', $divisi);
+        $this->db->where('i.NOMOR_ISO', $iso);
+        $query = $this->db->get();
+        
+        $sub_divisi = [];
+        foreach ($query->result() as $row) {
+            $sub_divisi[] = [
+                'divisi' => $row->SUB_DIVISI
+            ];
+        }
+        return $sub_divisi;
+    }
+
+
     public function getJenisAudit()
     {
         return $this->db->where('STATUS', 1)->order_by('ID_JENIS_AUDIT', 'ASC')->get('TM_JENIS_AUDIT')->result_array();

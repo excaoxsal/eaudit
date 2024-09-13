@@ -416,7 +416,10 @@ var KTDatatableJsonRemoteDemo = {
         key: "generalSearch"
       },
       columns: [{
-        field: "NO_LKHA",
+        field: "NO",
+        title: "NO"
+      },{
+        field: "NOMOR_LKHA",
         title: "NOMOR LKHA"
       },{
         field: "TEMUAN",

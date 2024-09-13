@@ -34,7 +34,7 @@
                     <div id="kt_header_menu" class="header-menu header-menu-mobile header-menu-layout-default d-flex">
                         <div class="nav nav-dark">
                             <a href="#" class="nav-link pl-0 pr-5">
-                                <h3 style="color: #3F4254; margin-bottom: -1px;">DASHBOARD MONITORING TINDAK LANJUT AUDIT</h3>
+                                <h3 style="color: #3F4254; margin-bottom: -1px;">DASHBOARD MONITORING AUDIT INTERNAL</h3>
                             </a>
                         </div>
                     </div>
@@ -53,8 +53,12 @@
                                             <option value="<?= $year['TAHUN'] ?>"><?= $year['TAHUN'] ?></option>
                                         <?php } ?>
                                     </select>
+                                </div>
+                            </div>
+                            <div class="row w-25">
+                                <div class="col">
                                     <select class="form-control form-control-solid form-control-lg" id="iso">
-                                            <option value="ALL">ALL</option>
+                                            <option value="ALL">ALL ISO</option>
                                             <?php foreach ($iso as $i) { ?>
                                             <option value="<?= $i['ID_ISO'] ?>"><?= $i['NOMOR_ISO'] ?></option>
                                         <?php } ?>
@@ -82,125 +86,98 @@
                 <div class="card card-custom mt-2">
                     <div class="card-body">
                         <h4>SUMMARY MONITORING TINDAK LANJUT</h4>
-                        <table class="table table-striped table-bordered">
+                        <table id="temuanTable" class="table table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th scope="col">UNIT AUDITEE</th>
-                                    <th scope="col">TEMUAN</th>
-                                    <th scope="col">REKOMENDASI</th>
-                                    <th scope="col">SELESAI</th>
-                                    <th scope="col">SUDAH TINDAK LANJUT (STL)</th>
-                                    <th scope="col">BELUM TINDAK LANJUT (BTL)</th>
-                                    <th scope="col">TEMUAN TIDAK DAPAT DITINDAKLANJUTI (TPTD)</th>
+                                    <th scope="col">Divisi</th>
+                                    <th scope="col">Sudah Close</th>
+                                    <th scope="col">Belum Close</th>
+                                    <th scope="col">Total Temuan</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($rekap['REKAP'] as $item) { ?>
-                                    <tr>
-                                        <th scope="row"><?= $item['DIVISI'] ?></th>
-                                        <td><?= $item['TEMUAN'] ?></td>
-                                        <td><?= $item['REKOMENDASI'] ?></td>
-                                        <td><?= $item['SELESAI'] ?></td>
-                                        <td><?= $item['STL'] ?></td>
-                                        <td><?= $item['BTL'] ?></td>
-                                        <td><?= $item['TPTD'] ?></td>
-                                    </tr>
-                                <?php } ?>
+                                <!-- Data akan dimuat di sini oleh JavaScript -->
                             </tbody>
                         </table>
                         <hr />
                         <div class="row mb-0 pb-0">
-                            <div class="col-12">
+                            <!-- <div class="col-12">
                                 <div id="charttemuaniso"></div>
-                            </div>
+                            </div> -->
                             <div class="col-12">
                                 <div id="charttemuandivisi"></div>
                             </div>
-                            <div class="col-4">
-                                <div id="charttemuan" class="w-100" style="height:300px"></div>
+                            <div class="col-12">
+                                <div id="charttemuandivisi1"></div>
                             </div>
-                            <div class="col-4">
-                                <div id="chartrekomendasi" class="w-100" style="height:300px"></div>
+                            <div class="col-12">
+                                <div id="charttemuandivisi2"></div>
                             </div>
-                            <div class="col-4">
-                                <div id="chartpenyelesaian" class="w-100" style="height:300px"></div>
+                            <div class="col-12">
+                                <div id="charttemuandivisi3"></div>
                             </div>
+                            
                         </div>
-                        <div class="row" style="margin-top:-46px">
-                            <div class="col">
-                                <hr />
-                                <table class="table table-striped table-bordered">
-                                    <thead>
-
-                                        <tr>
-                                            <th scope="col" style="vertical-align:middle">UNIT AUDITEE</th>
-                                            <th scope="col" style="vertical-align:middle">TEMUAN</th>
-                                            <th scope="col" style="vertical-align:middle">REKOMENDASI</th>
-                                            <th scope="col" style="vertical-align:middle">PIC</th>
-                                            <th scope="col" style="vertical-align:middle">BATAS WAKTU</th>
-                                            <th scope="col" style="vertical-align:middle">TANGGAL PENYELESAIAN</th>
-                                            <th scope="col" style="vertical-align:middle">HASIL MONITORING</th>
-                                            <th scope="col" style="vertical-align:middle">STATUS TL</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        foreach ($data_table as $item) {
-                                            $i = 0;
-                                            $data_temuan = "<strong>" . $item['JUDUL_TEMUAN'] . "</strong><br><br>" . $item['TEMUAN'];
-                                            $temuan = str_replace('<img src=', '<img width="300" src=', $data_temuan);
-                                            if ($item['TOTAL_REKOMENDASI'] != 0) {
-                                                foreach ($item['REKOMENDASI'] as $rek) {
-
-                                                    $rekom = str_replace('<img src=', '<img width="300" src=', $rek['REKOMENDASI']);
-                                                    $hasil = str_replace('<img src=', '<img width="300" src=', $rek['HASIL_MONITORING']);
-
-                                                    if ($i == 0) {
-                                                        echo '<tr>';
-                                                        echo '<th scope="row"  rowspan="' . $item['TOTAL_REKOMENDASI'] . '">' . $item['AUDITEE'] . '</th>';
-                                                        echo '<td rowspan="' . $item['TOTAL_REKOMENDASI'] . '">' . $temuan . '</td>';
-                                                        echo '<td>' . $rekom . '</td>';
-                                                        echo '<td>' . join("<br/><br>", json_decode($rek['PIC'])) . '</td>';
-                                                        echo '<td>' . $rek['BATAS_WAKTU'] . '</td>';
-                                                        echo '<td>' . $rek['TGL_PENYELESAIAN'] . '</td>';
-                                                        echo '<td>' . $hasil . '</td>';
-                                                        echo '<td>' . $rek['TK_PENYELESAIAN'] . '</td>';
-                                                        echo '</tr>';
-                                                    } else {
-                                                        echo '<tr>';
-                                                        echo '<td>' . $rekom . '</td>';
-                                                        echo '<td>' . join("<br/><br>", json_decode($rek['PIC'])) . '</td>';
-                                                        echo '<td>' . $rek['BATAS_WAKTU'] . '</td>';
-                                                        echo '<td>' . $rek['TGL_PENYELESAIAN'] . '</td>';
-                                                        echo '<td>' . $hasil . '</td>';
-                                                        echo '<td>' . $rek['TK_PENYELESAIAN'] . '</td>';
-                                                        echo '</tr>';
-                                                    }
-                                                    $i++;
-                                                }
-                                            } else {
-                                                echo '<tr>';
-                                                echo '<th scope="row"> ' . $item['AUDITEE'] . '</th>';
-                                                echo '<td>' . $temuan . '</td>';
-                                                echo '<td colspan="6"></td>';
-                                                echo '</tr>';
-                                            }
-                                        }
-                                        ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
             <!-- end content -->
         </div>
-        <div>
-            <canvas id="myChart"></canvas>
-        </div>
+        
     </div>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+
+    <script>
+    $(document).ready(function() {
+        // Fungsi untuk menampilkan tabel utama
+        function loadTable() {
+            $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataTable'); ?>", function (data) {
+                var tableBody = $('#temuanTable tbody');
+                tableBody.empty(); // Kosongkan tabel sebelum memasukkan data baru
+
+                // Loop data JSON dan render ke dalam tabel
+                $.each(data, function (index, row) {
+                    var newRow = `<tr class="main-row">
+                                      <th scope="row" onclick="showSubDivisi(this)">${row.divisi}</th>
+                                      <td>${row.iso9001.closed}</td>
+                                      <td>${row.iso9001.open}</td>
+                                      <td>${row.iso9001.total}</td>
+                                      <!-- Anda bisa menambahkan data ISO lain di sini -->
+                                  </tr>`;
+                    tableBody.append(newRow);
+                    
+                    // Jika ada sub-divisi, tambahkan sebagai hidden row
+                    if (row.sub_divisi.length > 0) {
+                        $.each(row.sub_divisi, function (subIndex, subRow) {
+                            var subRowHtml = `<tr class="sub-row" style="display: none;">
+                                                  <th scope="row">&nbsp;&nbsp;-- ${subRow.divisi}</th>
+                                                  <td>${row.iso9001.closed}</td>
+                                                  <td>${row.iso9001.open}</td>
+                                                  <td>${row.iso9001.total}</td>
+                                              </tr>`;
+                            tableBody.append(subRowHtml);
+                        });
+                    }
+                });
+            });
+        }
+
+        // Fungsi untuk menampilkan sub-divisi saat divisi induk diklik
+        function showSubDivisi(element) {
+            var nextRow = $(element).closest('tr').next();
+            while (nextRow.hasClass('sub-row')) {
+                nextRow.toggle(); // Toggle untuk show/hide
+                nextRow = nextRow.next();
+            }
+        }
+
+        // Load tabel ketika halaman siap
+        loadTable();
+    });
+    </script>
+
     <script type="text/javascript">
         
         google.charts.load('current', {packages: ['corechart', 'bar']});
@@ -228,7 +205,7 @@
                         minValue: 0,
                     },
                     vAxis: {
-                        title: 'Nomor ISO'
+                        title: 'ISO 9001'
                     },
                     legend: { position: 'top', maxLines: 3 }
                 };
@@ -241,8 +218,9 @@
             drawStackedChartIso(); // Refresh the chart when the selected province changes
         });
     </script>
+    
 
-<script type="text/javascript">
+    <script type="text/javascript">
         
         google.charts.load('current', {packages: ['corechart', 'bar']});
         google.charts.setOnLoadCallback(drawStackedChartDivisi);
@@ -269,7 +247,7 @@
                         minValue: 0,
                     },
                     vAxis: {
-                        title: 'NAMA_DIVISI'
+                        title: 'ISO 9001'
                     },
                     legend: { position: 'top', maxLines: 3 }
                 };
@@ -280,6 +258,129 @@
         }
         $('#iso').change(function() {
             drawStackedChartDivisi(); // Refresh the chart when the selected province changes
+        });
+    </script>
+
+    <script type="text/javascript">
+        
+        google.charts.load('current', {packages: ['corechart', 'bar']});
+        google.charts.setOnLoadCallback(drawStackedChartDivisi1);
+
+        function drawStackedChartDivisi1() {
+            var selectedIso = $('#iso').val();
+            // Mengambil data dari controller menggunakan AJAX
+            $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataDivisi'); ?>", {iso: selectedIso}, function(data) {
+                var chartData = [];
+                chartData.push(['NAMA_DIVISI', 'SUDAH_CLOSED', 'BELUM_CLOSED']);
+
+                $.each(data, function(index, value) {
+                    chartData.push([value.NAMA_DIVISI, parseInt(value.SUDAH_CLOSED), parseInt(value.BELUM_CLOSED)]);
+                });
+
+                var dataTable = google.visualization.arrayToDataTable(chartData);
+
+                var options = {
+                    isStacked: true,
+                    height: 400,
+                    title: 'Jumlah Temuan Sudah Close dan Belum Close Berdasarkan Divisi',
+                    hAxis: {
+                        title: 'Total Temuan',
+                        minValue: 0,
+                    },
+                    vAxis: {
+                        title: 'ISO 14001'
+                    },
+                    legend: { position: 'top', maxLines: 3 }
+                };
+
+                var chart = new google.visualization.ColumnChart(document.getElementById('charttemuandivisi1'));
+                chart.draw(dataTable, options);
+            });
+        }
+        $('#iso').change(function() {
+            drawStackedChartDivisi1(); // Refresh the chart when the selected province changes
+        });
+    </script>
+
+    <script type="text/javascript">
+        
+        google.charts.load('current', {packages: ['corechart', 'bar']});
+        google.charts.setOnLoadCallback(drawStackedChartDivisi2);
+
+        function drawStackedChartDivisi2() {
+            var selectedIso = $('#iso').val();
+            // Mengambil data dari controller menggunakan AJAX
+            $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataDivisi'); ?>", {iso: selectedIso}, function(data) {
+                var chartData = [];
+                chartData.push(['NAMA_DIVISI', 'SUDAH_CLOSED', 'BELUM_CLOSED']);
+
+                $.each(data, function(index, value) {
+                    chartData.push([value.NAMA_DIVISI, parseInt(value.SUDAH_CLOSED), parseInt(value.BELUM_CLOSED)]);
+                });
+
+                var dataTable = google.visualization.arrayToDataTable(chartData);
+
+                var options = {
+                    isStacked: true,
+                    height: 400,
+                    title: 'Jumlah Temuan Sudah Close dan Belum Close Berdasarkan Divisi',
+                    hAxis: {
+                        title: 'Total Temuan',
+                        minValue: 0,
+                    },
+                    vAxis: {
+                        title: 'ISO 37001'
+                    },
+                    legend: { position: 'top', maxLines: 3 }
+                };
+
+                var chart = new google.visualization.ColumnChart(document.getElementById('charttemuandivisi2'));
+                chart.draw(dataTable, options);
+            });
+        }
+        $('#iso').change(function() {
+            drawStackedChartDivisi2(); // Refresh the chart when the selected province changes
+        });
+    </script>
+
+    <script type="text/javascript">
+        
+        google.charts.load('current', {packages: ['corechart', 'bar']});
+        google.charts.setOnLoadCallback(drawStackedChartDivisi3);
+
+        function drawStackedChartDivisi3() {
+            var selectedIso = $('#iso').val();
+            // Mengambil data dari controller menggunakan AJAX
+            $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataDivisi'); ?>", {iso: selectedIso}, function(data) {
+                var chartData = [];
+                chartData.push(['NAMA_DIVISI', 'SUDAH_CLOSED', 'BELUM_CLOSED']);
+
+                $.each(data, function(index, value) {
+                    chartData.push([value.NAMA_DIVISI, parseInt(value.SUDAH_CLOSED), parseInt(value.BELUM_CLOSED)]);
+                });
+
+                var dataTable = google.visualization.arrayToDataTable(chartData);
+
+                var options = {
+                    isStacked: true,
+                    height: 400,
+                    title: 'Jumlah Temuan Sudah Close dan Belum Close Berdasarkan Divisi',
+                    hAxis: {
+                        title: 'Total Temuan',
+                        minValue: 0,
+                    },
+                    vAxis: {
+                        title: 'ISO 45001'
+                    },
+                    legend: { position: 'top', maxLines: 3 }
+                };
+
+                var chart = new google.visualization.ColumnChart(document.getElementById('charttemuandivisi3'));
+                chart.draw(dataTable, options);
+            });
+        }
+        $('#iso').change(function() {
+            drawStackedChartDivisi3(); // Refresh the chart when the selected province changes
         });
     </script>
 

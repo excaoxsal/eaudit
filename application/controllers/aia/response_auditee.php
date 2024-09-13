@@ -58,7 +58,14 @@ class Response_auditee extends MY_Controller {
 		if($current_date>=$result_waktu['0']['WAKTU_AUDIT_AWAL']){
 			if($current_date<=$result_waktu['0']['WAKTU_AUDIT_SELESAI']){
 				if($ext==""||$ext==null){
-					$file_path = null;
+					$data_update = 
+					[
+					'RESPON'           			=> is_empty_return_null($request['RESPON'])
+					];
+					$this->db->set('RESPONSE_AUDITEE', $data_update['RESPON'][0]);
+					$this->db->set('LOG_KIRIM', 'Response');
+					$this->db->where('ID_RE', $id_re);
+					$update = $this->db->update('RESPONSE_AUDITEE_D');
 				}else{	
 					$config['file_name']        = "RESPON_AUDITEE".$current_time;
 					$config['upload_path'] = './storage/aia/'; // Lokasi penyimpanan file
@@ -77,19 +84,18 @@ class Response_auditee extends MY_Controller {
 						$this->session->set_flashdata('error', $error_message);
 						redirect(base_url('aia/response_auditee/detail/'.$data));
 	                }
-				}
-				
-				$data_update = 
+					$data_update = 
 					[
 					'RESPON'           			=> is_empty_return_null($request['RESPON']),
 					'FILE'           			=> is_empty_return_null($file_path)
 					];
-				
-				$this->db->set('FILE', $file_path);
-				$this->db->set('RESPONSE_AUDITEE', $data_update['RESPON'][0]);
-				$this->db->set('LOG_KIRIM', 'Response');
-				$this->db->where('ID_RE', $id_re);
-				$update = $this->db->update('RESPONSE_AUDITEE_D');
+					$this->db->set('FILE', $file_path);
+					$this->db->set('RESPONSE_AUDITEE', $data_update['RESPON'][0]);
+					$this->db->set('LOG_KIRIM', 'Response');
+					$this->db->where('ID_RE', $id_re);
+					$update = $this->db->update('RESPONSE_AUDITEE_D');
+
+				}
 				
 				if ($update){
 					$success_message = 'Data Respon Berhasil Disimpan.';

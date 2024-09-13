@@ -161,7 +161,7 @@
 
   function save(id) {
     Swal.fire({
-      text: 'Apakah Anda yakin generate data ini dan menghapus data yang sudah tersimpan ?',
+      text: 'Apakah Anda yakin generate data ini dan menghapus data yang sudah tersimpan?',
       icon: 'question',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -170,24 +170,11 @@
       cancelButtonText: 'Batal'
     }).then((result) => {
       if (result.isConfirmed) {
-        $.ajax({
-          url: '<?= base_url() ?>aia/Response_auditee/generate/' + id,
-          type: 'post',
-          data: { id: id },
-          headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-          },
-          success: function(data) {
-            window.location = data; 
-          },
-          error: function(data) {
-            // console.log(data)
-            Swal.fire("Gagal menyimpan data!", "Terjadi kesalahan, silakan coba lagi.", "error");
-          }
-        });
+        // Redirect user to the desired URL
+        window.location.href = '<?= base_url() ?>aia/Response_auditee/generate/' + id;
       }
     });
-  }
+}
   function hapus(id) {
     Swal.fire({
       text: 'Apakah Anda yakin menghapus jadwal ini ?',
