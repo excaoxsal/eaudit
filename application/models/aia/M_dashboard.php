@@ -24,24 +24,39 @@ class M_dashboard extends CI_Model
     public function getTemuanByDivisi()
     {
         $this->db->select('d.NAMA_DIVISI as divisi, 
-                           SUM(CASE WHEN t."STATUS" = \'CLOSE\' THEN 1 ELSE 0 END) AS sudah_closed,
-                           SUM(CASE WHEN t."STATUS" != \'CLOSE\' THEN 1 ELSE 0 END) AS belum_closed,
+                           SUM(CASE WHEN t."STATUS" = \'CLOSE\' THEN 1 ELSE 0 END) AS closed,
+                           SUM(CASE WHEN t."STATUS" != \'CLOSE\' THEN 1 ELSE 0 END) AS open,
                            i.NOMOR_ISO as ISO, t.SUB_DIVISI');
         $this->db->from('TEMUAN_DETAIL t');
-        $this->db->join('RESPONSE_AUDITEE_H h','t.ID_RESPONSE = h.ID_HEADER','left');
-        $this->db->join('TM_DIVISI d', 'd.KODE = h.DIVISI', 'left');
-        $this->db->join('TM_ISO i','i.ID_ISO=h.ID_ISO','left');
+        $this->db->join('RESPONSE_AUDITEE_H h','h.ID_HEADER=t.ID_RESPONSE','left');
+        $this->db->join('TM_DIVISI d', 'd.KODE_PARENT = h.DIVISI', 'left');
+        $this->db->join('TM_ISO i','i.ID_ISO=h.ID_ISO');
+        
         $this->db->group_by('d.NAMA_DIVISI, ISO, t.SUB_DIVISI');
         $query = $this->db->get();
-        
-        $results = [];
+        // var_dump($query->result());die;
         foreach ($query->result() as $row) {
             $results[] = [
                 'divisi' => $row->divisi,
                 'iso9001' => [
-                    'closed' => ($row->ISO == '9001') ? $row->sudah_closed : 0,
-                    'open' => ($row->ISO == '9001') ? $row->belum_closed : 0,
-                    'total' => ($row->ISO == '9001') ? ($row->sudah_closed + $row->belum_closed) : 0
+                    'closed' => ($row->ISO == 'ISO 9001') ? $row->sudah_closed : 0,
+                    'open' => ($row->ISO == 'ISO 9001') ? $row->belum_closed : 0,
+                    'total' => ($row->ISO == 'ISO 9001') ? ($row->sudah_closed + $row->belum_closed) : 0
+                ],
+                'iso14001' => [
+                    'closed' => ($row->ISO == 'ISO 14001') ? $row->sudah_closed : 0,
+                    'open' => ($row->ISO == 'ISO 14001') ? $row->belum_closed : 0,
+                    'total' => ($row->ISO == 'ISO 14001') ? ($row->sudah_closed + $row->belum_closed) : 0
+                ],
+                'iso37001' => [
+                    'closed' => ($row->ISO == 'ISO 37001') ? $row->sudah_closed : 0,
+                    'open' => ($row->ISO == 'ISO 37001') ? $row->belum_closed : 0,
+                    'total' => ($row->ISO == 'ISO 37001') ? ($row->sudah_closed + $row->belum_closed) : 0
+                ],
+                'iso45001' => [
+                    'closed' => ($row->ISO == 'ISO 45001') ? $row->sudah_closed : 0,
+                    'open' => ($row->ISO == 'ISO 45001') ? $row->belum_closed : 0,
+                    'total' => ($row->ISO == 'ISO 45001') ? ($row->sudah_closed + $row->belum_closed) : 0
                 ],
                 'sub_divisi' => ($row->SUB_DIVISI) ? $this->getSubDivisi($row->divisi, $row->ISO) : []
             ];
@@ -54,8 +69,8 @@ class M_dashboard extends CI_Model
     {
         $this->db->select('t.SUB_DIVISI');
         $this->db->from('TEMUAN_DETAIL t');
-        $this->db->join('RESPONSE_AUDITEE_H h','ID_RESPONSE" = h.ID_HEADER','left');
-        $this->db->join('DIVISI d', 'd.KODE = h.DIVISI', 'left');
+        $this->db->join('RESPONSE_AUDITEE_H h','t.ID_RESPONSE = h.ID_HEADER','left');
+        $this->db->join('TM_DIVISI d', 'd.KODE = h.DIVISI', 'left');
         $this->db->join('TM_ISO i','i.ID_ISO=h.ID_ISO','left');
         $this->db->where('d.NAMA_DIVISI', $divisi);
         $this->db->where('i.NOMOR_ISO', $iso);
