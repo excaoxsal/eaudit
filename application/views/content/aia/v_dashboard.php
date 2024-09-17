@@ -86,18 +86,29 @@
                 <div class="card card-custom mt-2">
                     <div class="card-body">
                         <h4>SUMMARY MONITORING TINDAK LANJUT</h4>
-                        <table id="temuanTable" class="table table-striped table-bordered">
+                        <table class="table table-bordered" id="temuanTable">
                             <thead>
+                                <td rowspan="2">Divisi</td>
+                                <th colspan="3">ISO 9001</th>
+                                <th colspan="3">ISO 14001</th>
+                                <th colspan="3">ISO 37001</th>
+                                <th colspan="3">ISO 45001</th>
                                 <tr>
-                                    <th scope="col">Divisi</th>
-                                    <th scope="col">Sudah Close</th>
-                                    <th scope="col">Belum Close</th>
-                                    <th scope="col">Total Temuan</th>
+                                    <td>Sudah Close</td>
+                                    <td>Belum Close</td>
+                                    <td>Total Temuan</td>
+                                    <td>Sudah Close</td>
+                                    <td>Belum Close</td>
+                                    <td>Total Temuan</td>
+                                    <td>Sudah Close</td>
+                                    <td>Belum Close</td>
+                                    <td>Total Temuan</td>
+                                    <td>Sudah Close</td>
+                                    <td>Belum Close</td>
+                                    <td>Total Temuan</td>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <!-- Data akan dimuat di sini oleh JavaScript -->
-                            </tbody>
+                            <tbody></tbody>
                         </table>
                         <hr />
                         <div class="row mb-0 pb-0">
@@ -130,52 +141,48 @@
 
 
     <script>
-    $(document).ready(function() {
-        // Fungsi untuk menampilkan tabel utama
-        function loadTable() {
-            $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataTable'); ?>", function (data) {
-                var tableBody = $('#temuanTable tbody');
-                tableBody.empty(); // Kosongkan tabel sebelum memasukkan data baru
+        // Mengambil data dari controller menggunakan AJAX
+        function loadData() {
+            $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataTable'); ?>", function(data) {
+                var tableBody = $("#temuanTable tbody");
+                tableBody.empty();
 
-                // Loop data JSON dan render ke dalam tabel
-                $.each(data, function (index, row) {
-                    var newRow = `<tr class="main-row">
-                                      <th scope="row" onclick="showSubDivisi(this)">${row.divisi}</th>
-                                      <td>${row.iso9001.closed}</td>
-                                      <td>${row.iso9001.open}</td>
-                                      <td>${row.iso9001.total}</td>
-                                      <!-- Anda bisa menambahkan data ISO lain di sini -->
-                                  </tr>`;
-                    tableBody.append(newRow);
+                $.each(data, function(index, row) {
+                    var html = `
+                        <tr class="main-row">
+                            <td><a href="#" class="toggle-sub" data-index="${index}">${row.divisi}</a></td>
+                            <td>${row.iso9001.closed}</td>
+                            <td>${row.iso9001.open}</td>
+                            <td>${row.iso9001.total}</td>
+                            <td>${row.iso14001.closed}</td>
+                            <td>${row.iso14001.open}</td>
+                            <td>${row.iso14001.total}</td>
+                            <td>${row.iso37001.closed}</td>
+                            <td>${row.iso37001.open}</td>
+                            <td>${row.iso37001.total}</td>
+                            <td>${row.iso45001.closed}</td>
+                            <td>${row.iso45001.open}</td>
+                            <td>${row.iso45001.total}</td>
+                        </tr>`;
+
+                    tableBody.append(html);
+
+                    // Cek jika ada sub-divisi
                     
-                    // Jika ada sub-divisi, tambahkan sebagai hidden row
-                    if (row.sub_divisi.length > 0) {
-                        $.each(row.sub_divisi, function (subIndex, subRow) {
-                            var subRowHtml = `<tr class="sub-row" style="display: none;">
-                                                  <th scope="row">&nbsp;&nbsp;-- ${subRow.divisi}</th>
-                                                  <td>${row.iso9001.closed}</td>
-                                                  <td>${row.iso9001.open}</td>
-                                                  <td>${row.iso9001.total}</td>
-                                              </tr>`;
-                            tableBody.append(subRowHtml);
-                        });
-                    }
+                });
+
+                // Tambahkan event listener untuk membuka sub-divisi
+                $(".toggle-sub").click(function(event) {
+                    event.preventDefault();
+                    var index = $(this).data("index");
+                    $(".sub-row-" + index).toggle(); // Toggle visibilitas sub-divisi
                 });
             });
         }
 
-        // Fungsi untuk menampilkan sub-divisi saat divisi induk diklik
-        function showSubDivisi(element) {
-            var nextRow = $(element).closest('tr').next();
-            while (nextRow.hasClass('sub-row')) {
-                nextRow.toggle(); // Toggle untuk show/hide
-                nextRow = nextRow.next();
-            }
-        }
-
-        // Load tabel ketika halaman siap
-        loadTable();
-    });
+        $(document).ready(function() {
+            loadData();
+        });
     </script>
 
     <script type="text/javascript">
