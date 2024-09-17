@@ -620,7 +620,8 @@ public function index()
 		$data['tanggal']=date("d-m-Y", strtotime($data_respon[0]['CREATED_AT']));
 		$implementasiDate = isset($data_respon[0]['TANGGAL']) && !empty($data_respon[0]['TANGGAL']) ? $data_respon[0]['TANGGAL'] : null;
 		$data['tanggal_implementasi']=$implementasiDate ? date("d-m-Y", strtotime($implementasiDate)) : null;
-		$data['closedate']=date("d-m-Y", strtotime($data_respon[0]['WAKTU_TL_LEADAUDITOR']));
+		$closeDate = isset($data_respon[0]['WAKTU_TL_LEADAUDITOR']) && !empty($data_respon[0]['WAKTU_TL_LEADAUDITOR']) ? $data_respon[0]['WAKTU_TL_LEADAUDITOR'] : null;
+		$data['closedate']=$closeDate ? date("d-m-Y", strtotime($closeDate)) : null;
 		$data['auditee']=$data_respon[0]['AUDITEE'];
 		$data['ttd_auditee'] = $data_respon[0]['TTD_AUDITEE'];
 		$data['atasan_auditee']=$data_respon[0]['ATASAN_AUDITEE'];
