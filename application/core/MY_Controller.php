@@ -45,7 +45,7 @@ class MY_Controller extends CI_Controller
         $data['is_lead_auditor']    = $this->is_lead_auditor();
         $data['is_user']            = $this->is_user();
         $data['is_aia']             = $this->is_aia();
-        $data['is_closing_audit']   = $this->is_closing_audit();
+        //$data['is_closing_audit']   = $this->is_closing_audit();
         $this->data = $data;
 
 
