@@ -15,6 +15,7 @@ class MY_Controller extends CI_Controller
     protected function show($data = array())
     {
         $result               = $this->main_act->total_notif($this->session->userdata('ID_USER'));
+        //print_r($result);DIE();
         $data['notif_atasanAuditee']    = $this->main_act->notif_atasanAuditee($this->session->userdata('ID_USER'));
         $data['notif_auditor']    = $this->main_act->notif_auditor($this->session->userdata('ID_USER'));
         $data['notif_leadauditor']    = $this->main_act->notif_lead_auditor($this->session->userdata('ID_USER'));
@@ -28,14 +29,16 @@ class MY_Controller extends CI_Controller
         $data['total_apm']    = count($data['notif_apm']);
         $data['total_rcm']    = count($data['notif_rcm']);
         $data['total_pka']    = count($data['notif_pka']);
-        if($this->is_closing_audit())
-        {
-            $data['notif_lainnya']= $this->main_act->notif_lainnya();
-        }else{
-            $data['notif_lainnya']= $this->main_act->notif_rekom();
-        }
-        $data['tnotif_lain']        = count($data['notif_lainnya']);
-        $data['total_notif']        = count($result)+(int)$data['tnotif_lain'];
+        // if($this->is_closing_audit())
+        // {
+        //     $data['notif_lainnya']= $this->main_act->notif_lainnya();
+        // }else{
+        //     $data['notif_lainnya']= $this->main_act->notif_rekom();
+        // }
+        // $data['tnotif_lain']        = count($data['notif_lainnya']);
+        // $data['total_notif']        = count($result)+(int)$data['tnotif_lain'];
+        $data['total_notif']        = count($result);
+        //print_r($total_notif);DIE();
         $data['is_auditor']         = $this->is_auditor();
         $data['is_auditee']         = $this->is_auditee();
         $data['is_atasan_auditee']  = $this->is_atasan_auditee();
@@ -85,7 +88,7 @@ class MY_Controller extends CI_Controller
 
     protected function is_lead_auditor()
     {
-        if(($this->session->ID_JABATAN==2035) && $this->session->STATUS==1 && $this->session->ID_USER!=NULL && $this->session->NIPP!=NULL) return TRUE;
+        if(($this->session->ID_JABATAN==2132) && $this->session->STATUS==1 && $this->session->ID_USER!=NULL && $this->session->NIPP!=NULL) return TRUE;
         else return FALSE;
     }
 
@@ -101,12 +104,12 @@ class MY_Controller extends CI_Controller
         else return FALSE;
     }
 
-    protected function is_closing_audit()
-    {
-        // asm spi & senior officer spi
-        if(($this->session->ID_JABATAN==54519 || $this->session->ID_JABATAN==54573 || $this->session->ID_JABATAN==10001087) && $this->session->STATUS==1 && $this->session->ID_USER!=NULL && $this->session->NIPP!=NULL) return TRUE;
-        else return FALSE;
-    }
+    // protected function is_closing_audit()
+    // {
+    //     // asm spi & senior officer spi
+    //     if(($this->session->ID_JABATAN==54519 || $this->session->ID_JABATAN==54573 || $this->session->ID_JABATAN==10001087) && $this->session->STATUS==1 && $this->session->ID_USER!=NULL && $this->session->NIPP!=NULL) return TRUE;
+    //     else return FALSE;
+    // }
     
     protected function mail_config()
     {

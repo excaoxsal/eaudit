@@ -187,16 +187,19 @@ public function index()
 
 	public function commitment($id_response) {
 		$request = $this->input->post();
+		$id_temuan = $this->input->post('ID_TEMUAN');
 		$atasan_result = $this->m_temuan->getAtasan($_SESSION['ID_JABATAN']);
 		$atasan = json_decode($atasan_result, true);
 		date_default_timezone_set('Asia/Jakarta');
 		// $status = $this->m_temuan->getStatus($request['ID_TEMUAN']);
 		// $respObject = json_decode($status);
-		$temuan_detail = $this->m_temuan->get_temuan_detail($id_response);
-		// $temuan_header= $this->m_res_au->get_response_auditee_detail($id_response);
-		// print_r($this->m_res_au->get_response_auditee_detail($id_response));die();
+		$detail_temuan = $this->m_temuan->get_detail_temuan($id_response);
+		$filtered_data = array_filter($detail_temuan, function ($item) use ($id_temuan) {
+	        return $item['ID_TEMUAN'] == $id_temuan;
+	    });
+    	$filtered_data = array_values($filtered_data);
+    	//print_r($filtered_data);die();
     	
-
 		$data_update = 
 			[
 			'INVESTIGASI'           			=> is_empty_return_null($request['INVESTIGASI']),
@@ -218,7 +221,7 @@ public function index()
 		$this->db->where('ID_TEMUAN', $request['ID_TEMUAN']);
 		$update = $this->db->update('TEMUAN_DETAIL');
 		if ($update){
-			$this->m_temuan->insert_pemeriksa($temuan_detail[0]['ID_TEMUAN'], $temuan_detail[0]);
+			$this->m_temuan->insert_pemeriksa($id_temuan, $filtered_data);
 			$success_message = 'Data Commitment Berhasil Disimpan.';
 			$this->session->set_flashdata('success', $success_message);
 			redirect(base_url('aia/temuan/detail/'.$id_response));
@@ -290,12 +293,18 @@ public function index()
 
 	public function approval($id_response) {
 	    $request = $this->input->post();
+	    $id_temuan = $this->input->post('ID_TEMUAN');
 	    $array_where = [
 			'ID_PERENCANAAN' => $request['ID_TEMUAN'],
 			'JENIS_PERENCANAAN' => 'TEMUAN DETAIL',
 			'ID_USER' => $_SESSION['ID_USER']
 		];
-		$detail_temuan= $this->m_temuan->get_detail_temuan($id_response);
+		$detail_temuan = $this->m_temuan->get_detail_temuan($id_response);
+		$filtered_data = array_filter($detail_temuan, function ($item) use ($id_temuan) {
+	        return $item['ID_TEMUAN'] == $id_temuan;
+	    });
+    	$filtered_data = array_values($filtered_data);
+    	//print_r($filtered_data);die();
 	    if ($request['APPROVAL_COMMITMENT'] == 1){
 	    	$this->db->select('APPROVAL_COMMITMENT');
 		    $this->db->from('TEMUAN_DETAIL');
@@ -382,7 +391,7 @@ public function index()
 	    $update = $this->db->update('TEMUAN_DETAIL');
 
 	    if ($update) {
-	    	$this->m_temuan->insert_pemeriksa($request['ID_TEMUAN'], $detail_temuan[0]);
+	    	$this->m_temuan->insert_pemeriksa($request['ID_TEMUAN'], $filtered_data);
 	        $success_message = 'Status Sudah Berhasil Di Approve';
 	        $this->session->set_flashdata('success', $success_message);
 	    } else {
@@ -592,7 +601,7 @@ public function index()
 
 		$query = $this->db->select('la.NAMA as NAMA_LEAD_AUDITOR, la.FILE as TTD_LEAD_AUDITOR, a.NAMA as NAMA_AUDITOR, a.FILE as TTD_AUDITOR, aud.NAMA as AUDITEE, aud.FILE as TTD_AUDITEE, aaud.NAMA as ATASAN_AUDITEE, aaud.FILE as TTD_ATASAN_AUDITEE,
 		w.WAKTU_AUDIT_AWAL,w.WAKTU_AUDIT_SELESAI,
-		td.KATEGORI,td.APPROVAL_TINDAKLANJUT,td.CREATED_AT,td.TANGGAL,td.WAKTU_TL_LEADAUDITOR,td.INVESTIGASI,td.PERBAIKAN,td.KOREKTIF,td.ID_TEMUAN,td.KLAUSUL,td.TEMUAN,td.POINT,td.KETERANGAN_TL_LEAD_AUDITOR,EXTRACT(YEAR FROM "CREATED_AT") as "WAKTU",
+		td.KATEGORI,td.APPROVAL_TINDAKLANJUT,td.CREATED_AT,td.TANGGAL,td.WAKTU_TL_LEADAUDITOR,td.INVESTIGASI,td.PERBAIKAN,td.KOREKTIF,td.ID_TEMUAN,td.KLAUSUL,td.TEMUAN,td.POINT,td.STATUS,td.KETERANGAN_TL_LEAD_AUDITOR,EXTRACT(YEAR FROM "CREATED_AT") as "WAKTU",
 		d.NAMA_DIVISI,d.KODE,
 		sd.NAMA_DIVISI as SUB_DIVISI,
 		i.NOMOR_ISO,i.ID_ISO')
@@ -639,6 +648,7 @@ public function index()
 		$data['komen_lead']=$data_respon[0]["KETERANGAN_TL_LEAD_AUDITOR"];
 		$data['komen_au']=$data_respon[0]["KETERANGAN_TL_AUDITOR"];
 		$data['sub_divisi']=$data_respon[0]['SUB_DIVISI'];
+		$data['status']=$data_respon[0]['STATUS'];
 		$data['']=$data_respon[0][''];
 		if($data_respon[0]['ID_ISO']==1){
 			$data['kode_lks']="M";
