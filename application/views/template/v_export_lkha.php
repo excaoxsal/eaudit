@@ -45,8 +45,8 @@
             <td colspan="20" class="center" style="border: 0.1em solid #000;height: 15px;"><b>(DIISI OLEH AUDITOR)</b></td>
         </tr>
         <tr>
-            <td colspan="7" style="border: 0.1em solid #000;"><b>KLASIFIKASI KETIDAKSESUAIAN:</b></td>
-            <td colspan="13" style="border: 0.1em solid #000;"><?=$kategori?></td>
+            <td colspan="11" style="border: 0.1em solid #000;"><b>KLASIFIKASI KETIDAKSESUAIAN:</b></td>
+            <td colspan="9" style="border: 0.1em solid #000;"><?=$kategori?></td>
         </tr>
         <tr>
             <td colspan="20" style="border: 0.1em solid #000 ;height: auto;"><?=$nomor_iso?><br/>Klausul <?=$klausul?><br/><?=$temuan?></td>
