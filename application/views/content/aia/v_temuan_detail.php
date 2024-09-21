@@ -56,17 +56,6 @@
                       </span>
                     </div>
                   </div>
-                  <div class="col-md-4 my-2 my-md-0">
-                    <div class="d-flex align-items-center">
-                      <label class="mr-3 mb-0 d-none d-md-block">Klausul:</label>
-                      <select class="form-control" id="kt_datatable_search_status">
-                        <option value="">All</option>
-                        <?php foreach($list_divisi as $status){ ?>
-                        <option value="<?= $status['NAMA_DIVISI'] ?>"><?= $status['NAMA_DIVISI'] ?></option>
-                        <?php } ?>
-                      </select>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -193,7 +182,7 @@
                 <input type="file" class="custom-file-input" name="upload_file" id="upload_file">
                 <label class="custom-file-label" for="customFile">Choose file</label>
               </div>
-              <label><a id="FILE" href="#" download>Download File</a></label> <a onclick="deletefile()" href="#" class="btn btn-danger h-10" id="btnDelete">X</a>
+              <label><a id="FILE_IN_TL" href="#" download>Download File</a></label> <a onclick="deletefile()" href="#" class="btn btn-danger h-10" id="btnDelete">X</a>
             </div>
           </div>
         </div>
@@ -722,8 +711,8 @@ var KTDatatableJsonRemoteDemo = {
         $('#ID_TEMUAN_ENTRY').val(id_tl);
         $('#KETERANGAN_TL').val(obj.KETERANGAN_TL);
 
-        if (obj.FILE && obj.FILE !== 'null') {
-          $('#FILE').attr('href', obj.FILE).show();
+        if (obj.FILE && obj.FILE != 'null') {
+          $('#FILE_IN_TL').attr('href', obj.FILE).show();
           $('#FILE_TL').show();
           $('#btnDelete').show();
           $('#btnSubmitTL').show();
@@ -744,6 +733,7 @@ var KTDatatableJsonRemoteDemo = {
       $.get(`<?= base_url('aia/Temuan/getFileEntry/') ?>` + id_tl, function(data, status) {
         const obj = JSON.parse(data);
         $('#ID_TEMUAN_ENTRY').val(id_tl);
+        $('#FILE_IN_TL').attr('href', obj.FILE);
         $('#KETERANGAN_TL').val(obj.KETERANGAN_TL);
         $('#btnSubmitTL').hide();
         $('#FILE_TL').hide();
@@ -793,7 +783,7 @@ var KTDatatableJsonRemoteDemo = {
         
         var form_data = $("#kt_form").serialize() + '&' + $.param(obj);
         $.ajax({
-          url: '<?= base_url() ?>aia/Response_auditee/deletefile/',
+          url: '<?= base_url() ?>aia/Temuan/deletefile/',
           type: 'post',
           data: form_data,
           headers: {

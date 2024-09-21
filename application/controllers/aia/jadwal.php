@@ -42,7 +42,7 @@ class Jadwal extends MY_Controller
 		
 		$data['list_user'] 			= $this->master_act->user(['U.STATUS' => 1]);
 		$data_auditor 				= $this->master_act->auditor(['R.ID_ROLE' => 1]);
-		$data_lead_auditor			= $this->master_act->auditor(['J.ID_JABATAN' => 2035]);
+		$data_lead_auditor			= $this->master_act->auditor(['J.ID_JABATAN' => 2132]);
 		$data['data_auditor'] 		= $data_auditor;
 		$data['data_lead_auditor'] 	= $data_lead_auditor;
 		// $data['id_jadwal']			= $this->m_jadwal->get_jadwal($id);

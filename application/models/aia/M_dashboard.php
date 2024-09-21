@@ -23,46 +23,127 @@ class M_dashboard extends CI_Model
 
     public function getTemuanByDivisi()
     {
-        $this->db->select('d.NAMA_DIVISI as divisi, 
-                           SUM(CASE WHEN t."STATUS" = \'CLOSE\' THEN 1 ELSE 0 END) AS closed,
-                           SUM(CASE WHEN t."STATUS" != \'CLOSE\' THEN 1 ELSE 0 END) AS open,
-                           i.NOMOR_ISO as ISO, t.SUB_DIVISI');
-        $this->db->from('TEMUAN_DETAIL t');
-        $this->db->join('RESPONSE_AUDITEE_H h','h.ID_HEADER=t.ID_RESPONSE','left');
-        $this->db->join('TM_DIVISI d', 'd.KODE_PARENT = h.DIVISI', 'left');
+        $this->db->select('
+        d.NAMA_DIVISI as divisi,d.KODE,d.KODE_PARENT, 
+        SUM(CASE WHEN t."STATUS" = \'CLOSE\' THEN 1 ELSE 0 END) AS closed,
+        SUM(CASE WHEN t."STATUS" != \'CLOSE\' THEN 1 ELSE 0 END) AS open,
+        i.NOMOR_ISO as ISO, t.SUB_DIVISI');
+        $this->db->from('RESPONSE_AUDITEE_H h');
+        $this->db->join('TEMUAN_DETAIL t','t.ID_RESPONSE=h.ID_HEADER','left');
+        $this->db->join('TM_DIVISI d', 'h.DIVISI = d.KODE');
         $this->db->join('TM_ISO i','i.ID_ISO=h.ID_ISO');
+        $this->db->group_by('d.NAMA_DIVISI,d.KODE,d.KODE_PARENT, ISO, t.SUB_DIVISI');
         
-        $this->db->group_by('d.NAMA_DIVISI, ISO, t.SUB_DIVISI');
-        $query = $this->db->get();
-        // var_dump($query->result());die;
-        foreach ($query->result() as $row) {
-            $results[] = [
-                'divisi' => $row->divisi,
-                'iso9001' => [
-                    'closed' => ($row->ISO == 'ISO 9001') ? $row->sudah_closed : 0,
-                    'open' => ($row->ISO == 'ISO 9001') ? $row->belum_closed : 0,
-                    'total' => ($row->ISO == 'ISO 9001') ? ($row->sudah_closed + $row->belum_closed) : 0
-                ],
-                'iso14001' => [
-                    'closed' => ($row->ISO == 'ISO 14001') ? $row->sudah_closed : 0,
-                    'open' => ($row->ISO == 'ISO 14001') ? $row->belum_closed : 0,
-                    'total' => ($row->ISO == 'ISO 14001') ? ($row->sudah_closed + $row->belum_closed) : 0
-                ],
-                'iso37001' => [
-                    'closed' => ($row->ISO == 'ISO 37001') ? $row->sudah_closed : 0,
-                    'open' => ($row->ISO == 'ISO 37001') ? $row->belum_closed : 0,
-                    'total' => ($row->ISO == 'ISO 37001') ? ($row->sudah_closed + $row->belum_closed) : 0
-                ],
-                'iso45001' => [
-                    'closed' => ($row->ISO == 'ISO 45001') ? $row->sudah_closed : 0,
-                    'open' => ($row->ISO == 'ISO 45001') ? $row->belum_closed : 0,
-                    'total' => ($row->ISO == 'ISO 45001') ? ($row->sudah_closed + $row->belum_closed) : 0
-                ],
-                'sub_divisi' => ($row->SUB_DIVISI) ? $this->getSubDivisi($row->divisi, $row->ISO) : []
-            ];
-        }
+        $querydivisi = $this->db->get();
+        $querysubdivisi=
+        $this->db->select('
+        t.SUB_DIVISI as subdivisi,d.NAMA_DIVISI as divisi,d.KODE_PARENT,
+        SUM(CASE WHEN t."STATUS" = \'CLOSE\' THEN 1 ELSE 0 END) AS closed,
+        SUM(CASE WHEN t."STATUS" != \'CLOSE\' THEN 1 ELSE 0 END) AS open,                
+        i.NOMOR_ISO as ISO')
+       ->from('TEMUAN_DETAIL t')
+       ->join('RESPONSE_AUDITEE_H h','t.ID_RESPONSE = h.ID_HEADER','left')
+       ->join('TM_DIVISI d', 'd.KODE = t.SUB_DIVISI')
+       ->join('TM_ISO i','i.ID_ISO=h.ID_ISO')
+       ->group_by('d.KODE_PARENT,t.SUB_DIVISI,d.NAMA_DIVISI,ISO')
+       ->having('t.SUB_DIVISI is not null')
+       ->get();
+        $resultsdivisi = [];
+        $n=0;
+        // var_dump($querysubdivisi->result(),$querydivisi->result());die;
 
-        return $results;
+        foreach ($querydivisi->result() as $row) {
+            // Jika divisi belum ada di array $resultsdivisi, tambahkan divisi tersebut
+            if (!isset($resultsdivisi[$row->divisi])) {
+                $resultsdivisi[$row->divisi] = [
+                    'iso9001' => ['closed' => 0, 'open' => 0, 'total' => 0],
+                    'iso14001' => ['closed' => 0, 'open' => 0, 'total' => 0],
+                    'iso37001' => ['closed' => 0, 'open' => 0, 'total' => 0],
+                    'iso45001' => ['closed' => 0, 'open' => 0, 'total' => 0],
+                    'kodedivisi'=>$row->KODE,
+                    'namadivisi'=>$row->divisi,
+                    'tipe' => 'Divisi',
+                    
+                ];
+            }
+            // var_dump($row->closed + $row->open);die;
+        
+            // Memasukkan data ISO ke dalam divisi yang sesuai
+            switch ($row->ISO) {
+                case 'ISO 9001':
+                    $resultsdivisi[$row->divisi]['iso9001']['closed'] = $row->closed;
+                    $resultsdivisi[$row->divisi]['iso9001']['open'] = $row->open;
+                    $resultsdivisi[$row->divisi]['iso9001']['total'] = $row->closed + $row->open;
+                    break;
+                case 'ISO 14001':
+                    $resultsdivisi[$row->divisi]['iso14001']['closed'] = $row->closed;
+                    $resultsdivisi[$row->divisi]['iso14001']['open'] = $row->open;
+                    $resultsdivisi[$row->divisi]['iso14001']['total'] = $row->closed + $row->open;
+                    break;
+                case 'ISO 37001':
+                    $resultsdivisi[$row->divisi]['iso37001']['closed'] = $row->closed;
+                    $resultsdivisi[$row->divisi]['iso37001']['open'] = $row->open;
+                    $resultsdivisi[$row->divisi]['iso37001']['total'] = $row->closed + $row->open;
+                    break;
+                case 'ISO 45001':
+                    $resultsdivisi[$row->divisi]['iso45001']['closed'] = $row->closed;
+                    $resultsdivisi[$row->divisi]['iso45001']['open'] = $row->open;
+                    $resultsdivisi[$row->divisi]['iso45001']['total'] = $row->closed + $row->open;
+                    break;
+                
+            }
+                // var_dump($resultsdivisi);die;    
+        }
+        foreach ($querysubdivisi->result() as $rowsubdivisi){
+            if (!isset($resultsdivisi[$rowsubdivisi->divisi])) {
+                $resultsdivisi[$rowsubdivisi->divisi] = [
+                    'iso9001' => ['closed' => 0, 'open' => 0, 'total' => 0],
+                    'iso14001' => ['closed' => 0, 'open' => 0, 'total' => 0],
+                    'iso37001' => ['closed' => 0, 'open' => 0, 'total' => 0],
+                    'iso45001' => ['closed' => 0, 'open' => 0, 'total' => 0],
+                    'kodedivisi'=>$rowsubdivisi->KODE_PARENT,
+                    'namadivisi'=>$rowsubdivisi->divisi,
+                    'tipe' =>'Subdivisi',
+                    
+                    
+                ];
+            }
+            // var_dump($rowsubdivisi);die;
+            switch ($rowsubdivisi->ISO) {
+            case 'ISO 9001':
+                $resultsdivisi[$rowsubdivisi->divisi]['iso9001']['closed'] = $rowsubdivisi->closed;
+                $resultsdivisi[$rowsubdivisi->divisi]['iso9001']['open'] = $rowsubdivisi->open;
+                $resultsdivisi[$rowsubdivisi->divisi]['iso9001']['total'] = $rowsubdivisi->open + $rowsubdivisi->closed;
+                break;
+            case 'ISO 14001':
+                $resultsdivisi[$rowsubdivisi->divisi]['iso14001']['closed'] = $rowsubdivisi->closed;
+                $resultsdivisi[$rowsubdivisi->divisi]['iso14001']['open'] = $rowsubdivisi->open;
+                $resultsdivisi[$rowsubdivisi->divisi]['iso14001']['total'] = $rowsubdivisi->open + $rowsubdivisi->closed;
+                break;
+            case 'ISO 37001':
+                $resultsdivisi[$rowsubdivisi->divisi]['iso37001']['closed'] = $rowsubdivisi->closed;
+                $resultsdivisi[$rowsubdivisi->divisi]['iso37001']['open'] = $rowsubdivisi->open;
+                $resultsdivisi[$rowsubdivisi->divisi]['iso37001']['total'] = $rowsubdivisi->open + $rowsubdivisi->closed;
+                break;
+            case 'ISO 45001':
+                $resultsdivisi[$rowsubdivisi->divisi]['iso45001']['closed'] = $rowsubdivisi->closed;
+                $resultsdivisi[$rowsubdivisi->divisi]['iso45001']['open'] = $rowsubdivisi->open;
+                $resultsdivisi[$rowsubdivisi->divisi]['iso45001']['total'] = $rowsubdivisi->open + $rowsubdivisi->closed;
+                break;
+            }
+        }
+        // var_dump($rowsubdivisi->open);die;  
+        // asort($resultsdivisi);
+        $result = [];
+            foreach ($resultsdivisi as $element) {
+                // var_dump($element);die;
+                $result[$element['kodedivisi']][] = $element;
+            }
+        // $resultsdivisi.sort();
+        // var_dump($querysubdivisi->result());die;
+        // var_dump($result[$rowsubdivisi->divisi]);die;
+        // var_dump($result['SINF'][0]['namadivisi']);die;
+        return $result;
     }
 
     public function getSubDivisi($divisi, $iso)
@@ -72,8 +153,8 @@ class M_dashboard extends CI_Model
         $this->db->join('RESPONSE_AUDITEE_H h','t.ID_RESPONSE = h.ID_HEADER','left');
         $this->db->join('TM_DIVISI d', 'd.KODE = h.DIVISI', 'left');
         $this->db->join('TM_ISO i','i.ID_ISO=h.ID_ISO','left');
-        $this->db->where('d.NAMA_DIVISI', $divisi);
-        $this->db->where('i.NOMOR_ISO', $iso);
+        // $this->db->where('d.NAMA_DIVISI', $divisi);
+        // $this->db->where('i.NOMOR_ISO', $iso);
         $query = $this->db->get();
         
         $sub_divisi = [];
@@ -82,7 +163,7 @@ class M_dashboard extends CI_Model
                 'divisi' => $row->SUB_DIVISI
             ];
         }
-        return $sub_divisi;
+        return $query;
     }
 
 

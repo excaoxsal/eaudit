@@ -178,6 +178,19 @@ public function index()
 	    }
 	}
 
+
+	public function deletefile() {
+		var_dump($_POST);
+		$query = $this->db->select('FILE')->from('TEMUAN_DETAIL')->where('ID_TEMUAN',$_POST['ID_RE'])->get();
+		$file_path = $query->result_array();
+		var_dump($file_path[0]['FILE']);die;
+		unlink($file_path[0]['FILE']);
+		$this->db->set('FILE', NULL);
+		$this->db->where('ID_TEMUAN', $_POST['ID_RE']);
+		$update = $this->db->update('TEMUAN_DETAIL');
+		
+	}
+
 	function getCommitment($id_tl)
     {
             $query = $this->db->select('*')->from('TEMUAN_DETAIL')
@@ -243,6 +256,7 @@ public function index()
 		];
 		date_default_timezone_set('Asia/Jakarta');
 		$id_temuan = $_REQUEST['ID_TEMUAN'];
+		// var_dump($_REQUEST['ID_TEMUAN']);die;
         $ext = pathinfo($_FILES['upload_file']['name'], PATHINFO_EXTENSION);
 		
 		$current_date = date('Y-m-d');
@@ -529,7 +543,8 @@ public function index()
     {
             $query = $this->db->select('ID_TEMUAN, FILE, KETERANGAN_TL')->from('TEMUAN_DETAIL')
                         ->where('ID_TEMUAN', $id_tl)->get()->row();
-            echo json_encode($query);   
+			// var_dump($query);die;
+            echo json_encode($query);
     }
 
 	public function chatbox($data){
@@ -662,7 +677,7 @@ public function index()
 
         $pdf = new PDF('P', 'mm', 'A4', true, 'UTF-8', false);
 		//var_dump($data['auditee']);die;
-		// return $this->load->view('template/v_export_lkha',$data);
+		return $this->load->view('template/v_export_lkha',$data);
         // Setel informasi dokumen
         $pdf->SetCreator(PDF_CREATOR);
         $pdf->SetAuthor('PT. PELABUHAN TANJUNG PRIOK');

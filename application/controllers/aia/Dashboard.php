@@ -29,13 +29,27 @@ class Dashboard extends MY_Controller
         $data['list_divisi']    = $this->m_status_tl->getAuditeeTl($year);
         $data['rekap']          = $this->data($year, $divisi);
         //$data['rekom']              = $this->m_status_tl->rekomDashboard($year, $divisi);
-        $data['iso']          = $iso;
+        $eldata = $this->getTemuanDatatable();
+        $eldivisi = $this->all_divisi();
+        $data['datatable']      = $this->getTemuanDatatable();
+        $data['datadivisi']     = $this->all_divisi();
+        $data['iso']            = $iso;
         $data['years']          = $years;
         $data['year_filter']    = $year;
         $data['auditee']        = $divisi;
         $data['data_table']     = $this->m_status_tl->temuanDashboard($year, $divisi);
-
+        // var_dump($eldata);die;
         $this->load->view('/content/aia/v_dashboard', $data);
+    }
+    public function all_divisi()
+    {
+        $this->db->select('KODE');
+        $this->db->from('TM_DIVISI');
+        $this->db->where('IS_DIVISI IS NOT NULL');
+        $this->db->where('IS_DIVISI', 'Y');
+        $this->db->order_by('NAMA_DIVISI','ASC');
+        $query=$this->db->get();
+        return $query->result_array();
     }
 
     public function getTemuanDataIso() {
@@ -90,11 +104,13 @@ class Dashboard extends MY_Controller
 
     public function getTemuanDataTable()
     {
+        // header('Content-type: application/json');
         // Ambil data dari model
         $data_temuan = $this->m_dashboard->getTemuanByDivisi();
-        
+        // $data_sub = $this->m_dashboard->getSubDivisi();
+        // var_dump($data_temuan);die;
         // Kirim data dalam format JSON
-        echo json_encode($data_temuan);
+        return($data_temuan);
     }
 
     public function getTemuanDataDivisi() {
@@ -103,18 +119,96 @@ class Dashboard extends MY_Controller
         // var_dump($iso);die;
         $query = $this->db->query('
             SELECT 
-                d."NAMA_DIVISI",
+                d."KODE",
                 SUM(CASE WHEN t."STATUS" = \'CLOSE\' THEN 1 ELSE 0 END) AS "SUDAH_CLOSED",
                 SUM(CASE WHEN t."STATUS" != \'CLOSE\' THEN 1 ELSE 0 END) AS "BELUM_CLOSED"
             FROM 
                 "TEMUAN_DETAIL" t
-            JOIN 
+            right JOIN 
                 "RESPONSE_AUDITEE_H" h ON t."ID_RESPONSE" = h."ID_HEADER"
-            right JOIN
+            left JOIN
                 "TM_DIVISI" d on h."DIVISI" = d."KODE" 
-            where d."IS_CABANG" = \'N\' and d."IS_DIVISI" = \'Y\'
+            where d."IS_CABANG" = \'N\' and d."IS_DIVISI" = \'Y\' and h."ID_ISO" =1
             GROUP BY 
-                d."NAMA_DIVISI"
+                d."COUNT",d."KODE"
+        ');
+        // Mengubah hasil query menjadi array
+        $data = $query->result_array();
+        // var_dump($data);die;
+
+        // Mengirim data dalam format JSON untuk digunakan di chart
+        echo json_encode($data);
+    }
+    public function getTemuanDataDivisi1() {
+        // Query untuk mendapatkan data kasus dari provinsi di Jawa
+        $iso = $this->input->get('iso');
+        // var_dump($iso);die;
+        $query = $this->db->query('
+            SELECT 
+                d."KODE",
+                SUM(CASE WHEN t."STATUS" = \'CLOSE\' THEN 1 ELSE 0 END) AS "SUDAH_CLOSED",
+                SUM(CASE WHEN t."STATUS" != \'CLOSE\' THEN 1 ELSE 0 END) AS "BELUM_CLOSED"
+            FROM 
+                "TEMUAN_DETAIL" t
+            right JOIN 
+                "RESPONSE_AUDITEE_H" h ON t."ID_RESPONSE" = h."ID_HEADER"
+            left JOIN
+                "TM_DIVISI" d on h."DIVISI" = d."KODE" 
+            where d."IS_CABANG" = \'N\' and d."IS_DIVISI" = \'Y\' and h."ID_ISO" =2
+            GROUP BY 
+               d."COUNT", d."KODE"
+        ');
+        // Mengubah hasil query menjadi array
+        $data = $query->result_array();
+        // var_dump($data);die;
+
+        // Mengirim data dalam format JSON untuk digunakan di chart
+        echo json_encode($data);
+    }
+    public function getTemuanDataDivisi2() {
+        // Query untuk mendapatkan data kasus dari provinsi di Jawa
+        $iso = $this->input->get('iso');
+        // var_dump($iso);die;
+        $query = $this->db->query('
+            SELECT 
+                d."KODE",
+                SUM(CASE WHEN t."STATUS" = \'CLOSE\' THEN 1 ELSE 0 END) AS "SUDAH_CLOSED",
+                SUM(CASE WHEN t."STATUS" != \'CLOSE\' THEN 1 ELSE 0 END) AS "BELUM_CLOSED"
+            FROM 
+                "TEMUAN_DETAIL" t
+            right JOIN 
+                "RESPONSE_AUDITEE_H" h ON t."ID_RESPONSE" = h."ID_HEADER"
+            left JOIN
+                "TM_DIVISI" d on h."DIVISI" = d."KODE" 
+            where d."IS_CABANG" = \'N\' and d."IS_DIVISI" = \'Y\' and h."ID_ISO" =3
+            GROUP BY 
+               d."COUNT", d."KODE"
+        ');
+        // Mengubah hasil query menjadi array
+        $data = $query->result_array();
+        // var_dump($data);die;
+
+        // Mengirim data dalam format JSON untuk digunakan di chart
+        echo json_encode($data);
+    }
+    public function getTemuanDataDivisi3() {
+        // Query untuk mendapatkan data kasus dari provinsi di Jawa
+        $iso = $this->input->get('iso');
+        // var_dump($iso);die;
+        $query = $this->db->query('
+            SELECT 
+                d."KODE",
+                SUM(CASE WHEN t."STATUS" = \'CLOSE\' THEN 1 ELSE 0 END) AS "SUDAH_CLOSED",
+                SUM(CASE WHEN t."STATUS" != \'CLOSE\' THEN 1 ELSE 0 END) AS "BELUM_CLOSED"
+            FROM 
+                "TEMUAN_DETAIL" t
+            right JOIN 
+                "RESPONSE_AUDITEE_H" h ON t."ID_RESPONSE" = h."ID_HEADER"
+            left JOIN
+                "TM_DIVISI" d on h."DIVISI" = d."KODE" 
+            where d."IS_CABANG" = \'N\' and d."IS_DIVISI" = \'Y\' and h."ID_ISO" =4
+            GROUP BY 
+               d."COUNT", d."KODE"
         ');
         // Mengubah hasil query menjadi array
         $data = $query->result_array();
@@ -131,7 +225,7 @@ class Dashboard extends MY_Controller
         // var_dump($iso);die;
         $query = $this->db->query('
             SELECT 
-                d."NAMA_DIVISI",
+                d."KODE",
                 SUM(CASE WHEN t."STATUS" = \'CLOSE\' THEN 1 ELSE 0 END) AS "SUDAH_CLOSED",
                 SUM(CASE WHEN t."STATUS" != \'CLOSE\' THEN 1 ELSE 0 END) AS "BELUM_CLOSED"
             FROM 
@@ -142,7 +236,97 @@ class Dashboard extends MY_Controller
                 "TM_DIVISI" d on h."DIVISI" = d."KODE" 
             where d."IS_CABANG" = \'Y\' and d."IS_DIVISI" = \'Y\'
             GROUP BY 
-                d."NAMA_DIVISI"
+                d."KODE"
+        ');
+
+        
+        
+
+        // Mengubah hasil query menjadi array
+        $data = $query->result_array();
+        // var_dump($data);die;
+
+        // Mengirim data dalam format JSON untuk digunakan di chart
+        echo json_encode($data);
+    }
+    public function getTemuanDataCabang1() {
+        // Query untuk mendapatkan data kasus dari provinsi di Jawa
+        $iso = $this->input->get('iso');
+        // var_dump($iso);die;
+        $query = $this->db->query('
+            SELECT 
+                d."KODE",
+                SUM(CASE WHEN t."STATUS" = \'CLOSE\' THEN 1 ELSE 0 END) AS "SUDAH_CLOSED",
+                SUM(CASE WHEN t."STATUS" != \'CLOSE\' THEN 1 ELSE 0 END) AS "BELUM_CLOSED"
+            FROM 
+                "TEMUAN_DETAIL" t
+            JOIN 
+                "RESPONSE_AUDITEE_H" h ON t."ID_RESPONSE" = h."ID_HEADER"
+            right JOIN
+                "TM_DIVISI" d on h."DIVISI" = d."KODE" 
+            where d."IS_CABANG" = \'Y\' and d."IS_DIVISI" = \'Y\'
+            GROUP BY 
+                d."KODE"
+        ');
+
+        
+        
+
+        // Mengubah hasil query menjadi array
+        $data = $query->result_array();
+        // var_dump($data);die;
+
+        // Mengirim data dalam format JSON untuk digunakan di chart
+        echo json_encode($data);
+    }
+    public function getTemuanDataCabang2() {
+        // Query untuk mendapatkan data kasus dari provinsi di Jawa
+        $iso = $this->input->get('iso');
+        // var_dump($iso);die;
+        $query = $this->db->query('
+            SELECT 
+                d."KODE",
+                SUM(CASE WHEN t."STATUS" = \'CLOSE\' THEN 1 ELSE 0 END) AS "SUDAH_CLOSED",
+                SUM(CASE WHEN t."STATUS" != \'CLOSE\' THEN 1 ELSE 0 END) AS "BELUM_CLOSED"
+            FROM 
+                "TEMUAN_DETAIL" t
+            JOIN 
+                "RESPONSE_AUDITEE_H" h ON t."ID_RESPONSE" = h."ID_HEADER"
+            right JOIN
+                "TM_DIVISI" d on h."DIVISI" = d."KODE" 
+            where d."IS_CABANG" = \'Y\' and d."IS_DIVISI" = \'Y\'
+            GROUP BY 
+                d."KODE"
+        ');
+
+        
+        
+
+        // Mengubah hasil query menjadi array
+        $data = $query->result_array();
+        // var_dump($data);die;
+
+        // Mengirim data dalam format JSON untuk digunakan di chart
+        echo json_encode($data);
+    }
+    public function getTemuanDataCabang3() {
+        // Query untuk mendapatkan data kasus dari provinsi di Jawa
+        $iso = $this->input->get('iso');
+        // var_dump($iso);die;
+        $query = $this->db->query('
+            SELECT 
+                d."KODE",
+                SUM(CASE WHEN t."STATUS" = \'CLOSE\' THEN 1 ELSE 0 END) AS "SUDAH_CLOSED",
+                SUM(CASE WHEN t."STATUS" != \'CLOSE\' THEN 1 ELSE 0 END) AS "BELUM_CLOSED"
+            FROM 
+                "TEMUAN_DETAIL" t
+            JOIN 
+                "RESPONSE_AUDITEE_H" h ON t."ID_RESPONSE" = h."ID_HEADER"
+            right JOIN
+                "TM_DIVISI" d on h."DIVISI" = d."KODE" 
+            where d."IS_CABANG" = \'Y\' and d."IS_DIVISI" = \'Y\'
+            GROUP BY 
+                d."KODE"
         ');
 
         

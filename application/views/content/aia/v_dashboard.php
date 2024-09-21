@@ -22,8 +22,20 @@
     <link href="<?= base_url() ?>assets/css/themes/layout/aside/dark7a50.css?v=7.2.7" rel="stylesheet" type="text/css" />
 
     <script src="<?= base_url('assets/jquery/jquery.min.js') ?>"></script>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="shortcut icon" href="<?= base_url('assets/img/logos/favicon-ptp.png') ?>" />
+    <style>
+td.feat-title::before {
+  content: attr(data-before);
+}
+
+td.feat-desc {
+    font-size: 1.02em;
+    font-weight: 400;
+    padding-left: 1.5em;
+    border: 0;
+}
+    </style>
 </head>
 
 <body>
@@ -67,6 +79,15 @@
                             </div>
                             <div class="row w-25">
                                 <div class="col">
+                                    <select class="form-control form-control-solid form-control-lg" id="changegraph" onchange="changegraph()">
+                                            <option value="ALL">ALL</option>
+                                            <option value="Divisi">Divisi</option>
+                                            <option value="Cabang">Cabang</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row w-25">
+                                <div class="col">
                                     <select class="form-control form-control-solid form-control-lg" id="auditee">
                                         <option value="">-- All Auditee --</option>
                                         <?php foreach ($list_divisi as $divisi) { ?>
@@ -86,32 +107,8 @@
                 <div class="card card-custom mt-2">
                     <div class="card-body">
                         <h4>SUMMARY MONITORING TINDAK LANJUT</h4>
-                        <table class="table table-bordered" id="temuanTable">
-                            <thead>
-                                <td rowspan="2">Divisi</td>
-                                <th colspan="3">ISO 9001</th>
-                                <th colspan="3">ISO 14001</th>
-                                <th colspan="3">ISO 37001</th>
-                                <th colspan="3">ISO 45001</th>
-                                <tr>
-                                    <td>Sudah Close</td>
-                                    <td>Belum Close</td>
-                                    <td>Total Temuan</td>
-                                    <td>Sudah Close</td>
-                                    <td>Belum Close</td>
-                                    <td>Total Temuan</td>
-                                    <td>Sudah Close</td>
-                                    <td>Belum Close</td>
-                                    <td>Total Temuan</td>
-                                    <td>Sudah Close</td>
-                                    <td>Belum Close</td>
-                                    <td>Total Temuan</td>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
                         <hr />
-                        <div class="row mb-0 pb-0">
+                        <div class="row mb-0 pb-0" id="divisi">
                             <!-- <div class="col-12">
                                 <div id="charttemuaniso"></div>
                             </div> -->
@@ -129,6 +126,96 @@
                             </div>
                             
                         </div>
+                        <div class="row mb-0 pb-0" id="cabang">
+                            <!-- <div class="col-12">
+                                <div id="charttemuaniso"></div>
+                            </div> -->
+                            <div class="col-12">
+                                <div id="charttemuancabang"></div>
+                            </div>
+                            <div class="col-12">
+                                <div id="charttemuancabang1"></div>
+                            </div>
+                            <div class="col-12">
+                                <div id="charttemuancabang2"></div>
+                            </div>
+                            <div class="col-12">
+                                <div id="charttemuancabang3"></div>
+                            </div>
+                            
+                        </div>
+                        <table class="table table-bordered" id="temuanTable">
+                            <thead>
+                                <td rowspan="2">Divisi</td>
+                                <th colspan="3"  style="text-align:center;" >ISO 9001</th>
+                                <th colspan="3"  style="text-align:center;">ISO 14001</th>
+                                <th colspan="3"  style="text-align:center;">ISO 37001</th>
+                                <th colspan="3"  style="text-align:center;">ISO 45001</th>
+                                <tr>
+                                    <td style="text-align:center;">Sudah Close</td>
+                                    <td style="text-align:center;">Belum Close</td>
+                                    <td style="text-align:center;">Total Temuan</td>
+                                    <td style="text-align:center;">Sudah Close</td>
+                                    <td style="text-align:center;">Belum Close</td>
+                                    <td style="text-align:center;">Total Temuan</td>
+                                    <td style="text-align:center;">Sudah Close</td>
+                                    <td style="text-align:center;">Belum Close</td>
+                                    <td style="text-align:center;">Total Temuan</td>
+                                    <td style="text-align:center;">Sudah Close</td>
+                                    <td style="text-align:center;">Belum Close</td>
+                                    <td style="text-align:center;">Total Temuan</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            
+                            
+                            <?php foreach ($datadivisi as $ddivisi) { ?>
+                                <?php for ($i=0;$i<=count($datatable[$ddivisi['KODE']]);$i++) { ?>
+                                    <?php if(isset($datatable[$ddivisi['KODE']][$i])){ ?>
+                                        <?php if($datatable[$ddivisi['KODE']][$i]['tipe']=="Divisi"){ $n+=1 ?>
+
+                                            <tr class="parent" id="row12<?=$n?>" title="Click to expand/collapse" style="cursor: pointer;">  
+                                                <td class="feat-title"><?= $datatable[$ddivisi['KODE']][$i]['namadivisi']?></td>  
+                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['open']?></td>
+                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['closed']?></td>
+                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['total']?></td>
+                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['open']?></td>
+                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['closed']?></td>
+                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['total']?></td>
+                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['open']?></td>
+                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['closed']?></td>
+                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['total']?></td>
+                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['open']?></td>
+                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['closed']?></td>
+                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['total']?></td>
+                                            </tr>  
+                                            
+                                        <?php } ?>
+                                        <?php if($datatable[$ddivisi['KODE']][$i]['tipe']=="Subdivisi"){ ?>
+                                            <tr class="child-row12<?=$n?>" style="display: table-row;">  
+                                                <td class="feat-title"><?= $datatable[$ddivisi['KODE']][$i]['namadivisi']?></td>  
+                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['open']?></td>
+                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['closed']?></td>
+                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['total']?></td>
+                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['open']?></td>
+                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['closed']?></td>
+                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['total']?></td>
+                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['open']?></td>
+                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['closed']?></td>
+                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['total']?></td>
+                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['open']?></td>
+                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['closed']?></td>
+                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['total']?></td>
+                                            </tr>  
+                                        <?php } ?>
+
+                                    <?php } ?>
+                                
+                                
+                                <?php } ?>
+                                <?php } ?>
+                            </tbody>
+                        </table>
                         
                     </div>
                 </div>
@@ -137,54 +224,95 @@
         </div>
         
     </div>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
-
-    <script>
-        // Mengambil data dari controller menggunakan AJAX
-        function loadData() {
-            $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataTable'); ?>", function(data) {
-                var tableBody = $("#temuanTable tbody");
-                tableBody.empty();
-
-                $.each(data, function(index, row) {
-                    var html = `
-                        <tr class="main-row">
-                            <td><a href="#" class="toggle-sub" data-index="${index}">${row.divisi}</a></td>
-                            <td>${row.iso9001.closed}</td>
-                            <td>${row.iso9001.open}</td>
-                            <td>${row.iso9001.total}</td>
-                            <td>${row.iso14001.closed}</td>
-                            <td>${row.iso14001.open}</td>
-                            <td>${row.iso14001.total}</td>
-                            <td>${row.iso37001.closed}</td>
-                            <td>${row.iso37001.open}</td>
-                            <td>${row.iso37001.total}</td>
-                            <td>${row.iso45001.closed}</td>
-                            <td>${row.iso45001.open}</td>
-                            <td>${row.iso45001.total}</td>
-                        </tr>`;
-
-                    tableBody.append(html);
-
-                    // Cek jika ada sub-divisi
-                    
-                });
-
-                // Tambahkan event listener untuk membuka sub-divisi
-                $(".toggle-sub").click(function(event) {
-                    event.preventDefault();
-                    var index = $(this).data("index");
-                    $(".sub-row-" + index).toggle(); // Toggle visibilitas sub-divisi
-                });
-            });
-        }
-
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js">
         $(document).ready(function() {
-            loadData();
-        });
+	$('[data-toggle="toggle"]').change(function(){
+		$(this).parents().next('.hide').toggle();
+	});
+});
     </script>
+<script>
+function changegraph() {
+  var x = document.getElementById("changegraph").value;
+  if(x=="Cabang"){
+    document.getElementById("cabang").style.display = "block";
+    document.getElementById("divisi").style.display = "none";
+  }
+  else if((x=="Divisi")){
+    document.getElementById("cabang").style.display = "none";
+    document.getElementById("divisi").style.display = "block";
+  }
+  else{
+    document.getElementById("cabang").style.display = "block";
+    document.getElementById("divisi").style.display = "block";
+  }
+}
 
+
+</script>
+
+<script>
+  function Cabang() {
+    document.getElementById("cabang").style.display = "block";
+    document.getElementById("divisi").style.display = "none";
+  }
+  function Divisi() {
+    document.getElementById("cabang").style.display = "none";
+    document.getElementById("divisi").style.display = "block";
+  }
+  function All() {
+    document.getElementById("cabang").style.display = "block";
+    document.getElementById("divisi").style.display = "block";
+  }
+</script>
+
+<script> 
+document.addEventListener("DOMContentLoaded", function() {
+  let parents = document.querySelectorAll("tr.parent");
+  
+  for (let i = 0; i < parents.length; i++) {
+    parents[i].querySelector('.feat-title').setAttribute('data-before','+'); 
+    parents[i].style.cursor = "pointer";
+    parents[i].setAttribute("title", "Click to expand/collapse");
+
+    
+    parents[i].addEventListener("click", function() {
+        console.log(this);
+      let id = this.id;
+      let children = document.querySelectorAll('.child-' + id);       
+      console.log(id);
+      for (let j = 0; j < children.length; j++) {
+        if(children[j].style.display === "none"){
+            children[j].style.display = "table-row";
+            parents[i].querySelector('.feat-title').setAttribute('data-before','-');     
+        }
+        else{
+            children[j].style.display = "none";
+            parents[i].querySelector('.feat-title').setAttribute('data-before','+'); 
+        }
+         
+      } 
+    });  
+  }
+  let children = document.querySelectorAll("tr[class^='child-']");
+  for (let i = 0; i < children.length; i++) {
+    children[i].style.display = "none";
+  }
+});
+
+/*$(document).ready(function () {  
+            $('tr.parent')  
+                .css("cursor", "pointer")  
+                .attr("title", "Click to expand/collapse")  
+                .click(function () {  
+                    $(this).siblings('.child-' + this.id).toggle();  
+                });  
+            $('tr[@class^=child-]').hide().children('td');  
+    }); */ 
+
+</script>
+
+</script>
     <script type="text/javascript">
         
         google.charts.load('current', {packages: ['corechart', 'bar']});
@@ -237,21 +365,22 @@
             // Mengambil data dari controller menggunakan AJAX
             $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataDivisi'); ?>", {iso: selectedIso}, function(data) {
                 var chartData = [];
-                chartData.push(['NAMA_DIVISI', 'SUDAH_CLOSED', 'BELUM_CLOSED']);
+                chartData.push(['KODE', 'SUDAH_CLOSED', 'BELUM_CLOSED']);
 
                 $.each(data, function(index, value) {
-                    chartData.push([value.NAMA_DIVISI, parseInt(value.SUDAH_CLOSED), parseInt(value.BELUM_CLOSED)]);
+                    chartData.push([value.KODE, parseInt(value.SUDAH_CLOSED), parseInt(value.BELUM_CLOSED)]);
                 });
 
                 var dataTable = google.visualization.arrayToDataTable(chartData);
 
                 var options = {
-                    isStacked: true,
+                    isStacked: 'percent',
                     height: 400,
                     title: 'Jumlah Temuan Sudah Close dan Belum Close Berdasarkan Divisi',
                     hAxis: {
                         title: 'Total Temuan',
                         minValue: 0,
+                        ticks: [10, 20]
                     },
                     vAxis: {
                         title: 'ISO 9001'
@@ -276,18 +405,18 @@
         function drawStackedChartDivisi1() {
             var selectedIso = $('#iso').val();
             // Mengambil data dari controller menggunakan AJAX
-            $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataDivisi'); ?>", {iso: selectedIso}, function(data) {
+            $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataDivisi1'); ?>", {iso: selectedIso}, function(data) {
                 var chartData = [];
-                chartData.push(['NAMA_DIVISI', 'SUDAH_CLOSED', 'BELUM_CLOSED']);
+                chartData.push(['KODE', 'SUDAH_CLOSED', 'BELUM_CLOSED']);
 
                 $.each(data, function(index, value) {
-                    chartData.push([value.NAMA_DIVISI, parseInt(value.SUDAH_CLOSED), parseInt(value.BELUM_CLOSED)]);
+                    chartData.push([value.KODE, parseInt(value.SUDAH_CLOSED), parseInt(value.BELUM_CLOSED)]);
                 });
 
                 var dataTable = google.visualization.arrayToDataTable(chartData);
 
                 var options = {
-                    isStacked: true,
+                    isStacked: 'percent',
                     height: 400,
                     title: 'Jumlah Temuan Sudah Close dan Belum Close Berdasarkan Divisi',
                     hAxis: {
@@ -317,18 +446,18 @@
         function drawStackedChartDivisi2() {
             var selectedIso = $('#iso').val();
             // Mengambil data dari controller menggunakan AJAX
-            $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataDivisi'); ?>", {iso: selectedIso}, function(data) {
+            $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataDivisi2'); ?>", {iso: selectedIso}, function(data) {
                 var chartData = [];
-                chartData.push(['NAMA_DIVISI', 'SUDAH_CLOSED', 'BELUM_CLOSED']);
+                chartData.push(['KODE', 'SUDAH_CLOSED', 'BELUM_CLOSED']);
 
                 $.each(data, function(index, value) {
-                    chartData.push([value.NAMA_DIVISI, parseInt(value.SUDAH_CLOSED), parseInt(value.BELUM_CLOSED)]);
+                    chartData.push([value.KODE, parseInt(value.SUDAH_CLOSED), parseInt(value.BELUM_CLOSED)]);
                 });
 
                 var dataTable = google.visualization.arrayToDataTable(chartData);
 
                 var options = {
-                    isStacked: true,
+                    isStacked: 'percent',
                     height: 400,
                     title: 'Jumlah Temuan Sudah Close dan Belum Close Berdasarkan Divisi',
                     hAxis: {
@@ -358,18 +487,18 @@
         function drawStackedChartDivisi3() {
             var selectedIso = $('#iso').val();
             // Mengambil data dari controller menggunakan AJAX
-            $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataDivisi'); ?>", {iso: selectedIso}, function(data) {
+            $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataDivisi3'); ?>", {iso: selectedIso}, function(data) {
                 var chartData = [];
-                chartData.push(['NAMA_DIVISI', 'SUDAH_CLOSED', 'BELUM_CLOSED']);
+                chartData.push(['KODE', 'SUDAH_CLOSED', 'BELUM_CLOSED']);
 
                 $.each(data, function(index, value) {
-                    chartData.push([value.NAMA_DIVISI, parseInt(value.SUDAH_CLOSED), parseInt(value.BELUM_CLOSED)]);
+                    chartData.push([value.KODE, parseInt(value.SUDAH_CLOSED), parseInt(value.BELUM_CLOSED)]);
                 });
 
                 var dataTable = google.visualization.arrayToDataTable(chartData);
 
                 var options = {
-                    isStacked: true,
+                    isStacked: 'percent',
                     height: 400,
                     title: 'Jumlah Temuan Sudah Close dan Belum Close Berdasarkan Divisi',
                     hAxis: {
@@ -388,6 +517,171 @@
         }
         $('#iso').change(function() {
             drawStackedChartDivisi3(); // Refresh the chart when the selected province changes
+        });
+    </script>
+
+
+<script type="text/javascript">
+        
+        google.charts.load('current', {packages: ['corechart', 'bar']});
+        google.charts.setOnLoadCallback(drawStackedChartCabang);
+
+        function drawStackedChartCabang() {
+            var selectedIso = $('#iso').val();
+            // Mengambil data dari controller menggunakan AJAX
+            $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataCabang'); ?>", {iso: selectedIso}, function(data) {
+                var chartData = [];
+                chartData.push(['KODE', 'SUDAH_CLOSED', 'BELUM_CLOSED']);
+
+                $.each(data, function(index, value) {
+                    chartData.push([value.KODE, parseInt(value.SUDAH_CLOSED), parseInt(value.BELUM_CLOSED)]);
+                });
+
+                var dataTable = google.visualization.arrayToDataTable(chartData);
+
+                var options = {
+                    isStacked: 'percent',
+                    height: 400,
+                    title: 'Jumlah Temuan Sudah Close dan Belum Close Berdasarkan Cabang',
+                    hAxis: {
+                        title: 'Total Temuan',
+                        minValue: 0,
+                    },
+                    vAxis: {
+                        title: 'ISO 9001'
+                    },
+                    legend: { position: 'top', maxLines: 3 }
+                };
+
+                var chart = new google.visualization.ColumnChart(document.getElementById('charttemuancabang'));
+                chart.draw(dataTable, options);
+            });
+        }
+        $('#iso').change(function() {
+            drawStackedChartCabang(); // Refresh the chart when the selected province changes
+        });
+    </script>
+
+    <script type="text/javascript">
+        
+        google.charts.load('current', {packages: ['corechart', 'bar']});
+        google.charts.setOnLoadCallback(drawStackedChartCabang1);
+
+        function drawStackedChartCabang1() {
+            var selectedIso = $('#iso').val();
+            // Mengambil data dari controller menggunakan AJAX
+            $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataCabang1'); ?>", {iso: selectedIso}, function(data) {
+                var chartData = [];
+                chartData.push(['KODE', 'SUDAH_CLOSED', 'BELUM_CLOSED']);
+
+                $.each(data, function(index, value) {
+                    chartData.push([value.KODE, parseInt(value.SUDAH_CLOSED), parseInt(value.BELUM_CLOSED)]);
+                });
+
+                var dataTable = google.visualization.arrayToDataTable(chartData);
+
+                var options = {
+                    isStacked: 'percent',
+                    height: 400,
+                    title: 'Jumlah Temuan Sudah Close dan Belum Close Berdasarkan Cabang',
+                    hAxis: {
+                        title: 'Total Temuan',
+                        minValue: 0,
+                    },
+                    vAxis: {
+                        title: 'ISO 14001'
+                    },
+                    legend: { position: 'top', maxLines: 3 }
+                };
+
+                var chart = new google.visualization.ColumnChart(document.getElementById('charttemuancabang1'));
+                chart.draw(dataTable, options);
+            });
+        }
+        $('#iso').change(function() {
+            drawStackedChartCabang1(); // Refresh the chart when the selected province changes
+        });
+    </script>
+
+    <script type="text/javascript">
+        
+        google.charts.load('current', {packages: ['corechart', 'bar']});
+        google.charts.setOnLoadCallback(getTemuanDataCabang2);
+
+        function getTemuanDataCabang2() {
+            var selectedIso = $('#iso').val();
+            // Mengambil data dari controller menggunakan AJAX
+            $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataCabang2'); ?>", {iso: selectedIso}, function(data) {
+                var chartData = [];
+                chartData.push(['KODE', 'SUDAH_CLOSED', 'BELUM_CLOSED']);
+
+                $.each(data, function(index, value) {
+                    chartData.push([value.KODE, parseInt(value.SUDAH_CLOSED), parseInt(value.BELUM_CLOSED)]);
+                });
+
+                var dataTable = google.visualization.arrayToDataTable(chartData);
+
+                var options = {
+                    isStacked: 'percent',
+                    height: 400,
+                    title: 'Jumlah Temuan Sudah Close dan Belum Close Berdasarkan Cabang',
+                    hAxis: {
+                        title: 'Total Temuan',
+                        minValue: 0,
+                    },
+                    vAxis: {
+                        title: 'ISO 37001'
+                    },
+                    legend: { position: 'top', maxLines: 3 }
+                };
+
+                var chart = new google.visualization.ColumnChart(document.getElementById('charttemuancabang2'));
+                chart.draw(dataTable, options);
+            });
+        }
+        $('#iso').change(function() {
+            getTemuanDataCabang2(); // Refresh the chart when the selected province changes
+        });
+    </script>
+
+    <script type="text/javascript">
+        
+        google.charts.load('current', {packages: ['corechart', 'bar']});
+        google.charts.setOnLoadCallback(drawStackedChartCabang3);
+
+        function drawStackedChartCabang3() {
+            var selectedIso = $('#iso').val();
+            // Mengambil data dari controller menggunakan AJAX
+            $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataCabang3'); ?>", {iso: selectedIso}, function(data) {
+                var chartData = [];
+                chartData.push(['KODE', 'SUDAH_CLOSED', 'BELUM_CLOSED']);
+
+                $.each(data, function(index, value) {
+                    chartData.push([value.KODE, parseInt(value.SUDAH_CLOSED), parseInt(value.BELUM_CLOSED)]);
+                });
+
+                var dataTable = google.visualization.arrayToDataTable(chartData);
+
+                var options = {
+                    isStacked: 'percent',
+                    height: 400,
+                    title: 'Jumlah Temuan Sudah Close dan Belum Close Berdasarkan Cabang',
+                    hAxis: {
+                        title: 'Total Temuan',
+                        minValue: 0,
+                    },
+                    vAxis: {
+                        title: 'ISO 45001'
+                    },
+                    legend: { position: 'top', maxLines: 3 }
+                };
+
+                var chart = new google.visualization.ColumnChart(document.getElementById('charttemuancabang3'));
+                chart.draw(dataTable, options);
+            });
+        }
+        $('#iso').change(function() {
+            drawStackedChartCabang3(); // Refresh the chart when the selected province changes
         });
     </script>
 
@@ -421,127 +715,7 @@
 
     <script src="<?= base_url() ?>assets/js/pages/custom/user/edit-user7a50.js?v=7.2.7"></script>
     
-    <script type="text/javascript">
-      $(document).ready(function() {
-        $('#year, #auditee').select2().on('change', function (e) {} );
-      });
-    </script>
-    <script>
-        "use strict";
-        var KTAppSettings = {"breakpoints":{"sm":576,"md":768,"lg":992,"xl":1200,"xxl":1400},"colors":{"theme":{"base":{"white":"#ffffff","primary":"#3699FF","secondary":"#E5EAEE","success":"#1BC5BD","info":"#8950FC","warning":"#FFA800","danger":"#F64E60","light":"#E4E6EF","dark":"#181C32"},"light":{"white":"#ffffff","primary":"#E1F0FF","secondary":"#EBEDF3","success":"#C9F7F5","info":"#EEE5FF","warning":"#FFF4DE","danger":"#FFE2E5","light":"#F3F6F9","dark":"#D6D6E0"},"inverse":{"white":"#ffffff","primary":"#ffffff","secondary":"#3F4254","success":"#ffffff","info":"#ffffff","warning":"#ffffff","danger":"#ffffff","light":"#464E5F","dark":"#ffffff"}},"gray":{"gray-100":"#F3F6F9","gray-200":"#EBEDF3","gray-300":"#E4E6EF","gray-400":"#D1D3E0","gray-500":"#B5B5C3","gray-600":"#7E8299","gray-700":"#5E6278","gray-800":"#3F4254","gray-900":"#181C32"}},"font-family":"Poppins"};
-
-        var KTGoogleChartsDemo = (function() {
-            // Private functions
-            var main = function() {
-                // GOOGLE CHARTS INIT
-                google.charts.load('current', {
-                    'packages': ['corechart']
-                });
-
-                google.setOnLoadCallback(function() {
-                    KTGoogleChartsDemo.runDemos();
-                });
-            };
-
-            const chartTemuan = function() {
-                var data = google.visualization.arrayToDataTable([
-                    ['Task', 'Temuan'],
-                    <?= $rekap['CHARTS']['TEMUAN'] ?>
-                ]);
-
-                var options = {
-                    title: 'ISO 9001',
-                    'isStacked' : true,
-                    'width':400,
-                        'height':300
-                };
-
-                var chart = new google.visualization.ColumnChart(document.getElementById('charttemuan'));
-
-                chart.draw(data, options);
-            };
-
-            const chartRekomendasi = function() {
-                var data = google.visualization.arrayToDataTable([
-                    ['Task', 'Hours per Day'],
-                    <?= $rekap['CHARTS']['REKOMENDASI'] ?>
-                ]);
-
-                var options = {
-                    title: 'Prosentasi Jumlah Rekomendasi',
-                    pieHole: 0.4,
-                    pieSliceTextStyle: {
-                        color: 'black',
-                    }
-                };
-
-                var chart = new google.visualization.PieChart(document.getElementById('chartrekomendasi'));
-
-                chart.draw(data, options);
-            };
-
-            const chartPenyelesaian = function() {
-                var data = google.visualization.arrayToDataTable([
-                    ['Task', 'Hours per Day'],
-                    ['SELESAI', <?= $rekap['TOTAL']['SELESAI'] ?>],
-                    ['STL', <?= $rekap['TOTAL']['STL'] ?>],
-                    ['BTL', <?= $rekap['TOTAL']['BTL'] ?>],
-                    ['TPTD', <?= $rekap['TOTAL']['TPTD'] ?>]
-                ]);
-
-                var options = {
-                    title: 'Prosentasi Penyelesaian Tindak Lanjut',
-                    pieHole: 0.4,
-                    pieSliceTextStyle: {
-                        color: 'black',
-                    }
-
-                };
-
-                var chart = new google.visualization.PieChart(document.getElementById('chartpenyelesaian'));
-
-                chart.draw(data, options);
-            };
-
-            return {
-                // public functions
-                init: function() {
-                    main();
-                },
-
-                runDemos: function() {
-                    chartTemuan();
-                    chartRekomendasi();
-                    chartPenyelesaian();
-                },
-            };
-        })();
-
-        jQuery(document).ready((function() {
-            KTGoogleChartsDemo.init();
-
-            $('#year').val('<?= $year_filter ?>');
-            $('#auditee').val(<?= $auditee ?>);
-
-            $('#year').change(() => {
-                const val = $('#year option:selected').val();
-                const auditee = $('#auditee option:selected').val();
-                const url = `<?= base_url() ?>monitoring/dashboardtl?year=${val}&auditee=`;
-                document.location = url;
-            })
-
-            $('#auditee').change(() => {
-                reload();
-            })
-        }));
-
-        const reload = () => {
-            const val = $('#year option:selected').val();
-            const auditee = $('#auditee option:selected').val();
-            const url = `<?= base_url() ?>monitoring/dashboardtl?year=${val}&auditee=${auditee}`;
-            document.location = url;
-        }
-    </script>
+    
 </body>
 
 </html>
