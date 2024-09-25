@@ -166,7 +166,7 @@
           <i aria-hidden="true" class="ki ki-close"></i>
         </button>
       </div>
-      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/Temuan/tindakLanjut/<?=$kode?>" enctype="multipart/form-data">
+      <form class="form" id="kt_form_tl" method="post" action="<?= base_url() ?>aia/Temuan/tindakLanjut/<?=$kode?>" enctype="multipart/form-data">
         <div class="modal-body" style="height: auto">
           <input type="hidden"  name="ID_TEMUAN" id="ID_TEMUAN_ENTRY">
           <div class="form-group row">
@@ -700,10 +700,9 @@ var KTDatatableJsonRemoteDemo = {
       });
       $('#modal_viewCommitment').modal('show'); 
   }
-
+  var currentID_TL;
   function entryTL(id_tl)
   {
-    var currentID_TL;
     currentID_TL = id_tl;
     console.log(currentID_TL);
     $.get(`<?= base_url('aia/Temuan/getFileEntry/') ?>`+id_tl, function(data, status){
@@ -720,6 +719,7 @@ var KTDatatableJsonRemoteDemo = {
         } else {
           $('#FILE').hide();
           $('#btnDelete').hide();
+          $('#FILE_IN_TL').attr('href', obj.FILE).hide();
           
 
         }
@@ -781,7 +781,7 @@ var KTDatatableJsonRemoteDemo = {
       if (result.value) {
         var obj = {ACTION: 'delete'};
         
-        var form_data = $("#kt_form").serialize() + '&' + $.param(obj);
+        var form_data = $("#kt_form_tl").serialize() + '&' + $.param(obj);
         $.ajax({
           url: '<?= base_url() ?>aia/Temuan/deletefile/',
           type: 'post',
@@ -791,10 +791,10 @@ var KTDatatableJsonRemoteDemo = {
           },
           success: function(data) {
             Swal.fire("Sukses!", "File berhasil terhapus", "success");
-            entryCommitment(currentID_TL);
+            entry_tl(currentID_TL);
           },
           error: function(data){
-            Swal.fire("Gagal menyimpan data!", "Pastika semua kolom terisi!", "error");
+            Swal.fire("Gagal menyimpan data!", "Pastikan semua kolom terisi!", "error");
           }
         });
       }

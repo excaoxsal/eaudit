@@ -34,7 +34,75 @@ td.feat-desc {
     font-weight: 400;
     padding-left: 1.5em;
     border: 0;
+    
 }
+.parent {
+    background-color: #D6EEEE;
+}
+
+/* Responsiveness */
+table {
+            width: 100%;
+            margin: 0 auto;
+        }
+        td, th {
+            text-align: center;
+        }
+
+        /* Styling the parent and child rows */
+        .parent {
+            background-color: #dff0d8; /* Light green for parent row */
+            font-weight: bold;
+        }
+
+        .child-row1221 {
+            background-color: #f2f2f2; /* Light grey for child row */
+        }
+
+        /* Additional Hover effects for interactivity */
+        .parent:hover {
+            background-color: #c9e2b3;
+        }
+
+        .child-row1221:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* Adjusting title cursor for click effect */
+        [title] {
+            cursor: pointer;
+        }
+
+        /* Making table responsive */
+        @media screen and (max-width: 768px) {
+            table thead {
+                display: none;
+            }
+
+            table, table tbody, table tr, table td {
+                display: block;
+                width: 100%;
+            }
+
+            table tr {
+                margin-bottom: 10px;
+            }
+
+            table td {
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+            }
+
+            table td:before {
+                content: attr(data-label);
+                position: absolute;
+                left: 10px;
+                text-align: left;
+                font-weight: bold;
+            }
+        }
+
     </style>
 </head>
 
@@ -101,7 +169,7 @@ td.feat-desc {
                 </div>
 
                 <!-- filter -->
-                
+
 
                 <!-- table & charts -->
                 <div class="card card-custom mt-2">
@@ -144,87 +212,89 @@ td.feat-desc {
                             </div>
                             
                         </div>
-                        <table class="table table-bordered" id="temuanTable">
-                            <thead>
-                                <td rowspan="2">Divisi</td>
-                                <th colspan="3"  style="text-align:center;" >ISO 9001</th>
-                                <th colspan="3"  style="text-align:center;">ISO 14001</th>
-                                <th colspan="3"  style="text-align:center;">ISO 37001</th>
-                                <th colspan="3"  style="text-align:center;">ISO 45001</th>
-                                <tr>
-                                    <td style="text-align:center;">Sudah Close</td>
-                                    <td style="text-align:center;">Belum Close</td>
-                                    <td style="text-align:center;">Total Temuan</td>
-                                    <td style="text-align:center;">Sudah Close</td>
-                                    <td style="text-align:center;">Belum Close</td>
-                                    <td style="text-align:center;">Total Temuan</td>
-                                    <td style="text-align:center;">Sudah Close</td>
-                                    <td style="text-align:center;">Belum Close</td>
-                                    <td style="text-align:center;">Total Temuan</td>
-                                    <td style="text-align:center;">Sudah Close</td>
-                                    <td style="text-align:center;">Belum Close</td>
-                                    <td style="text-align:center;">Total Temuan</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            
-                            
-                            <?php foreach ($datadivisi as $ddivisi) { ?>
-                                <?php for ($i=0;$i<=count($datatable[$ddivisi['KODE']]);$i++) { ?>
-                                    <?php if(isset($datatable[$ddivisi['KODE']][$i])){ ?>
-                                        <?php if($datatable[$ddivisi['KODE']][$i]['tipe']=="Divisi"){ $n+=1 ?>
+                    
+                        <div class="row mb-0 pb-0">
+                            <table class="table table-bordered" id="temuanTable">
+                                <thead>
+                                    <td rowspan="2">Divisi</td>
+                                    <th colspan="3"  style="text-align:center;" >ISO 9001</th>
+                                    <th colspan="3"  style="text-align:center;">ISO 14001</th>
+                                    <th colspan="3"  style="text-align:center;">ISO 37001</th>
+                                    <th colspan="3"  style="text-align:center;">ISO 45001</th>
+                                    <tr>
+                                        <td style="text-align:center;">Sudah Close</td>
+                                        <td style="text-align:center;">Belum Close</td>
+                                        <td style="text-align:center;">Total Temuan</td>
+                                        <td style="text-align:center;">Sudah Close</td>
+                                        <td style="text-align:center;">Belum Close</td>
+                                        <td style="text-align:center;">Total Temuan</td>
+                                        <td style="text-align:center;">Sudah Close</td>
+                                        <td style="text-align:center;">Belum Close</td>
+                                        <td style="text-align:center;">Total Temuan</td>
+                                        <td style="text-align:center;">Sudah Close</td>
+                                        <td style="text-align:center;">Belum Close</td>
+                                        <td style="text-align:center;">Total Temuan</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                
+                                
+                                <?php foreach ($datadivisi as $ddivisi) { ?>
+                                    <?php for ($i=0;$i<=count($datatable[$ddivisi['KODE']]);$i++) { ?>
+                                        <?php if(isset($datatable[$ddivisi['KODE']][$i])){ ?>
+                                            <?php if($datatable[$ddivisi['KODE']][$i]['tipe']=="Divisi"){ $n+=1 ?>
 
-                                            <tr class="parent" id="row12<?=$n?>" title="Click to expand/collapse" style="cursor: pointer;">  
-                                                <td class="feat-title"><?= $datatable[$ddivisi['KODE']][$i]['namadivisi']?></td>  
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['open']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['closed']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['total']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['open']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['closed']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['total']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['open']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['closed']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['total']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['open']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['closed']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['total']?></td>
-                                            </tr>  
-                                            
-                                        <?php } ?>
-                                        <?php if($datatable[$ddivisi['KODE']][$i]['tipe']=="Subdivisi"){ ?>
-                                            <tr class="child-row12<?=$n?>" style="display: table-row;">  
-                                                <td class="feat-title"><?= $datatable[$ddivisi['KODE']][$i]['namadivisi']?></td>  
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['open']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['closed']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['total']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['open']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['closed']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['total']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['open']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['closed']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['total']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['open']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['closed']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['total']?></td>
-                                            </tr>  
-                                        <?php } ?>
+                                                <tr class="parent" id="row12<?=$n?>" title="Click to expand/collapse" style="cursor: pointer;">  
+                                                    <td class="feat-title"><?= $datatable[$ddivisi['KODE']][$i]['namadivisi']?></td>  
+                                                    <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['open']?></td>
+                                                    <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['closed']?></td>
+                                                    <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['total']?></td>
+                                                    <td><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['open']?></td>
+                                                    <td><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['closed']?></td>
+                                                    <td><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['total']?></td>
+                                                    <td><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['open']?></td>
+                                                    <td><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['closed']?></td>
+                                                    <td><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['total']?></td>
+                                                    <td><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['open']?></td>
+                                                    <td><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['closed']?></td>
+                                                    <td><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['total']?></td>
+                                                </tr>  
+                                                
+                                            <?php } ?>
+                                            <?php if($datatable[$ddivisi['KODE']][$i]['tipe']=="Subdivisi"){ ?>
+                                                <tr class="child-row12<?=$n?>" style="display: table-row;">  
+                                                    <td class="feat-title"><?= $datatable[$ddivisi['KODE']][$i]['namadivisi']?></td>  
+                                                    <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['open']?></td>
+                                                    <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['closed']?></td>
+                                                    <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['total']?></td>
+                                                    <td><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['open']?></td>
+                                                    <td><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['closed']?></td>
+                                                    <td><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['total']?></td>
+                                                    <td><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['open']?></td>
+                                                    <td><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['closed']?></td>
+                                                    <td><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['total']?></td>
+                                                    <td><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['open']?></td>
+                                                    <td><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['closed']?></td>
+                                                    <td><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['total']?></td>
+                                                </tr>  
+                                            <?php } ?>
 
+                                        <?php } ?>
+                                    
+                                    
                                     <?php } ?>
-                                
-                                
-                                <?php } ?>
-                                <?php } ?>
-                            </tbody>
-                        </table>
-                        
+                                    <?php } ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
             <!-- end content -->
-        </div>
         
-    </div>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js">
+    </div>    
+</body> 
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js">
         $(document).ready(function() {
 	$('[data-toggle="toggle"]').change(function(){
 		$(this).parents().next('.hide').toggle();
@@ -277,10 +347,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     
     parents[i].addEventListener("click", function() {
-        console.log(this);
+        
       let id = this.id;
       let children = document.querySelectorAll('.child-' + id);       
-      console.log(id);
+      
       for (let j = 0; j < children.length; j++) {
         if(children[j].style.display === "none"){
             children[j].style.display = "table-row";
