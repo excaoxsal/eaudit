@@ -180,13 +180,13 @@ public function index()
 
 
 	public function deletefile() {
-		var_dump($_POST);
-		$query = $this->db->select('FILE')->from('TEMUAN_DETAIL')->where('ID_TEMUAN',$_POST['ID_RE'])->get();
+		// var_dump($_POST['ID_TEMUAN']);
+		$query = $this->db->select('FILE')->from('TEMUAN_DETAIL')->where('ID_TEMUAN',$_POST['ID_TEMUAN'])->get();
 		$file_path = $query->result_array();
-		var_dump($file_path[0]['FILE']);die;
+		// var_dump($file_path[0]['FILE']);die;
 		unlink($file_path[0]['FILE']);
 		$this->db->set('FILE', NULL);
-		$this->db->where('ID_TEMUAN', $_POST['ID_RE']);
+		$this->db->where('ID_TEMUAN', $_POST['ID_TEMUAN']);
 		$update = $this->db->update('TEMUAN_DETAIL');
 		
 	}
