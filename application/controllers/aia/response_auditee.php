@@ -1,7 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 use PHPExcel\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PHPExcel\PhpSpreadsheet\Writer\Xlsx;
+use PHPExcel\Writer\Pdf\mPDF;
+use PHPExcel\PhpSpreadsheet\IOFactory;
 class Response_auditee extends MY_Controller {
 
 	public function __construct()
@@ -413,7 +415,138 @@ class Response_auditee extends MY_Controller {
 	$writer->save('php://output');
 	exit;
 	}
+
+
+
+
+
+	public function export_pdf($datas){
+		$this->load->database();
+        $this->load->library('session');
+		$this->db->select("
+			
+            i.\"NOMOR_ISO\",
+			ra.\"DIVISI\" AS \"KODE_DIVISI\",
+			d.\"NAMA_DIVISI\",
+			w.\"WAKTU_AUDIT_AWAL\",
+			w.\"WAKTU_AUDIT_SELESAI\",
+			au.\"NAMA\" AS \"AUDITOR\",
+			la.\"NAMA\" AS \"LEAD_AUDITOR\",
+			m.\"PERTANYAAN\",
+			m.\"KODE_KLAUSUL\",
+			ra.\"RESPONSE_AUDITEE\",
+			ra.\"KOMENTAR_1\" as \"KOMENTAR_AUDITOR\",
+			ra.\"KOMENTAR_2\" as \"KOMENTAR_AUDITEE\",
+			ra.\"FILE\",
+            CAST(COALESCE(SPLIT_PART(m.\"KODE_KLAUSUL\", '.', 1), '0') AS DECIMAL) AS a,
+            CAST(COALESCE(SPLIT_PART(m.\"KODE_KLAUSUL\", '.', 2), '0') AS DECIMAL) AS b,
+            CAST(COALESCE(NULLIF(SPLIT_PART(m.\"KODE_KLAUSUL\", '.', 3), ''), '0') AS DECIMAL) AS c
+			
+        ", false);
+        $this->db->from('"RESPONSE_AUDITEE_D" ra');
+        $this->db->join('"WAKTU_AUDIT" w', 'ra."ID_JADWAL" = w."ID_JADWAL"', 'left');
+        $this->db->join('"TM_PERTANYAAN" m', 'ra."ID_MASTER_PERTANYAAN" = m."ID_MASTER_PERTANYAAN"', 'left');
+        $this->db->join('"TM_USER" au', 'w."ID_AUDITOR" = au."ID_USER"', 'left');
+        $this->db->join('"TM_USER" la', 'w."ID_LEAD_AUDITOR" = la."ID_USER"', 'left');
+        $this->db->join('"TM_ISO" i', 'm."ID_ISO" = i."ID_ISO"', 'left');
+        $this->db->join('"TM_DIVISI" d', 'd."KODE" = ra."SUB_DIVISI"', 'left');
+        $this->db->where('ra."ID_HEADER"', $datas);
+        $this->db->order_by('a, b, c');
+        $this->db->order_by('ra."ID_MASTER_PERTANYAAN"', 'ASC');
+
+	$query = $this->db->get();
+	$data = $query->result_array();
+		// var_dump($data);die;
+	
+
+	// Create new Spreadsheet object
+	$spreadsheet = new PHPExcel();
+
+	// Set document properties
+	$spreadsheet->getProperties()->setCreator('Aplikasi Internal Audit')
+		->setLastModifiedBy('Aplikasi Internal Audit')
+		->setTitle('Export Data')
+		->setSubject('Export Data')
+		->setDescription('Export data from database to Excel file')
+		->setKeywords('export excel php codeigniter phpspreadsheet')
+		->setCategory('Export Data');
+
+	// Add header
+	$spreadsheet->setActiveSheetIndex(0)
+	->setCellValue('A1', 'NO')
+	->setCellValue('B1', 'NOMOR_ISO')
+	->setCellValue('C1', 'DIVISI')
+	->setCellValue('D1', 'SUB DIVISI')
+	->setCellValue('E1', 'WAKTU_AUDIT_AWAL')
+	->setCellValue('F1', 'WAKTU_AUDIT_SELESAI')
+	->setCellValue('G1', 'AUDITOR')
+	->setCellValue('H1', 'LEAD_AUDITOR')
+	->setCellValue('I1', 'PERTANYAAN')
+	->setCellValue('J1', 'KODE_KLAUSUL')
+	->setCellValue('K1', 'RESPONSE_AUDITEE')
+	->setCellValue('L1', 'KOMENTAR AUDITOR')
+	->setCellValue('M1', 'KOMENTAR AUDITEE')
+	->setCellValue('N1', 'FILE');
+
+
+	// Add data
+	$row = 2;
+	foreach ($data as $datum) {
+		$spreadsheet->setActiveSheetIndex(0)
+		->setCellValue('A' . $row, $row-1)
+		->setCellValue('B' . $row, $datum['NOMOR_ISO'])
+		->setCellValue('C' . $row, $datum['KODE_DIVISI'])
+		->setCellValue('D' . $row, $datum['NAMA_DIVISI'])
+		->setCellValue('E' . $row, $datum['WAKTU_AUDIT_AWAL'])
+		->setCellValue('F' . $row, $datum['WAKTU_AUDIT_SELESAI'])
+		->setCellValue('G' . $row, $datum['AUDITOR'])
+		->setCellValue('H' . $row, $datum['LEAD_AUDITOR'])
+		->setCellValue('I' . $row, $datum['PERTANYAAN'])
+		->setCellValue('J' . $row, $datum['KODE_KLAUSUL'])
+		->setCellValue('K' . $row, $datum['RESPONSE_AUDITEE'])
+		->setCellValue('L' . $row, $datum['KOMENTAR_AUDITOR'])
+		->setCellValue('M' . $row, $datum['KOMENTAR_AUDITEE']);
+
+		if (!empty($datum['FILE'])) {
+			//$url = str_replace('http://', '', $datum['FILE']);
+			$url = $datum['FILE'];		 
+            $spreadsheet->setActiveSheetIndex(0)
+            ->setCellValue('N' . $row, 'Download File');
+			$spreadsheet->getActiveSheet()->getCell('N' . $row)->getHyperlink()->setUrl(''.$url);
+        } else {
+            $spreadsheet->setActiveSheetIndex(0)->setCellValue('N' . $row, 'No File');
+        }
+		
+
+		$row++;
+	}
+
+	// Redirect output to a clientâ€™s web browser (Xlsx)
+	$filename = "export_data" . $datum['NOMOR_ISO'] . $datum['KODE_DIVISI'] . ".pdf";
+	$writer = new Mpdf($spreadsheet);
+	// Create a PDF writer using mPDF
+
+	// Set mPDF configuration (optional)
+	$writer->setOrientation('portrait'); // Orientation (portrait or landscape)
+	$writer->setPaper('A4'); // Paper size
+
+	// Save as a PDF file
+	$writer->save('php://output');
+
+	// Force download
+	header('Content-Description: File Transfer');
+	header('Content-Type: application/pdf');
+	header('Content-Disposition: attachment; filename="' . $filename . '"');
+	header('Content-Transfer-Encoding: binary');
+
+	header('Expires: 0');
+	header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+	header('Pragma: public');
+	readfile('php://output');
+	exit;
+	}
 	function is_empty_return_null($value) {
 		return empty($value) ? NULL : $value;
 	}
+	
 }

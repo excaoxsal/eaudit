@@ -121,7 +121,7 @@ var KTDatatableJsonRemoteDemo = {
           searchable: !1,
           overflow: "visible",
           template: function(t) {
-            return '<a  href="<?= base_url() ?>aia/Response_auditee/detail/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Lihat"><i class="fa fa-eye text-dark"></i></a><a  href="<?= base_url() ?>aia/Response_auditee/export_excel/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Export"><i class="fa fa-download text-dark"></i></a>'
+            return '<a  href="<?= base_url() ?>aia/Response_auditee/detail/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Lihat"><i class="fa fa-eye text-dark"></i></a><a  href="<?= base_url() ?>aia/Response_auditee/export_excel/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Export Excel"><i class="fa fa-file-excel text-dark"></i></a><a  href="<?= base_url() ?>aia/Response_auditee/export_pdf/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Export PDF"><i class="fa fa-file-pdf text-dark"></i></a>'
             }
         }
         ]
