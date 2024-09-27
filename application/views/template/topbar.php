@@ -56,7 +56,9 @@
         <?php foreach ($notif_atasanAuditee as $data) { ?>
           <div class="d-flex align-items-center bg-light-success rounded p-5 mb-5">
             <div class="d-flex flex-column flex-grow-1 mr-2">
-              <a href="<?= base_url() ?>aia/temuan/detail/<?= $data['ID_RESPONSE'] ?>" class="font-weight-normal text-dark-75 text-hover-primary font-size-lg mb-1">TEMUAN</a>
+              <a href="<?= base_url('aia/temuan/detail/' . $data['ID_RESPONSE'] . '?&temuan=' . urlencode($data['TEMUAN'])) ?>">
+                  Hasil Temuan untuk <?= $data['TEMUAN'] ?>
+              </a>
               <!-- <span class="text-muted font-size-sm"><?= tgl_indo($data['PADA_TANGGAL']) ?></span> -->
             </div>
           </div>

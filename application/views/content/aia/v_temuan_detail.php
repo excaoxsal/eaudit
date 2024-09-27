@@ -668,9 +668,31 @@ var KTDatatableJsonRemoteDemo = {
             
           }
         }]
-    }), $("#kt_datatable_search_status").on("change", (function() {
-      t.search($(this).val().toLowerCase(), "NAMA_DIVISI")
-    })), $("#kt_datatable_search_status").selectpicker()
+    });
+
+      // Get parameters from the URL
+      var params = new URLSearchParams(window.location.search);
+      var temuan = params.get('temuan') || ''; // Get temuan from URL
+      
+      // Decode the parameters to handle spaces
+      temuan = decodeURIComponent(temuan.replace(/\+/g, ' '));
+      
+      // Auto search functionality if temuan is present
+      if (temuan.trim()) {
+          t.search(temuan, 'TEMUAN'); // Perform the initial search for temuan
+      }
+
+      // Allow for dynamic searching through the input field
+      $("#kt_datatable_search_query").on("input", function() {
+          var searchValue = $(this).val(); // Get the input value from the input field
+          t.search(searchValue, 'TEMUAN'); // Perform the search
+      });
+
+      $("#kt_datatable_search_status").on("change", function() {
+        t.search($(this).val().toLowerCase(), "NAMA_DIVISI");
+      });
+      
+      $("#kt_datatable_search_status").selectpicker();
   }
 };
 
