@@ -194,17 +194,6 @@ class Iso extends MY_Controller
 						}
 					}
 					$data_auditee = $data_divisi;
-							$data[] = array(
-									'KODE_KLAUSUL'	=> is_empty_return_null($kode_klausul),
-									'LV1'			=> is_empty_return_null($lv1),
-									'LV2'			=> is_empty_return_null($lv2),
-									'LV3'			=> is_empty_return_null($lv3),
-									'LV4'			=> is_empty_return_null($lv4),
-									'AUDITEE'		=> is_empty_return_null($data_auditee),
-									'PERTANYAAN'	=> is_empty_return_null($pertanyaan),
-									'ID_ISO'=>is_empty_return_null($_POST['ID_ISO']),
-									'ID_MASTER_PERTANYAAN' => is_empty_return_null('')
-								);
 					$eldata = [
 									'KODE_KLAUSUL'	=> is_empty_return_null($kode_klausul),
 									'LV1'			=> is_empty_return_null($lv1),
@@ -241,5 +230,34 @@ class Iso extends MY_Controller
 			}
 	}
 
+	public function insertPertanyaan() {
+		
+		$eldata = [
+						'KODE_KLAUSUL'	=> is_empty_return_null($_POST['KLAUSUL']),
+						'LV1'			=> is_empty_return_null($_POST['LV1']),
+						'LV2'			=> is_empty_return_null($_POST['LV2']),
+						'LV3'			=> is_empty_return_null($_POST['LV3']),
+						'LV4'			=> is_empty_return_null($_POST['LV4']),
+						'AUDITEE'		=> is_empty_return_null($_POST['AUDITEE']),
+						'PERTANYAAN'	=> is_empty_return_null($_POST['PERTANYAAN']),
+						'ID_ISO'=>is_empty_return_null($_POST['ID_ISO'])		
+						
+					];
+		// var_dump($eldata);die;
+		$save = $this->m_pertanyaan->save($eldata);
+		if($save==true){
+			$success_message = 'Data berhasil disimpan.';
+			$this->session->set_flashdata('success', $success_message);
+			redirect($_SERVER['HTTP_REFERER']);
+		}
+		else{
+			$error_message = 'Silahkan cek kembali datanya';
+			$this->session->set_flashdata('error', $error_message);
+		}
+	}
+
+	public function editPertanyaan() {
+		
+	}
 
 }

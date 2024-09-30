@@ -245,7 +245,7 @@ table {
                                             <?php if($datatable[$ddivisi['KODE']][$i]['tipe']=="Divisi"){ $n+=1 ?>
 
                                                 <tr class="parent" id="row12<?=$n?>" title="Click to expand/collapse" style="cursor: pointer;">  
-                                                    <td class="feat-title"><?= $datatable[$ddivisi['KODE']][$i]['namadivisi']?></td>  
+                                                    <td class="feat-title" style="text-align:left;"><?= $datatable[$ddivisi['KODE']][$i]['namadivisi']?></td>  
                                                     <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['open']?></td>
                                                     <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['closed']?></td>
                                                     <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['total']?></td>
@@ -263,7 +263,7 @@ table {
                                             <?php } ?>
                                             <?php if($datatable[$ddivisi['KODE']][$i]['tipe']=="Subdivisi"){ ?>
                                                 <tr class="child-row12<?=$n?>" style="display: table-row;">  
-                                                    <td class="feat-title"><?= $datatable[$ddivisi['KODE']][$i]['namadivisi']?></td>  
+                                                    <td class="feat-title"style="text-align:left;"><?= $datatable[$ddivisi['KODE']][$i]['namadivisi']?></td>  
                                                     <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['open']?></td>
                                                     <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['closed']?></td>
                                                     <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['total']?></td>
@@ -393,7 +393,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Mengambil data dari controller menggunakan AJAX
             $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataIso'); ?>", {iso: selectedIso}, function(data) {
                 var chartData = [];
-                chartData.push(['NOMOR_ISO', 'SUDAH_CLOSED', 'BELUM_CLOSED']);
+                chartData.push(['NOMOR ISO', 'SUDAH CLOSED', 'BELUM CLOSED']);
 
                 $.each(data, function(index, value) {
                     chartData.push([value.NOMOR_ISO, parseInt(value.SUDAH_CLOSED), parseInt(value.BELUM_CLOSED)]);
@@ -435,7 +435,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Mengambil data dari controller menggunakan AJAX
             $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataDivisi'); ?>", {iso: selectedIso}, function(data) {
                 var chartData = [];
-                chartData.push(['KODE', 'SUDAH_CLOSED', 'BELUM_CLOSED']);
+                chartData.push(['KODE', 'SUDAH CLOSED', 'BELUM CLOSED']);
 
                 $.each(data, function(index, value) {
                     chartData.push([value.KODE, parseInt(value.SUDAH_CLOSED), parseInt(value.BELUM_CLOSED)]);
@@ -477,7 +477,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Mengambil data dari controller menggunakan AJAX
             $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataDivisi1'); ?>", {iso: selectedIso}, function(data) {
                 var chartData = [];
-                chartData.push(['KODE', 'SUDAH_CLOSED', 'BELUM_CLOSED']);
+                chartData.push(['KODE', 'SUDAH CLOSED', 'BELUM CLOSED']);
 
                 $.each(data, function(index, value) {
                     chartData.push([value.KODE, parseInt(value.SUDAH_CLOSED), parseInt(value.BELUM_CLOSED)]);
@@ -518,7 +518,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Mengambil data dari controller menggunakan AJAX
             $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataDivisi2'); ?>", {iso: selectedIso}, function(data) {
                 var chartData = [];
-                chartData.push(['KODE', 'SUDAH_CLOSED', 'BELUM_CLOSED']);
+                chartData.push(['KODE', 'SUDAH CLOSED', 'BELUM CLOSED']);
 
                 $.each(data, function(index, value) {
                     chartData.push([value.KODE, parseInt(value.SUDAH_CLOSED), parseInt(value.BELUM_CLOSED)]);
@@ -559,7 +559,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Mengambil data dari controller menggunakan AJAX
             $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataDivisi3'); ?>", {iso: selectedIso}, function(data) {
                 var chartData = [];
-                chartData.push(['KODE', 'SUDAH_CLOSED', 'BELUM_CLOSED']);
+                chartData.push(['KODE', 'SUDAH CLOSED', 'BELUM CLOSED']);
 
                 $.each(data, function(index, value) {
                     chartData.push([value.KODE, parseInt(value.SUDAH_CLOSED), parseInt(value.BELUM_CLOSED)]);
@@ -601,7 +601,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Mengambil data dari controller menggunakan AJAX
             $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataCabang'); ?>", {iso: selectedIso}, function(data) {
                 var chartData = [];
-                chartData.push(['KODE', 'SUDAH_CLOSED', 'BELUM_CLOSED']);
+                chartData.push(['KODE', 'SUDAH CLOSED', 'BELUM CLOSED']);
 
                 $.each(data, function(index, value) {
                     chartData.push([value.KODE, parseInt(value.SUDAH_CLOSED), parseInt(value.BELUM_CLOSED)]);
@@ -642,7 +642,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Mengambil data dari controller menggunakan AJAX
             $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataCabang1'); ?>", {iso: selectedIso}, function(data) {
                 var chartData = [];
-                chartData.push(['KODE', 'SUDAH_CLOSED', 'BELUM_CLOSED']);
+                chartData.push(['KODE', 'SUDAH CLOSED', 'BELUM CLOSED']);
 
                 $.each(data, function(index, value) {
                     chartData.push([value.KODE, parseInt(value.SUDAH_CLOSED), parseInt(value.BELUM_CLOSED)]);
@@ -683,7 +683,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Mengambil data dari controller menggunakan AJAX
             $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataCabang2'); ?>", {iso: selectedIso}, function(data) {
                 var chartData = [];
-                chartData.push(['KODE', 'SUDAH_CLOSED', 'BELUM_CLOSED']);
+                chartData.push(['KODE', 'SUDAH CLOSED', 'BELUM CLOSED']);
 
                 $.each(data, function(index, value) {
                     chartData.push([value.KODE, parseInt(value.SUDAH_CLOSED), parseInt(value.BELUM_CLOSED)]);
@@ -724,7 +724,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Mengambil data dari controller menggunakan AJAX
             $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataCabang3'); ?>", {iso: selectedIso}, function(data) {
                 var chartData = [];
-                chartData.push(['KODE', 'SUDAH_CLOSED', 'BELUM_CLOSED']);
+                chartData.push(['KODE', 'SUDAH CLOSED', 'BELUM CLOSED']);
 
                 $.each(data, function(index, value) {
                     chartData.push([value.KODE, parseInt(value.SUDAH_CLOSED), parseInt(value.BELUM_CLOSED)]);

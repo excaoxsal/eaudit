@@ -23,6 +23,7 @@ class M_Pertanyaan extends CI_Model{
         $this->db->select('*');
         $this->db->from('TM_PERTANYAAN');
         $this->db->join('TM_ISO', 'TM_PERTANYAAN.ID_ISO = TM_ISO.ID_ISO')->where('TM_ISO.ID_ISO',$iso);
+        $this->db->order_by('ID_MASTER_PERTANYAAN','ASC');
         $query=$this->db->get();
         return $query->result_array();
     }

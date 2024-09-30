@@ -24,24 +24,28 @@
           <div class="card-title">
             <h3 class="card-label"><?= $title ?></h3>
           </div>
+          <div class="card-toolbar">
+            <a class="btn btn-primary font-weight-bolder" onclick="insertPertanyaan(' + t.ID_TL + ')">
+              <i class="fa fa-plus" style="font-size: 12px;"></i>&nbsp;&nbsp;&nbsp;&nbsp;Tambah Pertanyaan</a>
+          </div>
           
         </div>
         <div class="card-body">
           <?php if ($this->session->flashdata('error')) { ?>
-            <div class="alert alert-danger alert-dismissible text-left">
-              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-              <h4><i class="icon fa fa-ban text-white"></i> Error!</h4>
-              <?= $this->session->flashdata('error'); ?>
-            </div>
+          <div class="alert alert-danger alert-dismissible text-left">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h4><i class="icon fa fa-ban text-white"></i> Error!</h4>
+            <?= $this->session->flashdata('error'); ?>
+          </div>
           <?php } ?>
           <?php if ($this->session->flashdata('success')) { ?>
-            <div class="input-group mb-3">
-              <div class="alert alert-success alert-dismissible" style="width: 100%;">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <h6><i class="icon fa fa-check text-white"></i> Success!</h6>
-                <?= $this->session->flashdata('success'); ?>
-              </div>
+          <div class="input-group mb-3">
+            <div class="alert alert-success alert-dismissible" style="width: 100%;">
+              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+              <h6><i class="icon fa fa-check text-white"></i> Success!</h6>
+              <?= $this->session->flashdata('success'); ?>
             </div>
+          </div>
           <?php } ?>
           <div class="mb-7">
             <div class="row align-items-center">
@@ -71,31 +75,58 @@
   <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Upload Master ISO</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Input Master Pertanyaan</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <i aria-hidden="true" class="ki ki-close"></i>
         </button>
       </div>
-      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/iso/proses_upload" enctype="multipart/form-data">
+      
         <div class="modal-body" style="height: auto">
-
+        <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/iso/insertPertanyaan" enctype="multipart/form-data">
           <div class="form-group row">
             <div class="col-12">
-              <label>Nomor ISO</label>
-              
-              <input type="text" class="form-control" placeholder="Nomor ISO" name="NOMOR_ISO" id="NOMOR_ISO">
-              <input type="hidden" class="form-control" placeholder="Nomor LHA" name="id_tl" id="id_tl">
+              <label>Klausul</label>
+              <input type="text" class="form-control" placeholder="KLAUSUL" name="KLAUSUL" id="KLAUSUL">
+              <input type="hidden" class="form-control" placeholder="Nomor LHA" name="ID_ISO" id="ID_ISO" value="<?=$id_iso?>">
             </div>
           </div>
           <div class="form-group row">
             <div class="col-12">
-              <label>Lampiran</label>
-              <div class="custom-file">
-                <input type="file" class="custom-file-input" name="file_excel" id="file_excel">
-                <label class="custom-file-label" for="customFile">Choose file</label>
-              </div>
+              <label>Lv1</label>
+              <input type="text" class="form-control" placeholder="Lv1" name="LV1" id="KLAUSUL">
             </div>
           </div>
+          <div class="form-group row">
+            <div class="col-12">
+              <label>Lv2</label>
+              <input type="text" class="form-control" placeholder="Lv2" name="LV2" id="KLAUSUL">
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-12">
+              <label>Lv3</label>
+              <input type="text" class="form-control" placeholder="Lv3" name="LV3" id="KLAUSUL">
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-12">
+              <label>Lv4</label>
+              <input type="text" class="form-control" placeholder="Lv4" name="LV4" id="KLAUSUL">
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-12">
+              <label>Auditee</label>
+              <textarea class="form-control" name="AUDITEE" id="AUDITEE"></textarea>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-12">
+              <label>Pertanyaan</label>
+              <textarea class="form-control" name="PERTANYAAN" id="PERTANYAAN"></textarea>
+            </div>
+          </div>
+          
         </div>
         <div class="modal-footer">
           <input type="submit" class="btn btn-primary font-weight-bold" value="Submit">
@@ -119,11 +150,15 @@
           pageSize: 10
         },
         layout: {
-          scroll: !1,
+          scroll: {
+                    x: true, 
+                    y: true 
+                },
           footer: !1
         },
         sortable: !0,
         pagination: !0,
+        
         search: {
           input: $("#datatable_search_query"),
           key: "generalSearch"
@@ -157,6 +192,17 @@
           field: "PERTANYAAN",
           title: "PERTANYAAN"
         }, 
+        {
+          field: "ID_ISO",
+          title: "Action",
+          class: "text-center",
+          sortable: !1,
+          searchable: !1,
+          overflow: "visible",
+          template: function(t) {
+            return '<a  href="<?= base_url() ?>aia/Iso/editPertanyaan/'+t.ID_MASTER_PERTANYAAN+'" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit text-dark"></i></a>'
+            }
+        }
       ]
       }), $("#datatable_search_status").on("change", (function() {
         t.search($(this).val().toLowerCase(), "STATUS")
@@ -164,15 +210,9 @@
     }
   };
 
-  function uploadFile(id_tl)
+  function insertPertanyaan(id_tl)
   {
-    $.get(`<?= base_url('aia/Iso/proses_upload') ?>`+id_tl, function(data, status){
-        const obj = JSON.parse(data);
-        $('#id_tl').val(id_tl);
-        $('#NOMOR_LHA').val(obj.NOMOR_LHA);
-        $('#TANGGAL_LHA').val(obj.TANGGAL_LHA);
-        // console.log(data.NOMOR_LHA);
-    });
+    
     $('#modal_upload').modal('show');
   }
   jQuery(document).ready((function() {

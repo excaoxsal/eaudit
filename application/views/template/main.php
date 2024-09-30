@@ -21,9 +21,9 @@
   <link href="<?= base_url('assets/css/themes/layout/brand/light7a50.css') ?>" rel="stylesheet" type="text/css" />
   <link href="<?= base_url('assets/css/themes/layout/aside/light7a50.css') ?>" rel="stylesheet" type="text/css" />
   <script src="https://kit.fontawesome.com/158ead05c1.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.tiny.cloud/1/nun9cyduwghfatmzjy7ljewsakpdfuqbu397iu0189kwkx5b/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+  
   <!--disable
-  <script src="https://cdn.tiny.cloud/1/jifstdyvbxfuj36bqjivg4fsavgqqvvgoyltmvj5w1pq188t/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+  
 	-->
   <!-- <script src="<?= base_url('assets/vendor/tinymce/js/tinymce/tinymce.min.js') ?>"></script> -->
   <script src="<?= base_url('assets/jquery/jquery.min.js') ?>"></script>

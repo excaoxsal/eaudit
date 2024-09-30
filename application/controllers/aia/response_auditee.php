@@ -272,8 +272,9 @@ class Response_auditee extends MY_Controller {
 						'ID_JADWAL' => $data,
 						'SUB_DIVISI' => trim($item),
 						'ID_HEADER' => $result_header[0]['ID_HEADER'],
-						'LOG_KIRIM' =>'Generate Jadwal by ID_USER '.$_SESSION['ID_USER']
-						
+						'LOG_KIRIM' =>'Generate Jadwal by ID_USER '.$_SESSION['ID_USER'],
+						'PERTANYAAN'=>$row['PERTANYAAN'],
+						'KLAUSUL'=>$row['KODE_KLAUSUL']
 					];
 					// Bersihkan dan siapkan data untuk dimasukkan
 				}	
