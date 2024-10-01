@@ -104,6 +104,7 @@
                       <div class="form-label">
                         <input type="file" class="form-control" name="tanda_tangan" id="tanda_tangan">
                         <img id="signaturePreview" src="" alt="Tanda Tangan" style="max-height: 100px; margin-top: 10px; display: none;">
+                        <span style="color: red;">(Ukuran File Maksimal 1 MB Dan Jenis File Yaitu JPG / PNG)</span>
                       </div>
                     </div>
                   </div>

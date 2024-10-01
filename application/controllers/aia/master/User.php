@@ -50,8 +50,8 @@ class User extends MY_Controller
         $file_name = 'Tanda_Tangan'.'-'.date('Ymd').'-'.$id;
         $config['file_name'] = $file_name;
         $config['upload_path'] = 'storage/aia/';
-        $config['allowed_types'] = 'gif|jpg|png';
-        $config['max_size'] = 2 * 1024; // 2 MB in KB
+        $config['allowed_types'] = 'jpg|png';
+        $config['max_size'] = 1024; // 1 MB in KB
         $ext = pathinfo($_FILES['tanda_tangan']['name'], PATHINFO_EXTENSION);
 
         $this->upload->initialize($config);
