@@ -129,15 +129,16 @@ table {
                             <div class="row w-25">
                                 <div class="col">
                                     <select class="form-control form-control-solid form-control-lg" id="year">
-                                        <?php foreach ($years as $year) { ?>
+                                        <!-- <?php foreach ($years as $year) { ?>
                                             <option value="<?= $year['TAHUN'] ?>"><?= $year['TAHUN'] ?></option>
-                                        <?php } ?>
+                                        <?php } ?> -->
+                                            <option value="2024">2024</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="row w-25">
                                 <div class="col">
-                                    <select class="form-control form-control-solid form-control-lg" id="iso">
+                                    <select class="form-control form-control-solid form-control-lg" id="iso" onchange="changeiso()">
                                             <option value="ALL">ALL ISO</option>
                                             <?php foreach ($iso as $i) { ?>
                                             <option value="<?= $i['ID_ISO'] ?>"><?= $i['NOMOR_ISO'] ?></option>
@@ -177,37 +178,31 @@ table {
                         <h4>SUMMARY MONITORING TINDAK LANJUT</h4>
                         <hr />
                         <div class="row mb-0 pb-0" id="divisi">
-                            <!-- <div class="col-12">
-                                <div id="charttemuaniso"></div>
-                            </div> -->
-                            <div class="col-12">
+                            <div class="col-12" id="divisi9001">
                                 <div id="charttemuandivisi"></div>
                             </div>
-                            <div class="col-12">
+                            <div class="col-12" id="divisi14001">
                                 <div id="charttemuandivisi1"></div>
                             </div>
-                            <div class="col-12">
+                            <div class="col-12" id="divisi37001">
                                 <div id="charttemuandivisi2"></div>
                             </div>
-                            <div class="col-12">
+                            <div class="col-12" id="divisi45001">
                                 <div id="charttemuandivisi3"></div>
                             </div>
                             
                         </div>
                         <div class="row mb-0 pb-0" id="cabang">
-                            <!-- <div class="col-12">
-                                <div id="charttemuaniso"></div>
-                            </div> -->
-                            <div class="col-12">
+                            <div class="col-12" id="cabang9001">
                                 <div id="charttemuancabang"></div>
                             </div>
-                            <div class="col-12">
+                            <div class="col-12" id="cabang14001">
                                 <div id="charttemuancabang1"></div>
                             </div>
-                            <div class="col-12">
+                            <div class="col-12" id="cabang37001">
                                 <div id="charttemuancabang2"></div>
                             </div>
-                            <div class="col-12">
+                            <div class="col-12" id="cabang45001">
                                 <div id="charttemuancabang3"></div>
                             </div>
                             
@@ -287,6 +282,80 @@ table {
                                 </tbody>
                             </table>
                         </div>
+                        <div class="row mb-0 pb-0">
+                            <table class="table table-bordered" id="temuanTable">
+                                <thead>
+                                    <td rowspan="2">Cabang</td>
+                                    <th colspan="3"  style="text-align:center;" >ISO 9001</th>
+                                    <th colspan="3"  style="text-align:center;">ISO 14001</th>
+                                    <th colspan="3"  style="text-align:center;">ISO 37001</th>
+                                    <th colspan="3"  style="text-align:center;">ISO 45001</th>
+                                    <tr>
+                                        <td style="text-align:center;">Sudah Close</td>
+                                        <td style="text-align:center;">Belum Close</td>
+                                        <td style="text-align:center;">Total Temuan</td>
+                                        <td style="text-align:center;">Sudah Close</td>
+                                        <td style="text-align:center;">Belum Close</td>
+                                        <td style="text-align:center;">Total Temuan</td>
+                                        <td style="text-align:center;">Sudah Close</td>
+                                        <td style="text-align:center;">Belum Close</td>
+                                        <td style="text-align:center;">Total Temuan</td>
+                                        <td style="text-align:center;">Sudah Close</td>
+                                        <td style="text-align:center;">Belum Close</td>
+                                        <td style="text-align:center;">Total Temuan</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                
+                                
+                                <?php foreach ($datacabang as $cabang) { ?>
+                                    <?php for ($i=0;$i<=count($datatablecabang[$cabang['KODE']]);$i++) { ?>
+                                        <?php if(isset($datatablecabang[$cabang['KODE']][$i])){ ?>
+                                            <?php if($datatablecabang[$cabang['KODE']][$i]['tipe']=="Divisi"){ $n+=1 ?>
+
+                                                <tr class="parent" id="row12<?=$n?>" title="Click to expand/collapse" style="cursor: pointer;">  
+                                                    <td class="feat-title" style="text-align:left;"><?= $datatablecabang[$cabang['KODE']][$i]['namadivisi']?></td>  
+                                                    <td><?= $datatablecabang[$cabang['KODE']][$i]['iso9001']['open']?></td>
+                                                    <td><?= $datatablecabang[$cabang['KODE']][$i]['iso9001']['closed']?></td>
+                                                    <td><?= $datatablecabang[$cabang['KODE']][$i]['iso9001']['total']?></td>
+                                                    <td><?= $datatablecabang[$cabang['KODE']][$i]['iso14001']['open']?></td>
+                                                    <td><?= $datatablecabang[$cabang['KODE']][$i]['iso14001']['closed']?></td>
+                                                    <td><?= $datatablecabang[$cabang['KODE']][$i]['iso14001']['total']?></td>
+                                                    <td><?= $datatablecabang[$cabang['KODE']][$i]['iso37001']['open']?></td>
+                                                    <td><?= $datatablecabang[$cabang['KODE']][$i]['iso37001']['closed']?></td>
+                                                    <td><?= $datatablecabang[$cabang['KODE']][$i]['iso37001']['total']?></td>
+                                                    <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['open']?></td>
+                                                    <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['closed']?></td>
+                                                    <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['total']?></td>
+                                                </tr>  
+                                                
+                                            <?php } ?>
+                                            <?php if($datatablecabang[$cabang['KODE']][$i]['tipe']=="Subdivisi"){ ?>
+                                                <tr class="child-row12<?=$n?>" style="display: table-row;">  
+                                                    <td class="feat-title"style="text-align:left;"><?= $datatablecabang[$cabang['KODE']][$i]['namadivisi']?></td>  
+                                                    <td><?= $datatablecabang[$cabang['KODE']][$i]['iso9001']['open']?></td>
+                                                    <td><?= $datatablecabang[$cabang['KODE']][$i]['iso9001']['closed']?></td>
+                                                    <td><?= $datatablecabang[$cabang['KODE']][$i]['iso9001']['total']?></td>
+                                                    <td><?= $datatablecabang[$cabang['KODE']][$i]['iso14001']['open']?></td>
+                                                    <td><?= $datatablecabang[$cabang['KODE']][$i]['iso14001']['closed']?></td>
+                                                    <td><?= $datatablecabang[$cabang['KODE']][$i]['iso14001']['total']?></td>
+                                                    <td><?= $datatablecabang[$cabang['KODE']][$i]['iso37001']['open']?></td>
+                                                    <td><?= $datatablecabang[$cabang['KODE']][$i]['iso37001']['closed']?></td>
+                                                    <td><?= $datatablecabang[$cabang['KODE']][$i]['iso37001']['total']?></td>
+                                                    <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['open']?></td>
+                                                    <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['closed']?></td>
+                                                    <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['total']?></td>
+                                                </tr>  
+                                            <?php } ?>
+
+                                        <?php } ?>
+                                    
+                                    
+                                    <?php } ?>
+                                    <?php } ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -321,19 +390,64 @@ function changegraph() {
 
 </script>
 
+
+<!--  -->
+
 <script>
-  function Cabang() {
-    document.getElementById("cabang").style.display = "block";
-    document.getElementById("divisi").style.display = "none";
+function changeiso() {
+  var x = document.getElementById("iso").value;
+  if(x=="1"){
+    document.getElementById("divisi9001").style.display = "block";
+    document.getElementById("divisi14001").style.display = "none";
+    document.getElementById("divisi37001").style.display = "none";
+    document.getElementById("divisi45001").style.display = "none";
+    document.getElementById("cabang9001").style.display = "block";
+    document.getElementById("cabang14001").style.display = "none";
+    document.getElementById("cabang37001").style.display = "none";
+    document.getElementById("cabang45001").style.display = "none";
   }
-  function Divisi() {
-    document.getElementById("cabang").style.display = "none";
-    document.getElementById("divisi").style.display = "block";
+  else if((x=="2")){
+    document.getElementById("divisi9001").style.display = "none";
+    document.getElementById("divisi14001").style.display = "block";
+    document.getElementById("divisi37001").style.display = "none";
+    document.getElementById("divisi45001").style.display = "none";
+    document.getElementById("cabang9001").style.display = "none";
+    document.getElementById("cabang14001").style.display = "block";
+    document.getElementById("cabang37001").style.display = "none";
+    document.getElementById("cabang45001").style.display = "none";
   }
-  function All() {
-    document.getElementById("cabang").style.display = "block";
-    document.getElementById("divisi").style.display = "block";
+  else if((x=="3")){
+    document.getElementById("divisi9001").style.display = "none";
+    document.getElementById("divisi14001").style.display = "none";
+    document.getElementById("divisi37001").style.display = "block";
+    document.getElementById("divisi45001").style.display = "none";
+    document.getElementById("cabang9001").style.display = "none";
+    document.getElementById("cabang14001").style.display = "none";
+    document.getElementById("cabang37001").style.display = "block";
+    document.getElementById("cabang45001").style.display = "none";
   }
+  else if((x=="4")){
+    document.getElementById("divisi9001").style.display = "none";
+    document.getElementById("divisi14001").style.display = "none";
+    document.getElementById("divisi37001").style.display = "none";
+    document.getElementById("divisi45001").style.display = "block";
+    document.getElementById("cabang9001").style.display = "none";
+    document.getElementById("cabang14001").style.display = "none";
+    document.getElementById("cabang37001").style.display = "none";
+    document.getElementById("cabang45001").style.display = "block";
+  }
+  else{
+    document.getElementById("divisi9001").style.display = "block";
+    document.getElementById("divisi14001").style.display = "block";
+    document.getElementById("divisi37001").style.display = "block";
+    document.getElementById("divisi45001").style.display = "block";
+    document.getElementById("cabang9001").style.display = "block";
+    document.getElementById("cabang14001").style.display = "block";
+    document.getElementById("cabang37001").style.display = "block";
+    document.getElementById("cabang45001").style.display = "block";
+  }
+}
+
 </script>
 
 <script> 

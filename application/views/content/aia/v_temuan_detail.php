@@ -76,7 +76,7 @@
           <i aria-hidden="true" class="ki ki-close"></i>
         </button>
       </div>
-      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/temuan/commitment/<?=$kode?>" enctype="multipart/form-data">
+      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/Temuan/commitment/<?=$kode?>" enctype="multipart/form-data">
         <div class="modal-body" style="height: auto">
           <input type="hidden"  name="ID_TEMUAN" id="ID_TEMUAN">
           <div class="form-group row">
@@ -123,7 +123,7 @@
           <i aria-hidden="true" class="ki ki-close"></i>
         </button>
       </div>
-      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/temuan/commitment/<?=$kode?>" enctype="multipart/form-data">
+      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/Temuan/commitment/<?=$kode?>" enctype="multipart/form-data">
         <div class="modal-body" style="height: auto">
           <input type="hidden" name="ID_TEMUAN" id="ID_TEMUAN">
           <div class="form-group row">
@@ -204,7 +204,7 @@
           <i aria-hidden="true" class="ki ki-close"></i>
         </button>
       </div>
-      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/temuan/chatbox/<?=$kode?>" enctype="multipart/form-data">
+      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/Temuan/chatbox/<?=$kode?>" enctype="multipart/form-data">
         <div class="modal-body" style="height: auto">
           <input type="hidden"  name="ID_TEMUAN" id="ID_TEMUAN_CHATBOX">
           <div class="form-group row">
@@ -253,7 +253,7 @@
           <i aria-hidden="true" class="ki ki-close"></i>
         </button>
       </div>
-      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/temuan/approval/<?=$kode?>" enctype="multipart/form-data">
+      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/Temuan/approval/<?=$kode?>" enctype="multipart/form-data">
         <div class="modal-body" style="height: auto">
           
           <div class="form-group row">
@@ -314,7 +314,7 @@
           <i aria-hidden="true" class="ki ki-close"></i>
         </button>
       </div>
-      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/temuan/approvalTL/<?=$kode?>" enctype="multipart/form-data">
+      <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/Temuan/approvalTL/<?=$kode?>" enctype="multipart/form-data">
         <div class="modal-body" style="height: auto">
           <input type="hidden"  name="ID_TEMUAN_APPROVE_TL" id="ID_TEMUAN_APPROVE_TL">
           <div class="form-group row">
@@ -484,7 +484,7 @@ var KTDatatableJsonRemoteDemo = {
                   return '<span class="label font-weight-bold label-lg label-light-default label-inline"style="'+approve+'">'+t.STATUS+'</span>'+
                   '<a onclick="viewCommitment(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Commitment"><i class="fa-solid fa-scroll text-dark"></i></a>'+
                   '<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>'+
-                  '<a href="<?= base_url() ?>aia/temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
+                  '<a href="<?= base_url() ?>aia/Temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
                   '<a onclick="log(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="far fa-file-alt text-dark" title="Logs"></i></a>';
                 }else if(t.STATUS == 'Commitment' && t.APPROVAL_COMMITMENT < 2 && isLeadPICAuditor){
                   console.log('d');
@@ -498,7 +498,7 @@ var KTDatatableJsonRemoteDemo = {
                   '<a onclick="approveTL(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="Approve Tindak Lanjut"><i class="fa fa-file-circle-check text-dark"></i></a>'+
                   '<a onclick="viewCommitment(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Commitment"><i class="fa-solid fa-scroll text-dark"></i></a>'+
                   '<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>'+
-                  '<a href="<?= base_url() ?>aia/temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
+                  '<a href="<?= base_url() ?>aia/Temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
                   '<a onclick="log(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="far fa-file-alt text-dark" title="Logs"></i></a>';
                 }else if(t.STATUS == 'Tindak Lanjut' && t.APPROVAL_COMMITMENT == 3 && t.APPROVAL_TINDAKLANJUT !== 2 && isLeadPICAuditor){
                   console.log('f');
@@ -506,7 +506,7 @@ var KTDatatableJsonRemoteDemo = {
                   '<a onclick="viewTL(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Tindak Lanjut"><i class="fa-solid fa-file-alt text-dark"></i></a>'+
                   '<a onclick="viewCommitment(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Commitment"><i class="fa-solid fa-scroll text-dark"></i></a>'+
                   '<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>'+
-                  '<a href="<?= base_url() ?>aia/temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
+                  '<a href="<?= base_url() ?>aia/Temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
                   '<a onclick="log(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="far fa-file-alt text-dark" title="Logs"></i></a>';
                 }else if(t.STATUS == 'CLOSE' && isLeadPICAuditor){
                   console.log('g');
@@ -514,7 +514,7 @@ var KTDatatableJsonRemoteDemo = {
                   '<a onclick="viewTL(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Tindak Lanjut"><i class="fa-solid fa-file-alt text-dark"></i></a>'+
                   '<a onclick="viewCommitment(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Commitment"><i class="fa-solid fa-scroll text-dark"></i></a>'+
                   '<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>'+
-                  '<a href="<?= base_url() ?>aia/temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
+                  '<a href="<?= base_url() ?>aia/Temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
                   '<a onclick="log(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="far fa-file-alt text-dark" title="Logs"></i></a>';
                 }else{
                   console.log('h');
@@ -540,7 +540,7 @@ var KTDatatableJsonRemoteDemo = {
                   return '<span class="label font-weight-bold label-lg label-light-default label-inline"style="'+approve+'">'+t.STATUS+'</span>'+
                   '<a onclick="viewCommitment(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Commitment"><i class="fa-solid fa-scroll text-dark"></i></a>'+
                   '<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>'+
-                  '<a href="<?= base_url() ?>aia/temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
+                  '<a href="<?= base_url() ?>aia/Temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
                   '<a onclick="log(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="far fa-file-alt text-dark" title="Logs"></i></a>';
                 }
                 else if(t.STATUS == 'Tindak Lanjut' && t.APPROVAL_COMMITMENT == 3 && t.APPROVAL_TINDAKLANJUT == 1 && isPICAuditor == sessionUserId){
@@ -549,7 +549,7 @@ var KTDatatableJsonRemoteDemo = {
                   '<a onclick="approveTL(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="Approve Tindak Lanjut"><i class="fa fa-file-circle-check text-dark"></i></a>'+
                   '<a onclick="viewCommitment(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Commitment"><i class="fa-solid fa-scroll text-dark"></i></a>'+
                   '<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>'+
-                  '<a href="<?= base_url() ?>aia/temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
+                  '<a href="<?= base_url() ?>aia/Temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
                   '<a onclick="log(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="far fa-file-alt text-dark" title="Logs"></i></a>'; 
                 }else if(t.STATUS == 'CLOSE' && t.APPROVAL_COMMITMENT == 3 && t.APPROVAL_TINDAKLANJUT == 3 && isPICAuditor == sessionUserId){
                   console.log('m');
@@ -557,7 +557,7 @@ var KTDatatableJsonRemoteDemo = {
                   '<a onclick="viewTL(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Tindak Lanjut"><i class="fa-solid fa-file-alt text-dark"></i></a>'+
                   '<a onclick="viewCommitment(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Commitment"><i class="fa-solid fa-scroll text-dark"></i></a>'+
                   '<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>'+
-                  '<a href="<?= base_url() ?>aia/temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
+                  '<a href="<?= base_url() ?>aia/Temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
                   '<a onclick="log(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="far fa-file-alt text-dark" title="Logs"></i></a>'; 
                 }else if(t.STATUS == 'Tindak Lanjut' && t.APPROVAL_COMMITMENT == 3 && t.APPROVAL_TINDAKLANJUT !== 1){
                   console.log('n');
@@ -565,7 +565,7 @@ var KTDatatableJsonRemoteDemo = {
                 '<a onclick="viewTL(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Tindak Lanjut"><i class="fa-solid fa-file-alt text-dark"></i></a>'+
                 '<a onclick="viewCommitment(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Commitment"><i class="fa-solid fa-scroll text-dark"></i></a>'+
                 '<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>'+
-                '<a href="<?= base_url() ?>aia/temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
+                '<a href="<?= base_url() ?>aia/Temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
                 '<a onclick="log(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="far fa-file-alt text-dark" title="Logs"></i></a>';
                 }else{
                   console.log('o');
@@ -591,7 +591,7 @@ var KTDatatableJsonRemoteDemo = {
                   return '<span class="label font-weight-bold label-lg label-light-default label-inline"style="'+approve+'">'+t.STATUS+'</span>'+
                   '<a onclick="viewCommitment(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Commitment"><i class="fa-solid fa-scroll text-dark"></i></a>'+
                   '<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>'+
-                  '<a href="<?= base_url() ?>aia/temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
+                  '<a href="<?= base_url() ?>aia/Temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
                   '<a onclick="log(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="far fa-file-alt text-dark" title="Logs"></i></a>';
                 }else if(t.STATUS == 'Tindak Lanjut' && t.APPROVAL_COMMITMENT == 3 && t.APPROVAL_TINDAKLANJUT == 0){
                   console.log('s');
@@ -599,7 +599,7 @@ var KTDatatableJsonRemoteDemo = {
                 '<a onclick="approveTL(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="Approve Tindak Lanjut"><i class="fa fa-file-circle-check text-dark"></i></a>'+
                 '<a onclick="viewCommitment(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Commitment"><i class="fa-solid fa-scroll text-dark"></i></a>'+
                 '<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>'+
-                '<a href="<?= base_url() ?>aia/temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
+                '<a href="<?= base_url() ?>aia/Temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
                 '<a onclick="log(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="far fa-file-alt text-dark" title="Logs"></i></a>';
                 }else if(t.STATUS == 'CLOSE' && t.APPROVAL_COMMITMENT == 3 && t.APPROVAL_TINDAKLANJUT == 3){
                   console.log('t');
@@ -607,7 +607,7 @@ var KTDatatableJsonRemoteDemo = {
                 '<a onclick="viewTL(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Tindak Lanjut"><i class="fa-solid fa-file-alt text-dark"></i></a>'+
                 '<a onclick="viewCommitment(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Commitment"><i class="fa-solid fa-scroll text-dark"></i></a>'+
                 '<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>'+
-                '<a href="<?= base_url() ?>aia/temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
+                '<a href="<?= base_url() ?>aia/Temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
                 '<a onclick="log(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="far fa-file-alt text-dark" title="Logs"></i></a>';
                 }else if(t.STATUS == 'Tindak Lanjut' && t.APPROVAL_COMMITMENT == 3 && t.APPROVAL_TINDAKLANJUT !== 0){
                   console.log('u');
@@ -615,7 +615,7 @@ var KTDatatableJsonRemoteDemo = {
                 '<a onclick="viewTL(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Tindak Lanjut"><i class="fa-solid fa-file-alt text-dark"></i></a>'+
                 '<a onclick="viewCommitment(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Commitment"><i class="fa-solid fa-scroll text-dark"></i></a>'+
                 '<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>'+
-                '<a href="<?= base_url() ?>aia/temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
+                '<a href="<?= base_url() ?>aia/Temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
                 '<a onclick="log(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="far fa-file-alt text-dark" title="Logs"></i></a>';
                 }else{
                   console.log('v');
@@ -637,7 +637,7 @@ var KTDatatableJsonRemoteDemo = {
                 '<a onclick="entryTL(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="Tindak Lanjut"><i class="fa fa-file-pen text-dark"></i></a>'+
                 '<a onclick="viewCommitment(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Commitment"><i class="fa-solid fa-scroll text-dark"></i></a>'+
                 '<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>'+
-                '<a href="<?= base_url() ?>aia/temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
+                '<a href="<?= base_url() ?>aia/Temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
                 '<a onclick="log(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="far fa-file-alt text-dark" title="Logs"></i></a>';
                 }else if(t.STATUS == 'Tindak Lanjut' && t.APPROVAL_COMMITMENT == 3){
                   console.log('y');
@@ -645,7 +645,7 @@ var KTDatatableJsonRemoteDemo = {
                 '<a onclick="viewTL(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Tindak Lanjut"><i class="fa-solid fa-file-alt text-dark"></i></a>'+
                 '<a onclick="viewCommitment(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Commitment"><i class="fa-solid fa-scroll text-dark"></i></a>'+
                 '<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>'+
-                '<a href="<?= base_url() ?>aia/temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
+                '<a href="<?= base_url() ?>aia/Temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
                 '<a onclick="log(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="far fa-file-alt text-dark" title="Logs"></i></a>';
                 }else if(t.STATUS == 'CLOSE' && t.APPROVAL_COMMITMENT == 3 && t.APPROVAL_TINDAKLANJUT == 3){
                   console.log('z');
@@ -653,7 +653,7 @@ var KTDatatableJsonRemoteDemo = {
                 '<a onclick="viewTL(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Tindak Lanjut"><i class="fa-solid fa-file-alt text-dark"></i></a>'+
                 '<a onclick="viewCommitment(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon" title="View Commitment"><i class="fa-solid fa-scroll text-dark"></i></a>'+
                 '<a onclick="chatbox(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>'+
-                '<a href="<?= base_url() ?>aia/temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
+                '<a href="<?= base_url() ?>aia/Temuan/export_pdf/'+t.ID_TEMUAN+'" class="btn btn-sm btn-clean btn-icon" title="Print LKHA"><i class="fa-solid fa-file-pdf text-dark"></i></a>'+
                 '<a onclick="log(' + t.ID_TEMUAN + ')" class="btn btn-sm btn-clean btn-icon"><i class="far fa-file-alt text-dark" title="Logs"></i></a>';
                 }
                 else{
@@ -726,7 +726,6 @@ var KTDatatableJsonRemoteDemo = {
   function entryTL(id_tl)
   {
     currentID_TL = id_tl;
-    console.log(currentID_TL);
     $.get(`<?= base_url('aia/Temuan/getFileEntry/') ?>`+id_tl, function(data, status){
         const obj = JSON.parse(data);
         $('#ID_TEMUAN_ENTRY').val(id_tl);
@@ -824,12 +823,11 @@ var KTDatatableJsonRemoteDemo = {
   }
 
 function chatbox(id_tl) {
-    $.post('<?= base_url('aia/temuan/updateStatus/') ?>'+id_tl, function(response) {
+    $.post('<?= base_url('aia/Temuan/updateStatus/') ?>'+id_tl, function(response) {
         
     });
-    $.get(`<?= base_url('aia/temuan/getdatadetail/') ?>` + id_tl, function(data, status) {
+    $.get(`<?= base_url('aia/Temuan/getdatadetail/') ?>` + id_tl, function(data, status) {
         const obj = JSON.parse(data);
-        console.log(obj);
         $('#ID_TEMUAN_CHATBOX').val(id_tl);
         $('#KOMENTAR_AUDITOR').val(obj.KOMENTAR_AUDITOR);
         $('#KOMENTAR_AUDITEE').val(obj.KOMENTAR_AUDITEE);
@@ -837,15 +835,9 @@ function chatbox(id_tl) {
     $('#modal_chat').modal('show');
 }
 
-// $('#log_form').submit(function(event) {
-//     event.preventDefault(); // Prevent the default form submission
-//     var id_tl = $('#ID_TEMUAN_CHATBOX').val();
-//     $.post('<?= base_url('aia/temuan/updateStatus/') ?>' + id_tl, function(response) {
-//     });
-// });
+
 
   function approve(id_tl){
-    console.log(id_tl);
     $('#ID_TEMUAN_APPROVAL1').val(id_tl);
     $.get(`<?= base_url('aia/Temuan/getCommitment/') ?>` + id_tl, function(data, status) {
         const obj = JSON.parse(data);
@@ -858,7 +850,6 @@ function chatbox(id_tl) {
     $('#modal_approve').modal('show');
   }
   function approveTL(id_tl){
-    console.log(id_tl);
     $('#ID_TEMUAN_APPROVE_TL').val(id_tl);
     var currentID_TL = id_tl;
       $.get(`<?= base_url('aia/Temuan/getFileEntry/') ?>` + id_tl, function(data, status) {
@@ -886,7 +877,7 @@ function chatbox(id_tl) {
   function entry_tl(id_tl)
   {
     currentID_TL = id_tl;
-    $.get(`<?= base_url('aia/temuan/getFileEntry/') ?>`+id_tl, function(data, status){
+    $.get(`<?= base_url('aia/Temuan/getFileEntry/') ?>`+id_tl, function(data, status){
         const obj = JSON.parse(data);
         $('#ID_RE').val(id_tl);
         $('#RESPONSE_AUDITEE').val(obj.RESPONSE_AUDITEE);

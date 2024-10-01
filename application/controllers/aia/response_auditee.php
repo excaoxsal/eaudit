@@ -44,12 +44,11 @@ class Response_auditee extends MY_Controller {
 		$this->show($data);
 	}
 	public function respon($data){
-		
+		// echo ($_FILES['file_excel']['error']);die;
 		$request = $this->input->post();
 		date_default_timezone_set('Asia/Jakarta');
 		$id_re = $_REQUEST['ID_RE'];
         $ext = pathinfo($_FILES['file_excel']['name'], PATHINFO_EXTENSION);
-		
 		$current_date = date('Y-m-d');
 		$current_time = date('YmdHis');
 		$query_waktu=$this->db->select('WAKTU_AUDIT_AWAL,WAKTU_AUDIT_SELESAI')->from('WAKTU_AUDIT W')
@@ -77,8 +76,10 @@ class Response_auditee extends MY_Controller {
 					$eltype= $config['allowed_types'];
 					$loadupload = $config['upload_path'];
 					$this->upload->upload_path = $loadupload;
-					$this->upload->allowed_types = $eltype;
+					$this->upload->allowed_types = $config['allowed_types'];
+					$this->upload->max_size = $config['max_size'];
 					$this->upload->initialize($config);
+					// var_dump($this->upload->do_upload('file_excel'));die;
 					$file_path = base_url().'storage/aia/'.$config['file_name'].'.'.$ext;
 					if ( ! $this->upload->do_upload('file_excel'))
 	                {
@@ -143,11 +144,7 @@ class Response_auditee extends MY_Controller {
 
 	public function chatbox($data){
 		$request = $this->input->post();
-		// var_dump($request['KOMENTAR_1']);die;
-		$data_update = [
-			'KOMENTAR_1'           			=> is_empty_return_null($request['MSG_AUDITOR']),
-			'KOMENTAR_2'          			=> is_empty_return_null($request['MSG_AUDITEE']),
-		];
+		
 		
 		$user_session = $_SESSION['NAMA_ROLE'];
         if($user_session=="AUDITOR"){

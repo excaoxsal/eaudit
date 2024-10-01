@@ -70,19 +70,19 @@
     </div>
   </div>
 </div>
-<!-- Modal-->
-<div class="modal fade" id="modal_upload" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
+<!-- Modal master pertanyaan-->
+<div class="modal fade" id="modal_input_pertanyaan" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Input Master Pertanyaan</h5>
+        <h5 class="modal-title" id="ModalLabel">Input Master Pertanyaan</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <i aria-hidden="true" class="ki ki-close"></i>
         </button>
       </div>
       
         <div class="modal-body" style="height: auto">
-        <form class="form" id="kt_form" method="post" action="<?= base_url() ?>aia/iso/insertPertanyaan" enctype="multipart/form-data">
+        <form class="form" id="insert_form" method="post" action="<?= base_url() ?>aia/iso/insertPertanyaan" enctype="multipart/form-data">
           <div class="form-group row">
             <div class="col-12">
               <label>Klausul</label>
@@ -93,25 +93,25 @@
           <div class="form-group row">
             <div class="col-12">
               <label>Lv1</label>
-              <input type="text" class="form-control" placeholder="Lv1" name="LV1" id="KLAUSUL">
+              <input type="text" class="form-control" placeholder="Lv1" name="LV1" id="LV1">
             </div>
           </div>
           <div class="form-group row">
             <div class="col-12">
               <label>Lv2</label>
-              <input type="text" class="form-control" placeholder="Lv2" name="LV2" id="KLAUSUL">
+              <input type="text" class="form-control" placeholder="Lv2" name="LV2" id="LV2">
             </div>
           </div>
           <div class="form-group row">
             <div class="col-12">
               <label>Lv3</label>
-              <input type="text" class="form-control" placeholder="Lv3" name="LV3" id="KLAUSUL">
+              <input type="text" class="form-control" placeholder="Lv3" name="LV3" id="LV3">
             </div>
           </div>
           <div class="form-group row">
             <div class="col-12">
               <label>Lv4</label>
-              <input type="text" class="form-control" placeholder="Lv4" name="LV4" id="KLAUSUL">
+              <input type="text" class="form-control" placeholder="Lv4" name="LV4" id="LV4">
             </div>
           </div>
           <div class="form-group row">
@@ -136,6 +136,71 @@
   </div>
 </div>
 <!-- end:modal -->
+<div class="modal fade" id="modal_edit_pertanyaan" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Master Pertanyaan</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <i aria-hidden="true" class="ki ki-close"></i>
+        </button>
+      </div>
+      
+        <div class="modal-body" style="height: auto">
+        <form class="form" id="update_form" method="post" action="<?= base_url() ?>aia/iso/updatePertanyaan" enctype="multipart/form-data">
+          <div class="form-group row">
+            <div class="col-12">
+              <label>Klausul</label>
+              <input type="text" class="form-control" placeholder="KLAUSUL" name="KLAUSUL_EDIT" id="KLAUSUL_EDIT">
+              <input type="hidden" class="form-control" name="ID_MASTER_PERTANYAAN" id="ID_MASTER_PERTANYAAN">
+              <input type="hidden" class="form-control" name="ID_ISO" id="ID_ISO_EDIT" value="<?=$id_iso?>">
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-12">
+              <label>Lv1</label>
+              <input type="text" class="form-control" placeholder="Lv1" name="LV1_EDIT" id="LV1_EDIT">
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-12">
+              <label>Lv2</label>
+              <input type="text" class="form-control" placeholder="Lv2" name="LV2_EDIT" id="LV2_EDIT">
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-12">
+              <label>Lv3</label>
+              <input type="text" class="form-control" placeholder="Lv3" name="LV3_EDIT" id="LV3_EDIT">
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-12">
+              <label>Lv4</label>
+              <input type="text" class="form-control" placeholder="Lv4" name="LV4_EDIT" id="LV4_EDIT">
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-12">
+              <label>Auditee</label>
+              <textarea class="form-control" name="AUDITEE_EDIT" id="AUDITEE_EDIT"></textarea>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-12">
+              <label>Pertanyaan</label>
+              <textarea class="form-control" name="PERTANYAAN_EDIT" id="PERTANYAAN_EDIT"></textarea>
+            </div>
+          </div>
+          
+        </div>
+        <div class="modal-footer">
+          <input type="submit" class="btn btn-primary font-weight-bold" value="Submit">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 
 <script type="text/javascript">
@@ -200,7 +265,7 @@
           searchable: !1,
           overflow: "visible",
           template: function(t) {
-            return '<a  href="<?= base_url() ?>aia/Iso/editPertanyaan/'+t.ID_MASTER_PERTANYAAN+'" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit text-dark"></i></a>'
+            return '<a onclick="editPertanyaan(' + t.ID_MASTER_PERTANYAAN + ')" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit text-dark"></i></a>'
             }
         }
       ]
@@ -210,10 +275,27 @@
     }
   };
 
+
+  function editPertanyaan(id_tl) {
+    $.get(`<?= base_url('aia/Iso/getdatapertanyaan/') ?>` + id_tl, function(data, status) {
+        const obj = JSON.parse(data);
+        $('#ID_ISO_EDIT').val(obj.ID_ISO);
+        $('#ID_MASTER_PERTANYAAN').val(id_tl);
+        $('#KLAUSUL_EDIT').val(obj.KODE_KLAUSUL);
+        $('#LV1_EDIT').val(obj.LV1);
+        $('#LV2_EDIT').val(obj.LV2);
+        $('#LV3_EDIT').val(obj.LV3);
+        $('#LV4_EDIT').val(obj.LV4);
+        $('#AUDITEE_EDIT').val(obj.AUDITEE);
+        $('#PERTANYAAN_EDIT').val(obj.PERTANYAAN);
+    });
+    $('#modal_edit_pertanyaan').modal('show');
+  }
+
   function insertPertanyaan(id_tl)
   {
     
-    $('#modal_upload').modal('show');
+    $('#modal_input_pertanyaan').modal('show');
   }
   jQuery(document).ready((function() {
     KTDatatableJsonRemoteDemo.init()

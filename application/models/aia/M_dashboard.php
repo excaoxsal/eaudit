@@ -146,6 +146,7 @@ class M_dashboard extends CI_Model
         // var_dump($result);die;
         return $result;
     }
+    
     public function getTemuanbyCabang(){
         $this->db->select('
         d.NAMA_DIVISI as divisi,d.KODE,d.KODE_PARENT, 

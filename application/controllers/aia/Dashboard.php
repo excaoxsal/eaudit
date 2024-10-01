@@ -22,17 +22,14 @@ class Dashboard extends MY_Controller
         $iso = $this->m_dashboard->getIso();
         $years  = $this->m_status_tl->getYearTl();
         $years_ = (!empty($years)) ? max($years)['TAHUN'] : date('Y');
-
         $year   = ($this->input->get('year')) ? $this->input->get('year') : $years_;
         $divisi = $this->input->get('auditee');
-
         $data['list_divisi']    = $this->m_status_tl->getAuditeeTl($year);
         $data['rekap']          = $this->data($year, $divisi);
-        //$data['rekom']              = $this->m_status_tl->rekomDashboard($year, $divisi);
-        $eldata = $this->getTemuanDatatable();
-        $eldivisi = $this->all_divisi();
         $data['datatable']      = $this->getTemuanDatatable();
+        $data['datatablecabang']      = $this->getTemuanDataTableCabang();
         $data['datadivisi']     = $this->all_divisi();
+        $data['datacabang']     = $this->all_cabang();
         $data['iso']            = $iso;
         $data['years']          = $years;
         $data['year_filter']    = $year;
@@ -45,7 +42,17 @@ class Dashboard extends MY_Controller
     {
         $this->db->select('KODE');
         $this->db->from('TM_DIVISI');
-        $this->db->where('IS_DIVISI IS NOT NULL');
+        $this->db->where('IS_CABANG','N');
+        $this->db->where('IS_DIVISI', 'Y');
+        $this->db->order_by('NAMA_DIVISI','ASC');
+        $query=$this->db->get();
+        return $query->result_array();
+    }
+    public function all_cabang()
+    {
+        $this->db->select('KODE');
+        $this->db->from('TM_DIVISI');
+        $this->db->where('IS_CABANG','Y');
         $this->db->where('IS_DIVISI', 'Y');
         $this->db->order_by('NAMA_DIVISI','ASC');
         $query=$this->db->get();
@@ -107,6 +114,18 @@ class Dashboard extends MY_Controller
         // header('Content-type: application/json');
         // Ambil data dari model
         $data_temuan = $this->m_dashboard->getTemuanByDivisi();
+        // $data_sub = $this->m_dashboard->getSubDivisi();
+        // var_dump($data_temuan);die;
+        // Kirim data dalam format JSON
+        return($data_temuan);
+    }
+
+
+    public function getTemuanDataTableCabang()
+    {
+        // header('Content-type: application/json');
+        // Ambil data dari model
+        $data_temuan = $this->m_dashboard->getTemuanbyCabang();
         // $data_sub = $this->m_dashboard->getSubDivisi();
         // var_dump($data_temuan);die;
         // Kirim data dalam format JSON
@@ -230,11 +249,11 @@ class Dashboard extends MY_Controller
                 SUM(CASE WHEN t."STATUS" != \'CLOSE\' THEN 1 ELSE 0 END) AS "BELUM_CLOSED"
             FROM 
                 "TEMUAN_DETAIL" t
-            JOIN 
+            right JOIN 
                 "RESPONSE_AUDITEE_H" h ON t."ID_RESPONSE" = h."ID_HEADER"
-            right JOIN
+            left JOIN
                 "TM_DIVISI" d on h."DIVISI" = d."KODE" 
-            where d."IS_CABANG" = \'Y\' and d."IS_DIVISI" = \'Y\'
+            where d."IS_CABANG" = \'Y\' and d."IS_DIVISI" = \'Y\' and h."ID_ISO" =1
             GROUP BY 
                 d."KODE"
         ');
@@ -260,11 +279,11 @@ class Dashboard extends MY_Controller
                 SUM(CASE WHEN t."STATUS" != \'CLOSE\' THEN 1 ELSE 0 END) AS "BELUM_CLOSED"
             FROM 
                 "TEMUAN_DETAIL" t
-            JOIN 
+            right JOIN 
                 "RESPONSE_AUDITEE_H" h ON t."ID_RESPONSE" = h."ID_HEADER"
-            right JOIN
+            left JOIN
                 "TM_DIVISI" d on h."DIVISI" = d."KODE" 
-            where d."IS_CABANG" = \'Y\' and d."IS_DIVISI" = \'Y\'
+            where d."IS_CABANG" = \'Y\' and d."IS_DIVISI" = \'Y\' and h."ID_ISO" =2
             GROUP BY 
                 d."KODE"
         ');
@@ -290,11 +309,11 @@ class Dashboard extends MY_Controller
                 SUM(CASE WHEN t."STATUS" != \'CLOSE\' THEN 1 ELSE 0 END) AS "BELUM_CLOSED"
             FROM 
                 "TEMUAN_DETAIL" t
-            JOIN 
+            right JOIN 
                 "RESPONSE_AUDITEE_H" h ON t."ID_RESPONSE" = h."ID_HEADER"
-            right JOIN
+            left JOIN
                 "TM_DIVISI" d on h."DIVISI" = d."KODE" 
-            where d."IS_CABANG" = \'Y\' and d."IS_DIVISI" = \'Y\'
+            where d."IS_CABANG" = \'Y\' and d."IS_DIVISI" = \'Y\' and h."ID_ISO" =3
             GROUP BY 
                 d."KODE"
         ');
@@ -320,11 +339,11 @@ class Dashboard extends MY_Controller
                 SUM(CASE WHEN t."STATUS" != \'CLOSE\' THEN 1 ELSE 0 END) AS "BELUM_CLOSED"
             FROM 
                 "TEMUAN_DETAIL" t
-            JOIN 
+            right JOIN 
                 "RESPONSE_AUDITEE_H" h ON t."ID_RESPONSE" = h."ID_HEADER"
-            right JOIN
+            left JOIN
                 "TM_DIVISI" d on h."DIVISI" = d."KODE" 
-            where d."IS_CABANG" = \'Y\' and d."IS_DIVISI" = \'Y\'
+            where d."IS_CABANG" = \'Y\' and d."IS_DIVISI" = \'Y\' and h."ID_ISO" =4
             GROUP BY 
                 d."KODE"
         ');

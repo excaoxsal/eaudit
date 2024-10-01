@@ -256,8 +256,33 @@ class Iso extends MY_Controller
 		}
 	}
 
-	public function editPertanyaan() {
-		
+	public function getdatapertanyaan($id) {
+		$query = $this->db->select('*')->from('TM_PERTANYAAN')->where('ID_MASTER_PERTANYAAN', $id)->get()->row();
+        echo json_encode($query);
 	}
 
+	public function updatePertanyaan() {
+		// var_dump($_POST);die;
+		$this->db->set('KODE_KLAUSUL', $_POST['KLAUSUL_EDIT']);
+		$this->db->set('LV1', $_POST['LV1_EDIT']);
+		$this->db->set('LV2', $_POST['LV2_EDIT']);
+		$this->db->set('LV3', $_POST['LV3_EDIT']);
+		$this->db->set('LV4', $_POST['LV4_EDIT']);
+		$this->db->set('AUDITEE', $_POST['AUDITEE_EDIT']);
+		$this->db->set('PERTANYAAN', $_POST['PERTANYAAN_EDIT']);
+		$this->db->set('ID_ISO', $_POST['ID_ISO']);
+		$this->db->where('ID_MASTER_PERTANYAAN', $_POST['ID_MASTER_PERTANYAAN']);
+		$elupdate = $this->db->update('TM_PERTANYAAN');
+
+		if ($elupdate) {
+			$success_message = 'Pertanyaan Berhasil Diperbarui';
+	        $this->session->set_flashdata('success', $success_message);
+		}
+		else{
+			$error_message = 'Pertanyaan Gagal Diperbarui';
+	        $this->session->set_flashdata('error', $error_message);
+		}
+		redirect(base_url('aia/Iso/show_iso/'.$_POST['ID_ISO']));
+		
+	}
 }
