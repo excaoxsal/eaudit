@@ -722,7 +722,8 @@ var KTDatatableJsonRemoteDemo = {
       });
       $('#modal_viewCommitment').modal('show'); 
   }
-  var currentID_TL;
+  
+
   function entryTL(id_tl)
   {
     currentID_TL = id_tl;
@@ -738,9 +739,9 @@ var KTDatatableJsonRemoteDemo = {
           $('#btnSubmitTL').show();
 
         } else {
-          $('#FILE').hide();
+          $('#FILE_TL').hide();
           $('#btnDelete').hide();
-          $('#FILE_IN_TL').attr('href', obj.FILE).hide();
+          $('#FILE_IN_TL').hide();
           
 
         }
@@ -812,7 +813,7 @@ var KTDatatableJsonRemoteDemo = {
           },
           success: function(data) {
             Swal.fire("Sukses!", "File berhasil terhapus", "success");
-            entry_tl(currentID_TL);
+            entryTL(currentID_TL);
           },
           error: function(data){
             Swal.fire("Gagal menyimpan data!", "Pastikan semua kolom terisi!", "error");

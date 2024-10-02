@@ -230,6 +230,7 @@ public function index()
 		$this->db->set('INVESTIGASI', $data_update['INVESTIGASI'][0]);
 		$this->db->set('STATUS', 'Commitment');
 		$this->db->set('ID_ATASAN_AUDITEE', $data_update['ID_ATASAN_AUDITEE']);
+		$this->db->set('LOG_KIRIM', 'Commitment Auditee');
 		$this->db->set('ID_AUDITEE', $data_update['ID_AUDITEE']);
 		$this->db->where('ID_TEMUAN', $request['ID_TEMUAN']);
 		$update = $this->db->update('TEMUAN_DETAIL');
@@ -258,37 +259,52 @@ public function index()
 		$id_temuan = $_REQUEST['ID_TEMUAN'];
 		// var_dump($_REQUEST['ID_TEMUAN']);die;
         $ext = pathinfo($_FILES['upload_file']['name'], PATHINFO_EXTENSION);
-		
-		$current_date = date('Y-m-d');
-		$current_time = date('YmdHis');
-
-		$config['file_name']        = "KETERANGAN_TL".$current_time;
-		$config['upload_path'] = './storage/aia/'; // Lokasi penyimpanan file
-		$config['allowed_types'] = 'xls|xlsx|pdf|doc|docx|ppt|pptx|jpg|jpeg|png|zip|rar'; // Jenis file yang diizinkan
-		$config['max_size'] = 15000; // Ukuran maksimum file (dalam KB)\
-		$upload_path = './storage/aia/';
-		$eltype= $config['allowed_types'];
-		$loadupload = $config['upload_path'];
-		$this->upload->upload_path = $loadupload;
-		$this->upload->allowed_types = $eltype;
-		$this->upload->initialize($config);
-		$file_path = base_url().'storage/aia/'.$config['file_name'].'.'.$ext;
-		
-		$elupload = $this->upload->do_upload('upload_file');
-		$upload_data = $this->upload->data();
-				
-		$data_update = 
+		if($ext==""||$ext==null){
+			$data_update = 
 			[
 			'KETERANGAN_TL'           			=> is_empty_return_null($request['KETERANGAN_TL']),
-			'FILE'           					=> is_empty_return_null($file_path),
 			'LOG_KIRIM'							=> 'Tindak Lanjut Auditee'
 			];
 		
-		$this->db->set('FILE', $file_path);
-		$this->db->set('KETERANGAN_TL', $data_update['KETERANGAN_TL'][0]);
-		$this->db->set('STATUS', 'Tindak Lanjut');
-		$this->db->where('ID_TEMUAN', $id_temuan);
-		$update = $this->db->update('TEMUAN_DETAIL');
+			$this->db->set('KETERANGAN_TL', $data_update['KETERANGAN_TL'][0]);
+			$this->db->set('STATUS', 'Tindak Lanjut');
+			$this->db->set('LOG_KIRIM', 'Tindak Lanjut Auditee');
+			$this->db->where('ID_TEMUAN', $id_temuan);
+			$update = $this->db->update('TEMUAN_DETAIL');
+		}
+		else{
+			$current_date = date('Y-m-d');
+			$current_time = date('YmdHis');
+
+			$config['file_name']        = "KETERANGAN_TL".$current_time;
+			$config['upload_path'] = './storage/aia/'; // Lokasi penyimpanan file
+			$config['allowed_types'] = 'xls|xlsx|pdf|doc|docx|ppt|pptx|jpg|jpeg|png|zip|rar'; // Jenis file yang diizinkan
+			$config['max_size'] = 15000; // Ukuran maksimum file (dalam KB)\
+			$upload_path = './storage/aia/';
+			$eltype= $config['allowed_types'];
+			$loadupload = $config['upload_path'];
+			$this->upload->upload_path = $loadupload;
+			$this->upload->allowed_types = $eltype;
+			$this->upload->initialize($config);
+			$file_path = base_url().'storage/aia/'.$config['file_name'].'.'.$ext;
+			
+			$elupload = $this->upload->do_upload('upload_file');
+			$upload_data = $this->upload->data();
+					
+			$data_update = 
+				[
+				'KETERANGAN_TL'           			=> is_empty_return_null($request['KETERANGAN_TL']),
+				'FILE'           					=> is_empty_return_null($file_path),
+				'LOG_KIRIM'							=> 'Tindak Lanjut Auditee'
+				];
+			
+			$this->db->set('FILE', $file_path);
+			$this->db->set('KETERANGAN_TL', $data_update['KETERANGAN_TL'][0]);
+			$this->db->set('STATUS', 'Tindak Lanjut');
+			$this->db->set('LOG_KIRIM', 'Tindak Lanjut Auditee');
+			$this->db->where('ID_TEMUAN', $id_temuan);
+			$update = $this->db->update('TEMUAN_DETAIL');
+		}
 		
 		if ($update){
 			$data_pemeriksa = ['STATUS_TINDAKLANJUT' => 1, 'TANGGAL' => date('Y-m-d')];
