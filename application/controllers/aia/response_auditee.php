@@ -143,9 +143,10 @@ class Response_auditee extends MY_Controller {
 	}
 
 	public function chatbox($data){
-		$request = $this->input->post();
-		
-		
+		// $request = ($this->input->post('KOMENTAR_1',true));
+		// var_dump($request);die;
+		$request['KOMENTAR_1'] = $this->input->post('KOMENTAR_1',true);
+		$request['KOMENTAR_2'] = $this->input->post('KOMENTAR_2',true);
 		$user_session = $_SESSION['NAMA_ROLE'];
         if($user_session=="AUDITOR"){
 			$this->db->set('KOMENTAR_1', $request['KOMENTAR_1']);
@@ -226,7 +227,7 @@ class Response_auditee extends MY_Controller {
 			$this->db->where('ID_RE', $data);
 			$this->db->update('RESPONSE_AUDITEE_D');
 		}
-		
+		 	
 	}
 	
 	public function generate($data){
@@ -235,8 +236,9 @@ class Response_auditee extends MY_Controller {
 		$query_divisi = $this->db->select('KODE')->from('WAKTU_AUDIT w')->join('TM_DIVISI d','d.ID_DIVISI=w.ID_DIVISI')->where('ID_JADWAL',$data)->get();
 		$query_iso = $this->db->select('ID_ISO')->from('TM_ISO')->get();
 		$result_iso = $query_iso->result_array();
-		$query_bersih_h = $this->db->where('ID_JADWAL =', $data)->delete('RESPONSE_AUDITEE_D');
+		$query_bersih_temuan = $this->db->where('ID_JADWAL =', $data)->delete('TEMUAN_DETAIL');
 		$query_bersih_d = $this->db->where('ID_JADWAL =', $data)->delete('RESPONSE_AUDITEE_H');
+		$query_bersih_h = $this->db->where('ID_JADWAL =', $data)->delete('RESPONSE_AUDITEE_D');
 		$result_divisi = $query_divisi->result_array();
 		foreach($result_iso as $iso){
 			$insert_header = [

@@ -11,7 +11,6 @@ class Dashboard extends MY_Controller
         $this->load->model('monitoring/m_rekap', 'm_rekap');
 		$this->load->model('aia/M_dashboard', 'm_dashboard');
         $this->is_login();
-        $this->is_auditor();
         if(!$this->is_auditor()) $this->load->view('/errors/html/err_401');
     }
 
@@ -44,7 +43,7 @@ class Dashboard extends MY_Controller
         $this->db->from('TM_DIVISI');
         $this->db->where('IS_CABANG','N');
         $this->db->where('IS_DIVISI', 'Y');
-        $this->db->order_by('NAMA_DIVISI','ASC');
+        $this->db->order_by('COUNT','ASC');
         $query=$this->db->get();
         return $query->result_array();
     }

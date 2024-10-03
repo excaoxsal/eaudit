@@ -155,16 +155,6 @@ table {
                                     </select>
                                 </div>
                             </div>
-                            <div class="row w-25">
-                                <div class="col">
-                                    <select class="form-control form-control-solid form-control-lg" id="auditee">
-                                        <option value="">-- All Auditee --</option>
-                                        <?php foreach ($list_divisi as $divisi) { ?>
-                                            <option value="<?= $divisi['ID_DIVISI'] ?>"><?= $divisi['NAMA_DIVISI'] ?></option>
-                                        <?php } ?>
-                                    </select>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>

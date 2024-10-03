@@ -48,8 +48,8 @@ class M_dashboard extends CI_Model
        ->join('TM_DIVISI d', 'd.KODE = t.SUB_DIVISI')
        ->join('TM_ISO i','i.ID_ISO=h.ID_ISO')
        ->where('d.IS_CABANG','N')
-       ->group_by('d.KODE_PARENT,d.COUNT,t.SUB_DIVISI,d.NAMA_DIVISI,ISO')
-       
+       ->group_by('d.COUNT,d.KODE_PARENT,t.SUB_DIVISI,d.NAMA_DIVISI,ISO')
+       ->order_by('d.COUNT','ASC')
        ->having('t.SUB_DIVISI is not null')
        ->get();
         $resultsdivisi = [];
