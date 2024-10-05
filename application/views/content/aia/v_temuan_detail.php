@@ -726,7 +726,7 @@ var KTDatatableJsonRemoteDemo = {
 
   function entryTL(id_tl)
   {
-    currentID_TL = id_tl;
+    var currentID_TL = id_tl;
     $.get(`<?= base_url('aia/Temuan/getFileEntry/') ?>`+id_tl, function(data, status){
         const obj = JSON.parse(data);
         $('#ID_TEMUAN_ENTRY').val(id_tl);
@@ -742,10 +742,7 @@ var KTDatatableJsonRemoteDemo = {
           $('#FILE_TL').hide();
           $('#btnDelete').hide();
           $('#FILE_IN_TL').hide();
-          
-
         }
-        // console.log(data.NOMOR_LHA);
     });
     $('#modal_TL').modal('show');
   }

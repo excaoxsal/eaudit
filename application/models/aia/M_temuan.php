@@ -38,6 +38,11 @@ class M_Temuan extends CI_Model{
         $this->db->update($table, $data);
     }
 
+    public function delete($table, $key, $id)
+    {
+        $this->db->where($key, $id)->delete($table);
+    }
+
     public function insert_pemeriksa($id_temuan, $data)
     {
         $data_notif = [];
