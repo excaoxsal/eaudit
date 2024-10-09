@@ -41,7 +41,8 @@ class Jabatan extends MY_Controller
         $data = array(
             'NAMA_JABATAN'  => trim(htmlspecialchars($this->input->post('jabatan', TRUE))),
             'ID_ATASAN'     => $id_atasan,
-            'ID_DIVISI'     => $this->input->post('id_divisi')
+            'ID_DIVISI'     => $this->input->post('id_divisi'),
+            'IS_AIA'        => 1
         );
 
         if (!$id) {
