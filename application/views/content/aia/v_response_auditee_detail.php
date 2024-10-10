@@ -247,9 +247,14 @@ var KTDatatableJsonRemoteDemo = {
           searchable: !1,
           overflow: "visible",
           template: function(t) {
-            var buttonTitle = role ==='AUDITOR'  ? 'Lihat"><i class="fa fa-eye text-dark' : 'Respon"><i class="fa fa-upload text-dark';//masukin buat entry commitment, approval, 
-            var iconClass = t.STATUS == 1 ? 'color:red' : 'color:#000';
+            if(t.RESPONSE_AUDITEE==""){
+              var buttonTitle = role ==='AUDITOR'  ? 'Lihat"><i class="fa fa-eye text-dark' : 'Respon"><i class="fa fa-upload text-dark';
+            }
+            else{
+              var buttonTitle = role ==='AUDITOR'  ? 'Lihat"><i class="fa fa-eye text-dark' : 'Koreksi"><i class="fa fa-edit text-dark';
+            }
             
+            var iconClass = t.STATUS == 1 ? 'color:red' : 'color:#000';
           return '<a onclick="uploadFile(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon" title="' + buttonTitle + '"></i></a><a onclick="chatbox(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>';
         }
         }]

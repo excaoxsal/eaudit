@@ -73,6 +73,7 @@ class M_res_auditee extends CI_Model{
             ra."ID_MASTER_PERTANYAAN",
             ra."SUB_DIVISI",
             ra."ID_RE",
+            ra."RESPONSE_AUDITEE",
             ra."STATUS_AUDITOR" as "STATUS"
             
         FROM 
@@ -92,7 +93,7 @@ class M_res_auditee extends CI_Model{
         WHERE 
             ra."ID_HEADER" = ?
         ORDER BY
-             ra."ID_RE" ASC
+            ra."ID_RE" ASC
         ';
         $params = array($data);
         }

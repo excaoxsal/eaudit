@@ -739,7 +739,7 @@ var KTDatatableJsonRemoteDemo = {
           $('#btnSubmitTL').show();
 
         } else {
-          $('#FILE_TL').hide();
+          
           $('#btnDelete').hide();
           $('#FILE_IN_TL').hide();
         }
