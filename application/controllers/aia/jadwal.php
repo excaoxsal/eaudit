@@ -63,7 +63,7 @@ class Jadwal extends MY_Controller
 		
 		$data['list_user'] 			= $this->master_act->user(['U.STATUS' => 1]);
 		$data_auditor 				= $this->master_act->auditor(['R.ID_ROLE' => 1]);
-		$data_lead_auditor			= $this->master_act->auditor(['J.ID_JABATAN' => 2035]);
+		$data_lead_auditor			= $this->master_act->auditor(['J.ID_JABATAN' => 2132]);
 		$data_jadwal				= $this->m_jadwal->get_jadwal($id_jadwal,$_SESSION->ID_USER);
 		$data['data_auditor'] 		= $data_auditor;
 		$data['data_lead_auditor'] 	= $data_lead_auditor;
@@ -155,7 +155,7 @@ class Jadwal extends MY_Controller
 		$this->db->trans_start();
 		$hapus = $this->db->where('ID_JADWAL',$data)->delete('WAKTU_AUDIT');
 
-		if($hapus===false){
+		if($hapus==false){
 			$this->db->trans_rollback();
 			$error_message = 'keknya ga bisa hapus deh';
 			$this->session->set_flashdata('error', $error_message);
@@ -165,7 +165,7 @@ class Jadwal extends MY_Controller
 			$this->db->trans_complete();
 			$success_message = 'Data berhasil dihapus.';
 			$this->session->set_flashdata('success', $success_message);
-			redirect($_SERVER['HTTP_REFERER']);
+			echo base_url('aia/jadwal/jadwal_audit');
 		}
 		
 	}

@@ -82,8 +82,8 @@ class M_jadwal extends CI_Model{
 
         $this->db->select('w.ID_JADWAL, w.WAKTU_AUDIT_AWAL, w.WAKTU_AUDIT_SELESAI,us.NAMA as NAMA_AUDITOR, ul.NAMA as NAMA_LEAD_AUDITOR, div.NAMA_DIVISI as NAMA_DIVISI');
 		$this->db->from('WAKTU_AUDIT w');
-		$this->db->join('TM_USER us', 'us.ID_USER = w.ID_AUDITOR');
-		$this->db->join('TM_USER ul', 'ul.ID_USER = w.ID_LEAD_AUDITOR');
+		$this->db->join('TM_USER us', 'us.ID_USER = w.ID_AUDITOR','left');
+		$this->db->join('TM_USER ul', 'ul.ID_USER = w.ID_LEAD_AUDITOR','left');
 		$this->db->join('TM_DIVISI div','div.ID_DIVISI = w.ID_DIVISI','LEFT');
 		// $this->db->where('w.ID_AUDITOR', '1');
 		// $this->db->or_where('w.ID_LEAD_AUDITOR', '12345');
