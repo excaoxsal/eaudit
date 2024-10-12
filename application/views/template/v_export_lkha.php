@@ -113,6 +113,20 @@
             <td colspan="12" style="border: 0.1em solid #000;">Nama : <?php echo $atasan_auditee; ?></td>
         </tr>
         <tr>
+            <td colspan="4" style="border: 0.1em solid #000;height: 20px;"><b>Tanda Tangan Auditor:</b></td>
+            <td colspan="4" style="border: 0.1em solid #000;" class="center">
+              <img src="<?php echo ($status == "Tindak Lanjut" || $status == "CLOSE") ? $ttd_auditor : null; ?>" alt="Tanda Tangan Auditor" style="width: 50px; height: 20px; object-fit: contain;"/>
+            </td>
+            <td colspan="12" style="border: 0.1em solid #000;">Nama : <?php echo $auditor; ?></td>
+        </tr>
+        <tr>
+            <td colspan="4" style="border: 0.1em solid #000;height: 20px;"><b>Tanda Tangan Lead Auditor:</b></td>
+            <td colspan="4" style="border: 0.1em solid #000;" class="center">
+              <img src="<?php echo ($status == "Tindak Lanjut" || $status == "CLOSE") ? $ttd_lead_auditor : null; ?>" alt="Tanda Tangan Lead Auditor" style="width: 50px; height: 20px; object-fit: contain;"/>
+            </td>
+            <td colspan="12" style="border: 0.1em solid #000;">Nama : <?php echo $lead_auditor; ?></td>
+        </tr>
+        <tr>
             <td colspan="4" style="border: 0.1em solid #000;"><b>TANGGAL CLOSING AUDITEE :</b></td>
             <td colspan="16" style="border: 0.1em solid #000;"><?php echo $closedate;?></td>
         </tr>
