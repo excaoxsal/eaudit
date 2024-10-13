@@ -120,7 +120,7 @@ class Jadwal extends MY_Controller
 				echo base_url('aia/jadwal/jadwal_audit');
 			}
 			else{
-				$error_message = 'keknya ga bisa update deh';
+				$error_message = 'Data tidak berhasil diupdate';
 				$this->session->set_flashdata('error', $error_message);
 			}
 		}
@@ -157,7 +157,7 @@ class Jadwal extends MY_Controller
 
 		if($hapus==false){
 			$this->db->trans_rollback();
-			$error_message = 'keknya ga bisa hapus deh';
+			$error_message = 'Data belum berhasil dihapus.';
 			$this->session->set_flashdata('error', $error_message);
 			
 		}
