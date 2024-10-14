@@ -153,20 +153,27 @@ class Jadwal extends MY_Controller
 	public function hapus($data){
 		
 		$this->db->trans_start();
-		$hapus = $this->db->where('ID_JADWAL',$data)->delete('WAKTU_AUDIT');
-
-		if($hapus==false){
-			$this->db->trans_rollback();
-			$error_message = 'Data belum berhasil dihapus.';
-			$this->session->set_flashdata('error', $error_message);
-			
+		$check_temuan = $this->db->select('*')->from('TEMUAN_DETAIL')->where('ID_JADWAL',$data)->get();
+		$result_temuan = $check_temuan->result_array();
+		if($result_temuan==null){
+			$hapus = $this->db->where('ID_JADWAL',$data)->delete('WAKTU_AUDIT');
+			if($hapus==false){
+				$this->db->trans_rollback();
+				$error_message = 'Data belum berhasil dihapus.';
+				$this->session->set_flashdata('error', $error_message);
+				
+			}
+			else{
+				$this->db->trans_complete();
+				$success_message = 'Data berhasil dihapus.';
+				$this->session->set_flashdata('success', $success_message);
+				echo base_url('aia/jadwal/jadwal_audit');
+			}
 		}
 		else{
-			$this->db->trans_complete();
-			$success_message = 'Data berhasil dihapus.';
-			$this->session->set_flashdata('success', $success_message);
-			echo base_url('aia/jadwal/jadwal_audit');
+			$this->db->trans_rollback();
+				$error_message = 'Jadwal gagal dihapus dikarenakan sudah digenerate dan sudah menghasilkan temuan.';
+				$this->session->set_flashdata('error', $error_message);
 		}
-		
 	}
 }

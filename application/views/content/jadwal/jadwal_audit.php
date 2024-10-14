@@ -134,7 +134,7 @@
               return 0;
             }else {
               return (
-                      '<a onclick="save(' + t.ID_JADWAL + ')" class="btn btn-sm btn-clean btn-icon" title="Generate"><i class="fa fa-refresh text-dark"></i></a>'+
+                      '<a onclick="save(' + t.ID_JADWAL + ')" class="btn btn-sm btn-clean btn-icon" title="Sinkronisasi"><i class="fa fa-refresh text-dark"></i></a>'+
                       
                       '<a href="<?= base_url() ?>aia/Jadwal/update/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit text-dark"></i></a>'+
                       '<a onclick="hapus(' + t.ID_JADWAL + ')" class="btn btn-sm btn-clean btn-icon" title="Hapus"><i class="fa fa-trash text-dark"></i></a>');
@@ -161,7 +161,7 @@
 
   function save(id) {
     Swal.fire({
-      text: 'Apakah Anda yakin generate data ini dan menghapus data yang sudah tersimpan?',
+      text: 'Apakah Anda yakin sinkronisasi data ini ?',
       icon: 'question',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',

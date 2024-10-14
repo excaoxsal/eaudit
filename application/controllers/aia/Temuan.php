@@ -412,7 +412,7 @@ public function index()
             'APPROVAL_COMMITMENT'       => $request['APPROVAL_COMMITMENT'],
             'STATUS'                    => 'OPEN',
             'KETERANGAN_ATASAN_AUDITEE' => is_empty_return_null($request['KETERANGAN_ATASAN_AUDITEE']),
-            'LOG_KIRIM'                 => 'Reject'
+            'LOG_KIRIM'                 => 'Approval Commitment telah ditolak oleh '.$_SESSION['NAMA']
         ];
 
         $this->db->set($data_update);
@@ -469,6 +469,17 @@ public function index()
 	        		$this->session->set_flashdata('error', $error_message);
 					redirect(base_url('aia/temuan/detail/'.$id_response));
 				}
+				$this->db->set($data_update);
+			    $this->db->where('ID_TEMUAN', $request['ID_TEMUAN_APPROVE_TL']);
+			    $update = $this->db->update('TEMUAN_DETAIL');
+
+			    if ($update) {
+			        $success_message = 'Temuan Sudah Berhasil Di Approve';
+			        $this->session->set_flashdata('success', $success_message);
+			    } else {
+			        $error_message = 'Temuan Gagal Di Approve ';
+			        $this->session->set_flashdata('error', $error_message);
+			    }
 				
 			}else if ($new_value==2){
 				if($this->is_auditor()){
@@ -479,7 +490,8 @@ public function index()
 					];
 					$data_pemeriksa1 = ['STATUS_TINDAKLANJUT' => 2, 'TANGGAL' => date('Y-m-d')];
 					$this->m_temuan->update($data_pemeriksa1, $array_where, 'PEMERIKSA');
-	
+					$lastquery=$this->db->last_query();
+					// var_dump($lastquery);die;
 					$array_whereNext = [
 						'ID_PERENCANAAN' => $request['ID_TEMUAN_APPROVE_TL'],
 						'JENIS_PERENCANAAN' => 'TEMUAN DETAIL',
@@ -495,6 +507,17 @@ public function index()
 	        		$this->session->set_flashdata('error', $error_message);
 					redirect(base_url('aia/temuan/detail/'.$id_response));
 				}
+				$this->db->set($data_update);
+			    $this->db->where('ID_TEMUAN', $request['ID_TEMUAN_APPROVE_TL']);
+			    $update = $this->db->update('TEMUAN_DETAIL');
+
+			    if ($update) {
+			        $success_message = 'Temuan Sudah Berhasil Di Approve';
+			        $this->session->set_flashdata('success', $success_message);
+			    } else {
+			        $error_message = 'Temuan Gagal Di Approve ';
+			        $this->session->set_flashdata('error', $error_message);
+			    }
 				
 			}else{
 				if($this->is_atasan_auditee()){
@@ -505,7 +528,6 @@ public function index()
 					];
 					$data_pemeriksa1 = ['STATUS_TINDAKLANJUT' => 2, 'TANGGAL' => date('Y-m-d')];
 					$this->m_temuan->update($data_pemeriksa1, $array_where, 'PEMERIKSA');
-	
 					$array_whereNext = [
 						'ID_PERENCANAAN' => $request['ID_TEMUAN_APPROVE_TL'],
 						'JENIS_PERENCANAAN' => 'TEMUAN DETAIL',
@@ -539,7 +561,8 @@ public function index()
 	    	$data_update = [
 		        'APPROVAL_TINDAKLANJUT' 			=> $request['APPROVAL_TINDAKLANJUT'],
 		        'STATUS' 							=> 'Commitment Approved',
-		        'KETERANGAN_TL_ATASAN' 				=> is_empty_return_null($request['KETERANGAN_TL_ATASAN'])
+		        'KETERANGAN_TL_ATASAN' 				=> is_empty_return_null($request['KETERANGAN_TL_ATASAN']),
+				'LOG_KIRIM'							=> 'Tindak Lanjut Telah ditolak'
 		    ];
 	    	//$new_value = $request['APPROVAL_TINDAKLANJUT'];
 	    	$array_where = [
