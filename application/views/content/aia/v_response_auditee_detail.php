@@ -248,11 +248,11 @@ var KTDatatableJsonRemoteDemo = {
           overflow: "visible",
           template: function(t) {
             if(t.RESPONSE_AUDITEE==""||t.RESPONSE_AUDITEE==null){
-              var buttonTitle = role ==='AUDITOR'  ? 'Lihat"><i class="fa fa-eye text-dark' : 'Respon"><i class="fa fa-upload text-dark';
+              var buttonTitle = 'Respon"><i class="fa fa-upload text-dark';
               console.log('a');
             }
             else if(t.RESPONSE_AUDITEE!=""||t.RESPONSE_AUDITEE!=null){
-              var buttonTitle = role ==='AUDITOR'  ? 'Lihat"><i class="fa fa-eye text-dark' : 'Koreksi"><i class="fa fa-edit text-dark';
+              var buttonTitle = 'Koreksi"><i class="fa fa-edit text-danger';
               console.log('b');
             }
             
