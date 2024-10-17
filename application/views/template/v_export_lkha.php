@@ -52,20 +52,6 @@
             <td colspan="20" style="border: 0.1em solid #000 ;height: auto;"><?=$nomor_iso?><br/>Klausul <?=$klausul?><br/><?=$temuan?></td>
         </tr>
         <tr>
-            <td colspan="4" style="border: 0.1em solid #000; height: 20px;"><b>Tanda Tangan Lead Auditor:</b></td>
-            <td colspan="4" style="border: 0.1em solid #000;" class="center">
-              <img src="<?= ($kategori === "OBSERVASI") ? "NULL" : $ttd_lead_auditor; ?>" alt="Tanda Tangan Lead Auditor" style="width: 50px; height: 20px; object-fit: contain;"/>
-            </td>
-            <td colspan="12" style="border: 0.1em solid #000;">Nama Lead Auditor : <?php echo $lead_auditor; ?></td>
-        </tr>
-        <tr>
-            <td colspan="4" style="border: 0.1em solid #000;height: 20px;"><b>Tanda Tangan Auditor:</b></td>
-            <td colspan="4" style="border: 0.1em solid #000;" class="center">
-              <img src="<?= ($kategori === "OBSERVASI") ? "NULL" : $ttd_auditor; ?>" alt="Tanda Tangan Auditor" style="width: 50px; height: 20px; object-fit: contain;"/>
-            </td>
-            <td colspan="12" style="border: 0.1em solid #000;">Nama Auditor : <?php echo $auditor; ?></td>
-        </tr>
-        <tr>
             <td colspan="4" style="border: 0.1em solid #000;height: 20px;"><b>Tanda tangan Auditee:</b></td>
             <td colspan="4" style="border: 0.1em solid #000;" class="center">
               <img src="<?php echo $ttd_auditee; ?>" alt="Tanda Tangan Auditee" style="width: 50px; height: 20px; object-fit: contain;"/>
@@ -80,6 +66,20 @@
             <td colspan="12" style="border: 0.1em solid #000;">Nama : <?php echo $atasan_auditee; ?></td>
         </tr>
         <tr>
+            <td colspan="4" style="border: 0.1em solid #000;height: 20px;"><b>Tanda Tangan Auditor:</b></td>
+            <td colspan="4" style="border: 0.1em solid #000;" class="center">
+              <img src="<?= ($kategori === "OBSERVASI") ? "NULL" : $ttd_auditor; ?>" alt="Tanda Tangan Auditor" style="width: 50px; height: 20px; object-fit: contain;"/>
+            </td>
+            <td colspan="12" style="border: 0.1em solid #000;">Nama Auditor : <?php echo $auditor; ?></td>
+        </tr>
+        <tr>
+            <td colspan="4" style="border: 0.1em solid #000; height: 20px;"><b>Tanda Tangan Lead Auditor:</b></td>
+            <td colspan="4" style="border: 0.1em solid #000;" class="center">
+              <img src="<?= ($kategori === "OBSERVASI") ? "NULL" : $ttd_lead_auditor; ?>" alt="Tanda Tangan Lead Auditor" style="width: 50px; height: 20px; object-fit: contain;"/>
+            </td>
+            <td colspan="12" style="border: 0.1em solid #000;">Nama Lead Auditor : <?php echo $lead_auditor; ?></td>
+        </tr>
+        <tr>
             <td colspan="20" class="center" style="border: 0.1em solid #000;height: 15px;"><b>(DIISI OLEH AUDITEE)</b></td>
         </tr>
         <tr>
@@ -87,7 +87,7 @@
             <td colspan="16" style="border: 0.1em solid #000;"><?php echo $tanggal_implementasi; ?></td>
         </tr>
         <tr>
-            <td colspan="4" style="border: 0.1em solid #000;height: auto;"><b>TINDAKAN INVESTIGASI:</b></td>
+            <td colspan="4" style="border: 0.1em solid #000;height: auto;"><b>AKAR PERMASALAHAN:</b></td>
             <td colspan="16" style="border: 0.1em solid #000;"><?=$investigasi?></td>
         </tr>
         <tr>
@@ -101,28 +101,28 @@
         <tr>
             <td colspan="4" style="border: 0.1em solid #000;height: 20px;"><b>Tanda Tangan Auditee:</b></td>
             <td colspan="4" style="border: 0.1em solid #000;" class="center">
-              <img src="<?php echo ($status == "Tindak Lanjut" || $status == "CLOSE") ? $ttd_auditee : null; ?>" alt="Tanda Tangan Auditee" style="width: 50px; height: 20px; object-fit: contain;"/>
+              <img src="<?php echo ($kategori != "OBSERVASI" && ($status == "Commitment Approved" || $status == "Tindak Lanjut" || $status == "CLOSE")) ? $ttd_auditee : null; ?>" alt="Tanda Tangan Auditee" style="width: 50px; height: 20px; object-fit: contain;"/>
             </td>
             <td colspan="12" style="border: 0.1em solid #000;">Nama : <?php echo $auditee; ?></td>
         </tr>
         <tr>
             <td colspan="4" style="border: 0.1em solid #000;height: 20px;"><b>Tanda Tangan Atasan Langsung Auditee:</b></td>
             <td colspan="4" style="border: 0.1em solid #000;" class="center">
-              <img src="<?php echo ($approval_tindaklanjut == 1 || $status == "CLOSE") ? $ttd_atasan_auditee : null; ?>" alt="Tanda Tangan Atasan Auditee" style="width: 50px; height: 20px; object-fit: contain;"/>
+              <img src="<?php echo ($kategori != "OBSERVASI" && ($status == "Commitment Approved" || $status == "Tindak Lanjut" || $status == "CLOSE")) ? $ttd_atasan_auditee : null; ?>" alt="Tanda Tangan Atasan Auditee" style="width: 50px; height: 20px; object-fit: contain;"/>
             </td>
             <td colspan="12" style="border: 0.1em solid #000;">Nama : <?php echo $atasan_auditee; ?></td>
         </tr>
         <tr>
             <td colspan="4" style="border: 0.1em solid #000;height: 20px;"><b>Tanda Tangan Auditor:</b></td>
             <td colspan="4" style="border: 0.1em solid #000;" class="center">
-              <img src="<?php echo ($status == "Tindak Lanjut" || $status == "CLOSE") ? $ttd_auditor : null; ?>" alt="Tanda Tangan Auditor" style="width: 50px; height: 20px; object-fit: contain;"/>
+              <img src="<?php echo ($kategori != "OBSERVASI" && ($status == "Commitment Approved" || $status == "Tindak Lanjut" || $status == "CLOSE")) ? $ttd_auditor : null; ?>" alt="Tanda Tangan Auditor" style="width: 50px; height: 20px; object-fit: contain;"/>
             </td>
             <td colspan="12" style="border: 0.1em solid #000;">Nama : <?php echo $auditor; ?></td>
         </tr>
         <tr>
             <td colspan="4" style="border: 0.1em solid #000;height: 20px;"><b>Tanda Tangan Lead Auditor:</b></td>
             <td colspan="4" style="border: 0.1em solid #000;" class="center">
-              <img src="<?php echo ($status == "Tindak Lanjut" || $status == "CLOSE") ? $ttd_lead_auditor : null; ?>" alt="Tanda Tangan Lead Auditor" style="width: 50px; height: 20px; object-fit: contain;"/>
+              <img src="<?php echo ($kategori != "OBSERVASI" && ($status == "Commitment Approved" || $status == "Tindak Lanjut" || $status == "CLOSE")) ? $ttd_lead_auditor : null; ?>" alt="Tanda Tangan Lead Auditor" style="width: 50px; height: 20px; object-fit: contain;"/>
             </td>
             <td colspan="12" style="border: 0.1em solid #000;">Nama : <?php echo $lead_auditor; ?></td>
         </tr>
@@ -134,18 +134,32 @@
             <td colspan="20" style="border: 0.1em solid #000;height: auto;"><b>KOMENTAR PEMERIKSAAN : </b><?=$komen_lead?></td>
         </tr>
         <tr>
-            <td colspan="4" style="border: 0.1em solid #000;height: 20px;"><b>Tanda Tangan Lead Auditor:</b></td>
+            <td colspan="4" style="border: 0.1em solid #000;height: 20px;"><b>Tanda Tangan Auditee:</b></td>
             <td colspan="4" style="border: 0.1em solid #000;" class="center">
-              <img src="<?php echo ($approval_tindaklanjut == 3 || $status == "CLOSE") ? $ttd_lead_auditor : null; ?>" alt="Tanda Tangan Lead Auditor" style="width: 50px; height: 20px; object-fit: contain;"/>
+              <img src="<?php echo ($kategori != "OBSERVASI" && ($status == "Tindak Lanjut" || $status == "CLOSE")) ? $ttd_auditee : null; ?>" alt="Tanda Tangan Auditee" style="width: 50px; height: 20px; object-fit: contain;"/>
             </td>
-            <td colspan="12" style="border: 0.1em solid #000;">Nama Lead Auditor : <?php echo $lead_auditor; ?></td>
+            <td colspan="12" style="border: 0.1em solid #000;">Nama : <?php echo $auditee; ?></td>
+        </tr>
+        <tr>
+            <td colspan="4" style="border: 0.1em solid #000;height: 20px;"><b>Tanda Tangan Atasan Auditee:</b></td>
+            <td colspan="4" style="border: 0.1em solid #000;" class="center">
+              <img src="<?php echo ($kategori != "OBSERVASI" && ($approval_tindaklanjut == 1 || $status == "CLOSE")) ? $ttd_atasan_auditee : null; ?>" alt="Tanda Tangan Atasan Langsung Auditee" style="width: 50px; height: 20px; object-fit: contain;"/>
+            </td>
+            <td colspan="12" style="border: 0.1em solid #000;">Nama : <?php echo $atasan_auditee; ?></td>
         </tr>
         <tr>
             <td colspan="4" style="border: 0.1em solid #000;height: 20px;"><b>Tanda Tangan Auditor:</b></td>
             <td colspan="4" style="border: 0.1em solid #000;" class="center">
-              <img src="<?php echo ($approval_tindaklanjut == 2 || $status == "CLOSE") ? $ttd_auditor : null; ?>" alt="Tanda Tangan Auditor" style="width: 50px; height: 20px; object-fit: contain;"/>
+              <img src="<?php echo ($kategori != "OBSERVASI" && ($approval_tindaklanjut == 2 || $status == "CLOSE")) ? $ttd_auditor : null; ?>" alt="Tanda Tangan Auditor" style="width: 50px; height: 20px; object-fit: contain;"/>
             </td>
             <td colspan="12" style="border: 0.1em solid #000;">Nama Auditor : <?php echo $auditor; ?></td>
+        </tr>
+        <tr>
+            <td colspan="4" style="border: 0.1em solid #000;height: 20px;"><b>Tanda Tangan Lead Auditor:</b></td>
+            <td colspan="4" style="border: 0.1em solid #000;" class="center">
+              <img src="<?php echo ($kategori != "OBSERVASI" && ($approval_tindaklanjut == 3 || $status == "CLOSE")) ? $ttd_lead_auditor : null; ?>" alt="Tanda Tangan Lead Auditor" style="width: 50px; height: 20px; object-fit: contain;"/>
+            </td>
+            <td colspan="12" style="border: 0.1em solid #000;">Nama Lead Auditor : <?php echo $lead_auditor; ?></td>
         </tr>
     </table>
 </body>
