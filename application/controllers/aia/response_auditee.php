@@ -147,6 +147,7 @@ class Response_auditee extends MY_Controller {
 		// var_dump($request);die;
 		$request['KOMENTAR_1'] = $this->input->post('KOMENTAR_1',true);
 		$request['KOMENTAR_2'] = $this->input->post('KOMENTAR_2',true);
+		$request['ID_RE_CHAT'] = $this->input->post('ID_RE_CHAT',true);
 		$user_session = $_SESSION['NAMA_ROLE'];
         if($user_session=="AUDITOR"){
 			$this->db->set('KOMENTAR_1', $request['KOMENTAR_1']);
@@ -163,7 +164,7 @@ class Response_auditee extends MY_Controller {
 			$this->db->where('ID_RE', $request['ID_RE_CHAT']);
 			$elupdate = $this->db->update('RESPONSE_AUDITEE_D');
 		}
-		// var_dump($elcoding_parts);die; 
+		// var_dump($this->db->last_query());die; 
         
 		if($elupdate){
 			$success_message = 'Data Komentar Berhasil Diposting.';
