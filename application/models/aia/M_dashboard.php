@@ -55,6 +55,7 @@ class M_dashboard extends CI_Model
         $resultsdivisi = [];
         $n=0;
         // var_dump($querydivisi->result(),$querysubdivisi->result());die;
+        echo($this->db->last_query());die;
 
         foreach ($querydivisi->result() as $row) {
             // Jika divisi belum ada di array $resultsdivisi, tambahkan divisi tersebut
@@ -152,6 +153,7 @@ class M_dashboard extends CI_Model
         d.NAMA_DIVISI as divisi,d.KODE,d.KODE_PARENT, 
         SUM(CASE WHEN t."STATUS" = \'CLOSE\' THEN 1 ELSE 0 END) AS closed,
         SUM(CASE WHEN t."STATUS" != \'CLOSE\' THEN 1 ELSE 0 END) AS open,
+        (SELECT COUNT("ID_RESPONSE") FROM "TEMUAN_DETAIL" LEFT JOIN "RESPONSE_AUDITEE_H" ON "ID_RESPONSE" = "ID_HEADER" WHERE "DIVISI" = d."KODE_PARENT") AS "TOTALALL",
         i.NOMOR_ISO as ISO');
         $this->db->from('RESPONSE_AUDITEE_H h');
         $this->db->join('TEMUAN_DETAIL t','t.ID_RESPONSE=h.ID_HEADER','left');
@@ -160,13 +162,14 @@ class M_dashboard extends CI_Model
         $this->db->where('d.IS_CABANG','Y');
         $this->db->order_by('d.COUNT','ASC');
         $this->db->group_by('d.NAMA_DIVISI,d.COUNT,d.KODE,d.KODE_PARENT, ISO');
-        
         $querydivisi = $this->db->get();
+        // var_dump($querydivisi->result_array());die;
+
         $querysubdivisi=
         $this->db->select('
         t.SUB_DIVISI as subdivisi,d.NAMA_DIVISI as divisi,d.KODE_PARENT,
         SUM(CASE WHEN t."STATUS" = \'CLOSE\' THEN 1 ELSE 0 END) AS closed,
-        SUM(CASE WHEN t."STATUS" != \'CLOSE\' THEN 1 ELSE 0 END) AS open,                
+        SUM(CASE WHEN t."STATUS" != \'CLOSE\' THEN 1 ELSE 0 END) AS open,               
         i.NOMOR_ISO as ISO')
        ->from('TEMUAN_DETAIL t')
        ->join('RESPONSE_AUDITEE_H h','t.ID_RESPONSE = h.ID_HEADER','left')
@@ -191,6 +194,8 @@ class M_dashboard extends CI_Model
                     'kodedivisi'=>$row->KODE,
                     'namadivisi'=>$row->divisi,
                     'tipe' => 'Divisi',
+                    'totalall'=>$row->TOTALALL
+                    
                     
                 ];
             }
@@ -202,21 +207,25 @@ class M_dashboard extends CI_Model
                     $resultsdivisi[$row->divisi]['iso9001']['closed'] = $row->closed;
                     $resultsdivisi[$row->divisi]['iso9001']['open'] = $row->open;
                     $resultsdivisi[$row->divisi]['iso9001']['total'] = $row->closed + $row->open;
+                    
                     break;
                 case 'ISO 14001':
                     $resultsdivisi[$row->divisi]['iso14001']['closed'] = $row->closed;
                     $resultsdivisi[$row->divisi]['iso14001']['open'] = $row->open;
                     $resultsdivisi[$row->divisi]['iso14001']['total'] = $row->closed + $row->open;
+                    
                     break;
                 case 'ISO 37001':
                     $resultsdivisi[$row->divisi]['iso37001']['closed'] = $row->closed;
                     $resultsdivisi[$row->divisi]['iso37001']['open'] = $row->open;
                     $resultsdivisi[$row->divisi]['iso37001']['total'] = $row->closed + $row->open;
+                    
                     break;
                 case 'ISO 45001':
                     $resultsdivisi[$row->divisi]['iso45001']['closed'] = $row->closed;
                     $resultsdivisi[$row->divisi]['iso45001']['open'] = $row->open;
                     $resultsdivisi[$row->divisi]['iso45001']['total'] = $row->closed + $row->open;
+                    
                     break;
                 
             }
@@ -242,25 +251,30 @@ class M_dashboard extends CI_Model
                 $resultsdivisi[$rowsubdivisi->divisi]['iso9001']['closed'] = $rowsubdivisi->closed;
                 $resultsdivisi[$rowsubdivisi->divisi]['iso9001']['open'] = $rowsubdivisi->open;
                 $resultsdivisi[$rowsubdivisi->divisi]['iso9001']['total'] = $rowsubdivisi->open + $rowsubdivisi->closed;
+                
+
                 break;
             case 'ISO 14001':
                 $resultsdivisi[$rowsubdivisi->divisi]['iso14001']['closed'] = $rowsubdivisi->closed;
                 $resultsdivisi[$rowsubdivisi->divisi]['iso14001']['open'] = $rowsubdivisi->open;
                 $resultsdivisi[$rowsubdivisi->divisi]['iso14001']['total'] = $rowsubdivisi->open + $rowsubdivisi->closed;
+                
                 break;
             case 'ISO 37001':
                 $resultsdivisi[$rowsubdivisi->divisi]['iso37001']['closed'] = $rowsubdivisi->closed;
                 $resultsdivisi[$rowsubdivisi->divisi]['iso37001']['open'] = $rowsubdivisi->open;
                 $resultsdivisi[$rowsubdivisi->divisi]['iso37001']['total'] = $rowsubdivisi->open + $rowsubdivisi->closed;
+                
                 break;
             case 'ISO 45001':
                 $resultsdivisi[$rowsubdivisi->divisi]['iso45001']['closed'] = $rowsubdivisi->closed;
                 $resultsdivisi[$rowsubdivisi->divisi]['iso45001']['open'] = $rowsubdivisi->open;
                 $resultsdivisi[$rowsubdivisi->divisi]['iso45001']['total'] = $rowsubdivisi->open + $rowsubdivisi->closed;
+                
                 break;
             }
         }
-        // var_dump($rowsubdivisi->open);die;  
+        // var_dump($rowsubdivisi);die;  
         $result = [];
             foreach ($resultsdivisi as $element) {
                 // var_dump($element);die;

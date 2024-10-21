@@ -243,9 +243,11 @@ table {
                                                     <td><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['open']?></td>
                                                     <td><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['closed']?></td>
                                                     <td><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['total']?></td>
-                                                </tr>  
+                                                </tr>
                                                 
                                             <?php } ?>
+                                            
+
                                             <?php if($datatable[$ddivisi['KODE']][$i]['tipe']=="Subdivisi"){ ?>
                                                 <tr class="child-row12<?=$n?>" style="display: table-row;">  
                                                     <td class="feat-title"style="text-align:left;"><?= $datatable[$ddivisi['KODE']][$i]['namadivisi']?></td>  
@@ -264,11 +266,15 @@ table {
                                                 </tr>  
                                             <?php } ?>
 
-                                        <?php } ?>
+                                        <?php $datatotal1 = $datatable[$ddivisi['KODE']][$i]['iso9001']['total'];$datatotal2 += $datatable[$ddivisi['KODE']][$i]['iso9001']['total']; } ?>
                                     
                                     
                                     <?php } ?>
                                     <?php } ?>
+                                    <tr >
+                                        <td class="feat-title">Total</td>
+                                        <td colspan="3"><?= $datatotal1?></td>
+                                    </tr>  
                                 </tbody>
                             </table>
                         </div>
@@ -280,6 +286,7 @@ table {
                                     <th colspan="3"  style="text-align:center;">ISO 14001</th>
                                     <th colspan="3"  style="text-align:center;">ISO 37001</th>
                                     <th colspan="3"  style="text-align:center;">ISO 45001</th>
+                                    <th colspan="3" rowspan="2" style="text-align:center;">TOTAL</th>
                                     <tr>
                                         <td style="text-align:center;">Sudah Close</td>
                                         <td style="text-align:center;">Belum Close</td>
@@ -317,6 +324,7 @@ table {
                                                     <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['open']?></td>
                                                     <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['closed']?></td>
                                                     <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['total']?></td>
+                                                    <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['total'] + $datatablecabang[$cabang['KODE']][$i]['iso9001']['total'] +$datatablecabang[$cabang['KODE']][$i]['iso14001']['total'] + $datatablecabang[$cabang['KODE']][$i]['iso37001']['total']?></td>
                                                 </tr>  
                                                 
                                             <?php } ?>
@@ -335,6 +343,7 @@ table {
                                                     <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['open']?></td>
                                                     <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['closed']?></td>
                                                     <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['total']?></td>
+                                                    <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['total'] + $datatablecabang[$cabang['KODE']][$i]['iso9001']['total'] +$datatablecabang[$cabang['KODE']][$i]['iso14001']['total'] + $datatablecabang[$cabang['KODE']][$i]['iso37001']['total']?></td>
                                                 </tr>  
                                             <?php } ?>
 

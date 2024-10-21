@@ -144,7 +144,7 @@ class Response_auditee extends MY_Controller {
 
 	public function chatbox($data){
 		// $request = ($this->input->post('KOMENTAR_1',true));
-		// var_dump($request);die;
+		// var_dump($_REQUEST['ID_RE_CHAT']);die;
 		$request['KOMENTAR_1'] = $this->input->post('KOMENTAR_1',true);
 		$request['KOMENTAR_2'] = $this->input->post('KOMENTAR_2',true);
 		$user_session = $_SESSION['NAMA_ROLE'];
@@ -153,17 +153,17 @@ class Response_auditee extends MY_Controller {
 			$this->db->set('KOMENTAR_2', $request['KOMENTAR_2']);
 			$this->db->set('STATUS_AUDITEE', '1');
 			$this->db->set('LOG_KIRIM', 'Chat');
-			$this->db->where('ID_RE', $request['ID_RE_CHAT']);
+			$this->db->where('ID_RE', $_REQUEST['ID_RE_CHAT']);
 			$elupdate = $this->db->update('RESPONSE_AUDITEE_D');
 		}else{
 			$this->db->set('KOMENTAR_1', $request['KOMENTAR_1']);
 			$this->db->set('KOMENTAR_2', $request['KOMENTAR_2']);
 			$this->db->set('STATUS_AUDITOR', '1');
 			$this->db->set('LOG_KIRIM', 'Chat');
-			$this->db->where('ID_RE', $request['ID_RE_CHAT']);
+			$this->db->where('ID_RE', $_REQUEST['ID_RE_CHAT']);
 			$elupdate = $this->db->update('RESPONSE_AUDITEE_D');
 		}
-		// var_dump($elcoding_parts);die; 
+		// var_dump($this->db->last_query());die; 
         
 		if($elupdate){
 			$success_message = 'Data Komentar Berhasil Diposting.';
@@ -176,6 +176,15 @@ class Response_auditee extends MY_Controller {
 		}
 		
 
+	}
+
+	function jsonResponAuditee() 
+	{
+        header('Content-Type: application/json');
+		// var_dump($this->m_res_au->get_response_auditee_header());
+		$getquery = $this->m_res_au->get_response_auditee_header();
+		// var_dump($getquery);die;
+        echo json_encode($getquery);
 	}
 
 	function jsonResponAuditeeDetail($data) 
@@ -206,12 +215,7 @@ class Response_auditee extends MY_Controller {
             echo json_encode($query);   
     }
 
-	function jsonResponAuditee() 
-	{
-        header('Content-Type: application/json');
-		// var_dump($this->m_res_au->get_response_auditee_header());
-        echo json_encode($this->m_res_au->get_response_auditee_header());
-	}
+	
 
 	function updateStatus($data){
 		$user_session = $_SESSION['NAMA_ROLE'];

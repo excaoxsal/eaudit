@@ -15,8 +15,8 @@ class M_res_auditee extends CI_Model{
                     w."WAKTU_AUDIT_AWAL",
                     w."WAKTU_AUDIT_SELESAI",
                     au."NAMA" AS "AUDITOR",
-                    la."NAMA" AS "LEAD_AUDITOR"
-                    
+                    la."NAMA" AS "LEAD_AUDITOR",
+                    ( (SELECT COUNT("ID_RE") FROM "RESPONSE_AUDITEE_D" where "ID_HEADER" = ra."ID_HEADER" and "RESPONSE_AUDITEE" IS NOT NULL ) || \'/\' || (SELECT COUNT("ID_RE") FROM "RESPONSE_AUDITEE_D" where "ID_HEADER" = ra."ID_HEADER" )) AS "TOTAL"
                 FROM "RESPONSE_AUDITEE_H" ra
                 LEFT JOIN "WAKTU_AUDIT" w ON ra."ID_JADWAL" = w."ID_JADWAL"
                 JOIN "TM_USER" au ON w."ID_AUDITOR" = au."ID_USER"
@@ -24,7 +24,7 @@ class M_res_auditee extends CI_Model{
                 LEFT JOIN "TM_ISO" i ON ra."ID_ISO" = i."ID_ISO"
                 JOIN "TM_DIVISI" d ON d."KODE" = ra."DIVISI"
                 
-                ORDER BY i."NOMOR_ISO", w."WAKTU_AUDIT_SELESAI" DESC
+                ORDER BY w."WAKTU_AUDIT_SELESAI" ,i."ID_ISO"  DESC
             ');
             return $query->result_array();
         }else{

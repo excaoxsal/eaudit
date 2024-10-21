@@ -114,6 +114,10 @@ var KTDatatableJsonRemoteDemo = {
         title: "Lead Auditor"
       },
       {
+        field:"TOTAL",
+        title:"Total Respons"
+      },
+      {
           field: "ID_ISO",
           title: "Action",
           class: "text-center",

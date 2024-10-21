@@ -58,6 +58,21 @@ class Dashboard extends MY_Controller
         return $query->result_array();
     }
 
+    public function total_temuan_9001(){
+        $query_total_temuan = 
+        $this->db->select('
+        count("ID_TEMUAN")
+        ')
+        ->from('RESPONSE_AUDITEE_H h')
+        ->join('TEMUAN_DETAIL t','t.ID_RESPONSE=h.ID_HEADER','left')
+        ->join('TM_DIVISI d', 'h.DIVISI = d.KODE')
+        ->join('TM_ISO i','i.ID_ISO=h.ID_ISO')
+        ->where('d.IS_CABANG','N')
+        ->where('i.IS_CABANG','N')
+        ->order_by('d.COUNT','ASC')
+        ->group_by('d.NAMA_DIVISI,d.COUNT,d.KODE,d.KODE_PARENT, ISO')->get();
+    }
+
     public function getTemuanDataIso() {
         // Query untuk mendapatkan data kasus dari provinsi di Jawa
         $iso = $this->input->get('iso');
