@@ -55,7 +55,7 @@ class M_dashboard extends CI_Model
         $resultsdivisi = [];
         $n=0;
         // var_dump($querydivisi->result(),$querysubdivisi->result());die;
-        echo($this->db->last_query());die;
+        // echo($this->db->last_query());die;
 
         foreach ($querydivisi->result() as $row) {
             // Jika divisi belum ada di array $resultsdivisi, tambahkan divisi tersebut
