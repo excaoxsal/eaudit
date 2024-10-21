@@ -109,9 +109,16 @@ var KTDatatableJsonRemoteDemo = {
       },{
         field: "AUDITOR",
         title: "Auditor"
-      }, {
+      },{
         field: "LEAD_AUDITOR",
         title: "Lead Auditor"
+      },{
+        field: "JUMLAH_RESPONSE_AUDITEE_NOT_NULL",
+        title: "Respon Terisi",
+        width: 100,
+        template: function(t) {
+          return '<span>' + ' (' + t.JUMLAH_RESPONSE_AUDITEE_NOT_NULL + '/' + t.JUMLAH_TOTAL_PERTANYAAN + ') '+ '</span>';
+        }
       },
       {
         field:"TOTAL",
