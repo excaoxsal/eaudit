@@ -272,9 +272,16 @@ table {
                                     <?php } ?>
                                     <?php } ?>
                                     <tr >
-                                        <td class="feat-title">Total</td>
-                                        <td colspan="3"><?= $datatotal1?></td>
-                                    </tr>  
+                                        <td class="feat-title">Total Per-ISO</td>
+                                        <td colspan="3"><?= $temuan_1['0']['TOTALALL']?></td>
+                                        <td colspan="3"><?= $temuan_2['0']['TOTALALL']?></td>
+                                        <td colspan="3"><?= $temuan_3['0']['TOTALALL']?></td>
+                                        <td colspan="3"><?= $temuan_4['0']['TOTALALL']?></td>
+                                    </tr>
+                                    <tr >
+                                        <td class="feat-title">Total Semua Temuan</td>
+                                        <td colspan="12"><?= $temuan_1['0']['TOTALALL']+$temuan_2['0']['TOTALALL']+$temuan_3['0']['TOTALALL']+$temuan_4['0']['TOTALALL']?></td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -286,7 +293,7 @@ table {
                                     <th colspan="3"  style="text-align:center;">ISO 14001</th>
                                     <th colspan="3"  style="text-align:center;">ISO 37001</th>
                                     <th colspan="3"  style="text-align:center;">ISO 45001</th>
-                                    <th colspan="3" rowspan="2" style="text-align:center;">TOTAL</th>
+                                    <th colspan="3" rowspan="3" style="text-align:center;">TOTAL</th>
                                     <tr>
                                         <td style="text-align:center;">Sudah Close</td>
                                         <td style="text-align:center;">Belum Close</td>

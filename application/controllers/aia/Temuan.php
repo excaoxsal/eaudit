@@ -45,6 +45,14 @@ public function index()
 		$this->show($data);
 	}
 
+	function jsonResponAuditee() 
+	{
+        header('Content-Type: application/json');
+		$query = $this->m_temuan->get_response_auditee_header();
+		// var_dump($query);die;
+        echo json_encode($query);
+	}
+
 	function jsonTemuanDetail($data) 
 	{
         header('Content-Type: application/json');

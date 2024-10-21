@@ -130,6 +130,57 @@ class M_Temuan extends CI_Model{
         $query = $this->db->query($sql, $params);
         return $query->result_array();
     }
+    public function get_response_auditee_header(){
+        $datauser = $_SESSION['NAMA_ROLE'];
+        if($datauser=="AUDITOR"){
+            $query = $this->db->query('
+                SELECT
+                    ra."ID_HEADER",
+                    i."NOMOR_ISO",
+                    ra."DIVISI" AS "KODE",
+                    d."NAMA_DIVISI",
+                    w."WAKTU_AUDIT_AWAL",
+                    w."WAKTU_AUDIT_SELESAI",
+                    au."NAMA" AS "AUDITOR",
+                    la."NAMA" AS "LEAD_AUDITOR",
+                    ( \'(\'|| (SELECT COUNT("ID_TEMUAN") FROM "TEMUAN_DETAIL" where "ID_RESPONSE" = ra."ID_HEADER" and "STATUS" =\'CLOSE\' ) || \'/\' || (SELECT COUNT("ID_TEMUAN") FROM "TEMUAN_DETAIL" where "ID_RESPONSE" = ra."ID_HEADER" )||\')\' ) AS "TOTAL"
+                FROM "RESPONSE_AUDITEE_H" ra
+                LEFT JOIN "WAKTU_AUDIT" w ON ra."ID_JADWAL" = w."ID_JADWAL"
+                JOIN "TM_USER" au ON w."ID_AUDITOR" = au."ID_USER"
+                LEFT JOIN "TM_USER" la ON w."ID_LEAD_AUDITOR" = la."ID_USER"
+                LEFT JOIN "TM_ISO" i ON ra."ID_ISO" = i."ID_ISO"
+                JOIN "TM_DIVISI" d ON d."KODE" = ra."DIVISI"
+                
+                ORDER BY w."WAKTU_AUDIT_SELESAI" ,i."ID_ISO"  DESC
+            ');
+            // echo $query;die;
+            return $query->result_array();
+        }else{
+            $query = $this->db->query('
+                SELECT
+                    ra."ID_HEADER",
+                    i."NOMOR_ISO",
+                    ra."DIVISI" AS "KODE",
+                    d."NAMA_DIVISI",
+                    w."WAKTU_AUDIT_AWAL",
+                    w."WAKTU_AUDIT_SELESAI",
+                    au."NAMA" AS "AUDITOR",
+                    la."NAMA" AS "LEAD_AUDITOR",
+                    ( \'(\'|| (SELECT COUNT("ID_TEMUAN") FROM "TEMUAN_DETAIL" where "ID_RESPONSE" = ra."ID_HEADER" and "STATUS" =\'CLOSE\' ) || \'/\' || (SELECT COUNT("ID_TEMUAN") FROM "TEMUAN_DETAIL" where "ID_RESPONSE" = ra."ID_HEADER" )||\')\' ) AS "TOTAL"
+                FROM "RESPONSE_AUDITEE_H" ra
+                LEFT JOIN "WAKTU_AUDIT" w ON ra."ID_JADWAL" = w."ID_JADWAL"
+                JOIN "TM_USER" au ON w."ID_AUDITOR" = au."ID_USER"
+                LEFT JOIN "TM_USER" la ON w."ID_LEAD_AUDITOR" = la."ID_USER"
+                LEFT JOIN "TM_ISO" i ON ra."ID_ISO" = i."ID_ISO"
+                JOIN "TM_DIVISI" d ON d."KODE" = ra."DIVISI"
+                WHERE d."ID_DIVISI" =' . $_SESSION['ID_DIVISI'] . ' 
+                AND d."STATUS" = \'1\'
+                
+                ORDER BY i."NOMOR_ISO", w."WAKTU_AUDIT_SELESAI" ASC
+            ');
+            return $query->result_array();
+        }    
+    }
 
     public function get_temuan_detail($data){
         $user_session = $_SESSION['NAMA_ROLE'];

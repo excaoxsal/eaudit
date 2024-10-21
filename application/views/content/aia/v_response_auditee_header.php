@@ -121,10 +121,6 @@ var KTDatatableJsonRemoteDemo = {
         }
       },
       {
-        field:"TOTAL",
-        title:"Total Respons"
-      },
-      {
           field: "ID_ISO",
           title: "Action",
           class: "text-center",

@@ -29,6 +29,10 @@ class Dashboard extends MY_Controller
         $data['datatablecabang']      = $this->getTemuanDataTableCabang();
         $data['datadivisi']     = $this->all_divisi();
         $data['datacabang']     = $this->all_cabang();
+        $data['temuan_1']       = $this->total_temuan_9001();
+        $data['temuan_2']       = $this->total_temuan_14001();
+        $data['temuan_3']       = $this->total_temuan_37001();
+        $data['temuan_4']       = $this->total_temuan_45001();
         $data['iso']            = $iso;
         $data['years']          = $years;
         $data['year_filter']    = $year;
@@ -59,18 +63,66 @@ class Dashboard extends MY_Controller
     }
 
     public function total_temuan_9001(){
-        $query_total_temuan = 
-        $this->db->select('
-        count("ID_TEMUAN")
-        ')
-        ->from('RESPONSE_AUDITEE_H h')
-        ->join('TEMUAN_DETAIL t','t.ID_RESPONSE=h.ID_HEADER','left')
-        ->join('TM_DIVISI d', 'h.DIVISI = d.KODE')
-        ->join('TM_ISO i','i.ID_ISO=h.ID_ISO')
-        ->where('d.IS_CABANG','N')
-        ->where('i.IS_CABANG','N')
-        ->order_by('d.COUNT','ASC')
-        ->group_by('d.NAMA_DIVISI,d.COUNT,d.KODE,d.KODE_PARENT, ISO')->get();
+        $this->db->select('SUM(counts.count_temuans) AS "TOTALALL"')
+                ->from('(SELECT COUNT(t."ID_TEMUAN") AS count_temuans 
+                        FROM "TEMUAN_DETAIL" t 
+                        LEFT JOIN "RESPONSE_AUDITEE_H" h ON t."ID_RESPONSE" = h."ID_HEADER" 
+                        JOIN "TM_DIVISI" d ON d."KODE" = t."SUB_DIVISI" 
+                        JOIN "TM_ISO" i ON i."ID_ISO" = h."ID_ISO" 
+                        WHERE d."IS_CABANG" = \'N\' AND i."ID_ISO" = 1 
+                        GROUP BY d."COUNT", t."SUB_DIVISI", d."NAMA_DIVISI", d."KODE_PARENT", i."NOMOR_ISO", t."ID_RESPONSE" 
+                        HAVING t."SUB_DIVISI" IS NOT NULL) AS counts', false);
+
+        $query = $this->db->get();
+        $result = $query->result_array();
+        // var_dump($result['0']['TOTALALL']);die;
+        return $result;
+    }
+    public function total_temuan_14001(){
+        $this->db->select('SUM(counts.count_temuans) AS "TOTALALL"')
+                ->from('(SELECT COUNT(t."ID_TEMUAN") AS count_temuans 
+                        FROM "TEMUAN_DETAIL" t 
+                        LEFT JOIN "RESPONSE_AUDITEE_H" h ON t."ID_RESPONSE" = h."ID_HEADER" 
+                        JOIN "TM_DIVISI" d ON d."KODE" = t."SUB_DIVISI" 
+                        JOIN "TM_ISO" i ON i."ID_ISO" = h."ID_ISO" 
+                        WHERE d."IS_CABANG" = \'N\' AND i."ID_ISO" = 2 
+                        GROUP BY d."COUNT", t."SUB_DIVISI", d."NAMA_DIVISI", d."KODE_PARENT", i."NOMOR_ISO", t."ID_RESPONSE" 
+                        HAVING t."SUB_DIVISI" IS NOT NULL) AS counts', false);
+
+        $query = $this->db->get();
+        $result = $query->result_array();
+        // var_dump($result['0']['TOTALALL']);die;
+        return $result;
+    }
+    public function total_temuan_37001(){
+        $this->db->select('SUM(counts.count_temuans) AS "TOTALALL"')
+                ->from('(SELECT COUNT(t."ID_TEMUAN") AS count_temuans 
+                        FROM "TEMUAN_DETAIL" t 
+                        LEFT JOIN "RESPONSE_AUDITEE_H" h ON t."ID_RESPONSE" = h."ID_HEADER" 
+                        JOIN "TM_DIVISI" d ON d."KODE" = t."SUB_DIVISI" 
+                        JOIN "TM_ISO" i ON i."ID_ISO" = h."ID_ISO" 
+                        WHERE d."IS_CABANG" = \'N\' AND i."ID_ISO" = 3 
+                        GROUP BY d."COUNT", t."SUB_DIVISI", d."NAMA_DIVISI", d."KODE_PARENT", i."NOMOR_ISO", t."ID_RESPONSE" 
+                        HAVING t."SUB_DIVISI" IS NOT NULL) AS counts', false);
+
+        $query = $this->db->get();
+        $result = $query->result_array();
+        return $result;
+    }
+    public function total_temuan_45001(){
+        $this->db->select('SUM(counts.count_temuans) AS "TOTALALL"')
+                ->from('(SELECT COUNT(t."ID_TEMUAN") AS count_temuans 
+                        FROM "TEMUAN_DETAIL" t 
+                        LEFT JOIN "RESPONSE_AUDITEE_H" h ON t."ID_RESPONSE" = h."ID_HEADER" 
+                        JOIN "TM_DIVISI" d ON d."KODE" = t."SUB_DIVISI" 
+                        JOIN "TM_ISO" i ON i."ID_ISO" = h."ID_ISO" 
+                        WHERE d."IS_CABANG" = \'N\' AND i."ID_ISO" = 4 
+                        GROUP BY d."COUNT", t."SUB_DIVISI", d."NAMA_DIVISI", d."KODE_PARENT", i."NOMOR_ISO", t."ID_RESPONSE" 
+                        HAVING t."SUB_DIVISI" IS NOT NULL) AS counts', false);
+
+        $query = $this->db->get();
+        $result = $query->result_array();
+        return $result;
     }
 
     public function getTemuanDataIso() {

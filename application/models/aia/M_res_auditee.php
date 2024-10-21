@@ -26,8 +26,8 @@ class M_res_auditee extends CI_Model{
                 LEFT JOIN "RESPONSE_AUDITEE_D" rd ON ra."ID_HEADER" = rd."ID_HEADER"
                 JOIN "TM_DIVISI" d ON d."KODE" = ra."DIVISI"
 
-                GROUP BY ra."ID_HEADER", i."NOMOR_ISO", ra."DIVISI", d."NAMA_DIVISI", w."WAKTU_AUDIT_AWAL", 
-                 w."WAKTU_AUDIT_SELESAI", au."NAMA", la."NAMA"
+                GROUP BY ra."ID_HEADER", i."NOMOR_ISO",i."ID_ISO", ra."DIVISI", d."NAMA_DIVISI", w."WAKTU_AUDIT_AWAL", 
+                w."WAKTU_AUDIT_SELESAI", au."NAMA", la."NAMA"
                 
                 ORDER BY w."WAKTU_AUDIT_SELESAI" ,i."ID_ISO"  DESC
             ');
@@ -57,7 +57,7 @@ class M_res_auditee extends CI_Model{
                 AND d."STATUS" = \'1\'
 
                 GROUP BY ra."ID_HEADER", i."NOMOR_ISO", ra."DIVISI", d."NAMA_DIVISI", w."WAKTU_AUDIT_AWAL", 
-                 w."WAKTU_AUDIT_SELESAI", au."NAMA", la."NAMA"
+                w."WAKTU_AUDIT_SELESAI", au."NAMA", la."NAMA"
                 
                 ORDER BY i."NOMOR_ISO", w."WAKTU_AUDIT_SELESAI" DESC
             ');

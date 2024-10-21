@@ -115,7 +115,7 @@ var KTDatatableJsonRemoteDemo = {
     t = $("#kt_datatable").KTDatatable({
       data: {
         type: "remote",
-        source: '<?= base_url() ?>aia/Response_auditee/jsonResponAuditee',
+        source: '<?= base_url() ?>aia/Temuan/jsonResponAuditee',
         pageSize: 10
       },
       layout: {
@@ -136,16 +136,22 @@ var KTDatatableJsonRemoteDemo = {
         title: "DIVISI"
       }, {
         field: "WAKTU_AUDIT_AWAL",
-        title: "Waktu Awal Audit"
+        title: "Waktu Awal Audit",
+        width: 100
       },{
         field: "WAKTU_AUDIT_SELESAI",
-        title: "Waktu Akhir Audit"
+        title: "Waktu Akhir Audit",
+        width: 100
       },{
         field: "AUDITOR",
         title: "Auditor"
       }, {
         field: "LEAD_AUDITOR",
         title: "Lead Auditor"
+      },{
+        field: "TOTAL",
+        title: "Total",
+        width: 50
       },
       {
           field: "ID_HEADER",
