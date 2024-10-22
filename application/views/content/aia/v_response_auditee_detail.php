@@ -328,7 +328,7 @@ function uploadFile(id_tl)
     });
     $.get(`<?= base_url('aia/Response_auditee/getdatadetail/') ?>`+id_tl, function(data,status){
         const obj = JSON.parse(data);
-  console.log(obj);
+    console.log(obj);
         $('#ID_RE_CHAT').val(id_tl);
         $('#KOMENTAR_1').val(obj.KOMENTAR_1);
         $('#KOMENTAR_2').val(obj.KOMENTAR_2);

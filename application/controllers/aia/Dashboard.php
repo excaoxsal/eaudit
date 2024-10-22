@@ -425,6 +425,63 @@ class Dashboard extends MY_Controller
         echo json_encode($data);
     }
 
+    public function getReportData() {
+        // Query untuk mendapatkan data
+        $query = $this->db->query('
+            SELECT 
+                COUNT("ID_TEMUAN") AS total_semua,
+                (SELECT COUNT("ID_TEMUAN") FROM "TEMUAN_DETAIL" td 
+                    LEFT JOIN "RESPONSE_AUDITEE_H" rah ON rah."ID_HEADER" = td."ID_RESPONSE" 
+                    LEFT JOIN "TM_DIVISI" td2 ON td2."KODE" = rah."DIVISI"
+                    WHERE td2."IS_CABANG" = \'Y\') AS total_cabang,
+                (SELECT COUNT("ID_TEMUAN") FROM "TEMUAN_DETAIL" td 
+                    LEFT JOIN "RESPONSE_AUDITEE_H" rah ON rah."ID_HEADER" = td."ID_RESPONSE" 
+                    LEFT JOIN "TM_DIVISI" td2 ON td2."KODE" = rah."DIVISI"
+                    WHERE td2."IS_CABANG" = \'N\') AS total_pusat,
+                (SELECT COUNT("ID_TEMUAN") FROM "TEMUAN_DETAIL" td 
+                    LEFT JOIN "RESPONSE_AUDITEE_H" rah ON rah."ID_HEADER" = td."ID_RESPONSE" 
+                    LEFT JOIN "TM_DIVISI" td2 ON td2."KODE" = rah."DIVISI"
+                    WHERE rah."ID_ISO" = 1 AND td2."IS_CABANG" = \'N\') AS total_divisi_iso1,
+                (SELECT COUNT("ID_TEMUAN") FROM "TEMUAN_DETAIL" td 
+                    LEFT JOIN "RESPONSE_AUDITEE_H" rah ON rah."ID_HEADER" = td."ID_RESPONSE" 
+                    LEFT JOIN "TM_DIVISI" td2 ON td2."KODE" = rah."DIVISI"
+                    WHERE rah."ID_ISO" = 2 AND td2."IS_CABANG" = \'N\') AS total_divisi_iso2,
+                (SELECT COUNT("ID_TEMUAN") FROM "TEMUAN_DETAIL" td 
+                    LEFT JOIN "RESPONSE_AUDITEE_H" rah ON rah."ID_HEADER" = td."ID_RESPONSE" 
+                    LEFT JOIN "TM_DIVISI" td2 ON td2."KODE" = rah."DIVISI"
+                    WHERE rah."ID_ISO" = 3 AND td2."IS_CABANG" = \'N\') AS total_divisi_iso3,
+                (SELECT COUNT("ID_TEMUAN") FROM "TEMUAN_DETAIL" td 
+                    LEFT JOIN "RESPONSE_AUDITEE_H" rah ON rah."ID_HEADER" = td."ID_RESPONSE" 
+                    LEFT JOIN "TM_DIVISI" td2 ON td2."KODE" = rah."DIVISI"
+                    WHERE rah."ID_ISO" = 4 AND td2."IS_CABANG" = \'N\') AS total_divisi_iso4,
+                (SELECT COUNT("ID_TEMUAN") FROM "TEMUAN_DETAIL" td 
+                    LEFT JOIN "RESPONSE_AUDITEE_H" rah ON rah."ID_HEADER" = td."ID_RESPONSE" 
+                    LEFT JOIN "TM_DIVISI" td2 ON td2."KODE" = rah."DIVISI"
+                    WHERE rah."ID_ISO" = 1 AND td2."IS_CABANG" = \'Y\') AS total_cabang_iso1,
+                (SELECT COUNT("ID_TEMUAN") FROM "TEMUAN_DETAIL" td 
+                    LEFT JOIN "RESPONSE_AUDITEE_H" rah ON rah."ID_HEADER" = td."ID_RESPONSE" 
+                    LEFT JOIN "TM_DIVISI" td2 ON td2."KODE" = rah."DIVISI"
+                    WHERE rah."ID_ISO" = 2 AND td2."IS_CABANG" = \'Y\') AS total_cabang_iso2,
+                (SELECT COUNT("ID_TEMUAN") FROM "TEMUAN_DETAIL" td 
+                    LEFT JOIN "RESPONSE_AUDITEE_H" rah ON rah."ID_HEADER" = td."ID_RESPONSE" 
+                    LEFT JOIN "TM_DIVISI" td2 ON td2."KODE" = rah."DIVISI"
+                    WHERE rah."ID_ISO" = 3 AND td2."IS_CABANG" = \'Y\') AS total_cabang_iso3,
+                (SELECT COUNT("ID_TEMUAN") FROM "TEMUAN_DETAIL" td 
+                    LEFT JOIN "RESPONSE_AUDITEE_H" rah ON rah."ID_HEADER" = td."ID_RESPONSE" 
+                    LEFT JOIN "TM_DIVISI" td2 ON td2."KODE" = rah."DIVISI"
+                    WHERE rah."ID_ISO" = 4 AND td2."IS_CABANG" = \'Y\') AS total_cabang_iso4
+            FROM "TEMUAN_DETAIL" td
+        ');
+
+        // Mengambil hasil query
+        $result = $query->row_array();
+
+        // Mengatur header untuk JSON
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($result));
+    }
+
     public function data($year, $divisi)
     {
         $rekap                      = array();

@@ -462,30 +462,30 @@ table {
                         <div class="scoreboard-container">
                             <div class="button-group">
                                 <button id="all">ALL</button>
-                                <button id="divisi">DIVISI</button>
-                                <button id="cabang">CABANG</button>
+                                <button id="btn_divisi">DIVISI</button>
+                                <button id="btn_cabang">CABANG</button>
                             </div>
 
                             <div id="scoreboard">
                                 <div class="box-container">
                                     <label for="box1">Kantor Pusat & Cabang</label>
-                                    <div class="box" id="box1">100</div>
+                                    <div class="box" id="box1">0</div>
                                 </div>
                                 <div class="box-container">
-                                    <label for="box2">ISO 14001</label>
-                                    <div class="box" id="box2">100</div>
+                                    <label for="box2">ISO 9001</label>
+                                    <div class="box" id="box2">0</div>
                                 </div>
                                 <div class="box-container">
-                                    <label for="box3">ISO 45001</label>
-                                    <div class="box" id="box3">100</div>
+                                    <label for="box3">ISO 14001</label>
+                                    <div class="box" id="box3">0</div>
                                 </div>
                                 <div class="box-container">
-                                    <label for="box4">ISO 9001</label>
-                                    <div class="box" id="box4">100</div>
+                                    <label for="box4">ISO 37001</label>
+                                    <div class="box" id="box4">0</div>
                                 </div>
                                 <div class="box-container">
-                                    <label for="box5">ISO 37001</label>
-                                    <div class="box" id="box5">100</div>
+                                    <label for="box5">ISO 45001</label>
+                                    <div class="box" id="box5">0</div>
                                 </div>
                             </div>
                         </div>
@@ -493,143 +493,141 @@ table {
                 </div>
             </div>
             <!-- end content -->
-        
+            <div id="elasw"></div>
     </div>    
 </body> 
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js">
         $(document).ready(function() {
-	$('[data-toggle="toggle"]').change(function(){
-		$(this).parents().next('.hide').toggle();
-	});
-});
+        $('[data-toggle="toggle"]').change(function(){
+            $(this).parents().next('.hide').toggle();
+        });
+        });
     </script>
-<script>
-function changegraph() {
-  var x = document.getElementById("changegraph").value;
-  if(x=="Cabang"){
-    document.getElementById("cabang").style.display = "block";
-    document.getElementById("divisi").style.display = "none";
-  }
-  else if((x=="Divisi")){
-    document.getElementById("cabang").style.display = "none";
-    document.getElementById("divisi").style.display = "block";
-  }
-  else{
-    document.getElementById("cabang").style.display = "block";
-    document.getElementById("divisi").style.display = "block";
-  }
-}
 
-
-</script>
-
-
-<!--  -->
-
-<script>
-function changeiso() {
-  var x = document.getElementById("iso").value;
-  if(x=="1"){
-    document.getElementById("divisi9001").style.display = "block";
-    document.getElementById("divisi14001").style.display = "none";
-    document.getElementById("divisi37001").style.display = "none";
-    document.getElementById("divisi45001").style.display = "none";
-    document.getElementById("cabang9001").style.display = "block";
-    document.getElementById("cabang14001").style.display = "none";
-    document.getElementById("cabang37001").style.display = "none";
-    document.getElementById("cabang45001").style.display = "none";
-  }
-  else if((x=="2")){
-    document.getElementById("divisi9001").style.display = "none";
-    document.getElementById("divisi14001").style.display = "block";
-    document.getElementById("divisi37001").style.display = "none";
-    document.getElementById("divisi45001").style.display = "none";
-    document.getElementById("cabang9001").style.display = "none";
-    document.getElementById("cabang14001").style.display = "block";
-    document.getElementById("cabang37001").style.display = "none";
-    document.getElementById("cabang45001").style.display = "none";
-  }
-  else if((x=="3")){
-    document.getElementById("divisi9001").style.display = "none";
-    document.getElementById("divisi14001").style.display = "none";
-    document.getElementById("divisi37001").style.display = "block";
-    document.getElementById("divisi45001").style.display = "none";
-    document.getElementById("cabang9001").style.display = "none";
-    document.getElementById("cabang14001").style.display = "none";
-    document.getElementById("cabang37001").style.display = "block";
-    document.getElementById("cabang45001").style.display = "none";
-  }
-  else if((x=="4")){
-    document.getElementById("divisi9001").style.display = "none";
-    document.getElementById("divisi14001").style.display = "none";
-    document.getElementById("divisi37001").style.display = "none";
-    document.getElementById("divisi45001").style.display = "block";
-    document.getElementById("cabang9001").style.display = "none";
-    document.getElementById("cabang14001").style.display = "none";
-    document.getElementById("cabang37001").style.display = "none";
-    document.getElementById("cabang45001").style.display = "block";
-  }
-  else{
-    document.getElementById("divisi9001").style.display = "block";
-    document.getElementById("divisi14001").style.display = "block";
-    document.getElementById("divisi37001").style.display = "block";
-    document.getElementById("divisi45001").style.display = "block";
-    document.getElementById("cabang9001").style.display = "block";
-    document.getElementById("cabang14001").style.display = "block";
-    document.getElementById("cabang37001").style.display = "block";
-    document.getElementById("cabang45001").style.display = "block";
-  }
-}
-
-</script>
-
-<script> 
-document.addEventListener("DOMContentLoaded", function() {
-  let parents = document.querySelectorAll("tr.parent");
-  
-  for (let i = 0; i < parents.length; i++) {
-    parents[i].querySelector('.feat-title').setAttribute('data-before','+'); 
-    parents[i].style.cursor = "pointer";
-    parents[i].setAttribute("title", "Click to expand/collapse");
-
-    
-    parents[i].addEventListener("click", function() {
-        
-      let id = this.id;
-      let children = document.querySelectorAll('.child-' + id);       
-      
-      for (let j = 0; j < children.length; j++) {
-        if(children[j].style.display === "none"){
-            children[j].style.display = "table-row";
-            parents[i].querySelector('.feat-title').setAttribute('data-before','-');     
+    <script>
+        function changegraph() {
+        var x = document.getElementById("changegraph").value;
+        if(x=="Cabang"){
+            document.getElementById("cabang").style.display = "block";
+            document.getElementById("divisi").style.display = "none";
+        }
+        else if((x=="Divisi")){
+            document.getElementById("cabang").style.display = "none";
+            document.getElementById("divisi").style.display = "block";
         }
         else{
-            children[j].style.display = "none";
-            parents[i].querySelector('.feat-title').setAttribute('data-before','+'); 
+            document.getElementById("cabang").style.display = "block";
+            document.getElementById("divisi").style.display = "block";
         }
-         
-      } 
-    });  
-  }
-  let children = document.querySelectorAll("tr[class^='child-']");
-  for (let i = 0; i < children.length; i++) {
-    children[i].style.display = "none";
-  }
-});
+        }
 
-/*$(document).ready(function () {  
-            $('tr.parent')  
-                .css("cursor", "pointer")  
-                .attr("title", "Click to expand/collapse")  
-                .click(function () {  
-                    $(this).siblings('.child-' + this.id).toggle();  
-                });  
-            $('tr[@class^=child-]').hide().children('td');  
-    }); */ 
 
-</script>
+    </script>
 
-</script>
+    <script>
+        function changeiso() {
+        var x = document.getElementById("iso").value;
+        if(x=="1"){
+            document.getElementById("divisi9001").style.display = "block";
+            document.getElementById("divisi14001").style.display = "none";
+            document.getElementById("divisi37001").style.display = "none";
+            document.getElementById("divisi45001").style.display = "none";
+            document.getElementById("cabang9001").style.display = "block";
+            document.getElementById("cabang14001").style.display = "none";
+            document.getElementById("cabang37001").style.display = "none";
+            document.getElementById("cabang45001").style.display = "none";
+        }
+        else if((x=="2")){
+            document.getElementById("divisi9001").style.display = "none";
+            document.getElementById("divisi14001").style.display = "block";
+            document.getElementById("divisi37001").style.display = "none";
+            document.getElementById("divisi45001").style.display = "none";
+            document.getElementById("cabang9001").style.display = "none";
+            document.getElementById("cabang14001").style.display = "block";
+            document.getElementById("cabang37001").style.display = "none";
+            document.getElementById("cabang45001").style.display = "none";
+        }
+        else if((x=="3")){
+            document.getElementById("divisi9001").style.display = "none";
+            document.getElementById("divisi14001").style.display = "none";
+            document.getElementById("divisi37001").style.display = "block";
+            document.getElementById("divisi45001").style.display = "none";
+            document.getElementById("cabang9001").style.display = "none";
+            document.getElementById("cabang14001").style.display = "none";
+            document.getElementById("cabang37001").style.display = "block";
+            document.getElementById("cabang45001").style.display = "none";
+        }
+        else if((x=="4")){
+            document.getElementById("divisi9001").style.display = "none";
+            document.getElementById("divisi14001").style.display = "none";
+            document.getElementById("divisi37001").style.display = "none";
+            document.getElementById("divisi45001").style.display = "block";
+            document.getElementById("cabang9001").style.display = "none";
+            document.getElementById("cabang14001").style.display = "none";
+            document.getElementById("cabang37001").style.display = "none";
+            document.getElementById("cabang45001").style.display = "block";
+        }
+        else{
+            document.getElementById("divisi9001").style.display = "block";
+            document.getElementById("divisi14001").style.display = "block";
+            document.getElementById("divisi37001").style.display = "block";
+            document.getElementById("divisi45001").style.display = "block";
+            document.getElementById("cabang9001").style.display = "block";
+            document.getElementById("cabang14001").style.display = "block";
+            document.getElementById("cabang37001").style.display = "block";
+            document.getElementById("cabang45001").style.display = "block";
+        }
+        }
+
+    </script>
+
+    <script> 
+        document.addEventListener("DOMContentLoaded", function() {
+        let parents = document.querySelectorAll("tr.parent");
+        
+        for (let i = 0; i < parents.length; i++) {
+            parents[i].querySelector('.feat-title').setAttribute('data-before','+'); 
+            parents[i].style.cursor = "pointer";
+            parents[i].setAttribute("title", "Click to expand/collapse");
+
+            
+            parents[i].addEventListener("click", function() {
+                
+            let id = this.id;
+            let children = document.querySelectorAll('.child-' + id);       
+            
+            for (let j = 0; j < children.length; j++) {
+                if(children[j].style.display === "none"){
+                    children[j].style.display = "table-row";
+                    parents[i].querySelector('.feat-title').setAttribute('data-before','-');     
+                }
+                else{
+                    children[j].style.display = "none";
+                    parents[i].querySelector('.feat-title').setAttribute('data-before','+'); 
+                }
+                
+            } 
+            });  
+        }
+        let children = document.querySelectorAll("tr[class^='child-']");
+        for (let i = 0; i < children.length; i++) {
+            children[i].style.display = "none";
+        }
+        });
+
+        /*$(document).ready(function () {  
+                    $('tr.parent')  
+                        .css("cursor", "pointer")  
+                        .attr("title", "Click to expand/collapse")  
+                        .click(function () {  
+                            $(this).siblings('.child-' + this.id).toggle();  
+                        });  
+                    $('tr[@class^=child-]').hide().children('td');  
+            }); */ 
+        
+    </script>
+
+
     <script type="text/javascript">
         
         google.charts.load('current', {packages: ['corechart', 'bar']});
@@ -838,7 +836,7 @@ document.addEventListener("DOMContentLoaded", function() {
     </script>
 
 
-<script type="text/javascript">
+    <script type="text/javascript">
         
         google.charts.load('current', {packages: ['corechart', 'bar']});
         google.charts.setOnLoadCallback(drawStackedChartCabang);
@@ -1002,26 +1000,67 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     </script>
 
-    <script>
-        const ctx = document.getElementById('myChart');
+    
 
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-            datasets: [{
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
-                borderWidth: 1
-            }]
-            },
-            options: {
-            scales: {
-                y: {
-                beginAtZero: true
+    <script>
+        $(document).ready(function() {
+            let responseData; // Variabel untuk menyimpan data response
+
+            // Saat halaman selesai dimuat, lakukan permintaan AJAX
+            $.ajax({
+                url: '<?= base_url('aia/Dashboard/getReportData'); ?>', // URL controller untuk mengambil data
+                type: 'GET', // Tipe requestnya GET
+                dataType: 'json', // Data yang diharapkan sebagai JSON
+                success: function(response) {
+                    
+                    responseData = response; // Simpan data response
+
+                    // Tampilkan data default (ALL)
+                    updateScoreboard('all');
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+
+            // Fungsi untuk memperbarui scoreboard berdasarkan pilihan
+            function updateScoreboard(type) {
+                if (type === 'all') {
+                    $('#box1').text(responseData.total_semua);
+                    $('#box2').text(parseInt(responseData.total_divisi_iso1) + parseInt(responseData.total_cabang_iso1));
+                    $('#box3').text(parseInt(responseData.total_divisi_iso2) + parseInt(responseData.total_cabang_iso2));
+                    $('#box4').text(parseInt(responseData.total_divisi_iso3) + parseInt(responseData.total_cabang_iso3));
+                    $('#box5').text(parseInt(responseData.total_divisi_iso4) + parseInt(responseData.total_cabang_iso4));
+                } else if (type === 'divisi') {
+                    $('#box1').text(responseData.total_pusat); // Misalkan ini untuk total divisi
+                    $('#box2').text(parseInt(responseData.total_divisi_iso1));
+                    $('#box3').text(parseInt(responseData.total_divisi_iso2));
+                    $('#box4').text(parseInt(responseData.total_divisi_iso3));
+                    $('#box5').text(parseInt(responseData.total_divisi_iso4));
+                } else if (type === 'cabang') {
+                    $('#box1').text(responseData.total_cabang); // Misalkan ini untuk total cabang
+                    $('#box2').text(responseData.total_cabang_iso1);
+                    $('#box3').text(responseData.total_cabang_iso2);
+                    $('#box4').text(responseData.total_cabang_iso3);
+                    $('#box5').text(responseData.total_cabang_iso4);
                 }
             }
-            }
+
+            // Event listener untuk tombol
+            $('#all').click(function() {
+                updateScoreboard('all');
+                
+            });
+
+            $('#btn_divisi').click(function() {
+                updateScoreboard('divisi');
+                
+            });
+
+            $('#btn_cabang').click(function() {
+                updateScoreboard('cabang');
+                
+            });
         });
     </script>
 

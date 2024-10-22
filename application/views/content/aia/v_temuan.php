@@ -150,8 +150,7 @@ var KTDatatableJsonRemoteDemo = {
         title: "Lead Auditor"
       },{
         field: "TOTAL",
-        title: "Total",
-        width: 50
+        title: "Total Temuan Close",
       },
       {
           field: "ID_HEADER",
