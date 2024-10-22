@@ -25,6 +25,103 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="shortcut icon" href="<?= base_url('assets/img/logos/favicon-ptp.png') ?>" />
     <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Container to center everything */
+.scoreboard-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align buttons and scoreboard at the top */
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Styling for button group (aligned vertically) */
+.button-group {
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    margin-right: 20px; /* Space between buttons and scoreboard */
+}
+
+.button-group button {
+    padding: 8px 15px;
+    margin-bottom: 10px;
+    background-color: #007BFF;
+    border: none;
+    color: white;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button-group button:hover {
+    background-color: #0056b3;
+}
+
+.button-group button:focus {
+    outline: none;
+}
+
+/* Styling for the scoreboard */
+#scoreboard {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 equal columns */
+    gap: 20px; /* Space between the boxes */
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Container for each box with its label */
+.box-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Styling for the labels */
+.box-container label {
+    font-size: 12px;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+/* Styling for the individual boxes */
+.box {
+    background-color: #ffffff;
+    padding: 40px;
+    width: 100%;
+    text-align: center;
+    border: 2px solid #dee2e6;
+    border-radius: 10px;
+    font-size: 80px;
+    color: #333;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    #scoreboard {
+        grid-template-columns: 1fr 1fr; /* Two columns on smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    #scoreboard {
+        grid-template-columns: 1fr; /* Single column on very small screens */
+    }
+}
+
 td.feat-title::before {
   content: attr(data-before);
 }
@@ -361,6 +458,36 @@ table {
                                     <?php } ?>
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="scoreboard-container">
+                            <div class="button-group">
+                                <button id="all">ALL</button>
+                                <button id="divisi">DIVISI</button>
+                                <button id="cabang">CABANG</button>
+                            </div>
+
+                            <div id="scoreboard">
+                                <div class="box-container">
+                                    <label for="box1">Kantor Pusat & Cabang</label>
+                                    <div class="box" id="box1">100</div>
+                                </div>
+                                <div class="box-container">
+                                    <label for="box2">ISO 14001</label>
+                                    <div class="box" id="box2">100</div>
+                                </div>
+                                <div class="box-container">
+                                    <label for="box3">ISO 45001</label>
+                                    <div class="box" id="box3">100</div>
+                                </div>
+                                <div class="box-container">
+                                    <label for="box4">ISO 9001</label>
+                                    <div class="box" id="box4">100</div>
+                                </div>
+                                <div class="box-container">
+                                    <label for="box5">ISO 37001</label>
+                                    <div class="box" id="box5">100</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
