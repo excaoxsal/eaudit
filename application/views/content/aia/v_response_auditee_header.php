@@ -74,7 +74,7 @@
   </div>
 </div>
 <script type="text/javascript">
- "use strict";
+"use strict";
 var KTDatatableJsonRemoteDemo = {
   init: function() {
     var t;
@@ -134,7 +134,8 @@ var KTDatatableJsonRemoteDemo = {
         ]
     }), $("#kt_datatable_search_status").on("change", (function() {
       t.search($(this).val().toLowerCase(), "NAMA_DIVISI")
-    })), $("#kt_datatable_search_status").selectpicker()
+    })), $("#kt_datatable_search_status").selectpicker(),$("#kt_datatable").KTDatatable().reload();
+    
   }
 };
 jQuery(document).ready((function() {

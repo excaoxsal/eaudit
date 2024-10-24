@@ -224,7 +224,7 @@ var KTDatatableJsonRemoteDemo = {
       }]
     }), $("#datatable_search_divisi").on("change", (function() {
       t.search($(this).val().toLowerCase(), "NAMA_DIVISI")
-    })), $("#datatable_search_type").selectpicker()
+    })), $("#datatable_search_type").selectpicker(),$("#kt_datatable").KTDatatable().reload();
   }
 };
 jQuery(document).ready((function() {

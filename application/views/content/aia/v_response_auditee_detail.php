@@ -223,6 +223,7 @@ var KTDatatableJsonRemoteDemo = {
         title: "No.",
         template: function(row, index) {
             // Calculate the correct index for the current page
+            
             var currentPage = t.getCurrentPage();
             var pageSize = t.getPageSize();
             return (currentPage - 1) * pageSize + (index + 1);
@@ -239,30 +240,31 @@ var KTDatatableJsonRemoteDemo = {
       {
         field: "PERTANYAAN",
         title: "Pertanyaan"
-      },{
-          field: "ID_ISO",
-          title: "Action",
-          class: "text-center",
-          sortable: !1,
-          searchable: !1,
-          overflow: "visible",
-          template: function(t) {
-            if(t.RESPONSE_AUDITEE==""||t.RESPONSE_AUDITEE==null){
-              var buttonTitle = 'Respon"><i class="fa fa-upload text-dark';
-              console.log('a');
-            }
-            else if(t.RESPONSE_AUDITEE!=""||t.RESPONSE_AUDITEE!=null){
-              var buttonTitle = 'Koreksi"><i class="fa fa-edit text-danger';
-              console.log('b');
-            }
-            
-            var iconClass = t.STATUS == 1 ? 'color:red' : 'color:#000';
-          return '<a onclick="uploadFile(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon" title="' + buttonTitle + '"></i></a><a onclick="chatbox(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>';
+      },
+      {
+        field: "ID_ISO",
+        title: "Action",
+        class: "text-center",
+        sortable: !1,
+        searchable: !1,
+        overflow: "visible",
+        template: function(t) {
+          if(t.RESPONSE_AUDITEE==""||t.RESPONSE_AUDITEE==null){
+            var buttonTitle = 'Respon"><i class="fa fa-upload text-dark';
+            console.log('a');
+          }
+          else if(t.RESPONSE_AUDITEE!=""||t.RESPONSE_AUDITEE!=null){
+            var buttonTitle = 'Koreksi"><i class="fa fa-edit text-danger';
+            console.log('b');
+          }
+          
+          var iconClass = t.STATUS == 1 ? 'color:red' : 'color:#000';
+        return '<a onclick="uploadFile(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon" title="' + buttonTitle + '"></i></a><a onclick="chatbox(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>';
         }
-        }]
+      }]
     }), $("#kt_datatable_search_status").on("change", (function() {
       t.search($(this).val().toLowerCase(), "NAMA_DIVISI")
-    })), $("#kt_datatable_search_status").selectpicker()
+    })), $("#kt_datatable_search_status").selectpicker(),$("#kt_datatable").KTDatatable().reload();
   }
 };
 var currentID_TL;

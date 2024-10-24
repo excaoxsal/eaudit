@@ -16,7 +16,7 @@ class Dashboard extends MY_Controller
 
     public function index()
     {
-        $data['menu']       = 'dashboard';
+        $data['menu']       = 'dashboard-aia';
         $data['list_ja']    = $this->master_act->jenis_audit();
         $iso = $this->m_dashboard->getIso();
         $years  = $this->m_status_tl->getYearTl();
@@ -39,7 +39,9 @@ class Dashboard extends MY_Controller
         $data['auditee']        = $divisi;
         $data['data_table']     = $this->m_status_tl->temuanDashboard($year, $divisi);
         // var_dump($eldata);die;
-        $this->load->view('/content/aia/v_dashboard', $data);
+        $data['content']        = '/content/aia/v_dashboard';
+        $this->show($data);
+        // $this->load->view('/content/aia/v_dashboard', $data);
     }
     public function all_divisi()
     {

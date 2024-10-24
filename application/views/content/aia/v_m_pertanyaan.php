@@ -271,7 +271,7 @@
       ]
       }), $("#datatable_search_status").on("change", (function() {
         t.search($(this).val().toLowerCase(), "STATUS")
-      })), $("#datatable_search_status").selectpicker()
+      })), $("#datatable_search_status").selectpicker(),$("#kt_datatable").KTDatatable().reload();
     }
   };
 

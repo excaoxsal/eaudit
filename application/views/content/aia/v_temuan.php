@@ -153,27 +153,26 @@ var KTDatatableJsonRemoteDemo = {
         title: "Total Temuan Close",
       },
       {
-          field: "ID_HEADER",
-          title: "Action",
-          class: "text-center",
-          sortable: !1,
-          searchable: !1,
-          overflow: "visible",
-          template: function(t) {
-              var isAuditor = <?php echo json_encode($is_auditor); ?>;
-              var isAuditee = <?php echo json_encode($is_auditee); ?>;
+        field: "ID_HEADER",
+        title: "Action",
+        class: "text-center",
+        sortable: !1,
+        searchable: !1,
+        overflow: "visible",
+        template: function(t) {
+            var isAuditor = <?php echo json_encode($is_auditor); ?>;
+            var isAuditee = <?php echo json_encode($is_auditee); ?>;
 
-              if (isAuditor){
-                return '<a  href="<?= base_url() ?>aia/temuan/detail/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Lihat"><i class="fa fa-eye text-dark"></i></a><a onclick="uploadFile(' + t.ID_HEADER + ')" class="btn btn-sm btn-clean btn-icon" title="Upload Temuan"><i class="fa fa-upload text-dark"></i></a>'
-              }else{
-                return '<a  href="<?= base_url() ?>aia/temuan/detail/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Lihat"><i class="fa fa-eye text-dark"></i></a>'
-              }
+            if (isAuditor){
+              return '<a  href="<?= base_url() ?>aia/temuan/detail/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Lihat"><i class="fa fa-eye text-dark"></i></a><a onclick="uploadFile(' + t.ID_HEADER + ')" class="btn btn-sm btn-clean btn-icon" title="Upload Temuan"><i class="fa fa-upload text-dark"></i></a>'
+            }else{
+              return '<a  href="<?= base_url() ?>aia/temuan/detail/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Lihat"><i class="fa fa-eye text-dark"></i></a>'
             }
-        }
-        ]
+          }
+        }]
     }), $("#kt_datatable_search_status").on("change", (function() {
       t.search($(this).val().toLowerCase(), "NAMA_DIVISI")
-    })), $("#kt_datatable_search_status").selectpicker()
+    })), $("#kt_datatable_search_status").selectpicker(),$("#kt_datatable").KTDatatable().reload();
   }
 };
 jQuery(document).ready((function() {

@@ -380,9 +380,9 @@
   </div>
 </div>
 <!-- End MODAL Log -->
- 
+
 <script type="text/javascript">
- "use strict";
+"use strict";
 var KTDatatableJsonRemoteDemo = {
   init: function() 
   {
@@ -669,6 +669,7 @@ var KTDatatableJsonRemoteDemo = {
           }
         }]
     });
+    $("#kt_datatable").KTDatatable().reload();
 
       // Get parameters from the URL
       var params = new URLSearchParams(window.location.search);

@@ -398,7 +398,7 @@ var KTDatatableJsonRemoteDemo = {
       t.search($(this).val().toLowerCase(), "NAMA_ROLE")
     })), $("#datatable_search_divisi").on("change", (function() {
       t.search($(this).val().toLowerCase(), "NAMA_DIVISI")
-    })), $("#datatable_search_status, #datatable_search_type, #datatable_search_divisi").selectpicker()
+    })), $("#datatable_search_status, #datatable_search_type, #datatable_search_divisi").selectpicker(),$("#kt_datatable").KTDatatable().reload();
   }
 };
 jQuery(document).ready((function() {
