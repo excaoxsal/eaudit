@@ -116,7 +116,9 @@ var KTDatatableJsonRemoteDemo = {
       data: {
         type: "remote",
         source: '<?= base_url() ?>aia/Temuan/jsonResponAuditee',
-        pageSize: 10
+        pageSize: 10,
+        currentPage :1
+
       },
       layout: {
         scroll: !1,
@@ -170,7 +172,9 @@ var KTDatatableJsonRemoteDemo = {
             }
           }
         }]
-    }), $("#kt_datatable_search_status").on("change", (function() {
+    });
+    t.setDataSourceParam('currentPage', 1);
+    $("#kt_datatable_search_status").on("change", (function() {
       t.search($(this).val().toLowerCase(), "NAMA_DIVISI")
     })), $("#kt_datatable_search_status").selectpicker(),$("#kt_datatable").KTDatatable().reload();
   }

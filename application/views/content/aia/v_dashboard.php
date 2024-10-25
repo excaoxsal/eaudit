@@ -6,23 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard TL</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
-    <link href="<?= base_url() ?>assets/plugins/custom/datatables/datatables.bundle7a50.css?v=7.2.7" rel="stylesheet" type="text/css" />
-    <link href="<?= base_url('assets/css/custom.css') ?>" rel="stylesheet" type="text/css" />
-
-    <link href="<?= base_url() ?>assets/plugins/global/plugins.bundle7a50.css?v=7.2.7" rel="stylesheet" type="text/css" />
-    <link href="<?= base_url() ?>assets/plugins/custom/prismjs/prismjs.bundle7a50.css?v=7.2.7" rel="stylesheet" type="text/css" />
-    <link href="<?= base_url() ?>assets/css/style.bundle7a50.css?v=7.2.7" rel="stylesheet" type="text/css" />
-
-    <link href="<?= base_url() ?>assets/css/themes/layout/header/base/light7a50.css?v=7.2.7" rel="stylesheet" type="text/css" />
-    <link href="<?= base_url() ?>assets/css/themes/layout/header/menu/light7a50.css?v=7.2.7" rel="stylesheet" type="text/css" />
-    <link href="<?= base_url() ?>assets/css/themes/layout/brand/dark7a50.css?v=7.2.7" rel="stylesheet" type="text/css" />
-    <link href="<?= base_url() ?>assets/css/themes/layout/aside/dark7a50.css?v=7.2.7" rel="stylesheet" type="text/css" />
-
-    <script src="<?= base_url('assets/jquery/jquery.min.js') ?>"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
     <link rel="shortcut icon" href="<?= base_url('assets/img/logos/favicon-ptp.png') ?>" />
     <style>
 * {
@@ -378,111 +362,93 @@ table {
                         </table>
                     </div>
                     <div class="row mb-0 pb-0">
-                        <table class="table table-bordered" id="temuanTable">
-                            <thead>
-                                <td rowspan="2">Cabang</td>
-                                <th colspan="3"  style="text-align:center;" >ISO 9001</th>
-                                <th colspan="3"  style="text-align:center;">ISO 14001</th>
-                                <th colspan="3"  style="text-align:center;">ISO 37001</th>
-                                <th colspan="3"  style="text-align:center;">ISO 45001</th>
-                                <th colspan="3" rowspan="3" style="text-align:center;">TOTAL</th>
-                                <tr>
-                                    <td style="text-align:center;">Sudah Close</td>
-                                    <td style="text-align:center;">Belum Close</td>
-                                    <td style="text-align:center;">Total Temuan</td>
-                                    <td style="text-align:center;">Sudah Close</td>
-                                    <td style="text-align:center;">Belum Close</td>
-                                    <td style="text-align:center;">Total Temuan</td>
-                                    <td style="text-align:center;">Sudah Close</td>
-                                    <td style="text-align:center;">Belum Close</td>
-                                    <td style="text-align:center;">Total Temuan</td>
-                                    <td style="text-align:center;">Sudah Close</td>
-                                    <td style="text-align:center;">Belum Close</td>
-                                    <td style="text-align:center;">Total Temuan</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            
-                            
-                            <?php foreach ($datacabang as $cabang) { ?>
-                                <?php for ($i=0;$i<=count($datatablecabang[$cabang['KODE']]);$i++) { ?>
-                                    <?php if(isset($datatablecabang[$cabang['KODE']][$i])){ ?>
-                                        <?php if($datatablecabang[$cabang['KODE']][$i]['tipe']=="Divisi"){ $n+=1 ?>
-
-                                            <tr class="parent" id="row12<?=$n?>" title="Click to expand/collapse" style="cursor: pointer;">  
-                                                <td class="feat-title" style="text-align:left;"><?= $datatablecabang[$cabang['KODE']][$i]['namadivisi']?></td>  
-                                                <td><?= $datatablecabang[$cabang['KODE']][$i]['iso9001']['open']?></td>
-                                                <td><?= $datatablecabang[$cabang['KODE']][$i]['iso9001']['closed']?></td>
-                                                <td><?= $datatablecabang[$cabang['KODE']][$i]['iso9001']['total']?></td>
-                                                <td><?= $datatablecabang[$cabang['KODE']][$i]['iso14001']['open']?></td>
-                                                <td><?= $datatablecabang[$cabang['KODE']][$i]['iso14001']['closed']?></td>
-                                                <td><?= $datatablecabang[$cabang['KODE']][$i]['iso14001']['total']?></td>
-                                                <td><?= $datatablecabang[$cabang['KODE']][$i]['iso37001']['open']?></td>
-                                                <td><?= $datatablecabang[$cabang['KODE']][$i]['iso37001']['closed']?></td>
-                                                <td><?= $datatablecabang[$cabang['KODE']][$i]['iso37001']['total']?></td>
-                                                <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['open']?></td>
-                                                <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['closed']?></td>
-                                                <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['total']?></td>
-                                                <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['total'] + $datatablecabang[$cabang['KODE']][$i]['iso9001']['total'] +$datatablecabang[$cabang['KODE']][$i]['iso14001']['total'] + $datatablecabang[$cabang['KODE']][$i]['iso37001']['total']?></td>
-                                            </tr>  
-                                            
+                        <div class="table-responsive"> <!-- Tambahkan div ini untuk membuat tabel responsif -->
+                            <table class="table table-bordered" id="temuanTable">
+                                <thead>
+                                    <tr>
+                                        <td rowspan="2">Cabang</td>
+                                        <th colspan="3" style="text-align:center;">ISO 9001</th>
+                                        <th colspan="3" style="text-align:center;">ISO 14001</th>
+                                        <th colspan="3" style="text-align:center;">ISO 37001</th>
+                                        <th colspan="3" style="text-align:center;">ISO 45001</th>
+                                        <th colspan="3" rowspan="3" style="text-align:center;">TOTAL</th>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align:center;">Sudah Close</td>
+                                        <td style="text-align:center;">Belum Close</td>
+                                        <td style="text-align:center;">Total Temuan</td>
+                                        <td style="text-align:center;">Sudah Close</td>
+                                        <td style="text-align:center;">Belum Close</td>
+                                        <td style="text-align:center;">Total Temuan</td>
+                                        <td style="text-align:center;">Sudah Close</td>
+                                        <td style="text-align:center;">Belum Close</td>
+                                        <td style="text-align:center;">Total Temuan</td>
+                                        <td style="text-align:center;">Sudah Close</td>
+                                        <td style="text-align:center;">Belum Close</td>
+                                        <td style="text-align:center;">Total Temuan</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($datacabang as $cabang) { ?>
+                                        <?php for ($i=0; $i < count($datatablecabang[$cabang['KODE']]); $i++) { ?>
+                                            <?php if(isset($datatablecabang[$cabang['KODE']][$i])) { ?>
+                                                <?php if($datatablecabang[$cabang['KODE']][$i]['tipe']=="Divisi") { $n+=1 ?>
+                                                    <tr class="parent" id="row12<?=$n?>" title="Click to expand/collapse" style="cursor: pointer;">  
+                                                        <td class="feat-title" style="text-align:left;"><?= $datatablecabang[$cabang['KODE']][$i]['namadivisi']?></td>  
+                                                        <td><?= $datatablecabang[$cabang['KODE']][$i]['iso9001']['open']?></td>
+                                                        <td><?= $datatablecabang[$cabang['KODE']][$i]['iso9001']['closed']?></td>
+                                                        <td><?= $datatablecabang[$cabang['KODE']][$i]['iso9001']['total']?></td>
+                                                        <td><?= $datatablecabang[$cabang['KODE']][$i]['iso14001']['open']?></td>
+                                                        <td><?= $datatablecabang[$cabang['KODE']][$i]['iso14001']['closed']?></td>
+                                                        <td><?= $datatablecabang[$cabang['KODE']][$i]['iso14001']['total']?></td>
+                                                        <td><?= $datatablecabang[$cabang['KODE']][$i]['iso37001']['open']?></td>
+                                                        <td><?= $datatablecabang[$cabang['KODE']][$i]['iso37001']['closed']?></td>
+                                                        <td><?= $datatablecabang[$cabang['KODE']][$i]['iso37001']['total']?></td>
+                                                        <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['open']?></td>
+                                                        <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['closed']?></td>
+                                                        <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['total']?></td>
+                                                        <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['total'] + $datatablecabang[$cabang['KODE']][$i]['iso9001']['total'] + $datatablecabang[$cabang['KODE']][$i]['iso14001']['total'] + $datatablecabang[$cabang[' KODE']][$i]['iso37001']['total']?></td>
+                                                    </tr>
+                                                <?php } ?>
+                                            <?php } ?>
                                         <?php } ?>
-                                        <?php if($datatablecabang[$cabang['KODE']][$i]['tipe']=="Subdivisi"){ ?>
-                                            <tr class="child-row12<?=$n?>" style="display: table-row;">  
-                                                <td class="feat-title"style="text-align:left;"><?= $datatablecabang[$cabang['KODE']][$i]['namadivisi']?></td>  
-                                                <td><?= $datatablecabang[$cabang['KODE']][$i]['iso9001']['open']?></td>
-                                                <td><?= $datatablecabang[$cabang['KODE']][$i]['iso9001']['closed']?></td>
-                                                <td><?= $datatablecabang[$cabang['KODE']][$i]['iso9001']['total']?></td>
-                                                <td><?= $datatablecabang[$cabang['KODE']][$i]['iso14001']['open']?></td>
-                                                <td><?= $datatablecabang[$cabang['KODE']][$i]['iso14001']['closed']?></td>
-                                                <td><?= $datatablecabang[$cabang['KODE']][$i]['iso14001']['total']?></td>
-                                                <td><?= $datatablecabang[$cabang['KODE']][$i]['iso37001']['open']?></td>
-                                                <td><?= $datatablecabang[$cabang['KODE']][$i]['iso37001']['closed']?></td>
-                                                <td><?= $datatablecabang[$cabang['KODE']][$i]['iso37001']['total']?></td>
-                                                <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['open']?></td>
-                                                <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['closed']?></td>
-                                                <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['total']?></td>
-                                                <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['total'] + $datatablecabang[$cabang['KODE']][$i]['iso9001']['total'] +$datatablecabang[$cabang['KODE']][$i]['iso14001']['total'] + $datatablecabang[$cabang['KODE']][$i]['iso37001']['total']?></td>
-                                            </tr>  
-                                        <?php } ?>
-
                                     <?php } ?>
-                                
-                                
-                                <?php } ?>
-                                <?php } ?>
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="scoreboard-container">
-                        <div class="button-group">
-                            <button id="all">ALL</button>
-                            <button id="btn_divisi">DIVISI</button>
-                            <button id="btn_cabang">CABANG</button>
+                    <div style="max-width: 1200px; margin: auto; background: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); padding: 20px;">
+                        <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+                            <button id="all" style="flex: 1; padding: 10px; margin: 0 5px; border: none; border-radius: 5px; background-color: #007bff; color: white; cursor: pointer; transition: background-color 0.3s;">ALL</button>
+                            <button id="btn_divisi" style="flex: 1; padding: 10px; margin: 0 5px; border: none; border-radius: 5px; background-color: #007bff; color: white; cursor: pointer; transition: background-color 0.3s;">DIVISI</button>
+                            <button id="btn_cabang" style="flex: 1; padding: 10px; margin: 0 5px; border: none; border-radius: 5px; background-color: #007bff; color: white; cursor: pointer; transition: background-color 0.3s;">CABANG</button>
                         </div>
 
-                        <div id="scoreboard">
-                            <div class="box-container">
-                                <label for="box1">Kantor Pusat & Cabang</label>
-                                <div class="box" id="box1">0</div>
-                            </div>
-                            <div class="box-container">
+                        <div id="scoreboard" style="display: flex; flex-wrap: wrap; justify-content: space-between;">
+                            
+                            <div style="flex: 1 1 calc(20% - 10px); margin: 5px; background: #e9ecef; border-radius: 5px; padding: 15px; text-align: center;">
                                 <label for="box2">ISO 9001</label>
-                                <div class="box" id="box2">0</div>
+                                <div class="box" id="box2" style="font-size: 24px; font-weight: bold; margin-top: 10px;">0</div>
                             </div>
-                            <div class="box-container">
+                            <div style="flex: 1 1 calc(20% - 10px); margin: 5px; background: #e9ecef; border-radius: 5px; padding: 15px; text-align: center;">
                                 <label for="box3">ISO 14001</label>
-                                <div class="box" id="box3">0</div>
+                                <div class="box" id="box3" style="font-size: 24px; font-weight: bold; margin-top: 10px;">0</div>
                             </div>
-                            <div class="box-container">
+                            <div style="flex: 1 1 calc(20% - 10px); margin: 5px; background: #e9ecef; border-radius: 5px; padding: 15px; text-align: center;">
                                 <label for="box4">ISO 37001</label>
-                                <div class="box" id="box4">0</div>
+                                <div class="box" id="box4" style="font-size: 24px; font-weight: bold; margin-top: 10px;">0</div>
                             </div>
-                            <div class="box-container">
+                            <div style="flex: 1 1 calc(20% - 10px); margin: 5px; background: #e9ecef; border-radius: 5px; padding: 15px; text-align: center;">
                                 <label for="box5">ISO 45001</label>
-                                <div class="box" id="box5">0</div>
+                                <div class="box" id="box5" style="font-size: 24px; font-weight: bold; margin-top: 10px;">0</div>
+                            </div>
+                            <div style="flex: 1 1 calc(20% - 10px); margin: 5px; background: #e9ecef; border-radius: 5px; padding: 15px; text-align: center;">
+                                <label for="box1">Kantor Pusat & Cabang</label>
+                                <div class="box" id="box1" style="font-size: 24px; font-weight: bold; margin-top: 10px;">0</div>
                             </div>
                         </div>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -659,7 +625,6 @@ table {
     
 
     <script type="text/javascript">
-        
         google.charts.load('current', {packages: ['corechart', 'bar']});
         google.charts.setOnLoadCallback(drawStackedChartDivisi);
 
@@ -695,13 +660,25 @@ table {
                 chart.draw(dataTable, options);
             });
         }
+
         $('#iso').change(function() {
             drawStackedChartDivisi(); // Refresh the chart when the selected province changes
         });
+
+        // Resize chart on window resize
+        $(window).resize(function() {
+            drawStackedChartDivisi();
+        });
     </script>
 
+    <style>
+        #charttemuandivisi {
+            width: 100%; /* Set width to 100% */
+            height: 400px; /* Set a fixed height */
+        }
+    </style>
+
     <script type="text/javascript">
-        
         google.charts.load('current', {packages: ['corechart', 'bar']});
         google.charts.setOnLoadCallback(drawStackedChartDivisi1);
 
@@ -725,6 +702,7 @@ table {
                     hAxis: {
                         title: 'Total Temuan',
                         minValue: 0,
+                        ticks: [10, 20]
                     },
                     vAxis: {
                         title: 'ISO 14001'
@@ -736,13 +714,26 @@ table {
                 chart.draw(dataTable, options);
             });
         }
+
         $('#iso').change(function() {
             drawStackedChartDivisi1(); // Refresh the chart when the selected province changes
         });
+
+        // Resize chart on window resize
+        $(window).resize(function() {
+            drawStackedChartDivisi1();
+        });
     </script>
 
-    <script type="text/javascript">
-        
+    <style>
+        #charttemuandivisi1 {
+            width: 100%; /* Set width to 100% */
+            height: 400px; /* Set a fixed height */
+        }
+    </style>
+
+
+<script type="text/javascript">
         google.charts.load('current', {packages: ['corechart', 'bar']});
         google.charts.setOnLoadCallback(drawStackedChartDivisi2);
 
@@ -766,6 +757,7 @@ table {
                     hAxis: {
                         title: 'Total Temuan',
                         minValue: 0,
+                        ticks: [10, 20]
                     },
                     vAxis: {
                         title: 'ISO 37001'
@@ -777,13 +769,25 @@ table {
                 chart.draw(dataTable, options);
             });
         }
+
         $('#iso').change(function() {
             drawStackedChartDivisi2(); // Refresh the chart when the selected province changes
         });
+
+        // Resize chart on window resize
+        $(window).resize(function() {
+            drawStackedChartDivisi2();
+        });
     </script>
 
-    <script type="text/javascript">
-        
+    <style>
+        #charttemuandivisi2 {
+            width: 100%; /* Set width to 100% */
+            height: 400px; /* Set a fixed height */
+        }
+    </style>
+
+<script type="text/javascript">
         google.charts.load('current', {packages: ['corechart', 'bar']});
         google.charts.setOnLoadCallback(drawStackedChartDivisi3);
 
@@ -807,6 +811,7 @@ table {
                     hAxis: {
                         title: 'Total Temuan',
                         minValue: 0,
+                        ticks: [10, 20]
                     },
                     vAxis: {
                         title: 'ISO 45001'
@@ -818,14 +823,25 @@ table {
                 chart.draw(dataTable, options);
             });
         }
+
         $('#iso').change(function() {
             drawStackedChartDivisi3(); // Refresh the chart when the selected province changes
         });
+
+        // Resize chart on window resize
+        $(window).resize(function() {
+            drawStackedChartDivisi3();
+        });
     </script>
 
+    <style>
+        #charttemuandivisi3 {
+            width: 100%; /* Set width to 100% */
+            height: 400px; /* Set a fixed height */
+        }
+    </style>
 
     <script type="text/javascript">
-        
         google.charts.load('current', {packages: ['corechart', 'bar']});
         google.charts.setOnLoadCallback(drawStackedChartCabang);
 
@@ -849,6 +865,7 @@ table {
                     hAxis: {
                         title: 'Total Temuan',
                         minValue: 0,
+                        ticks: [10, 20]
                     },
                     vAxis: {
                         title: 'ISO 9001'
@@ -860,13 +877,25 @@ table {
                 chart.draw(dataTable, options);
             });
         }
+
         $('#iso').change(function() {
             drawStackedChartCabang(); // Refresh the chart when the selected province changes
         });
+
+        // Resize chart on window resize
+        $(window).resize(function() {
+            drawStackedChartCabang();
+        });
     </script>
 
-    <script type="text/javascript">
-        
+    <style>
+        #charttemuancabang {
+            width: 100%; /* Set width to 100% */
+            height: 400px; /* Set a fixed height */
+        }
+    </style>
+
+<script type="text/javascript">
         google.charts.load('current', {packages: ['corechart', 'bar']});
         google.charts.setOnLoadCallback(drawStackedChartCabang1);
 
@@ -890,6 +919,7 @@ table {
                     hAxis: {
                         title: 'Total Temuan',
                         minValue: 0,
+                        ticks: [10, 20]
                     },
                     vAxis: {
                         title: 'ISO 14001'
@@ -901,17 +931,29 @@ table {
                 chart.draw(dataTable, options);
             });
         }
+
         $('#iso').change(function() {
             drawStackedChartCabang1(); // Refresh the chart when the selected province changes
         });
+
+        // Resize chart on window resize
+        $(window).resize(function() {
+            drawStackedChartCabang1();
+        });
     </script>
 
-    <script type="text/javascript">
-        
-        google.charts.load('current', {packages: ['corechart', 'bar']});
-        google.charts.setOnLoadCallback(getTemuanDataCabang2);
+    <style>
+        #charttemuancabang {
+            width: 100%; /* Set width to 100% */
+            height: 400px; /* Set a fixed height */
+        }
+    </style>
 
-        function getTemuanDataCabang2() {
+<script type="text/javascript">
+        google.charts.load('current', {packages: ['corechart', 'bar']});
+        google.charts.setOnLoadCallback(drawStackedChartCabang2);
+
+        function drawStackedChartCabang2() {
             var selectedIso = $('#iso').val();
             // Mengambil data dari controller menggunakan AJAX
             $.getJSON("<?php echo base_url('aia/Dashboard/getTemuanDataCabang2'); ?>", {iso: selectedIso}, function(data) {
@@ -931,6 +973,7 @@ table {
                     hAxis: {
                         title: 'Total Temuan',
                         minValue: 0,
+                        ticks: [10, 20]
                     },
                     vAxis: {
                         title: 'ISO 37001'
@@ -942,13 +985,25 @@ table {
                 chart.draw(dataTable, options);
             });
         }
+
         $('#iso').change(function() {
-            getTemuanDataCabang2(); // Refresh the chart when the selected province changes
+            drawStackedChartCabang2(); // Refresh the chart when the selected province changes
+        });
+
+        // Resize chart on window resize
+        $(window).resize(function() {
+            drawStackedChartCabang2();
         });
     </script>
 
-    <script type="text/javascript">
-        
+    <style>
+        #charttemuancabang2 {
+            width: 100%; /* Set width to 100% */
+            height: 400px; /* Set a fixed height */
+        }
+    </style>
+
+<script type="text/javascript">
         google.charts.load('current', {packages: ['corechart', 'bar']});
         google.charts.setOnLoadCallback(drawStackedChartCabang3);
 
@@ -972,6 +1027,7 @@ table {
                     hAxis: {
                         title: 'Total Temuan',
                         minValue: 0,
+                        ticks: [10, 20]
                     },
                     vAxis: {
                         title: 'ISO 45001'
@@ -983,10 +1039,23 @@ table {
                 chart.draw(dataTable, options);
             });
         }
+
         $('#iso').change(function() {
             drawStackedChartCabang3(); // Refresh the chart when the selected province changes
         });
+
+        // Resize chart on window resize
+        $(window).resize(function() {
+            drawStackedChartCabang3();
+        });
     </script>
+
+    <style>
+        #charttemuancabang {
+            width: 100%; /* Set width to 100% */
+            height: 400px; /* Set a fixed height */
+        }
+    </style>
 
     
 
