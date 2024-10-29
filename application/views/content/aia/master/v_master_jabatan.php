@@ -99,7 +99,7 @@
 </div>
 <script type="text/javascript">
   $(document).ready(function() {
-    $('#id_divisi, #datatable_search_divisi').select2().on('change', function (e) {
+    $('#id_divisi').select2().on('change', function (e) {
       $(this).valid();
     } );
     $("#form").validate({
@@ -173,7 +173,7 @@
     KTUtil.scrollTop();
     $('#form')[0].reset(); 
     $('input').val('');
-    $('#id_divisi, #datatable_search_divisi').trigger('change');
+    $('#id_divisi').trigger('change');
     $('#datatable').KTDatatable('reload');
     $('#collapseOne3').removeClass('show');
     $('#headingOne3 .card-title').addClass('collapsed');
@@ -184,9 +184,10 @@
 <script type="text/javascript">
 "use strict";
 var KTDatatableJsonRemoteDemo = {
+  datatable: null, // Keep a reference to the datatable
   init: function() {
-    var t;
-    t = $("#datatable").KTDatatable({
+    var self = this;
+    self.datatable = $("#datatable").KTDatatable({
       data: {
         type: "remote",
         source: '<?= base_url() ?>aia/master/jabatan/jabatan_json',
@@ -202,32 +203,45 @@ var KTDatatableJsonRemoteDemo = {
         input: $("#datatable_search_query"),
         key: "generalSearch"
       },
-      columns: [{
-        field: "NAMA_JABATAN",
-        title: "Jabatan"
-      },{
-        field: "NAMA_ATASAN",
-        title: "Atasan"
-      }, {
-        field: "NAMA_DIVISI",
-        title: "Divisi"
-      }, {
-        field: "ID_JABATAN",
-        class: "text-center",
-        title: "Actions",
-        sortable: !1,
-        searchable: !1,
-        overflow: "visible",
-        template: function(t) {
-          return '<a href="javascript:;" onclick="update(\'' + btoa(t.ID_JABATAN) + '\')" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit text-dark"></i></a><a href="javascript:;" onclick="hapus(\'' + btoa(t.ID_JABATAN) + '\')" class="btn btn-sm btn-clean btn-icon" title="Delete"><i class="fa fa-trash text-dark"></i></a>'
+      columns: [
+        {
+          field: "NAMA_JABATAN",
+          title: "Jabatan"
+        },
+        {
+          field: "NAMA_ATASAN",
+          title: "Atasan"
+        },
+        {
+          field: "NAMA_DIVISI",
+          title: "Divisi"
+        },
+        {
+          field: "ID_JABATAN",
+          class: "text-center",
+          title: "Actions",
+          sortable: !1,
+          searchable: !1,
+          overflow: "visible",
+          template: function(t) {
+            return '<a href="javascript:;" onclick="update(\'' + btoa(t.ID_JABATAN) + '\')" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit text-dark"></i></a><a href="javascript:;" onclick="hapus(\'' + btoa(t.ID_JABATAN) + '\')" class="btn btn-sm btn-clean btn-icon" title="Delete"><i class="fa fa-trash text-dark"></i></a>';
+          }
         }
-      }]
-    }), $("#datatable_search_divisi").on("change", (function() {
-      t.search($(this).val().toLowerCase(), "NAMA_DIVISI")
-    })), $("#datatable_search_type").selectpicker(),$("#kt_datatable").KTDatatable().reload();
+      ]
+    });
+
+    // Ensure datatable is fully initialized before calling gotoPage
+    self.datatable.on('datatable-on-init', function() {
+      self.datatable.gotoPage(1); // Set default to page 1
+    });
+
+    // Initialize selectpicker if needed
+    $("#datatable_search_type").selectpicker();
   }
 };
-jQuery(document).ready((function() {
-  KTDatatableJsonRemoteDemo.init()
-}));
+
+jQuery(document).ready(function() {
+  KTDatatableJsonRemoteDemo.init();
+});
+
 </script>

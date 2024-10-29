@@ -121,7 +121,7 @@
                   <div class="col-md-4 my-2 my-md-0">
                     <div class="d-flex align-items-center">
                       <label class="mr-3 mb-0 d-none d-md-block">Lokasi:</label>
-                      <select class="form-control" id="datatable_search_status">
+                      <select class="form-control" id="datatable_search_lokasi">
                         <option value="">All</option>
                         <option value="Y">Cabang</option>
                         <option value="N">Pusat</option>
@@ -259,8 +259,7 @@
 "use strict";
 var KTDatatableJsonRemoteDemo = {
   init: function() {
-    var t;
-    t = $("#datatable").KTDatatable({
+    var t = $("#datatable").KTDatatable({
       data: {
         type: "remote",
         source: '<?= base_url() ?>aia/master/divisi/divisi_json',
@@ -276,45 +275,63 @@ var KTDatatableJsonRemoteDemo = {
         input: $("#datatable_search_query"),
         key: "generalSearch"
       },
-      columns: [{
-        field: "nama_divisi",
-        title: "Divisi"
-      },{
-        field: "nama_sub_divisi",
-        title: "SUB DIVISI"
-      }, {
-        field: "IS_CABANG",
-        title: "Lokasi",
-        template: function(t) {
-          var a = {
-            'N': {
-              title: "Pusat",
-              class: " label-primary"
-            },
-            'Y': {
-              title: "Cabang",
-              class: " label-secondary"
-            }
-          };
-          return '<span class="label font-weight-bold label-lg' + a[t.IS_CABANG].class + ' label-inline">' + a[t.IS_CABANG].title + "</span>"
+      columns: [
+        {
+          field: "nama_divisi",
+          title: "Divisi"
+        },
+        {
+          field: "nama_sub_divisi",
+          title: "SUB DIVISI"
+        },
+        {
+          field: "IS_CABANG",
+          title: "Lokasi",
+          template: function(t) {
+            var a = {
+              'N': {
+                title: "Pusat",
+                class: " label-primary"
+              },
+              'Y': {
+                title: "Cabang",
+                class: " label-secondary"
+              }
+            };
+            return '<span class="label font-weight-bold label-lg' + a[t.IS_CABANG].class + ' label-inline">' + a[t.IS_CABANG].title + "</span>";
+          }
+        },
+        {
+          field: "ID_DIVISI",
+          title: "Actions",
+          class: "text-center",
+          sortable: !1,
+          searchable: !1,
+          overflow: "visible",
+          template: function(t) {
+            return '<a href="javascript:;" onclick="update(\'' + btoa(t.ID_DIVISI) + '\')" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit text-dark"></i></a><a href="javascript:;" onclick="hapus(\'' + btoa(t.ID_DIVISI) + '\')" class="btn btn-sm btn-clean btn-icon" title="Delete"><i class="fa fa-trash text-dark"></i></a>';
+          }
         }
-      }, {
-        field: "ID_DIVISI",
-        title: "Actions",
-        class: "text-center",
-        sortable: !1,
-        searchable: !1,
-        overflow: "visible",
-        template: function(t) {
-          return '<a href="javascript:;" onclick="update(\'' + btoa(t.ID_DIVISI) + '\')" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit text-dark"></i></a><a href="javascript:;" onclick="hapus(\'' + btoa(t.ID_DIVISI) + '\')" class="btn btn-sm btn-clean btn-icon" title="Delete"><i class="fa fa-trash text-dark"></i></a>'
-        }
-      }]
-    }), $("#datatable_search_status").on("change", (function() {
-      t.search($(this).val().toLowerCase(), "IS_CABANG")
-    })), $("#datatable_search_status").selectpicker(),$("#kt_datatable").KTDatatable().reload();
+      ]
+    });
+
+    // Handle change for search dropdown
+    $("#datatable_search_lokasi").on("change", function() {
+      t.search($(this).val().toLowerCase(), "IS_CABANG");
+    });
+
+    // Ensure datatable is fully initialized before calling gotoPage
+    t.on('datatable-on-init', function() {
+      t.gotoPage(1); // Set default to page 1
+    });
+
+    // Initialize selectpicker if needed
+    $("#datatable_search_lokasi").selectpicker();
   }
 };
-jQuery(document).ready((function() {
-  KTDatatableJsonRemoteDemo.init()
-}));
+
+jQuery(document).ready(function() {
+  KTDatatableJsonRemoteDemo.init();
+});
+
 </script>

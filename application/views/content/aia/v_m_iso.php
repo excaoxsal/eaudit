@@ -177,9 +177,6 @@
           field: "NOMOR_ISO",
           title: "ISO"
         },
-        
-        
-        
         {
           field: "ID_ISO",
           title: "Action",
@@ -192,11 +189,13 @@
             
           }
         }
-          
-      ]
+        ]
       }), $("#datatable_search_status").on("change", (function() {
         t.search($(this).val().toLowerCase(), "STATUS")
-      })), $("#datatable_search_status").selectpicker(),$("#kt_datatable").KTDatatable().reload();
+      })), $("#datatable_search_status").selectpicker(), 
+      t.on('datatable-on-init', function() {
+        t.reload(); // reload page
+      });
     }
   };
 
@@ -237,6 +236,6 @@
     
   }
   jQuery(document).ready((function() {
-    KTDatatableJsonRemoteDemo.init()
+    KTDatatableJsonRemoteDemo.init();
   }));
 </script>

@@ -300,20 +300,22 @@
 <script type="text/javascript">
 "use strict";
 var KTDatatableJsonRemoteDemo = {
+  datatable: null, // Keep a reference to the datatable
+
   init: function() {
-    var t;
-    t = $("#datatable").KTDatatable({
+    var self = this;
+    self.datatable = $("#datatable").KTDatatable({
       data: {
         type: "remote",
         source: '<?= base_url('aia/master/user/user_json') ?>',
         pageSize: 10
       },
       layout: {
-        scroll: !1,
-        footer: !1
+        scroll: false,
+        footer: false
       },
-      sortable: !0,
-      pagination: !0,
+      sortable: true,
+      pagination: true,
       search: {
         input: $("#datatable_search_query"),
         key: "generalSearch"
@@ -389,19 +391,32 @@ var KTDatatableJsonRemoteDemo = {
           <li class="navi-item">
           <a href="javascript:void(0)" onclick=action("`+aksi+`",\'` + btoa(t.ID_USER) + `\') class="navi-link"><span class="navi-icon"><i class="fa fa-`+fa+` text-dark"></i></span><span class="navi-text">`+teks+`</span></li></ul></div></div>
           `
-          // return '<a href="javascript:;" onclick="update(\'' + btoa(t.ID_USER) + '\')" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit"></i></a><a href="javascript:;" onclick="hapus(\'' + btoa(t.ID_USER) + '\')" class="btn btn-sm btn-clean btn-icon" title="Delete"><i class="fa fa-trash"></i></a>'
         }
       }]
-    }), $("#datatable_search_status").on("change", (function() {
-      t.search($(this).val().toLowerCase(), "STATUS")
-    })), $("#datatable_search_type").on("change", (function() {
-      t.search($(this).val().toLowerCase(), "NAMA_ROLE")
-    })), $("#datatable_search_divisi").on("change", (function() {
-      t.search($(this).val().toLowerCase(), "NAMA_DIVISI")
-    })), $("#datatable_search_status, #datatable_search_type, #datatable_search_divisi").selectpicker(),$("#kt_datatable").KTDatatable().reload();
-  }
+    });
+
+    // Ensure datatable is fully initialized before calling gotoPage
+    self.datatable.on('datatable-on-init', function() {
+      self.datatable.gotoPage(1); // Set default to page 1
+    });
+
+    // Set up filters
+    $("#datatable_search_status").on("change", function() {
+      self.datatable.search($(this).val().toLowerCase(), "STATUS");
+    });
+    $("#datatable_search_type").on("change", function() {
+      self.datatable.search($(this).val().toLowerCase(), "NAMA_ROLE");
+    });
+    $("#datatable_search_divisi").on("change", function() {
+      self.datatable.search($(this).val().toLowerCase(), "NAMA_DIVISI");
+    });
+
+    $("#datatable_search_status, #datatable_search_type, #datatable_search_divisi").selectpicker();
+  },
 };
-jQuery(document).ready((function() {
-  KTDatatableJsonRemoteDemo.init()
-}));
+
+jQuery(document).ready(function() {
+  // Initialize the datatable
+  KTDatatableJsonRemoteDemo.init();
+});
 </script>
