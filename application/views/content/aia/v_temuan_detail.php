@@ -694,6 +694,10 @@ var KTDatatableJsonRemoteDemo = {
       });
       
       $("#kt_datatable_search_status").selectpicker();
+      // Ensure datatable is fully initialized before calling gotoPage
+      $("#kt_datatable").KTDatatable().on('datatable-on-init', function() {
+        $("#kt_datatable").KTDatatable().gotoPage(1); // Set default to page 1
+      });
   }
 };
 

@@ -264,7 +264,11 @@ var KTDatatableJsonRemoteDemo = {
       }]
     }), $("#kt_datatable_search_status").on("change", (function() {
       t.search($(this).val().toLowerCase(), "NAMA_DIVISI")
-    })), $("#kt_datatable_search_status").selectpicker(),$("#kt_datatable").KTDatatable().reload();
+    })), $("#kt_datatable_search_status").selectpicker(),
+    // Ensure datatable is fully initialized before calling gotoPage
+    $("#kt_datatable").KTDatatable().on('datatable-on-init', function() {
+      $("#kt_datatable").KTDatatable().gotoPage(1); // Set default to page 1
+    });
   }
 };
 var currentID_TL;
