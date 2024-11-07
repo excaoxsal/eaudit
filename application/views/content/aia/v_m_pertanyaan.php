@@ -271,7 +271,12 @@
       ]
       }), $("#datatable_search_status").on("change", (function() {
         t.search($(this).val().toLowerCase(), "STATUS")
-      })), $("#datatable_search_status").selectpicker(),$("#kt_datatable").KTDatatable().reload();
+      })), $("#datatable_search_status").selectpicker();
+      t.on('datatable-on-init', function() {
+      t.gotoPage(1); // Set default to page 1
+      
+    });
+      
     }
   };
 

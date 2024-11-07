@@ -55,7 +55,13 @@
         </ul>
       </div>
     </li>
-    <li  id="myList"  class="menu-item menu-item-submenu <?= isset($menu) ? $menu == 'perencanaan-aia' ? 'menu-item-open menu-item-here' : '' : ''; ?>" aria-haspopup="true" data-menu-toggle="hover">
+    <li class="menu-item <?= isset($menu) ? $menu == 'perencanaan-aia' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
+      <a href="<?= base_url('aia/Jadwal/jadwal_audit') ?>" class="menu-link mx-5 my-1 rounded">
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" class="mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-airplay"><path d="M5 17H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1"></path><polygon points="12 15 17 21 7 21 12 15"></polygon></svg>
+        <span class="menu-text">Perencanaan</span>
+      </a>
+    </li>
+    <!-- <li  id="myList"  class="menu-item menu-item-submenu <?= isset($menu) ? $menu == 'perencanaan-aia' ? 'menu-item-open menu-item-here' : '' : ''; ?>" aria-haspopup="true" data-menu-toggle="hover">
 
       <a href="javascript:;" class="menu-link menu-toggle mx-5 my-1 rounded">
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" class="mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clipboard"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
@@ -76,7 +82,7 @@
           
         </ul>
       </div>
-    </li>
+    </li> -->
     <li class="menu-item <?= isset($menu) ? $menu == 'dashboard-aia' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
       <a href="<?= base_url('aia/Dashboard/index') ?>" class="menu-link mx-5 my-1 rounded">
       <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" class="mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-airplay"><path d="M5 17H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1"></path><polygon points="12 15 17 21 7 21 12 15"></polygon></svg>
