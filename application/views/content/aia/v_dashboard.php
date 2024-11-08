@@ -275,103 +275,98 @@ table {
                     </div>
                 
                     <div class="row mb-0 pb-0">
-                        <table class="table table-bordered" id="temuanTable">
-                            <thead>
-                                <td rowspan="2">Divisi</td>
-                                <th colspan="3"  style="text-align:center;" >ISO 9001</th>
-                                <th colspan="3"  style="text-align:center;">ISO 14001</th>
-                                <th colspan="3"  style="text-align:center;">ISO 37001</th>
-                                <th colspan="3"  style="text-align:center;">ISO 45001</th>
-                                <tr>
-                                    <td style="text-align:center;">Sudah Close</td>
-                                    <td style="text-align:center;">Belum Close</td>
-                                    <td style="text-align:center;">Total Temuan</td>
-                                    <td style="text-align:center;">Sudah Close</td>
-                                    <td style="text-align:center;">Belum Close</td>
-                                    <td style="text-align:center;">Total Temuan</td>
-                                    <td style="text-align:center;">Sudah Close</td>
-                                    <td style="text-align:center;">Belum Close</td>
-                                    <td style="text-align:center;">Total Temuan</td>
-                                    <td style="text-align:center;">Sudah Close</td>
-                                    <td style="text-align:center;">Belum Close</td>
-                                    <td style="text-align:center;">Total Temuan</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            
-                            
+                    <table class="table table-bordered" id="temuanTable" style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr>
+                                <th rowspan="2" style="text-align: center; background-color: #f2f2f2; font-weight: bold;">Divisi</th>
+                                <th colspan="3" style="text-align: center; background-color: #e6f7ff; font-weight: bold;">ISO 9001</th>
+                                <th colspan="3" style="text-align: center; background-color: #e6f7ff; font-weight: bold;">ISO 14001</th>
+                                <th colspan="3" style="text-align: center; background-color: #e6f7ff; font-weight: bold;">ISO 37001</th>
+                                <th colspan="3" style="text-align: center; background-color: #e6f7ff; font-weight: bold;">ISO 45001</th>
+                            </tr>
+                            <tr>
+                                <th style="text-align: center; font-weight: normal;">Sudah Close</th>
+                                <th style="text-align: center; font-weight: normal;">Belum Close</th>
+                                <th style="text-align: center; font-weight: normal;">Total Temuan</th>
+                                <th style="text-align: center; font-weight: normal;">Sudah Close</th>
+                                <th style="text-align: center; font-weight: normal;">Belum Close</th>
+                                <th style="text-align: center; font-weight: normal;">Total Temuan</th>
+                                <th style="text-align: center; font-weight: normal;">Sudah Close</th>
+                                <th style="text-align: center; font-weight: normal;">Belum Close</th>
+                                <th style="text-align: center; font-weight: normal;">Total Temuan</th>
+                                <th style="text-align: center; font-weight: normal;">Sudah Close</th>
+                                <th style="text-align: center; font-weight: normal;">Belum Close</th>
+                                <th style="text-align: center; font-weight: normal;">Total Temuan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                             <?php foreach ($datadivisi as $ddivisi) { ?>
-                                <?php for ($i=0;$i<=count($datatable[$ddivisi['KODE']]);$i++) { ?>
-                                    <?php if(isset($datatable[$ddivisi['KODE']][$i])){ ?>
-                                        <?php if($datatable[$ddivisi['KODE']][$i]['tipe']=="Divisi"){ $n+=1 ?>
-
-                                            <tr class="parent" id="row12<?=$n?>" title="Click to expand/collapse" style="cursor: pointer;">  
-                                                <td class="feat-title" style="text-align:left;"><?= $datatable[$ddivisi['KODE']][$i]['namadivisi']?></td>  
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['open']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['closed']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['total']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['open']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['closed']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['total']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['open']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['closed']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['total']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['open']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['closed']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['total']?></td>
+                                <?php for ($i = 0; $i <= count($datatable[$ddivisi['KODE']]); $i++) { ?>
+                                    <?php if (isset($datatable[$ddivisi['KODE']][$i])) { ?>
+                                        <?php if ($datatable[$ddivisi['KODE']][$i]['tipe'] == "Divisi") { $n += 1; ?>
+                                            <tr class="parent" id="row12<?=$n?>" title="Click to expand/collapse" style="cursor: pointer; background-color: #f9f9f9;">  
+                                                <td class="feat-title" style="text-align:left; font-weight: bold;"><?= $datatable[$ddivisi['KODE']][$i]['namadivisi'] ?></td>  
+                                                <td style="font-weight: normal;"><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['open'] ?></td>
+                                                <td style="font-weight: normal;"><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['closed'] ?></td>
+                                                <td style="font-weight: normal;"><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['total'] ?></td>
+                                                <td style="font-weight: normal;"><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['open'] ?></td>
+                                                <td style="font-weight: normal;"><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['closed'] ?></td>
+                                                <td style="font-weight: normal;"><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['total'] ?></td>
+                                                <td style="font-weight: normal;"><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['open'] ?></td>
+                                                <td style="font-weight: normal;"><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['closed'] ?></td>
+                                                <td style="font-weight: normal;"><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['total'] ?></td>
+                                                <td style="font-weight: normal;"><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['open'] ?></td>
+                                                <td style="font-weight: normal;"><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['closed'] ?></td>
+                                                <td style="font-weight: normal;"><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['total'] ?></td>
                                             </tr>
-                                            
                                         <?php } ?>
-                                        
 
-                                        <?php if($datatable[$ddivisi['KODE']][$i]['tipe']=="Subdivisi"){ ?>
-                                            <tr class="child-row12<?=$n?>" style="display: table-row;">  
-                                                <td class="feat-title"style="text-align:left;"><?= $datatable[$ddivisi['KODE']][$i]['namadivisi']?></td>  
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['open']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['closed']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['total']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['open']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['closed']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['total']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['open']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['closed']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['total']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['open']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['closed']?></td>
-                                                <td><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['total']?></td>
+                                        <?php if ($datatable[$ddivisi['KODE']][$i]['tipe'] == "Subdivisi") { ?>
+                                            <tr class="child-row12<?=$n?>" style="display: table-row; background-color: #ffffff;">  
+                                                <td class="feat-title" style="text-align:left;"><?= $datatable[$ddivisi['KODE']][$i]['namadivisi'] ?></td>  
+                                                <td style="font-weight: normal;"><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['open'] ?></td>
+                                                <td style="font-weight: normal;"><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['closed'] ?></td>
+                                                <td style="font-weight: normal;"><?= $datatable[$ddivisi['KODE']][$i]['iso9001']['total'] ?></td>
+                                                <td style="font-weight: normal;"><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['open'] ?></td>
+                                                <td style="font-weight: normal;"><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['closed'] ?></td>
+                                                <td style="font-weight: normal;"><?= $datatable[$ddivisi['KODE']][$i]['iso14001']['total'] ?></td>
+                                                <td style="font-weight: normal;"><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['open'] ?></td>
+                                                <td style="font-weight: normal;"><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['closed'] ?></td>
+                                                <td style="font-weight: normal;"><?= $datatable[$ddivisi['KODE']][$i]['iso37001']['total'] ?></td>
+                                                <td style="font-weight: normal;"><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['open'] ?></td>
+                                                <td style="font-weight: normal;"><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['closed'] ?></td>
+                                                <td style="font-weight: normal;"><?= $datatable[$ddivisi['KODE']][$i]['iso45001']['total'] ?></td>
                                             </tr>  
                                         <?php } ?>
 
-                                    <?php $datatotal1 = $datatable[$ddivisi['KODE']][$i]['iso9001']['total'];$datatotal2 += $datatable[$ddivisi['KODE']][$i]['iso9001']['total']; } ?>
-                                
-                                
+                                    <?php $datatotal1 = $datatable[$ddivisi['KODE']][$i]['iso9001']['total']; $datatotal2 += $datatable[$ddivisi['KODE']][$i]['iso9001']['total']; } ?>
                                 <?php } ?>
-                                <?php } ?>
-                                <tr >
-                                    <td class="feat-title">Total Per-ISO</td>
-                                    <td colspan="3"><?= $temuan_1['0']['TOTALALL']?></td>
-                                    <td colspan="3"><?= $temuan_2['0']['TOTALALL']?></td>
-                                    <td colspan="3"><?= $temuan_3['0']['TOTALALL']?></td>
-                                    <td colspan="3"><?= $temuan_4['0']['TOTALALL']?></td>
-                                </tr>
-                                <tr >
-                                    <td class="feat-title">Total Semua Temuan</td>
-                                    <td colspan="12"><?= $temuan_1['0']['TOTALALL']+$temuan_2['0']['TOTALALL']+$temuan_3['0']['TOTALALL']+$temuan_4['0']['TOTALALL']?></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                            <?php } ?>
+                            <tr>
+                                <td class="feat-title" style="font-weight: bold; background-color: #e6f7ff;">Total Per-ISO</td>
+                                <td colspan="3" style="text-align: center; font-weight: normal;"><?= $temuan_1['0']['TOTALALL'] ?></td>
+                                <td colspan="3" style="text-align: center; font-weight: normal;"><?= $temuan_2['0']['TOTALALL'] ?></td>
+                                <td colspan="3" style="text-align: center; font-weight: normal;"><?= $temuan_3['0']['TOTALALL'] ?></td>
+                                <td colspan="3" style="text-align: center; font-weight: normal;"><?= $temuan_4['0']['TOTALALL'] ?></td>
+                            </tr>
+                            <tr>
+                                <td class="feat-title" style="font-weight: bold; background-color: #e6f7ff;">Total Semua Temuan</td>
+                                <td colspan="12" style="text-align: center; font-weight: normal;"><strong><?= $temuan_1['0']['TOTALALL'] + $temuan_2['0']['TOTALALL'] + $temuan_3['0']['TOTALALL'] + $temuan_4['0']['TOTALALL'] ?></strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
                     </div>
                     <div class="row mb-0 pb-0">
                         <div class="table-responsive"> <!-- Tambahkan div ini untuk membuat tabel responsif -->
-                            <table class="table table-bordered" id="temuanTable">
+                            <table class="table table-bordered" id="temuanTableCabang">
                                 <thead>
                                     <tr>
-                                        <td rowspan="2">Cabang</td>
-                                        <th colspan="3" style="text-align:center;">ISO 9001</th>
-                                        <th colspan="3" style="text-align:center;">ISO 14001</th>
-                                        <th colspan="3" style="text-align:center;">ISO 37001</th>
-                                        <th colspan="3" style="text-align:center;">ISO 45001</th>
-                                        <th colspan="3" rowspan="3" style="text-align:center;">TOTAL</th>
+                                        <td rowspan="2" style="text-align: center; background-color: #f2f2f2; font-weight: bold;">Cabang</td>
+                                        <th colspan="3" style="text-align: center; background-color: #e6f7ff; font-weight: bold;">ISO 9001</th>
+                                        <th colspan="3" style="text-align: center; background-color: #e6f7ff; font-weight: bold;">ISO 14001</th>
+                                        <th colspan="3" style="text-align: center; background-color: #e6f7ff; font-weight: bold;">ISO 37001</th>
+                                        <th colspan="3" style="text-align: center; background-color: #e6f7ff; font-weight: bold;">ISO 45001</th>
+                                        <th colspan="3" rowspan="3" style="text-align: center; background-color: #e6f7ff; font-weight: bold;">TOTAL</th>
                                     </tr>
                                     <tr>
                                         <td style="text-align:center;">Sudah Close</td>
@@ -395,21 +390,39 @@ table {
                                                 <?php if($datatablecabang[$cabang['KODE']][$i]['tipe']=="Divisi") { $n+=1 ?>
                                                     <tr class="parent" id="row12<?=$n?>" title="Click to expand/collapse" style="cursor: pointer;">  
                                                         <td class="feat-title" style="text-align:left;"><?= $datatablecabang[$cabang['KODE']][$i]['namadivisi']?></td>  
-                                                        <td><?= $datatablecabang[$cabang['KODE']][$i]['iso9001']['open']?></td>
-                                                        <td><?= $datatablecabang[$cabang['KODE']][$i]['iso9001']['closed']?></td>
-                                                        <td><?= $datatablecabang[$cabang['KODE']][$i]['iso9001']['total']?></td>
-                                                        <td><?= $datatablecabang[$cabang['KODE']][$i]['iso14001']['open']?></td>
-                                                        <td><?= $datatablecabang[$cabang['KODE']][$i]['iso14001']['closed']?></td>
-                                                        <td><?= $datatablecabang[$cabang['KODE']][$i]['iso14001']['total']?></td>
-                                                        <td><?= $datatablecabang[$cabang['KODE']][$i]['iso37001']['open']?></td>
-                                                        <td><?= $datatablecabang[$cabang['KODE']][$i]['iso37001']['closed']?></td>
-                                                        <td><?= $datatablecabang[$cabang['KODE']][$i]['iso37001']['total']?></td>
-                                                        <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['open']?></td>
-                                                        <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['closed']?></td>
-                                                        <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['total']?></td>
+                                                        <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso9001']['open']?></td>
+                                                        <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso9001']['closed']?></td>
+                                                        <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso9001']['total']?></td>
+                                                        <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso14001']['open']?></td>
+                                                        <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso14001']['closed']?></td>
+                                                        <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso14001']['total']?></td>
+                                                        <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso37001']['open']?></td>
+                                                        <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso37001']['closed']?></td>
+                                                        <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso37001']['total']?></td>
+                                                        <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['open']?></td>
+                                                        <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['closed']?></td>
+                                                        <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['total']?></td>
                                                         <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['total'] + $datatablecabang[$cabang['KODE']][$i]['iso9001']['total'] + $datatablecabang[$cabang['KODE']][$i]['iso14001']['total'] + $datatablecabang[$cabang[' KODE']][$i]['iso37001']['total']?></td>
                                                     </tr>
                                                 <?php } ?>
+                                                <?php if($datatablecabang[$cabang['KODE']][$i]['tipe']=="Subdivisi"){ ?>
+                                                <tr class="child-row12<?=$n?>" style="display: table-row;">  
+                                                    <td class="feat-title"style="text-align:left;"><?= $datatablecabang[$cabang['KODE']][$i]['namadivisi']?></td>  
+                                                    <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso9001']['open']?></td>
+                                                    <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso9001']['closed']?></td>
+                                                    <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso9001']['total']?></td>
+                                                    <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso14001']['open']?></td>
+                                                    <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso14001']['closed']?></td>
+                                                    <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso14001']['total']?></td>
+                                                    <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso37001']['open']?></td>
+                                                    <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso37001']['closed']?></td>
+                                                    <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso37001']['total']?></td>
+                                                    <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['open']?></td>
+                                                    <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['closed']?></td>
+                                                    <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['total']?></td>
+                                                    <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['total'] + $datatablecabang[$cabang['KODE']][$i]['iso9001']['total'] + $datatablecabang[$cabang['KODE']][$i]['iso14001']['total'] + $datatablecabang[$cabang[' KODE']][$i]['iso37001']['total']?></td>
+                                                </tr>  
+                                            <?php } ?>
                                             <?php } ?>
                                         <?php } ?>
                                     <?php } ?>
@@ -418,37 +431,37 @@ table {
                         </div>
                     </div>
                     <div class="scoreboard-container">
-                    <div style="max-width: 1200px; margin: auto; background: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); padding: 20px;">
-                        <div style="display: flex; justify-content: center; margin-bottom: 20px;">
-                            <button id="all" style="flex: 1; padding: 10px; margin: 0 5px; border: none; border-radius: 5px; background-color: #007bff; color: white; cursor: pointer; transition: background-color 0.3s;">ALL</button>
-                            <button id="btn_divisi" style="flex: 1; padding: 10px; margin: 0 5px; border: none; border-radius: 5px; background-color: #007bff; color: white; cursor: pointer; transition: background-color 0.3s;">DIVISI</button>
-                            <button id="btn_cabang" style="flex: 1; padding: 10px; margin: 0 5px; border: none; border-radius: 5px; background-color: #007bff; color: white; cursor: pointer; transition: background-color 0.3s;">CABANG</button>
-                        </div>
+                        <div style="max-width: 1200px; margin: auto; background: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); padding: 20px;">
+                            <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+                                <button id="all" style="flex: 1; padding: 10px; margin: 0 5px; border: none; border-radius: 5px; background-color: #007bff; color: white; cursor: pointer; transition: background-color 0.3s;">ALL</button>
+                                <button id="btn_divisi" style="flex: 1; padding: 10px; margin: 0 5px; border: none; border-radius: 5px; background-color: #007bff; color: white; cursor: pointer; transition: background-color 0.3s;">DIVISI</button>
+                                <button id="btn_cabang" style="flex: 1; padding: 10px; margin: 0 5px; border: none; border-radius: 5px; background-color: #007bff; color: white; cursor: pointer; transition: background-color 0.3s;">CABANG</button>
+                            </div>
 
-                        <div id="scoreboard" style="display: flex; flex-wrap: wrap; justify-content: space-between;">
-                            
-                            <div style="flex: 1 1 calc(20% - 10px); margin: 5px; background: #e9ecef; border-radius: 5px; padding: 15px; text-align: center;">
-                                <label for="box2">ISO 9001</label>
-                                <div class="box" id="box2" style="font-size: 24px; font-weight: bold; margin-top: 10px;">0</div>
-                            </div>
-                            <div style="flex: 1 1 calc(20% - 10px); margin: 5px; background: #e9ecef; border-radius: 5px; padding: 15px; text-align: center;">
-                                <label for="box3">ISO 14001</label>
-                                <div class="box" id="box3" style="font-size: 24px; font-weight: bold; margin-top: 10px;">0</div>
-                            </div>
-                            <div style="flex: 1 1 calc(20% - 10px); margin: 5px; background: #e9ecef; border-radius: 5px; padding: 15px; text-align: center;">
-                                <label for="box4">ISO 37001</label>
-                                <div class="box" id="box4" style="font-size: 24px; font-weight: bold; margin-top: 10px;">0</div>
-                            </div>
-                            <div style="flex: 1 1 calc(20% - 10px); margin: 5px; background: #e9ecef; border-radius: 5px; padding: 15px; text-align: center;">
-                                <label for="box5">ISO 45001</label>
-                                <div class="box" id="box5" style="font-size: 24px; font-weight: bold; margin-top: 10px;">0</div>
-                            </div>
-                            <div style="flex: 1 1 calc(20% - 10px); margin: 5px; background: #e9ecef; border-radius: 5px; padding: 15px; text-align: center;">
-                                <label for="box1">Kantor Pusat & Cabang</label>
-                                <div class="box" id="box1" style="font-size: 24px; font-weight: bold; margin-top: 10px;">0</div>
+                            <div id="scoreboard" style="display: flex; flex-wrap: wrap; justify-content: space-between;">
+                                
+                                <div style="flex: 1 1 calc(20% - 10px); margin: 5px; background: #e9ecef; border-radius: 5px; padding: 15px; text-align: center;">
+                                    <label for="box2">ISO 9001</label>
+                                    <div class="box" id="box2" style="font-size: 24px; font-weight: bold; margin-top: 10px;">0</div>
+                                </div>
+                                <div style="flex: 1 1 calc(20% - 10px); margin: 5px; background: #e9ecef; border-radius: 5px; padding: 15px; text-align: center;">
+                                    <label for="box3">ISO 14001</label>
+                                    <div class="box" id="box3" style="font-size: 24px; font-weight: bold; margin-top: 10px;">0</div>
+                                </div>
+                                <div style="flex: 1 1 calc(20% - 10px); margin: 5px; background: #e9ecef; border-radius: 5px; padding: 15px; text-align: center;">
+                                    <label for="box4">ISO 37001</label>
+                                    <div class="box" id="box4" style="font-size: 24px; font-weight: bold; margin-top: 10px;">0</div>
+                                </div>
+                                <div style="flex: 1 1 calc(20% - 10px); margin: 5px; background: #e9ecef; border-radius: 5px; padding: 15px; text-align: center;">
+                                    <label for="box5">ISO 45001</label>
+                                    <div class="box" id="box5" style="font-size: 24px; font-weight: bold; margin-top: 10px;">0</div>
+                                </div>
+                                <div style="flex: 1 1 calc(20% - 10px); margin: 5px; background: #e9ecef; border-radius: 5px; padding: 15px; text-align: center;">
+                                    <label for="box1">Kantor Pusat & Cabang</label>
+                                    <div class="box" id="box1" style="font-size: 24px; font-weight: bold; margin-top: 10px;">0</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
                     </div>
                 </div>
             </div>
@@ -542,44 +555,7 @@ table {
 
     </script>
 
-    <script> 
-        document.addEventListener("DOMContentLoaded", function() {
-            let parents = document.querySelectorAll("tr.parent");
-            
-            for (let i = 0; i < parents.length; i++) {
-                // Set the color based on the row index (odd/even)
-                if (i % 2 === 0) {
-                    parents[i].style.backgroundColor = "#d4edda"; // Even index (0, 2, 4, ...) - soft pastel green
-                } else {
-                    parents[i].style.backgroundColor = "#c3e6cb"; // Odd index (1, 3, 5, ...) - muted green
-                }
-
-                parents[i].querySelector('.feat-title').setAttribute('data-before', '+'); 
-                parents[i].style.cursor = "pointer";
-                parents[i].setAttribute("title", "Click to expand/collapse");
-
-                parents[i].addEventListener("click", function() {
-                    let id = this.id;
-                    let children = document.querySelectorAll('.child-' + id);       
-                    
-                    for (let j = 0; j < children.length; j++) {
-                        if (children[j].style.display === "none") {
-                            children[j].style.display = "table-row";
-                            parents[i].querySelector('.feat-title').setAttribute('data-before', '-');     
-                        } else {
-                            children[j].style.display = "none";
-                            parents[i].querySelector('.feat-title').setAttribute('data-before', '+'); 
-                        }
-                    } 
-                });  
-            }
-
-            let children = document.querySelectorAll("tr[class^='child-']");
-            for (let i = 0; i < children.length; i++) {
-                children[i].style.display = "none";
-            }
-        });
-    </script>
+    
 
 
     <script type="text/javascript">
@@ -621,6 +597,16 @@ table {
         $('#iso').change(function() {
             drawStackedChartIso(); // Refresh the chart when the selected province changes
         });
+
+        /*$(document).ready(function () {  
+                    $('tr.parent')  
+                        .css("cursor", "pointer")  
+                        .attr("title", "Click to expand/collapse")  
+                        .click(function () {  
+                            $(this).siblings('.child-' + this.id).toggle();  
+                        });  
+                    $('tr[@class^=child-]').hide().children('td');  
+            }); */ 
     </script>
     
 
@@ -733,7 +719,7 @@ table {
     </style>
 
 
-<script type="text/javascript">
+    <script type="text/javascript">
         google.charts.load('current', {packages: ['corechart', 'bar']});
         google.charts.setOnLoadCallback(drawStackedChartDivisi2);
 
@@ -787,7 +773,7 @@ table {
         }
     </style>
 
-<script type="text/javascript">
+    <script type="text/javascript">
         google.charts.load('current', {packages: ['corechart', 'bar']});
         google.charts.setOnLoadCallback(drawStackedChartDivisi3);
 
@@ -895,7 +881,7 @@ table {
         }
     </style>
 
-<script type="text/javascript">
+    <script type="text/javascript">
         google.charts.load('current', {packages: ['corechart', 'bar']});
         google.charts.setOnLoadCallback(drawStackedChartCabang1);
 
@@ -949,7 +935,7 @@ table {
         }
     </style>
 
-<script type="text/javascript">
+    <script type="text/javascript">
         google.charts.load('current', {packages: ['corechart', 'bar']});
         google.charts.setOnLoadCallback(drawStackedChartCabang2);
 
@@ -1003,7 +989,7 @@ table {
         }
     </style>
 
-<script type="text/javascript">
+    <script type="text/javascript">
         google.charts.load('current', {packages: ['corechart', 'bar']});
         google.charts.setOnLoadCallback(drawStackedChartCabang3);
 
@@ -1057,8 +1043,49 @@ table {
         }
     </style>
 
+    <!-- end graph script -->
     
+    
+    <script> 
+        document.addEventListener("DOMContentLoaded", function() {
+            let parents = document.querySelectorAll("tr.parent");
+            
+            for (let i = 0; i < parents.length; i++) {
+                // Set the color based on the row index (odd/even)
+                if (i % 2 === 0) {
+                    parents[i].style.backgroundColor = "#d4edda"; // Even index (0, 2, 4, ...) - soft pastel green
+                } else {
+                    parents[i].style.backgroundColor = "#c3e6cb"; // Odd index (1, 3, 5, ...) - muted green
+                }
 
+                parents[i].querySelector('.feat-title').setAttribute('data-before', '+'); 
+                parents[i].style.cursor = "pointer";
+                parents[i].setAttribute("title", "Click to expand/collapse");
+
+                parents[i].addEventListener("click", function() {
+                    let id = this.id;
+                    let children = document.querySelectorAll('.child-' + id);       
+                    
+                    for (let j = 0; j < children.length; j++) {
+                        if (children[j].style.display === "none") {
+                            children[j].style.display = "table-row";
+                            parents[i].querySelector('.feat-title').setAttribute('data-before', '-');  
+                            console.log('a');
+                        } else {
+                            children[j].style.display = "none";
+                            parents[i].querySelector('.feat-title').setAttribute('data-before', '+'); 
+                            console.log('b');
+                        }
+                    } 
+                });  
+            }
+
+            let children = document.querySelectorAll("tr[class^='child-']");
+            for (let i = 0; i < children.length; i++) {
+                children[i].style.display = "none";
+            }
+        });
+    </script>
     <script>
         $(document).ready(function() {
             let responseData; // Variabel untuk menyimpan data response
