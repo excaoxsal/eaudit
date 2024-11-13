@@ -77,6 +77,9 @@ class Dashboard extends MY_Controller
 
         $query = $this->db->get();
         $result = $query->result_array();
+        if($result['0']['TOTALALL']==null){
+            $result['0']['TOTALALL']='0';
+        }
         // var_dump($result['0']['TOTALALL']);die;
         return $result;
     }
@@ -93,6 +96,9 @@ class Dashboard extends MY_Controller
 
         $query = $this->db->get();
         $result = $query->result_array();
+        if($result['0']['TOTALALL']==null){
+            $result['0']['TOTALALL']='0';
+        }
         // var_dump($result['0']['TOTALALL']);die;
         return $result;
     }
@@ -109,6 +115,9 @@ class Dashboard extends MY_Controller
 
         $query = $this->db->get();
         $result = $query->result_array();
+        if($result['0']['TOTALALL']==null){
+            $result['0']['TOTALALL']='0';
+        }
         return $result;
     }
     public function total_temuan_45001(){
@@ -124,6 +133,9 @@ class Dashboard extends MY_Controller
 
         $query = $this->db->get();
         $result = $query->result_array();
+        if($result['0']['TOTALALL']==null){
+            $result['0']['TOTALALL']='0';
+        }
         return $result;
     }
 

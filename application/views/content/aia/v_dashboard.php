@@ -402,7 +402,7 @@ table {
                                                         <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['open']?></td>
                                                         <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['closed']?></td>
                                                         <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['total']?></td>
-                                                        <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['total'] + $datatablecabang[$cabang['KODE']][$i]['iso9001']['total'] + $datatablecabang[$cabang['KODE']][$i]['iso14001']['total'] + $datatablecabang[$cabang[' KODE']][$i]['iso37001']['total']?></td>
+                                                        <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['total'] + $datatablecabang[$cabang['KODE']][$i]['iso9001']['total'] + $datatablecabang[$cabang['KODE']][$i]['iso14001']['total'] + $datatablecabang[$cabang['KODE']][$i]['iso37001']['total']?></td>
                                                     </tr>
                                                 <?php } ?>
                                                 <?php if($datatablecabang[$cabang['KODE']][$i]['tipe']=="Subdivisi"){ ?>
