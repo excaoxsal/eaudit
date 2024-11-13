@@ -54,6 +54,7 @@ class Divisi extends MY_Controller
             $data = array(
                 'NAMA_DIVISI'  => trim(htmlspecialchars($this->input->post('divisi1', TRUE))),
                 'KODE'         => trim(htmlspecialchars($this->input->post('kode_divisi', TRUE))),
+                'KODE_PARENT'  => NULL,
                 'IS_DIVISI'    => $is_divisi,
                 'IS_CABANG'    => $is_cabang 
             );
