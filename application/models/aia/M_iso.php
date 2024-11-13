@@ -14,7 +14,7 @@ class M_Iso extends CI_Model{
     }
 
     public function iiso(){
-        $this->db->select('*')->from('TM_ISO')->where('IS_ANY','1');
+        $this->db->select('*')->from('TM_ISO')->where('IS_ANY','1')->order_by('ID_ISO', 'ASC');
         $query = $this->db->get();
         return $query->result_array();
     }

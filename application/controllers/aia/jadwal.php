@@ -45,14 +45,11 @@ class Jadwal extends MY_Controller
 		$data_lead_auditor			= $this->master_act->auditor(['J.ID_JABATAN' => 2132]);
 		$data['data_auditor'] 		= $data_auditor;
 		$data['data_lead_auditor'] 	= $data_lead_auditor;
-		// $data['id_jadwal']			= $this->m_jadwal->get_jadwal($id);
 		$data['list_jenis_audit'] 	= $this->master_act->jenis_audit();
-		// $listdiv=$this->master_act->divisi();
         $listdiv=$this->aia_master_act->only_divisi();
 		$data['list_divisi'] 		= $listdiv;
 		$data['menu']           	= 'perencanaan-aia';
 		$data['sub_menu']      		= 'jadwal_audit';
-		
 		$data['title']          	= 'Create Jadwal Audit';
         $data['content']        	= 'content/jadwal/create';
         $this->show($data);
@@ -68,18 +65,13 @@ class Jadwal extends MY_Controller
 		$data['data_auditor'] 		= $data_auditor;
 		$data['data_lead_auditor'] 	= $data_lead_auditor;
 		$data['data_jadwal']		= $data_jadwal;
-		// $nama = $data_jadwal[0]['NAMA_AUDITOR'];
-		// var_dump($data_jadwal);
-		// die();
 		$data['list_jenis_audit'] 	= $this->master_act->jenis_audit();
-		$data['list_divisi'] 		= $this->master_act->divisi();
+		$data['list_divisi'] 		= $this->aia_master_act->only_divisi();
 		$data['menu']           	= 'perencanaan';
-		$data['sub_menu']      		= 'jadwal_audit';
-		
+		$data['sub_menu']      		= 'jadwal_audit';	
 		$data['title']          	= 'Update Jadwal Audit';
         $data['content']        	= 'content/jadwal/create';
-		// print_r($data['data_jadwal']);
-		// die();
+		// var_dump($data_jadwal);die;
         $this->show($data);
 	}
 

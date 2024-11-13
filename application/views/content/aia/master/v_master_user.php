@@ -91,7 +91,7 @@
                       <div class="form-label">
                         <select class="form-control" id="atasan_i" name="atasan_i">
                           <option value="">--Pilih Atasan--</option>
-                          <?php foreach($list_user as $user){ ?>
+                          <?php foreach($list_atasan_user as $user){ ?>
                           <option value="<?= $user['ID_USER'] ?>"><?= $user['NAMA'] ?></option>
                           <?php } ?>
                         </select>

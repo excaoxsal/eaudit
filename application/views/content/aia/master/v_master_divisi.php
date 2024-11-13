@@ -87,7 +87,8 @@
                     <div class="col-9">
                       <span class="switch">
                         <label>
-                          <input type="checkbox" checked="checked" id="is_cabang" name="is_cabang">
+                        <!-- <input type="hidden" name="is_cabang" value="0"> -->
+                        <input type="checkbox" id="is_cabang" name="is_cabang" value="1">
                           <span></span>
                         </label>
                       </span>
@@ -228,7 +229,7 @@
               $('#subdiv').css('display', 'none');
               $('#divisi').css('display', 'flex');
               $('#is_divisi').val(data[0]['IS_DIVISI']);
-              $('#divisi1').val(data[0]['nama_divisi']);
+              $('#divisi1').val(data[0]['nama_divisi_']);
               $('#kode_divisi').val(data[0]['KODE']);
             }
             
@@ -277,7 +278,7 @@ var KTDatatableJsonRemoteDemo = {
       },
       columns: [
         {
-          field: "nama_divisi",
+          field: "nama_divisi_",
           title: "Divisi"
         },
         {

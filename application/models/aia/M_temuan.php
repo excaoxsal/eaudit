@@ -114,7 +114,7 @@ class M_Temuan extends CI_Model{
             FROM 
                 "TEMUAN_DETAIL" td 
             LEFT JOIN 
-                "RESPONSE_AUDITEE_D" ra ON td."ID_RESPONSE" = ra."ID_HEADER" 
+                "RESPONSE_AUDITEE_H" ra ON td."ID_RESPONSE" = ra."ID_HEADER" 
             LEFT JOIN 
                 "WAKTU_AUDIT" w ON ra."ID_JADWAL" = w."ID_JADWAL" 
             JOIN 
@@ -217,7 +217,7 @@ class M_Temuan extends CI_Model{
             t."APPROVAL_TINDAKLANJUT"
         FROM
             "TEMUAN_DETAIL" t
-            INNER JOIN "RESPONSE_AUDITEE_D" ra ON ra."ID_HEADER" = t."ID_RESPONSE"
+            INNER JOIN "RESPONSE_AUDITEE_H" ra ON ra."ID_HEADER" = t."ID_RESPONSE"
             INNER JOIN "WAKTU_AUDIT" wa ON ra."ID_JADWAL" = wa."ID_JADWAL"
         WHERE
             t."ID_RESPONSE" = ?

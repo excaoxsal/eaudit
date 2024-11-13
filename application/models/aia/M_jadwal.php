@@ -67,12 +67,13 @@ class M_jadwal extends CI_Model{
 	public function get_jadwal($id_jadwal,$id_user){
 		$this->db->select('w.ID_JADWAL,w.WAKTU_AUDIT_AWAL,w.WAKTU_AUDIT_SELESAI,us.ID_USER as ID_AUDITOR, us.NAMA as NAMA_AUDITOR, ul.ID_USER as ID_LEAD, ul.NAMA as NAMA_LEAD_AUDITOR, div.NAMA_DIVISI as NAMA_DIVISI,w.ID_DIVISI as ID_DIVISI');
         $this->db->from('WAKTU_AUDIT w');
-        $this->db->join('TM_USER us', 'us.ID_USER = w.ID_AUDITOR');
-        $this->db->join('TM_USER ul', 'ul.ID_USER = w.ID_LEAD_AUDITOR');
+        $this->db->join('TM_USER us', 'us.ID_USER = w.ID_AUDITOR','left');
+        $this->db->join('TM_USER ul', 'ul.ID_USER = w.ID_LEAD_AUDITOR','left');
 		$this->db->join('TM_DIVISI div','div.ID_DIVISI = w.ID_DIVISI','LEFT');
         $this->db->where('w.ID_JADWAL', $id_jadwal);
         $this->db->or_where('w.ID_LEAD_AUDITOR', $id_user);
-		// $elquery = $this->db->select('')->from('RESPON_AUDITEE');
+		// $elquery = $this->db->get();
+		// print_r($this->db->last_query());die;
         $query = $this->db->get();
         return $query->result_array();
 	}

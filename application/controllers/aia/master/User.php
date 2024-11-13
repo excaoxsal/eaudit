@@ -17,6 +17,8 @@ class User extends MY_Controller
     public function index()
     {
         $data['list_user']      = $this->aia_master_act->user(['U.STATUS'=>1]);
+        $data['list_atasan_user']      = $this->aia_master_act->atasan_user(['U.STATUS'=>1]);
+
         $data['list_jabatan']   = $this->aia_master_act->jabatan();
         $data['list_divisi']    = $this->aia_master_act->only_divisi();
         $data['list_role']      = $this->aia_master_act->role();

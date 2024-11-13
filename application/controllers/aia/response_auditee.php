@@ -184,7 +184,7 @@ class Response_auditee extends MY_Controller {
         header('Content-Type: application/json');
 		// var_dump($this->m_res_au->get_response_auditee_header());
 		$getquery = $this->m_res_au->get_response_auditee_header();
-		// var_dump($getquery);die;
+		// var_dump($_SESSION['ID_DIVISI']);die;
         echo json_encode($getquery);
 	}
 
@@ -241,10 +241,17 @@ class Response_auditee extends MY_Controller {
 		$query_divisi = $this->db->select('KODE')->from('WAKTU_AUDIT w')->join('TM_DIVISI d','d.ID_DIVISI=w.ID_DIVISI')->where('ID_JADWAL',$data)->get();
 		$query_iso = $this->db->select('ID_ISO')->from('TM_ISO')->get();
 		$result_iso = $query_iso->result_array();
+		$result_divisi = $query_divisi->result_array();
 		// $query_bersih_temuan = $this->db->where('ID_JADWAL =', $data)->delete('TEMUAN_DETAIL');
 		// $query_bersih_d = $this->db->where('ID_JADWAL =', $data)->delete('RESPONSE_AUDITEE_H');
 		// $query_bersih_h = $this->db->where('ID_JADWAL =', $data)->delete('RESPONSE_AUDITEE_D');
-		$result_divisi = $query_divisi->result_array();
+		$query_valid_header = $this->db->select('*')->from('RESPONSE_AUDITEE_H d')->where('ID_JADWAL',$data)->where('DIVISI',$result_divisi[0]['KODE'])->get();
+		if($query_valid_header->result_array()==null){
+			$query_bersih_d = $this->db->where('ID_JADWAL ', $data)->where('DIVISI !=',$result_divisi[0]['KODE'])->delete('RESPONSE_AUDITEE_H');
+			$query_bersih_h = $this->db->where('ID_JADWAL ', $data)->where('DIVISI !=',$result_divisi[0]['KODE'])->delete('RESPONSE_AUDITEE_D');
+			// print_r($this->db->last_query());die;
+		}
+		
 		foreach($result_iso as $iso){
 			$query_valid_header = $this->db->select('*')->from('RESPONSE_AUDITEE_H d')->where('ID_JADWAL',$data)->where('ID_ISO',$iso['ID_ISO'])->where('DIVISI',$result_divisi[0]['KODE'])->get();
 			$result_valid_header = $query_valid_header->result_array();
@@ -321,26 +328,16 @@ class Response_auditee extends MY_Controller {
 							$this->db->where('ID_JADWAL',$data)->where('ID_MASTER_PERTANYAAN',$row['ID_MASTER_PERTANYAAN'])->where('DIVISI',$result_divisi[0]['KODE'])->where('SUB_DIVISI',trim($item))->where('ID_ISO',$row['ID_ISO']);
 							$this->db->update('RESPONSE_AUDITEE_D');
 						}
-						
 					}
-					
-					// Bersihkan dan siapkan data untuk dimasukkan
-				}
-					
+				}	
 			}
 		}
-		
-		
-		
-		
-		
-		// var_dump($resultq);die;
 		if (!empty($data_to_insert)) {
 			
 				$this->db->insert_batch('RESPONSE_AUDITEE_D', $data_to_insert);
 			
 		}
-			$success_message = 'Data telah berhasil di-generate.';
+			$success_message = 'Data telah berhasil disinkronisasi.';
 			$this->m_jadwal->update_status($data);
 				$this->session->set_flashdata('success', $success_message);
 				redirect(base_url('aia/jadwal/jadwal_audit'));
