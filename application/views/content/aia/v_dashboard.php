@@ -285,17 +285,17 @@ table {
                                 <th colspan="3" style="text-align: center; background-color: #e6f7ff; font-weight: bold;">ISO 45001</th>
                             </tr>
                             <tr>
-                                <th style="text-align: center; font-weight: normal;">Sudah Close</th>
                                 <th style="text-align: center; font-weight: normal;">Belum Close</th>
+                                <th style="text-align: center; font-weight: normal;">Sudah Close</th>
                                 <th style="text-align: center; font-weight: normal;">Total Temuan</th>
-                                <th style="text-align: center; font-weight: normal;">Sudah Close</th>
                                 <th style="text-align: center; font-weight: normal;">Belum Close</th>
+                                <th style="text-align: center; font-weight: normal;">Sudah Close</th>
                                 <th style="text-align: center; font-weight: normal;">Total Temuan</th>
-                                <th style="text-align: center; font-weight: normal;">Sudah Close</th>
                                 <th style="text-align: center; font-weight: normal;">Belum Close</th>
+                                <th style="text-align: center; font-weight: normal;">Sudah Close</th>
                                 <th style="text-align: center; font-weight: normal;">Total Temuan</th>
-                                <th style="text-align: center; font-weight: normal;">Sudah Close</th>
                                 <th style="text-align: center; font-weight: normal;">Belum Close</th>
+                                <th style="text-align: center; font-weight: normal;">Sudah Close</th>
                                 <th style="text-align: center; font-weight: normal;">Total Temuan</th>
                             </tr>
                         </thead>
@@ -369,17 +369,17 @@ table {
                                         <th colspan="3" rowspan="3" style="text-align: center; background-color: #e6f7ff; font-weight: bold;">TOTAL</th>
                                     </tr>
                                     <tr>
-                                        <td style="text-align:center;">Sudah Close</td>
                                         <td style="text-align:center;">Belum Close</td>
+                                        <td style="text-align:center;">Sudah Close</td>
                                         <td style="text-align:center;">Total Temuan</td>
-                                        <td style="text-align:center;">Sudah Close</td>
                                         <td style="text-align:center;">Belum Close</td>
+                                        <td style="text-align:center;">Sudah Close</td>
                                         <td style="text-align:center;">Total Temuan</td>
-                                        <td style="text-align:center;">Sudah Close</td>
                                         <td style="text-align:center;">Belum Close</td>
+                                        <td style="text-align:center;">Sudah Close</td>
                                         <td style="text-align:center;">Total Temuan</td>
-                                        <td style="text-align:center;">Sudah Close</td>
                                         <td style="text-align:center;">Belum Close</td>
+                                        <td style="text-align:center;">Sudah Close</td>
                                         <td style="text-align:center;">Total Temuan</td>
                                     </tr>
                                 </thead>
@@ -420,7 +420,7 @@ table {
                                                     <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['open']?></td>
                                                     <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['closed']?></td>
                                                     <td style="font-weight: normal;"><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['total']?></td>
-                                                    <td><?= $datatablecabang[$cabang['KODE']][$i]['iso45001']['total'] + $datatablecabang[$cabang['KODE']][$i]['iso9001']['total'] + $datatablecabang[$cabang['KODE']][$i]['iso14001']['total'] + $datatablecabang[$cabang[' KODE']][$i]['iso37001']['total']?></td>
+                                                    <td><?= $datatablecabang[$cabang['KODE']][$i]['iso9001']['total'] + $datatablecabang[$cabang['KODE']][$i]['iso14001']['total'] + $datatablecabang[$cabang['KODE']][$i]['iso37001']['total'] + $datatablecabang[$cabang['KODE']][$i]['iso45001']['total'] ?></td>
                                                 </tr>  
                                             <?php } ?>
                                             <?php } ?>
