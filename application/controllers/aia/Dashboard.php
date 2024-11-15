@@ -230,6 +230,7 @@ class Dashboard extends MY_Controller
             where d."IS_CABANG" = \'N\' and d."IS_DIVISI" = \'Y\' and h."ID_ISO" =1
             GROUP BY 
                 d."COUNT",d."KODE"
+            ORDER BY d."COUNT" ASC
         ');
         // Mengubah hasil query menjadi array
         $data = $query->result_array();
@@ -256,6 +257,7 @@ class Dashboard extends MY_Controller
             where d."IS_CABANG" = \'N\' and d."IS_DIVISI" = \'Y\' and h."ID_ISO" =2
             GROUP BY 
                d."COUNT", d."KODE"
+               ORDER BY d."COUNT" ASC
         ');
         // Mengubah hasil query menjadi array
         $data = $query->result_array();
@@ -282,6 +284,7 @@ class Dashboard extends MY_Controller
             where d."IS_CABANG" = \'N\' and d."IS_DIVISI" = \'Y\' and h."ID_ISO" =3
             GROUP BY 
                d."COUNT", d."KODE"
+               ORDER BY d."COUNT" ASC
         ');
         // Mengubah hasil query menjadi array
         $data = $query->result_array();
@@ -308,6 +311,7 @@ class Dashboard extends MY_Controller
             where d."IS_CABANG" = \'N\' and d."IS_DIVISI" = \'Y\' and h."ID_ISO" =4
             GROUP BY 
                d."COUNT", d."KODE"
+               ORDER BY d."COUNT" ASC
         ');
         // Mengubah hasil query menjadi array
         $data = $query->result_array();
@@ -336,6 +340,7 @@ class Dashboard extends MY_Controller
             where d."IS_CABANG" = \'Y\' and d."IS_DIVISI" = \'Y\' and h."ID_ISO" =1
             GROUP BY 
                 d."KODE"
+                
         ');
 
         

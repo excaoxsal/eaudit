@@ -275,7 +275,7 @@ table {
                     </div>
                 
                     <div class="row mb-0 pb-0">
-                    <table class="table table-bordered" id="temuanTable" style="width: 100%; border-collapse: collapse;">
+                    <table class="table table-bordered" id="temuanTableDivisi" style="width: 100%; border-collapse: collapse;">
                         <thead>
                             <tr>
                                 <th rowspan="2" style="text-align: center; background-color: #f2f2f2; font-weight: bold;">Divisi</th>
@@ -484,14 +484,20 @@ table {
         if(x=="Cabang"){
             document.getElementById("cabang").style.display = "block";
             document.getElementById("divisi").style.display = "none";
+            document.getElementById("temuanTableCabang").style.display = "block";
+            document.getElementById("temuanTableDivisi").style.display = "none";
         }
         else if((x=="Divisi")){
             document.getElementById("cabang").style.display = "none";
             document.getElementById("divisi").style.display = "block";
+            document.getElementById("temuanTableCabang").style.display = "none";
+            document.getElementById("temuanTableDivisi").style.display = "block";
         }
         else{
             document.getElementById("cabang").style.display = "block";
             document.getElementById("divisi").style.display = "block";
+            document.getElementById("temuanTableCabang").style.display = "block";
+            document.getElementById("temuanTableDivisi").style.display = "block";
         }
         }
 

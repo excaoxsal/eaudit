@@ -419,6 +419,10 @@ var KTDatatableJsonRemoteDemo = {
       },{
         field: "KATEGORI",
         title: "Kategori"
+      },
+      {
+        field: "NAMA_DIVISI",
+        title: "Sub Divisi"
       },{
         field: "STATUS",
         title: "Status",
@@ -684,10 +688,7 @@ var KTDatatableJsonRemoteDemo = {
       }
 
       // Allow for dynamic searching through the input field
-      $("#kt_datatable_search_query").on("input", function() {
-          var searchValue = $(this).val(); // Get the input value from the input field
-          t.search(searchValue, 'TEMUAN'); // Perform the search
-      });
+      
 
       $("#kt_datatable_search_status").on("change", function() {
         t.search($(this).val().toLowerCase(), "NAMA_DIVISI");
