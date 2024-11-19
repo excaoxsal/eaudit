@@ -3,6 +3,8 @@
     position: absolute;
     right: 10px;
   }
+  .bg-reject { background-color: #ea5151 !important; /* Light red for Approve */ } 
+  .bg-approve { background-color: #3ed64b !important; /* Light green for Reject */ }
 </style>
 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
   <div class="subheader py-2 py-lg-4 subheader-solid" id="kt_subheader">
@@ -283,7 +285,7 @@
           <input type="hidden"  name="ID_TEMUAN" id="ID_TEMUAN_APPROVAL1">
           <div class="form-group row">
             <div class="col-12">
-            <select class="form-control select-dua" id="APPROVAL_COMMITMENT" name="APPROVAL_COMMITMENT">
+            <select class="form-control bg-approve" id="APPROVAL_COMMITMENT" name="APPROVAL_COMMITMENT">
               <option value="1">Approve</option>
               <option value="0">Reject</option>
             </select>
@@ -336,7 +338,7 @@
           <input type="hidden"  name="ID_TEMUAN" id="ID_TEMUAN_APPROVALTL">
           <div class="form-group row">
             <div class="col-12">
-            <select class="form-control select-dua" id="APPROVAL_TINDAKLANJUT" name="APPROVAL_TINDAKLANJUT">
+            <select class="form-control bg-approve" id="APPROVAL_TINDAKLANJUT" name="APPROVAL_TINDAKLANJUT">
               <option value="1">Approve</option>
               <option value="0">Reject</option>
             </select>
@@ -933,5 +935,16 @@ $(document).ready(function() {
   $('#modal_TL').on('hidden.bs.modal', function() {
     $("#kt_datatable").KTDatatable().reload();
   });
+});
+
+$(document).ready(function() { 
+  $("#APPROVAL_COMMITMENT, #APPROVAL_TINDAKLANJUT").on("change", function() { 
+    var selectedValue = $(this).val(); $(this).removeClass('bg-approve bg-reject'); 
+    if (selectedValue == "1") { 
+      $(this).addClass("bg-approve"); 
+    } else if (selectedValue == "0") { 
+      $(this).addClass("bg-reject"); 
+    } 
+  }); 
 });
 </script>

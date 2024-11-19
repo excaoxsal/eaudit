@@ -1,9 +1,53 @@
 <style type="text/css">
   #datatable_paginate {
-
     position: absolute;
     right: 10px;
   }
+
+  #loadingScreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999; /* Make sure it's on top of other elements */
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.loading-content {
+    text-align: center;
+    animation: fadeIn 1s ease-in-out infinite alternate;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0.5;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.fa-spinner {
+    font-size: 48px;
+    margin-bottom: 10px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
 </style>
 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
   <div class="subheader py-2 py-lg-4 subheader-solid" id="kt_subheader">
@@ -61,7 +105,12 @@
               </div>
             </div>
           </div>
-          
+          <!-- Dynamic Loading Screen -->
+          <div id="loadingScreen" style="display: none;">
+              <div class="loading-content">
+                  <i class="fa fa-spinner fa-spin"></i> <span id="loadingText">Loading, please wait...</span>
+              </div>
+          </div>
           <div class="datatable datatable-bordered datatable-head-custom" id="datatable"></div>
         </div>
       </div>
@@ -134,51 +183,82 @@
               return 0;
             }else {
               return (
-                      '<a onclick="save(' + t.ID_JADWAL + ')" class="btn btn-sm btn-clean btn-icon" title="Sinkronisasi"><i class="fa fa-refresh text-dark"></i></a>'+
-                      
+                      '<a id="syncButton_' + t.ID_JADWAL + '" onclick="save(' + t.ID_JADWAL + ')" class="btn btn-sm btn-clean btn-icon" title="Sinkronisasi"><i class="fa fa-refresh text-dark"></i></a>'+
                       '<a href="<?= base_url() ?>aia/Jadwal/update/'+t.ID_JADWAL+'" class="btn btn-sm btn-clean btn-icon" title="Edit"><i class="fa fa-edit text-dark"></i></a>'+
                       '<a onclick="hapus(' + t.ID_JADWAL + ')" class="btn btn-sm btn-clean btn-icon" title="Hapus"><i class="fa fa-trash text-dark"></i></a>');
             }
           },
-          
-          
-          
-        },
-        
-        
-        
-          
+        },  
       ]
       }), $("#datatable_search_status").on("change", (function() {
         t.search($(this).val().toLowerCase(), "STATUS")
       })), $("#datatable_search_status").selectpicker();
       t.on('datatable-on-init', function() {
       t.gotoPage(1); // Set default to page 1
-      $("#kt_datatable").KTDatatable().reload();
     });
-    }
-    
+    }  
   };
   jQuery(document).ready((function() {
     KTDatatableJsonRemoteDemo.init()
   }));
 
+  // Global flag to track if a synchronization is in progress
+  let isSyncInProgress = false;
+
   function save(id) {
+    // Check if a synchronization process is already running
+    if (isSyncInProgress) {
+        Swal.fire({
+            text: 'Sinkronisasi sedang berjalan. Harap tunggu hingga selesai.',
+            icon: 'warning',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'OK'
+        });
+        return;
+    }
+
+    // Set the flag to indicate that a synchronization is in progress
+    isSyncInProgress = true;
+
+    // Show the confirmation dialog
     Swal.fire({
-      text: 'Apakah Anda yakin sinkronisasi data ini ?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Ya',
-      cancelButtonText: 'Batal'
+        text: 'Apakah Anda yakin sinkronisasi data ini?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya',
+        cancelButtonText: 'Batal'
     }).then((result) => {
-      if (result.isConfirmed) {
-        // Redirect user to the desired URL
-        window.location.href = '<?= base_url() ?>aia/Response_auditee/generate/' + id;
-      }
+        if (result.isConfirmed) {
+            // Show the dynamic loading screen when the user confirms
+            document.getElementById("loadingScreen").style.display = "flex";
+
+            // Optionally update the loading text periodically
+            let loadingText = document.getElementById("loadingText");
+            let messages = [
+                "Synchronizing data...",
+                "Please be patient..."
+            ];
+            let index = 0;
+
+            // Change the loading message every 2 seconds
+            let interval = setInterval(() => {
+                index = (index + 1) % messages.length;
+                loadingText.textContent = messages[index];
+            }, 3000);
+
+            // Redirect to the synchronization URL
+            window.location.href = '<?= base_url() ?>aia/Response_auditee/generate/' + id;
+
+            // Clear the interval when the page is about to unload
+            window.onbeforeunload = () => clearInterval(interval);
+        } else {
+            isSyncInProgress = false;
+        }
     });
-}
+  }
+
   function hapus(id) {
     Swal.fire({
       text: 'Apakah Anda yakin menghapus jadwal ini ?',

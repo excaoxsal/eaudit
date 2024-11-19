@@ -691,9 +691,9 @@ public function index()
 		->where('ID_TEMUAN',$id)->get();
 		$data_respon = $query->result_array();
 		//$data['id'] = $data_respon[0]['ID_TEMUAN'];
-		$data['auditor'] = $data_respon[0]['NAMA_AUDITOR'];
+		$data['auditor'] = ucwords(strtolower($data_respon[0]['NAMA_AUDITOR']));
 		$data['ttd_auditor'] = $data_respon[0]['TTD_AUDITOR'];
-		$data['lead_auditor'] = $data_respon[0]['NAMA_LEAD_AUDITOR'];
+		$data['lead_auditor'] = ucwords(strtolower($data_respon[0]['NAMA_LEAD_AUDITOR']));
 		$data['ttd_lead_auditor'] = $data_respon[0]['TTD_LEAD_AUDITOR'];
 		$data['investigasi']=$data_respon[0]['INVESTIGASI'];
 		$data['perbaikan']=$data_respon[0]['PERBAIKAN'];
@@ -703,9 +703,9 @@ public function index()
 		$data['tanggal_implementasi']=$implementasiDate ? date("d-m-Y", strtotime($implementasiDate)) : null;
 		$closeDate = isset($data_respon[0]['WAKTU_TL_LEADAUDITOR']) && !empty($data_respon[0]['WAKTU_TL_LEADAUDITOR']) ? $data_respon[0]['WAKTU_TL_LEADAUDITOR'] : null;
 		$data['closedate']=$closeDate ? date("d-m-Y", strtotime($closeDate)) : null;
-		$data['auditee']=$data_respon[0]['AUDITEE'];
+		$data['auditee']= ucwords(strtolower($data_respon[0]['AUDITEE']));
 		$data['ttd_auditee'] = $data_respon[0]['TTD_AUDITEE'];
-		$data['atasan_auditee']=$data_respon[0]['ATASAN_AUDITEE'];
+		$data['atasan_auditee']= ucwords(strtolower($data_respon[0]['ATASAN_AUDITEE']));
 		$data['ttd_atasan_auditee'] = $data_respon[0]['TTD_ATASAN_AUDITEE'];
 		$data['nomor_iso']=$data_respon[0]['NOMOR_ISO'];
 		$data['kategori']=$data_respon[0]['KATEGORI'];
