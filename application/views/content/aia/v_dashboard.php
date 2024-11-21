@@ -278,7 +278,7 @@ table {
                     <table class="table table-bordered" id="temuanTableDivisi" style="width: 100%; border-collapse: collapse;">
                         <thead>
                             <tr>
-                                <th rowspan="2" style="text-align: center; background-color: #f2f2f2; font-weight: bold;">Divisi</th>
+                                <th rowspan="2" style="text-align: center; vertical-align: middle; background-color: #f2f2f2; font-weight: bold;">Divisi</th>
                                 <th colspan="3" style="text-align: center; background-color: #e6f7ff; font-weight: bold;">ISO 9001</th>
                                 <th colspan="3" style="text-align: center; background-color: #e6f7ff; font-weight: bold;">ISO 14001</th>
                                 <th colspan="3" style="text-align: center; background-color: #e6f7ff; font-weight: bold;">ISO 37001</th>
@@ -361,7 +361,7 @@ table {
                             <table class="table table-bordered" id="temuanTableCabang">
                                 <thead>
                                     <tr>
-                                        <td rowspan="2" style="text-align: center; background-color: #f2f2f2; font-weight: bold;">Cabang</td>
+                                        <td rowspan="2" style="text-align: center; vertical-align: middle; background-color: #f2f2f2; font-weight: bold;">Cabang</td>
                                         <th colspan="3" style="text-align: center; background-color: #e6f7ff; font-weight: bold;">ISO 9001</th>
                                         <th colspan="3" style="text-align: center; background-color: #e6f7ff; font-weight: bold;">ISO 14001</th>
                                         <th colspan="3" style="text-align: center; background-color: #e6f7ff; font-weight: bold;">ISO 37001</th>
