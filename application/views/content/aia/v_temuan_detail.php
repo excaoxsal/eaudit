@@ -871,7 +871,7 @@ function chatbox(id_tl) {
           $('#btnSubmitTL').show();
 
         } else {
-          $('#FILE_TL').hide();
+          $('#FILE_TL_APPROVE').hide();
           $('#FILE').hide();
           $('#btnDelete').hide();
           
