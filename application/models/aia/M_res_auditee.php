@@ -104,7 +104,7 @@ class M_res_auditee extends CI_Model{
         WHERE 
             ra."ID_HEADER" = ?
         ORDER BY
-            ra."ID_RE" ASC
+            ra."ID_MASTER_PERTANYAAN" ASC
         ';
         $params = array($data);
         }

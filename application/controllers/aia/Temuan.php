@@ -570,7 +570,7 @@ public function index()
 		        'APPROVAL_TINDAKLANJUT' 			=> $request['APPROVAL_TINDAKLANJUT'],
 		        'STATUS' 							=> 'Commitment Approved',
 		        'KETERANGAN_TL_ATASAN' 				=> is_empty_return_null($request['KETERANGAN_TL_ATASAN']),
-				'LOG_KIRIM'							=> 'Tindak Lanjut Telah ditolak'
+				'LOG_KIRIM'							=> 'Tindak Lanjut Telah ditolak oleh'.$_SESSION['NAMA']
 		    ];
 	    	//$new_value = $request['APPROVAL_TINDAKLANJUT'];
 	    	$array_where = [
