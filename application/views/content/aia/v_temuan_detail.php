@@ -373,7 +373,7 @@
           <input type="hidden" name="ID_TARGET" id="ID_TARGET">
           <div class="form-group row">
             <div class="col-12">
-              <div id="LOG_KIRIM" class="form-control" style="height: auto; overflow-y: auto;"></div>
+              <div id="LOG_KIRIM" class="form-control" style="height: auto;"></div>
             </div>
           </div>
         </div>

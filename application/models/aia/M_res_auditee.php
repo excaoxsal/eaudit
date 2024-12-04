@@ -169,7 +169,9 @@ class M_res_auditee extends CI_Model{
 
     public function get_divisi(){
         // $eltrue = "NOT NULL";
-        $this->db->select('*')->from('TM_DIVISI')->where('IS_DIVISI','Y');
+        $this->db->select('*')->from('TM_DIVISI')
+        ->where('IS_DIVISI','Y')
+        ->where('STATUS', 1);
         $query = $this->db->get();
         return $query->result_array();
     }

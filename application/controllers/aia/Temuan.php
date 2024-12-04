@@ -358,7 +358,7 @@ public function index()
                     'APPROVAL_COMMITMENT'       => $new_value,
                     'KETERANGAN_LEAD_AUDITOR'   => is_empty_return_null($request['KETERANGAN_ATASAN_AUDITEE']),
                     'STATUS'                    => 'Commitment Approved',
-                    'LOG_KIRIM'                 => 'Approval Commitment Lead Auditor'
+                    'LOG_KIRIM'                 => 'Approval Commitment oleh '.$_SESSION['NAMA']
                 ];
                 $data_pemeriksa = ['STATUS_COMMITMENT' => 2, 'TANGGAL' => date('Y-m-d')];
                 $this->m_temuan->update($data_pemeriksa, $array_where, 'PEMERIKSA');
@@ -373,7 +373,7 @@ public function index()
                 $data_update = [
                     'APPROVAL_COMMITMENT'       => $new_value,
                     'KETERANGAN_AUDITOR'        => is_empty_return_null($request['KETERANGAN_ATASAN_AUDITEE']),
-                    'LOG_KIRIM'                 => 'Approval Commitment Auditor'
+                    'LOG_KIRIM'                 => 'Approval Commitment oleh '.$_SESSION['NAMA']
                 ];
                 $data_pemeriksa = ['STATUS_COMMITMENT' => 2, 'TANGGAL' => date('Y-m-d')];
                 $this->m_temuan->update($data_pemeriksa, $array_where, 'PEMERIKSA');
@@ -388,7 +388,7 @@ public function index()
                 $data_update = [
                     'APPROVAL_COMMITMENT'       => $new_value,
                     'KETERANGAN_ATASAN_AUDITEE' => is_empty_return_null($request['KETERANGAN_ATASAN_AUDITEE']),
-                    'LOG_KIRIM'                 => 'Approval Commitment Atasan Auditee'
+                    'LOG_KIRIM'                 => 'Approval Commitment oleh '.$_SESSION['NAMA']
                 ];
                 $data_pemeriksa = ['STATUS_COMMITMENT' => 2, 'TANGGAL' => date('Y-m-d')];
                 $this->m_temuan->update($data_pemeriksa, $array_where, 'PEMERIKSA');
@@ -466,7 +466,7 @@ public function index()
 						'APPROVAL_TINDAKLANJUT'			=> $new_value,
 						'KETERANGAN_TL_LEAD_AUDITOR' 	=> is_empty_return_null($request['KETERANGAN_TL_ATASAN']),
 						'STATUS'						=> 'CLOSE',
-						'LOG_KIRIM'						=> 'Approval Tindak Lanjut Lead Auditor'
+						'LOG_KIRIM'						=> 'Approval Tindak Lanjut oleh '.$_SESSION['NAMA']
 					];
 					$data_pemeriksa = ['STATUS_TINDAKLANJUT' => 2, 'TANGGAL' => date('Y-m-d')];
 					$this->m_temuan->update($data_pemeriksa, $array_where, 'PEMERIKSA');
@@ -494,7 +494,7 @@ public function index()
 					$data_update = [
 						'APPROVAL_TINDAKLANJUT' 		=> $new_value,
 						'KETERANGAN_TL_AUDITOR' 		=> is_empty_return_null($request['KETERANGAN_TL_ATASAN']),
-						'LOG_KIRIM'						=> 'Approval Tindak Lanjut Auditor'
+						'LOG_KIRIM'						=> 'Approval Tindak Lanjut oleh '.$_SESSION['NAMA']
 					];
 					$data_pemeriksa1 = ['STATUS_TINDAKLANJUT' => 2, 'TANGGAL' => date('Y-m-d')];
 					$this->m_temuan->update($data_pemeriksa1, $array_where, 'PEMERIKSA');
@@ -532,7 +532,7 @@ public function index()
 					$data_update = [
 						'APPROVAL_TINDAKLANJUT' 		=> $new_value,
 						'KETERANGAN_TL_ATASAN' 			=> is_empty_return_null($request['KETERANGAN_TL_ATASAN']),
-						'LOG_KIRIM'						=> 'Approval Tindak Lanjut Atasan Auditee'
+						'LOG_KIRIM'						=> 'Approval Tindak Lanjut oleh '.$_SESSION['NAMA']
 					];
 					$data_pemeriksa1 = ['STATUS_TINDAKLANJUT' => 2, 'TANGGAL' => date('Y-m-d')];
 					$this->m_temuan->update($data_pemeriksa1, $array_where, 'PEMERIKSA');
@@ -570,7 +570,7 @@ public function index()
 		        'APPROVAL_TINDAKLANJUT' 			=> $request['APPROVAL_TINDAKLANJUT'],
 		        'STATUS' 							=> 'Commitment Approved',
 		        'KETERANGAN_TL_ATASAN' 				=> is_empty_return_null($request['KETERANGAN_TL_ATASAN']),
-				'LOG_KIRIM'							=> 'Tindak Lanjut Telah ditolak oleh'.$_SESSION['NAMA']
+				'LOG_KIRIM'							=> 'Tindak Lanjut Telah ditolak oleh '.$_SESSION['NAMA']
 		    ];
 	    	//$new_value = $request['APPROVAL_TINDAKLANJUT'];
 	    	$array_where = [
