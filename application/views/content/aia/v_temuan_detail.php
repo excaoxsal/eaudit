@@ -368,17 +368,16 @@
           <i aria-hidden="true" class="ki ki-close"></i>
         </button>
       </div>
-    <form class="form" id="log_form" method="post" action="<?= base_url() ?>aia/Temuan/getLog/<?=$kode?>" enctype="multipart/form-data">
-    <!-- Add specific height to enable scrolling -->
-      <div class="modal-body" style="height: 400px; overflow-y: auto;">
-        <input type="hidden" name="ID_TARGET" id="ID_TARGET">
-        <div class="form-group row">
-          <div class="col-12">
-            <div id="LOG_KIRIM" class="form-control" style="height: auto;"></div>
+      <form class="form" id="log_form" method="post" action="<?= base_url() ?>aia/Temuan/getLog/<?=$kode?>" enctype="multipart/form-data">
+        <div class="modal-body" style="height: auto">
+          <input type="hidden" name="ID_TARGET" id="ID_TARGET">
+          <div class="form-group row">
+            <div class="col-12">
+              <div id="LOG_KIRIM" class="form-control" style="height: auto; overflow-y: auto;"></div>
+            </div>
           </div>
         </div>
-      </div>
-    </form>
+      </form>
     </div>
   </div>
 </div>
