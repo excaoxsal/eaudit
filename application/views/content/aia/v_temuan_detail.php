@@ -84,7 +84,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">Tanggal Implementasi</label>
             <div class="col-md-10">
-              <input type="date" class="form-control" name="TANGGAL" id="TANGGAL" placeholder="Select a date">
+              <input type="date" class="form-control" name="TANGGAL" id="TANGGAL" placeholder="Select a date" required>
             </div>
           </div>
           <div class="form-group row">
