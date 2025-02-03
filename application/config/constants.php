@@ -94,7 +94,7 @@ define('USER_DIRUT_ID', 20);
 define('ID_JAB_SM_SPI', 54506);
 define('ID_JAB_ASM_SPI', 54519);
 
-defined('APK_NAME') OR define ('APK_NAME', 'AIA (Aplikasi Internal Audit)'); 
+defined('APK_NAME') OR define ('APK_NAME', 'Aplikasi Internal Audit'); 
 defined('APK_VER') OR define ('APK_VER', 'Ver 1.0'); 
 defined('COMPANY') OR define ('COMPANY', 'PT Pelabuhan Tanjung Priok (PTP Multipurpose)'); 
-defined('BASE_URL') OR define ('BASE_URL', 'http://10.202.253.193/e-audit/'); 
+defined('BASE_URL') OR define ('BASE_URL', 'http://localhost/eaudit/'); 

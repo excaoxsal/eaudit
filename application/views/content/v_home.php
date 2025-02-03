@@ -1,4 +1,4 @@
-<div id="lazyBackground" class="d-flex flex-row-fluid bgi-size-cover bgi-position-center h-100">
+<div class="d-flex flex-row-fluid bgi-size-cover bgi-position-center h-100" style="background: url(<?= base_url('assets/img/bg/bg-gg.jpg') ?>) no-repeat;background-size: cover;">
   <div class="container">
     <div class="d-flex justify-content-between align-items-center border-bottom border-white py-7">
       <h3 class="h4 text-white mb-0">Hi, <?= $this->session->userdata('NAMA') ?>.</h3>
@@ -39,7 +39,7 @@
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         <div class="modal-body">
-          <p>Anda memiliki <b><?= $total_notif ?></b> notifikasi yang perlu dikonfirmasi. <br>Klik ikon <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bell"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg> untuk memeriksa.</p>
+          <p>Anda memiliki <b><?= $total_notif ?></b> notifikasi yang perlu ditindak lanjuti. <br>Klik ikon <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bell"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg> untuk memeriksa.</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -54,10 +54,4 @@
 $(document).ready(function() {
   $('#modal_notif').modal();
 })
-// Lazy-load the background image after the main page content is ready
-document.addEventListener("DOMContentLoaded", function() {
-    const lazyBackground = document.getElementById("lazyBackground");
-    lazyBackground.style.background = "url('<?= base_url('assets/img/bg/auditor.jpg') ?>') no-repeat center center";
-    lazyBackground.style.backgroundSize = "cover";
-});
 </script>
