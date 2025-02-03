@@ -70,8 +70,7 @@
 								<div class="mb-10"></div>
 								<div class="d-flex justify-content-start mt-n5">
 								<div class="form-label">
-									<?php echo $widget;?>
-     								<?php echo $script;?>
+									
 								</div>
 								</div>
 								<div class="pb-lg-0 pb-5">
