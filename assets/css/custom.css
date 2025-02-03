@@ -127,6 +127,13 @@
    -webkit-transition: opacity .5s ease-in-out;
 }
 
+form {
+    max-height: 70vh; /* Tinggi maksimal 70% dari tinggi viewport */
+    overflow-y: auto; /* Tambahkan scroll jika konten terlalu tinggi */
+    width: 100%; /* Pastikan form menggunakan 100% dari elemen pembungkusnya */
+    margin: 0 auto; /* Pusatkan form */
+}
+
 .aside-menu .menu-nav>.menu-item.menu-item-active>.menu-heading, .aside-menu .menu-nav>.menu-item.menu-item-active>.menu-link, .aside-menu .menu-nav>.menu-item.menu-item-here>.menu-heading, .aside-menu .menu-nav>.menu-item.menu-item-here>.menu-link {
   background-color: #3699ff!important;
   color: #fff!important;
