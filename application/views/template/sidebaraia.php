@@ -68,16 +68,23 @@
       </a>
     </li>
     
-
-
-    
-    
-      
     <?php } ?>
+    <li class="menu-item <?= isset($menu) ? $menu == 'new_response_auditee' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
+      <a href="<?= base_url('aia/new_response_auditee') ?>" class="menu-link mx-5 my-1 rounded">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-activity"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+        <span class="menu-text">New Respon Auditee</span>
+      </a>
+    </li>
     <li class="menu-item <?= isset($menu) ? $menu == 'response_auditee' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
       <a href="<?= base_url('aia/response_auditee') ?>" class="menu-link mx-5 my-1 rounded">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-activity"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
         <span class="menu-text">Respon Auditee</span>
+      </a>
+    </li>
+    <li class="menu-item <?= isset($menu) ? $menu == 'observasi_lapangan' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
+      <a href="<?= base_url('aia/observasi_lapangan') ?>" class="menu-link mx-5 my-1 rounded">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-activity"><path d="M2 16.1A5 5 0 0 1 5.9 20M2 12.05A9 9 0 0 1 9.95 20M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"></path></svg>
+        <span class="menu-text">Observasi Lapangan</span>
       </a>
     </li>
     <li class="menu-item <?= isset($menu) ? $menu == 'temuan-aia' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
