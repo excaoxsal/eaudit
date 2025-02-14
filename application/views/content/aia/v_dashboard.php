@@ -322,11 +322,11 @@
 </div>
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js">
-$(document).ready(function() {
-    $('[data-toggle="toggle"]').change(function() {
-        $(this).parents().next('.hide').toggle();
+    $(document).ready(function() {
+        $('[data-toggle="toggle"]').change(function() {
+            $(this).parents().next('.hide').toggle();
+        });
     });
-});
 </script>
 
 <script>
@@ -336,53 +336,46 @@ $(document).ready(function() {
     google.charts.setOnLoadCallback(drawChart);
 
     function drawChart() {
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'ISO Standard'); // Label kategori
-        data.addColumn('number', 'Jumlah Pertanyaan'); // Data batang
-        data.addColumn({
-            type: 'string',
-            role: 'annotation'
-        }); // Label di tengah batang
+        fetch('<?php echo base_url('aia/Dashboard/get_iso_data'); ?>')
+            .then(response => response.json())
+            .then(data => {
+                var dataTable = new google.visualization.DataTable();
+                dataTable.addColumn('string', 'ISO Standard'); // Label kategori
+                dataTable.addColumn('number', 'Jumlah Pertanyaan'); // Data batang
+                dataTable.addColumn({ type: 'string', role: 'annotation' }); // Label di tengah batang
 
-        // Data dengan label annotation
-        data.addRows([
-            ['ISO 9001', 80, '80'],
-            ['ISO 14001', 67, '67'],
-            ['ISO 37001', 59, '59'],
-            ['ISO 45001', 87, '87']
-        ]);
+                // Loop untuk menambahkan data dari API
+                data.forEach(item => {
+                    dataTable.addRow([item.NOMOR_ISO, parseInt(item.jumlah_pertanyaan), item.jumlah_pertanyaan]);
+                });
 
-        var options = {
-            title: 'Jumlah pertanyaan per ISO',
-            chartArea: {
-                width: '60%'
-            },
-            bars: 'vertical',
-            height: 500,
-            colors: ['#0066cc'], // Warna batang biru
-            annotations: {
-                alwaysOutside: false, // Pastikan label berada di dalam batang
-                textStyle: {
-                    fontSize: 16, // Ukuran font lebih besar
-                    bold: true,
-                    color: 'white' // Warna teks putih agar kontras
-                }
-            },
-            vAxis: {
-                minValue: 0, // Skala vertikal dimulai dari 0
-                textStyle: {
-                    fontSize: 14 // Ukuran font sumbu vertikal
-                }
-            },
-            hAxis: {
-                textStyle: {
-                    fontSize: 14 // Ukuran font sumbu horizontal
-                }
-            }
-        };
+                var options = {
+                    title: 'Jumlah Pertanyaan per ISO',
+                    chartArea: { width: '60%' },
+                    bars: 'vertical',
+                    height: 500,
+                    colors: ['#0066cc'], // Warna batang biru
+                    annotations: {
+                        alwaysOutside: false, // Pastikan label berada di dalam batang
+                        textStyle: {
+                            fontSize: 16,
+                            bold: true,
+                            color: 'white' // Warna teks putih agar kontras
+                        }
+                    },
+                    vAxis: {
+                        minValue: 0,
+                        textStyle: { fontSize: 14 }
+                    },
+                    hAxis: {
+                        textStyle: { fontSize: 14 }
+                    }
+                };
 
-        var chart = new google.visualization.ColumnChart(document.getElementById('chart-preaudit'));
-        chart.draw(data, options);
+                var chart = new google.visualization.ColumnChart(document.getElementById('chart-preaudit'));
+                chart.draw(dataTable, options);
+            })
+            .catch(error => console.error('Error fetching data:', error));
     }
 </script>
 <script>
@@ -460,7 +453,7 @@ $(document).ready(function() {
         chart.draw(data, options);
     }
 </script>
-<script type="text/javascript">
+<script>
     google.charts.load('current', {packages:['corechart']});
     google.charts.setOnLoadCallback(drawChart);
 
@@ -502,7 +495,7 @@ $(document).ready(function() {
     chart.draw(data, options);
     }
 </script>
-<script type="text/javascript">
+<script>
     google.charts.load('current', {packages:['corechart']});
     google.charts.setOnLoadCallback(drawChart);
 
@@ -541,7 +534,7 @@ $(document).ready(function() {
 
     var chart = new google.visualization.BarChart(document.getElementById('chart-filterdivisi'));
     chart.draw(data, options);
-}
+    }
 </script>
 <script>
       google.charts.load('current', {packages:['corechart']});

@@ -579,6 +579,10 @@ class Dashboard extends MY_Controller
         // var_dump($rekap,$grand_total,$charts);die;
         return array('REKAP' => $rekap, 'TOTAL' => $grand_total, 'CHARTS' => $charts);
     }
-    
+
+    public function get_iso_data() {
+        $data = $this->m_dashboard->get_iso_data();
+        echo json_encode($data);
+    }    
 
 }

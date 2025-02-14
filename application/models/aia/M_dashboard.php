@@ -357,4 +357,15 @@ class M_dashboard extends CI_Model
 
         return $this->db->query($query)->result_array();
     }
+
+    public function get_iso_data() {
+        $this->db->select('i."NOMOR_ISO", COUNT(p."ID_MASTER_PERTANYAAN") AS jumlah_pertanyaan');
+        $this->db->from('"TM_PERTANYAAN" p');
+        $this->db->join('"TM_ISO" i', 'p."ID_ISO" = i."ID_ISO"', 'inner');
+        $this->db->group_by('i."NOMOR_ISO"');
+        $this->db->order_by('i."NOMOR_ISO"', 'ASC');
+
+        $query = $this->db->get();
+        return $query->result_array();
+    }
 }
