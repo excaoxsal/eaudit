@@ -18,17 +18,43 @@ class observasi_lapangan extends MY_Controller {
 		$this->is_login();
 	}
 
-	public function index() {
+	// public function index() {
+	// 	$datauser= $_SESSION;
+	// 	// var_dump($datauser);die;
+	// 	$data['list_status'] 	= $this->master_act->status();
+	// 	$data['list_divisi'] 	= $this->m_res_au->get_divisi();
+	// 	$data['menu']           = 'observasi_lapangan'; // Set the menu variable
+    //     $data['title']          = 'Observasi Lapangan';
+    //     $data['content']        = 'content/aia/v_observasi_lapangan_detail';
+		
+    //     $this->show($data);
+    // }
+
+	public function index()
+	{
 		$datauser= $_SESSION;
 		// var_dump($datauser);die;
 		$data['list_status'] 	= $this->master_act->status();
 		$data['list_divisi'] 	= $this->m_res_au->get_divisi();
-		$data['menu']           = 'observasi_lapangan'; // Set the menu variable
+		$data['menu']           = 'observasi_lapangan';
         $data['title']          = 'Observasi Lapangan';
-        $data['content']        = 'content/aia/v_observasi_lapangan_detail';
+        $data['content']        = 'content/aia/v_observasi_lapangan_header.php';
 		
         $this->show($data);
-    }
+	}
+
+	public function detail($datas){
+		
+		$data['list_divisi'] 	= $this->m_res_au->get_divisi();
+		$data['menu']           = 'observasi_lapangan';
+        $data['title']          = 'Observasi Lapangan';
+        $data['content']        = 'content/aia/v_observasi_lapangan_detail';
+		$data['kode']			= $datas;
+		// var_dump();die;
+		$data['role']			= $_SESSION['NAMA_ROLE'];
+		$data['detail']			= $this->m_res_au->get_response_auditee_detail($datas);
+		$this->show($data);
+	}
 
 	public function save()
     {
