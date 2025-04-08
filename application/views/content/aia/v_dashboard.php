@@ -384,33 +384,37 @@
     });
     google.charts.setOnLoadCallback(drawChart);
 
-    function drawChart() {
-        var data = new google.visualization.DataTable();
+    async function fetchDatarespon() {
+        const response = await fetch('<?php echo base_url('aia/Dashboard/get_responded_question'); ?>'); // Ganti URL sesuai backend Anda
+            const data = await response.json();
+            return data;
+    }
+
+    async function drawChart() {
+        const rawData = await fetchDatarespon();
+
+        // Format data untuk Google Charts
+        const data = new google.visualization.DataTable();
         data.addColumn("string", "Divisi");
         data.addColumn("number", "Open");
-        data.addColumn({
-            type: "string",
-            role: "annotation"
-        }); // Label teks
+        data.addColumn({ type: "string", role: "annotation" }); // Label teks
         data.addColumn("number", "Closed");
-        data.addColumn({
-            type: "string",
-            role: "annotation"
-        }); // Label teks
+        data.addColumn({ type: "string", role: "annotation" }); // Label teks
 
-        data.addRows([
-            ["Div 1", 20, "20", 40, "40"],
-            ["Div 2", 30, "30", 30, "30"],
-            ["Div 3", 40, "40", 20, "20"],
-            ["Div 4", 50, "50", 10, "10"],
-            ["Div 5", 55, "55", 5, "5"],
-            ["Div 6", 33, "33", 27, "27"],
-            ["Div 7", 27, "27", 33, "33"],
-            ["Div 8", 58, "58", 2, "2"],
-            ["Div 9", 27, "27", 33, "33"],
-            ["Div 10", 10, "10", 50, "50"],
-            ["Div 11", 12, "12", 48, "48"],
-        ]);
+        // Memasukkan data ke dalam tabel
+        rawData.forEach(row => {
+            // Pastikan nilai Open dan Closed adalah number
+            const openValue = Number(row.Open);
+            const closedValue = Number(row.Closed);
+
+            data.addRow([
+                row.DIVISI,
+                openValue,               // Pastikan ini number
+                openValue.toString(),     // Label untuk "Open"
+                closedValue,              // Pastikan ini number
+                closedValue.toString()    // Label untuk "Closed"
+            ]);
+        });
 
         var options = {
             title: "Jumlah pertanyaan terjawab",
@@ -441,10 +445,10 @@
             },
             vAxis: {
                 minValue: 0,
-                maxValue: 100,
-                format: "#'%'",
+                maxValue: 1000,
+                format: "#",
             },
-            colors: ["#3366cc", "#cc3333"], // Biru untuk Closed, Merah untuk Closed
+            colors: ["#3366cc", "#008000"], // Biru untuk Open, Merah untuk Closed
         };
 
         var chart = new google.visualization.ColumnChart(
@@ -453,46 +457,67 @@
         chart.draw(data, options);
     }
 </script>
-<script>
-    google.charts.load('current', {packages:['corechart']});
-    google.charts.setOnLoadCallback(drawChart);
 
-    function drawChart() {
-    var data = google.visualization.arrayToDataTable([
-        ['ISO', 'ISO 9001:2015', { role: 'annotation' }, 'ISO 45001:2018', { role: 'annotation' }, 'ISO 14001:2015', { role: 'annotation' }, 'ISO 37001:2016', { role: 'annotation' }],
-        ['ISO 9001:2015', 104, '104', null, null, null, null, null, null],
-        ['ISO 45001:2018', null, null, 15, '15', null, null, null, null],
-        ['ISO 14001:2015', null, null, null, null, 26, '26', null, null],
-        ['ISO 37001:2016', null, null, null, null, null, null, 31, '31']
-    ]);
+<!-- ini buat TOTAL TEMUAN AUDIT INTERNAL
+KANTOR PUSAT BERDASARKAN ISO -->
+<script type="text/javascript">
+    google.charts.load('current', { packages: ['corechart'] });
+    google.charts.setOnLoadCallback(fetchDatatemuan);
 
-    var options = {
+    async function fetchDatatemuan() {
+        // Ambil data dari backend Bun
+        const response = await fetch('<?php echo base_url('aia/Dashboard/get_temuan_by_iso_div'); ?>');
+        const jsonData = await response.json();
+
+        // Proses data untuk Google Charts
+        const chartDatatemuan = [['ISO', 'Total Temuan', { role: 'annotation' }]];
+        jsonData.forEach((item) => {
+            if (item && item.NOMOR_ISO && item.TOTAL_TEMUAN !== undefined) {
+                // Konversi TOTAL_TEMUAN ke numerik
+                const totalTemuan = parseInt(item.TOTAL_TEMUAN);
+                if (!isNaN(totalTemuan)) {
+                    chartDatatemuan.push([item.NOMOR_ISO, totalTemuan,item.TOTAL_TEMUAN]);
+                } else {
+                    console.warn('Data TOTAL_TEMUAN tidak valid:', item.TOTAL_TEMUAN);
+                }
+            } else {
+                console.warn('Data tidak valid:', item);
+            }
+        });
+        // console.log(chartDatatemuan);
+        drawCharttemuan(chartDatatemuan);
+    }
+
+    function drawCharttemuan(chartDatatemuan) {
+        var data = google.visualization.arrayToDataTable(chartDatatemuan);
+        console.log(chartDatatemuan);
+        var options = {
         title: 'TOTAL TEMUAN AUDIT INTERNAL\nKANTOR PUSAT BERDASARKAN ISO',
         chartArea: { width: '60%' },
         height: 500,
         vAxis: {
-        title: 'Total Temuan',
-        minValue: 0
+            title: 'Total Temuan',
+            minValue: 0,
         },
         bar: { groupWidth: '80%' }, // Perbesar batang
         hAxis: {
-        title: 'ISO'
+            title: 'ISO',
         },
         annotations: {
-        alwaysOutside: true,
-        textStyle: {
+            alwaysOutside: true,
+            textStyle: {
             fontSize: 12,
             bold: true,
-            color: '#000'
-        }
+            color: '#000',
+            },
         },
         legend: { position: 'bottom', alignment: 'center' },
-        colors: ['#3366cc', '#109618', '#ff9900', '#dc3912'],
-        isStacked: false
-    };
+        colors: ['#3366cc', '#109618', '#ff9900', '#dc3912'], // Variasi warna untuk setiap ISO
+        isStacked: false,
+        };
 
-    var chart = new google.visualization.ColumnChart(document.getElementById('chart-filterpusat'));
-    chart.draw(data, options);
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart-filterpusat'));
+        chart.draw(data, options);
     }
 </script>
 <script>

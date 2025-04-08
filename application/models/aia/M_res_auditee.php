@@ -2,6 +2,8 @@
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 error_reporting(E_ERROR);
 class M_res_auditee extends CI_Model{
+    protected $table = 'RESPONSE_AUDITEE_D';
+    protected $primaryKey = 'ID_RE';
 
     public function get_response_auditee_header(){
         $datauser = $_SESSION['NAMA_ROLE'];
@@ -85,8 +87,8 @@ class M_res_auditee extends CI_Model{
             ra."SUB_DIVISI",
             ra."ID_RE",
             ra."RESPONSE_AUDITEE",
-            ra."STATUS_AUDITOR" as "STATUS"
-            
+            ra."STATUS_AUDITOR" as "STATUS",
+            ra."ID_HEADER"
         FROM 
             "RESPONSE_AUDITEE_D" ra
         LEFT JOIN 
@@ -164,6 +166,32 @@ class M_res_auditee extends CI_Model{
         ->join('TM_DIVISI d','d.KODE=ra.DIVISI')
         ->where('KODE',$data);
         $query = $this->db->get();
+        return $query->result_array();
+    }
+
+
+    public function getNotNullResponse()
+    {
+        $query = $this->db->query('
+            SELECT "DIVISI", COUNT("DIVISI") as count 
+            FROM "RESPONSE_AUDITEE_D" 
+            WHERE "RESPONSE_AUDITEE" IS NOT NULL AND "RESPONSE_AUDITEE" != \'% %\' 
+            GROUP BY "DIVISI" 
+            ORDER BY "DIVISI" ASC
+        ');
+        return $query->result_array();
+    }
+
+    // Query untuk mengambil data RESPONSE_AUDITEE is NULL
+    public function getNullResponse()
+    {
+        $query = $this->db->query('
+            SELECT "DIVISI", COUNT("DIVISI") as count 
+            FROM "RESPONSE_AUDITEE_D" 
+            WHERE "RESPONSE_AUDITEE" IS NULL 
+            GROUP BY "DIVISI" 
+            ORDER BY "DIVISI" ASC
+        ');
         return $query->result_array();
     }
 

@@ -10,12 +10,13 @@ class Dashboard extends MY_Controller
         $this->load->model('monitoring/m_status_tl', 'm_status_tl');
         $this->load->model('monitoring/m_rekap', 'm_rekap');
 		$this->load->model('aia/M_dashboard', 'm_dashboard');
+		$this->load->model('aia/M_res_auditee', 'M_res_auditee');
+
         $this->is_login();
         if(!$this->is_auditor()) $this->load->view('/errors/html/err_401');
     }
 
-    public function index()
-    {
+    public function index(){
         $data['menu']       = 'dashboard-aia';
         $data['list_ja']    = $this->master_act->jenis_audit();
         $iso = $this->m_dashboard->getIso();
@@ -43,8 +44,7 @@ class Dashboard extends MY_Controller
         $this->show($data);
         // $this->load->view('/content/aia/v_dashboard', $data);
     }
-    public function all_divisi()
-    {
+    public function all_divisi(){
         $this->db->select('KODE');
         $this->db->from('TM_DIVISI');
         $this->db->where('IS_CABANG','N');
@@ -53,8 +53,7 @@ class Dashboard extends MY_Controller
         $query=$this->db->get();
         return $query->result_array();
     }
-    public function all_cabang()
-    {
+    public function all_cabang(){
         $this->db->select('KODE');
         $this->db->from('TM_DIVISI');
         $this->db->where('IS_CABANG','Y');
@@ -585,4 +584,78 @@ class Dashboard extends MY_Controller
         echo json_encode($data);
     }    
 
+    public function formatData(){
+        $model = new M_res_auditee();
+        // Ambil data dari model
+        $notNullResults = $model->getNotNullResponse();
+        $nullResults = $model->getNullResponse();
+
+        // Gabungkan data
+        $formattedData = $this->transformToFormat($notNullResults, $nullResults);
+
+        // Kirim data ke view
+        echo json_encode($formattedData);
+    }
+
+    private function transformToFormat($notNullResults, $nullResults)
+    {
+        $divisiData = [];
+
+        // Proses data not null
+        foreach ($notNullResults as $row) {
+            $divisi = $row['DIVISI'];
+            $count = $row['count'];
+            if (!isset($divisiData[$divisi])) {
+                $divisiData[$divisi] = ['not_null' => 0, 'null' => 0];
+            }
+            $divisiData[$divisi]['not_null'] = $count;
+        }
+
+        // Proses data null
+        foreach ($nullResults as $row) {
+            $divisi = $row['DIVISI'];
+            $count = $row['count'];
+            if (!isset($divisiData[$divisi])) {
+                $divisiData[$divisi] = ['not_null' => 0, 'null' => 0];
+            }
+            $divisiData[$divisi]['null'] = $count;
+        }
+
+        // Format data ke bentuk yang diinginkan
+        $formattedData = [];
+        foreach ($divisiData as $divisi => $counts) {
+            $formattedData[] = [
+                $divisi,
+                $counts['not_null'],
+                (string) $counts['not_null'],
+                $counts['null'],
+                (string) $counts['null'],
+            ];
+        }
+
+        return $formattedData;
+    }
+
+    public function get_temuan_by_iso_div() {
+        $query = $this->db->query('
+            select ti."NOMOR_ISO" ,count(ti."NOMOR_ISO") as "TOTAL_TEMUAN" from "TEMUAN_DETAIL" td 
+            inner join "TM_DIVISI" td2 on td2."KODE" = td."SUB_DIVISI" 
+            inner join "RESPONSE_AUDITEE_H" rah on rah."ID_HEADER" = td."ID_RESPONSE" 
+            inner join "TM_ISO" ti on ti."ID_ISO" = rah."ID_ISO" 
+            where td2."IS_CABANG"=\'N\'
+            group by ti."ID_ISO", ti."NOMOR_ISO" order by ti."ID_ISO" asc 
+        ');
+        $data = $query->result_array();
+        echo json_encode($data);
+    }
+    public function get_responded_question() {
+        $query = $this->db->query('
+            SELECT "DIVISI", COUNT(CASE WHEN "RESPONSE_AUDITEE" IS NOT NULL AND "RESPONSE_AUDITEE" != \'\' THEN 1 END) AS "Open", 
+            COUNT(CASE WHEN "RESPONSE_AUDITEE" IS NULL OR "RESPONSE_AUDITEE" = \'\' THEN 1 END) AS "Closed" FROM "RESPONSE_AUDITEE_D" 
+            GROUP BY "DIVISI" ORDER BY "DIVISI" ASC;
+        ');
+        $data = $query->result_array();
+        echo json_encode($data);
+    }
+    
 }

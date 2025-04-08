@@ -14,6 +14,7 @@ class observasi_lapangan extends MY_Controller {
 		$this->load->library('Pdf');
 		$this->load->model('aia/M_res_auditee', 'm_res_au');
 		$this->load->model('aia/M_jadwal', 'm_jadwal');
+		$this->load->model('aia/M_Observasi', 'm_observasi');
 		//$this->load->model('DynamicForm_model');
 		$this->is_login();
 	}
@@ -53,20 +54,23 @@ class observasi_lapangan extends MY_Controller {
 		// var_dump();die;
 		$data['role']			= $_SESSION['NAMA_ROLE'];
 		$data['detail']			= $this->m_res_au->get_response_auditee_detail($datas);
+		$data['observasi']			= $this->m_observasi->get_observasi_by_id_response($datas);
+		$data['kode_klausul']	= $this->m_observasi->get_kode_klausul($data['detail'][0]['ID_ISO'],$data['detail'][0]['KODE']);
+		// var_dump($data['kode_klausul']);die;
 		$this->show($data);
 	}
 
-	public function save()
-    {
-        $row_id = $this->input->post('row_id');
-        $column = $this->input->post('column');
-        $value = $this->input->post('value');
+	// public function save()
+    // {
+    //     $row_id = $this->input->post('row_id');
+    //     $column = $this->input->post('column');
+    //     $value = $this->input->post('value');
+	// 	var_dump($this->input->post('klausul'));die;
+	// 	// Contoh query untuk menyimpan data ke database
+    //     $this->db->where('id', $row_id)->update('your_table', [$column => $value]);
 
-        // Contoh query untuk menyimpan data ke database
-        $this->db->where('id', $row_id)->update('your_table', [$column => $value]);
-
-        echo json_encode(['status' => 'success']);
-    }
+    //     echo json_encode(['status' => 'success']);
+    // }
 
     // public function save() {
     //     $data = [
@@ -83,6 +87,86 @@ class observasi_lapangan extends MY_Controller {
 
     //     echo json_encode(['status' => 'success']);
     // }
+
+	public function save() {
+        $this->load->library('form_validation');
+        // var_dump($this->input->post('klausul'));die;
+        // Validasi input
+        $this->form_validation->set_rules('hasil_observasi', 'Hasil Observasi', 'required');
+        $this->form_validation->set_rules('klausul', 'Klausul', 'required');
+        $this->form_validation->set_rules('klasifikasi', 'Klasifikasi', 'required');
+        
+        if ($this->form_validation->run() == FALSE) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => validation_errors()
+            ]);
+            return;
+        }
+		if($ext==""||$ext==null){
+			$file_name = null;
+		}else 
+		{
+		$current_time = date('YmdHis');
+        $ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+		$config['file_name']        = "File_Observasi".$current_time;
+        $config['upload_path'] = './storage/aia/observasi/';
+        $config['allowed_types'] = 'jpg|jpeg|png|pdf|doc|docx';
+        $config['max_size'] = 2048; // 2MB
+		$this->upload->initialize($config);
+        // $this->load->library('upload', $config);
+		$file_path = base_url().'storage/aia/observasi/'.$config['file_name'].'.'.$ext;
+        $file_name = $file_path;
+
+		}
+
+        // Konfigurasi upload file
+		
+        if (!empty($_FILES['file']['name'])) {
+            if ($this->upload->do_upload('file')) {
+                $file_data = $this->upload->data();
+                // $file_name = $file_path;
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => $this->upload->display_errors()
+                ]);
+                return;
+            }
+        }
+
+        // Data untuk disimpan
+        $data = [
+            'HASIL_OBSERVASI' => $this->input->post('hasil_observasi'),
+            'KLAUSUL' => $this->input->post('klausul'),
+            'FILE' => $file_name,
+            'KLASIFIKASI' => $this->input->post('klasifikasi'),
+			'COUNT' => $this->input->post('count'),
+			'ID_RESPONSE' => $this->input->post('id_response')
+        ];
+
+        // Simpan ke database
+        $result = $this->m_observasi->save_observasi($data);
+
+        if ($result) {
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Data observasi berhasil disimpan'
+            ]);
+        } else {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Gagal menyimpan data observasi'
+            ]);
+        }
+    }
+
+    public function get_observasi_by_iso_kode($nomor_iso, $kode) {
+        return $this->db->get_where('observasi_lapangan', [
+            'nomor_iso' => $nomor_iso,
+            'kode' => $kode
+        ])->result_array();
+    }
 
 	function jsonResponAuditee() 
 	{
