@@ -96,7 +96,14 @@
                             <tr>
                                 <td>1</td>
                                 <td><input type="text" class="form-control" name="hasil_observasi"></td>
-                                <td><input type="text" class="form-control" name="klausul"></td>
+                                <td>
+                                    <select class="form-control" name="klausul">
+                                        <option value="">Pilih Klausul</option>
+                                        <?php foreach ($klausul as $item): ?>
+                                            <option value="<?= $item['KLAUSUL'] ?>"><?= $item['KLAUSUL'] ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </td>
                                 <td><input type="file" class="form-control-file" name="file"></td>
                                 <td>
                                     <select class="form-control" name="klasifikasi">
@@ -124,7 +131,14 @@
                 <tr>
                     <td>${rowCount}</td>
                     <td><input type="text" class="form-control" name="hasil_observasi"></td>
-                    <td><input type="text" class="form-control" name="klausul"></td>
+                    <td>
+                        <select class="form-control" name="klausul">
+                            <option value="">Pilih Klausul</option>
+                            <?php foreach ($klausul as $item): ?>
+                                <option value="<?= $item['KLAUSUL'] ?>"><?= $item['KLAUSUL'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </td>
                     <td><input type="file" class="form-control-file" name="file"></td>
                     <td>
                         <select class="form-control" name="klasifikasi">

@@ -19,18 +19,13 @@ class M_Observasi extends CI_Model {
         ])->result_array();
     }
 
-    public function get_kode_klausul($id_iso,$kode){
+    public function get_kode_klausul($id_header){
         $query = $this->db->query('
-            SELECT
-                mp."ID_MASTER_PERTANYAAN",
-                mp."PERTANYAAN",
-                mp."KODE_KLAUSUL"
-            FROM "TM_PERTANYAAN" mp
-            JOIN "TM_ISO" i ON mp."ID_ISO" = i."ID_ISO"
-            WHERE i."ID_ISO" = ?
-            AND (mp."LV3" IS NULL)
-            AND mp."AUDITEE" like ?
-        ', [$id_iso, '%' . $kode . '%']);
+            SELECT distinct "KLAUSUL"
+            FROM "RESPONSE_AUDITEE_D" 
+            WHERE "ID_HEADER" = ? 
+            AND "KLAUSUL" NOT LIKE ?
+        ', [$id_header, '%.%%.%']);
         return $query->result_array();
     }
 }

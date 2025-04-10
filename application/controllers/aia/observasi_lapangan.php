@@ -51,12 +51,11 @@ class observasi_lapangan extends MY_Controller {
         $data['title']          = 'Observasi Lapangan';
         $data['content']        = 'content/aia/v_observasi_lapangan_detail';
 		$data['kode']			= $datas;
-		// var_dump();die;
 		$data['role']			= $_SESSION['NAMA_ROLE'];
 		$data['detail']			= $this->m_res_au->get_response_auditee_detail($datas);
 		$data['observasi']			= $this->m_observasi->get_observasi_by_id_response($datas);
-		$data['kode_klausul']	= $this->m_observasi->get_kode_klausul($data['detail'][0]['ID_ISO'],$data['detail'][0]['KODE']);
-		// var_dump($data['kode_klausul']);die;
+		$data['klausul']	= $this->m_observasi->get_kode_klausul($data['detail'][0]['ID_HEADER']);
+		// var_dump($data['detail']);die;
 		$this->show($data);
 	}
 
