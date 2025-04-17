@@ -75,10 +75,16 @@
         <span class="menu-text">Respon Auditee</span>
       </a>
     </li>
-    <li class="menu-item <?= isset($menu) ? $menu == 'observasi_lapangan' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
-      <a href="<?= base_url('aia/observasi_lapangan') ?>" class="menu-link mx-5 my-1 rounded">
+    <li class="menu-item <?= isset($menu) ? $menu == 'visit_lapangan' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
+      <a href="<?= base_url('aia/visit_lapangan') ?>" class="menu-link mx-5 my-1 rounded">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-activity"><path d="M2 16.1A5 5 0 0 1 5.9 20M2 12.05A9 9 0 0 1 9.95 20M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"></path></svg>
         <span class="menu-text">Visit Lapangan</span>
+      </a>
+    </li>
+    <li class="menu-item <?= isset($menu) ? $menu == 'potensi_temuan' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">
+      <a href="<?= base_url('aia/potensi_temuan') ?>" class="menu-link mx-5 my-1 rounded">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <span class="menu-text">Potensi Temuan</span>
       </a>
     </li>
     <li class="menu-item <?= isset($menu) ? $menu == 'temuan-aia' ? 'menu-item-active' : '' : ''; ?>" aria-haspopup="true">

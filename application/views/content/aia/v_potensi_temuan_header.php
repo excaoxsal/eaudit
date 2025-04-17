@@ -11,7 +11,7 @@
       <div class="d-flex align-items-center flex-wrap mr-2">
         <h5 class="text-dark font-weight-bold mt-2 mb-2 mr-5"><?= APK_NAME ?></h5>
         <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
-        <span class="text-muted font-weight-bold mr-4">Respon Auditee</span>
+        <span class="text-muted font-weight-bold mr-4">Potensi Temuan</span>
       </div>
     </div>
   </div>
@@ -20,7 +20,7 @@
       <div class="card card-custom">
         <div class="card-header flex-wrap border-0 pt-6 pb-0">
           <div class="card-title">
-            <h3 class="card-label">List Respon Auditee
+            <h3 class="card-label">List Potensi Temuan
           </div>
         </div>
         <div class="card-body">
@@ -112,13 +112,6 @@ var KTDatatableJsonRemoteDemo = {
       },{
         field: "LEAD_AUDITOR",
         title: "Lead Auditor"
-      },{
-        field: "JUMLAH_RESPONSE_AUDITEE_NOT_NULL",
-        title: "Respon Terisi",
-        width: 100,
-        template: function(t) {
-          return '<span>' + ' (' + t.JUMLAH_RESPONSE_AUDITEE_NOT_NULL + '/' + t.JUMLAH_TOTAL_PERTANYAAN + ') '+ '</span>';
-        }
       },
       {
           field: "ID_ISO",
@@ -128,7 +121,14 @@ var KTDatatableJsonRemoteDemo = {
           searchable: !1,
           overflow: "visible",
           template: function(t) {
-            return '<a  href="<?= base_url() ?>aia/visit_lapangan/detail/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Approve"><i class="fa-regular fa-circle-check text-dark"></i></a><a  href="<?= base_url() ?>aia/visit_lapangan/detail/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Reject"><i class="fa-regular fa-circle-xmark text-dark"></i></a><a  href="<?= base_url() ?>aia/Response_auditee/detail/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Lihat"><i class="fa fa-eye text-dark"></i></a><a  href="<?= base_url() ?>aia/Response_auditee/export_excel/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Export Excel"><i class="fa fa-file-excel text-dark"></i></a>'
+            return `
+              <a href="<?= base_url() ?>aia/potensi_temuan/detail/${t.ID_HEADER}" class="btn btn-sm btn-clean btn-icon" title="Lihat">
+                <i class="fa fa-eye text-dark"></i>
+              </a>
+              <a href="<?= base_url() ?>aia/potensi_temuan/generate/${t.ID_HEADER}" onclick="save(${t.ID_HEADER})" class="btn btn-sm btn-clean btn-icon" title="Generate">
+                <i class="fa fa-cogs text-dark"></i>
+              </a>
+            `;
             }
         }
       ]
@@ -142,6 +142,60 @@ var KTDatatableJsonRemoteDemo = {
     
   }
 };
+
+  function save(id) {
+    // Check if a synchronization process is already running
+    if (isSyncInProgress) {
+        Swal.fire({
+            text: 'Sinkronisasi sedang berjalan. Harap tunggu hingga selesai.',
+            icon: 'warning',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'OK'
+        });
+        return;
+    }
+
+    // Set the flag to indicate that a synchronization is in progress
+    isSyncInProgress = true;
+
+    // Show the confirmation dialog
+    Swal.fire({
+        text: 'Apakah Anda yakin sinkronisasi data ini?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Show the dynamic loading screen when the user confirms
+            document.getElementById("loadingScreen").style.display = "flex";
+
+            // Optionally update the loading text periodically
+            let loadingText = document.getElementById("loadingText");
+            let messages = [
+                "Synchronizing data...",
+                "Please be patient..."
+            ];
+            let index = 0;
+
+            // Change the loading message every 2 seconds
+            let interval = setInterval(() => {
+                index = (index + 1) % messages.length;
+                loadingText.textContent = messages[index];
+            }, 3000);
+
+            // Redirect to the synchronization URL
+            window.location.href = '<?= base_url() ?>aia/Response_auditee/generate/' + id;
+
+            // Clear the interval when the page is about to unload
+            window.onbeforeunload = () => clearInterval(interval);
+        } else {
+            isSyncInProgress = false;
+        }
+    });
+  }
 jQuery(document).ready((function() {
   KTDatatableJsonRemoteDemo.init()
 }));

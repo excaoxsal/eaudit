@@ -4,7 +4,7 @@ use PHPExcel\PhpSpreadsheet\Spreadsheet;
 use PHPExcel\PhpSpreadsheet\Writer\Xlsx;
 use PHPExcel\Writer\Pdf\mPDF;
 use PHPExcel\PhpSpreadsheet\IOFactory;
-class observasi_lapangan extends MY_Controller {
+class visit_lapangan extends MY_Controller {
 
 	public function __construct()
 	{
@@ -14,7 +14,7 @@ class observasi_lapangan extends MY_Controller {
 		$this->load->library('Pdf');
 		$this->load->model('aia/M_res_auditee', 'm_res_au');
 		$this->load->model('aia/M_jadwal', 'm_jadwal');
-		$this->load->model('aia/M_Observasi', 'm_observasi');
+		$this->load->model('aia/M_visit_lapangan', 'm_visit_lapangan');
 		//$this->load->model('DynamicForm_model');
 		$this->is_login();
 	}
@@ -24,9 +24,9 @@ class observasi_lapangan extends MY_Controller {
 	// 	// var_dump($datauser);die;
 	// 	$data['list_status'] 	= $this->master_act->status();
 	// 	$data['list_divisi'] 	= $this->m_res_au->get_divisi();
-	// 	$data['menu']           = 'observasi_lapangan'; // Set the menu variable
+	// 	$data['menu']           = 'visit_lapangan'; // Set the menu variable
     //     $data['title']          = 'Observasi Lapangan';
-    //     $data['content']        = 'content/aia/v_observasi_lapangan_detail';
+    //     $data['content']        = 'content/aia/v_visit_lapangan_detail';
 		
     //     $this->show($data);
     // }
@@ -37,9 +37,9 @@ class observasi_lapangan extends MY_Controller {
 		// var_dump($datauser);die;
 		$data['list_status'] 	= $this->master_act->status();
 		$data['list_divisi'] 	= $this->m_res_au->get_divisi();
-		$data['menu']           = 'observasi_lapangan';
+		$data['menu']           = 'visit_lapangan';
         $data['title']          = 'Observasi Lapangan';
-        $data['content']        = 'content/aia/v_observasi_lapangan_header.php';
+        $data['content']        = 'content/aia/v_visit_lapangan_header.php';
 		
         $this->show($data);
 	}
@@ -47,15 +47,15 @@ class observasi_lapangan extends MY_Controller {
 	public function detail($datas){
 		
 		$data['list_divisi'] 	= $this->m_res_au->get_divisi();
-		$data['menu']           = 'observasi_lapangan';
+		$data['menu']           = 'visit_lapangan';
         $data['title']          = 'Observasi Lapangan';
-        $data['content']        = 'content/aia/v_observasi_lapangan_detail';
+        $data['content']        = 'content/aia/v_visit_lapangan_detail';
 		$data['kode']			= $datas;
 		$data['role']			= $_SESSION['NAMA_ROLE'];
 		$data['detail']			= $this->m_res_au->get_response_auditee_detail($datas);
-		$data['observasi']			= $this->m_observasi->get_observasi_by_id_response($datas);
-		$data['klausul']	= $this->m_observasi->get_kode_klausul($data['detail'][0]['ID_HEADER']);
-		// var_dump($data['detail']);die;
+		$data['observasi']			= $this->m_visit_lapangan->get_visit_lapangan_by_id_response($datas);
+		$data['klausul']	= $this->m_visit_lapangan->get_kode_klausul($data['detail'][0]['ID_HEADER']);
+		// var_dump($data['klausul']);die;
 		$this->show($data);
 	}
 
@@ -89,10 +89,11 @@ class observasi_lapangan extends MY_Controller {
 
 	public function save() {
         $this->load->library('form_validation');
-        // var_dump($this->input->post('klausul'));die;
+        // var_dump($_POST);die;
         // Validasi input
+        $ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
         $this->form_validation->set_rules('hasil_observasi', 'Hasil Observasi', 'required');
-        $this->form_validation->set_rules('klausul', 'Klausul', 'required');
+        // $this->form_validation->set_rules('id_master_pertanyaan', 'master', 'required');
         $this->form_validation->set_rules('klasifikasi', 'Klasifikasi', 'required');
         
         if ($this->form_validation->run() == FALSE) {
@@ -103,20 +104,43 @@ class observasi_lapangan extends MY_Controller {
             return;
         }
 		if($ext==""||$ext==null){
-			$file_name = null;
+            $data = [
+                'HASIL_OBSERVASI' => $this->input->post('hasil_observasi'),
+                'ID_MASTER_PERTANYAAN' => $this->input->post('id_master_pertanyaan'),
+                'KLASIFIKASI' => $this->input->post('klasifikasi'),
+                
+                'ID_RESPONSE' => $this->input->post('id_response')
+            ];
 		}else 
 		{
-		$current_time = date('YmdHis');
-        $ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
-		$config['file_name']        = "File_Observasi".$current_time;
-        $config['upload_path'] = './storage/aia/observasi/';
-        $config['allowed_types'] = 'jpg|jpeg|png|pdf|doc|docx';
-        $config['max_size'] = 2048; // 2MB
-		$this->upload->initialize($config);
-        // $this->load->library('upload', $config);
-		$file_path = base_url().'storage/aia/observasi/'.$config['file_name'].'.'.$ext;
-        $file_name = $file_path;
-
+            $current_time = date('YmdHis');
+            $config['upload_path'] = './storage/aia/observasi/';
+            $config['allowed_types'] = 'jpg|jpeg|png|pdf|doc|docx';
+            $config['max_size'] = 2048; // 2MB
+            $config['overwrite'] = true;
+            $config['file_name']        = "File_Observasi".$current_time;
+            $config['allowed_types'] = 'jpg|jpeg|png|pdf|doc|docx';
+            $config['max_size'] = 2048; // 2MB
+            $this->upload->initialize($config);
+            // $this->load->library('upload', $config);
+            $file_path = base_url().'storage/aia/observasi/'.$config['file_name'].'.'.$ext;
+            $file_name = $file_path;
+            $data = [
+                'HASIL_OBSERVASI' => $this->input->post('hasil_observasi'),
+                'ID_MASTER_PERTANYAAN' => $this->input->post('id_master_pertanyaan'),
+                'FILE' => $file_name,
+                'KLASIFIKASI' => $this->input->post('klasifikasi'),
+                
+                'ID_VISIT' => $this->input->post('id')
+            ];
+            $query = $this->db->select('FILE')->from('VISIT_LAPANGAN')->where('ID_VISIT',$this->input->post('id'))->get();
+            // var_dump($query->result_array());
+            $file_path = $query->result_array();
+            // var_dump($file_path[0]['FILE']);die;
+            if($query){
+                unlink($file_path[0]['FILE']);
+            }
+            
 		}
 
         // Konfigurasi upload file
@@ -135,18 +159,18 @@ class observasi_lapangan extends MY_Controller {
         }
 
         // Data untuk disimpan
-        $data = [
-            'HASIL_OBSERVASI' => $this->input->post('hasil_observasi'),
-            'KLAUSUL' => $this->input->post('klausul'),
-            'FILE' => $file_name,
-            'KLASIFIKASI' => $this->input->post('klasifikasi'),
-			'COUNT' => $this->input->post('count'),
-			'ID_RESPONSE' => $this->input->post('id_response')
-        ];
+        // var_dump($data);die;
 
         // Simpan ke database
-        $result = $this->m_observasi->save_observasi($data);
-
+        $id_response = $this->input->post('id');
+        if ($id_response) {
+            // Update data
+            $this->db->where('ID_VISIT', $id_response);
+            $result = $this->db->update('VISIT_LAPANGAN', $data);
+        } else {
+            // Insert data baru
+            $result = $this->m_visit_lapangan->save_observasi($data);
+        }
         if ($result) {
             echo json_encode([
                 'status' => 'success',
@@ -161,7 +185,7 @@ class observasi_lapangan extends MY_Controller {
     }
 
     public function get_observasi_by_iso_kode($nomor_iso, $kode) {
-        return $this->db->get_where('observasi_lapangan', [
+        return $this->db->get_where('visit_lapangan', [
             'nomor_iso' => $nomor_iso,
             'kode' => $kode
         ])->result_array();
@@ -202,6 +226,27 @@ class observasi_lapangan extends MY_Controller {
             $query = $this->db->select('ID_RE, FILE, RESPONSE_AUDITEE')->from('RESPONSE_AUDITEE_D')
                         ->where('ID_RE', $id_tl)->get()->row();
             echo json_encode($query);   
+    }
+
+
+    public function delete_visit($id_visit)
+    {
+        // Validasi parameter
+        if (!$id_visit) {
+            echo json_encode(['status' => 'error', 'message' => 'ID tidak valid']);
+            return;
+        }
+
+        // Proses hapus
+        $this->db->where('ID_VISIT', $id_visit);
+        $deleted = $this->db->delete('VISIT_LAPANGAN');
+
+        // Respon
+        if ($deleted) {
+            echo json_encode(['status' => 'success', 'message' => 'Data berhasil dihapus']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Gagal menghapus data']);
+        }
     }
 	
 }

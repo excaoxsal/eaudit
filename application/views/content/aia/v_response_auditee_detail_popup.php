@@ -194,9 +194,73 @@
     </div>
   </div>
 </div>
+<!-- MODAL Penilaian -->
+<div class="modal fade" id="modal_penilaian" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Penilaian</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <i aria-hidden="true" class="ki ki-close"></i>
+        </button>
+      </div>
+      <form class="form" id="kt_form_popup" method="post" action="<?= base_url() ?>aia/Response_auditee/submit_penilaian/<?=$kode?>" enctype="multipart/form-data">
+        <div class="modal-body" style="height: auto">
+          <input type="hidden"  name="ID_RE_PENILAIAN" id="ID_RE_PENILAIAN">
+          <div class="form-group row">
+            <div class="col-12">
+            <?php if ($is_auditor) { ?>
+              <label>Penilaian Jawaban</label>
+                <select class="form-control status-select" data-id="${row.ID_RE}" name="PENILAIAN" id="PENILAIAN">
+                    <option value="" <?= empty($row['STATUS']) ? "selected" : "" ?>>-- Pilih Status --</option>
+                    <option value="1" <?= $row['STATUS'] == 1 ? "selected" : "" ?>>TIDAK DIISI SAMA SEKALI</option>
+                    <option value="2" <?= $row['STATUS'] == 2 ? "selected" : "" ?>>JAWABAN TIDAK SESUAI</option>
+                    <option value="3" <?= $row['STATUS'] == 3 ? "selected" : "" ?>>JAWABAN BENAR, LAMPIRAN SALAH</option>
+                    <option value="4" <?= $row['STATUS'] == 4 ? "selected" : "" ?>>JAWABAN SALAH, LAMPIRAN BENAR</option>
+                    <option value="5" <?= $row['STATUS'] == 5 ? "selected" : "" ?>>JAWABAN DAN LAMPIRAN SESUAI</option>
+                </select>
+            <?php } else {?>
+            
+              <label>Message Auditor</label>
+              <textarea readonly class="form-control" <?= $disabled ?> name="KOMENTAR_1" id="KOMENTAR_1"></textarea>
+            <?php } ?>
+              
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-12">
+            <?php if ($is_auditee){ ?>
+              <label>Status</label>
+              <select class="form-control" name="KLASIFIKASI" id="KLASIFIKASI" readonly>
+                  <option value="" <?= empty($item['klasifikasi']) ? "selected" : "" ?>>-- Pilih Klasifikasi --</option>
+                  <option value="MAJOR" <?= $item['klasifikasi'] == 'MAJOR' ? 'selected' : '' ?>>MAJOR</option>
+                  <option value="MINOR" <?= $item['klasifikasi'] == 'MINOR' ? 'selected' : '' ?>>MINOR</option>
+                  <option value="OBSERVASI" <?= $item['klasifikasi'] == 'OBSERVASI' ? 'selected' : '' ?>>OBSERVASI</option>
+              </select>
+            <?php } else {?>
+              <label>Status</label>
+              <select class="form-control" name="KLASIFIKASI" id="KLASIFIKASI" readonly>
+                  <option value="" <?= empty($item['klasifikasi']) ? "selected" : "" ?>>-- Pilih Klasifikasi --</option>
+                  <option value="MAJOR" <?= $item['klasifikasi'] == 'MAJOR' ? 'selected' : '' ?>>MAJOR</option>
+                  <option value="MINOR" <?= $item['klasifikasi'] == 'MINOR' ? 'selected' : '' ?>>MINOR</option>
+                  <option value="OBSERVASI" <?= $item['klasifikasi'] == 'OBSERVASI' ? 'selected' : '' ?>>OBSERVASI</option>
+              </select>
+            <?php } ?>
+              
+            </div>
+          </div>
+          
+        </div>
+        <div class="modal-footer">
+          <input type="submit" class="btn btn-primary font-weight-bold" value="Submit">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 <?= $is_auditee ?>
 <script type="text/javascript">
- "use strict";
+"use strict";
 var KTDatatableJsonRemoteDemo = {
   init: function() 
   {
@@ -210,7 +274,8 @@ var KTDatatableJsonRemoteDemo = {
       },
       layout: {
         scroll: !1,
-        footer: !1
+        footer: !1,
+        height: "auto",
       },
       sortable: !0,
       pagination: !0,
@@ -218,28 +283,38 @@ var KTDatatableJsonRemoteDemo = {
         input: $("#kt_datatable_popup_search_query"),
         key: "generalSearch"
       },
-      columns: [{
+      columns: [
+      {
         field: "number",
         title: "No.",
+        width: 50, // Lebar tetap 50px
+        autoHide: false, // Pastikan kolom selalu terlihat
         template: function(row, index) {
-            // Calculate the correct index for the current page
-            
-            var currentPage = t.getCurrentPage();
-            var pageSize = t.getPageSize();
-            return (currentPage - 1) * pageSize + (index + 1);
+          var currentPage = t.getCurrentPage();
+          var pageSize = t.getPageSize();
+          return (currentPage - 1) * pageSize + (index + 1);
         }
       },
       {
         field: "KODE_KLAUSUL",
-        title: "Klausul"
+        title: "Klausul",
+        width: 80,
+        autoHide: false
       },
       {
         field: "NAMA_DIVISI",
-        title: "SUB DIVISI"
+        title: "SUB DIVISI",
+        width: "auto",
+        minWidth: 50,
       },
       {
         field: "PERTANYAAN",
-        title: "Pertanyaan"
+        title: "Pertanyaan",
+        width: "auto",
+        minWidth: 50,
+        template: function(t) {
+          return `<div style="white-space: pre-wrap; word-wrap: break-word; min-height: 40px; display: flex; align-items: center;">${t.PERTANYAAN}</div>`;
+        }
       },
       {
         field: "ID_ISO",
@@ -247,19 +322,21 @@ var KTDatatableJsonRemoteDemo = {
         class: "text-center",
         sortable: !1,
         searchable: !1,
-        overflow: "visible",
+        overflow: "auto",
         template: function(t) {
           if(t.RESPONSE_AUDITEE==""||t.RESPONSE_AUDITEE==null){
             var buttonTitle = 'Respon"><i class="fa fa-upload text-dark';
-            console.log('a');
           }
           else if(t.RESPONSE_AUDITEE!=""||t.RESPONSE_AUDITEE!=null){
             var buttonTitle = 'Koreksi"><i class="fa fa-edit text-danger';
-            console.log('b');
           }
           
           var iconClass = t.STATUS == 1 ? 'color:red' : 'color:#000';
-        return '<a onclick="uploadFile(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon" title="' + buttonTitle + '"></i></a><a onclick="chatbox(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' + iconClass + '" title="Chat"></i></a>';
+        return '<a onclick="uploadFile(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon" title="' + buttonTitle 
+        + '"></i></a><a onclick="chatbox(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' 
+        + iconClass + '" title="Chat"></i></a>'
+        + '<a onclick="penilaian(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-star" style="'
+        + iconClass + '" title="Penilaian"></i></a>';
         }
       }]
     }), $("#kt_datatable_popup_search_status").on("change", (function() {
@@ -272,64 +349,7 @@ var KTDatatableJsonRemoteDemo = {
   }
 };
 
-// $(document).ready(function () {
-//     // Inisialisasi datatable untuk tab aktif saat halaman dimuat
-//     if ($("#popup-view").hasClass("show active")) {
-//       KTDatatablePopup.init();
-//     }
 
-//     // Event listener untuk tab switching
-//     $('a[data-toggle="tab"]').on("shown.bs.tab", function (e) {
-//       var target = $(e.target).attr("href"); // Get the target tab
-
-//       if (target === "#popup-view") {
-//         if (!$.fn.dataTable.isDataTable("#kt_datatable_popup")) {
-//           KTDatatablePopup.init();
-//         }
-//       }
-//     });
-//   });
-
-  // var KTDatatablePopup = {
-  //   init: function () {
-  //     $("#kt_datatable_popup").KTDatatable({
-  //       data: {
-  //         type: "remote",
-  //         source: '<?= base_url() ?>aia/Response_auditee/jsonResponAuditeeDetailPopup/<?= $kode ?>',
-  //         pageSize: 10
-  //       },
-  //       layout: {
-  //         scroll: !1,
-  //         footer: !1
-  //       },
-  //       sortable: !0,
-  //       pagination: !0,
-  //       search: {
-  //         input: $("#kt_datatable_popup_search_query"),
-  //         key: "generalSearch"
-  //       },
-  //       columns: [
-  //         {
-  //           field: "number",
-  //           title: "No.",
-  //           template: function (row, index) {
-  //             var currentPage = $("#kt_datatable_popup").KTDatatable().getCurrentPage();
-  //             var pageSize = $("#kt_datatable_popup").KTDatatable().getPageSize();
-  //             return (currentPage - 1) * pageSize + (index + 1);
-  //           }
-  //         },
-  //         {
-  //           field: "PERTANYAAN",
-  //           title: "Pertanyaan"
-  //         },
-  //         {
-  //           field: "STATUS",
-  //           title: "Status"
-  //         }
-  //       ]
-  //     });
-  //   }
-  // };
   
 var currentID_TL;
 function uploadFile(id_tl)
@@ -402,6 +422,20 @@ function uploadFile(id_tl)
     });
     $('#modal_chat').modal('show');
   }
+  function penilaian(id_tl)
+  {
+    $.post('<?= base_url('aia/Response_auditee/submit_penilaian/') ?>'+id_tl, function(response) {
+        
+    });
+    $.get(`<?= base_url('aia/Response_auditee/getpenilaian/') ?>`+id_tl, function(data,status){
+        const obj = JSON.parse(data);
+        $('#ID_RE_PENILAIAN').val(id_tl);
+        $('#PENILAIAN').val(obj.PENILAIAN);
+        $('#KLASIFIKASI').val(obj.KLASIFIKASI);
+        
+    });
+    $('#modal_penilaian').modal('show');
+  }
 jQuery(document).ready((function() {
   KTDatatableJsonRemoteDemo.init()
 }));
@@ -415,6 +449,9 @@ $(document).ready(function() {
   });
 
   $('#modal_upload').on('hidden.bs.modal', function() {
+    $("#kt_datatable_popup").KTDatatable().reload();
+  });
+  $('#modal_penilaian').on('hidden.bs.modal', function() {
     $("#kt_datatable_popup").KTDatatable().reload();
   });
 });

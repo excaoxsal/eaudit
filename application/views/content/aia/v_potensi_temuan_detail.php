@@ -1,10 +1,10 @@
 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
     <div class="subheader py-2 py-lg-4 subheader-solid" id="kt_subheader">
-        <div class="container-fluid d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
-        <div class="d-flex align-items-center flex-wrap mr-2">
+        <div class="container-fluid d-flex align-klau-center justify-content-between flex-wrap flex-sm-nowrap">
+        <div class="d-flex align-klau-center flex-wrap mr-2">
             <h5 class="text-dark font-weight-bold mt-2 mb-2 mr-5"><?= APK_NAME ?></h5>
             <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
-            <span class="text-muted font-weight-bold mr-4">Detail Observasi Lapangan</span>
+            <span class="text-muted font-weight-bold mr-4">Potensi Temuan</span>
             <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
             <span class="text-muted font-weight-bold mr-4"><?=$detail['0']['NOMOR_ISO']?></span>
             <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
@@ -17,7 +17,7 @@
         <div class="card card-custom">
             <div class="card-header flex-wrap border-0 pt-6 pb-0">
             <div class="card-title">
-                <h3 class="card-label">List Visit Lapangan
+                <h3 class="card-label">List Potensi Temuan
             </div>
             </div>
             <div class="card-body">
@@ -44,76 +44,55 @@
                     <thead>
                     <tr>
                         <th>No</th>
+                        <th>Pertanyaan</th>
+                        <th>Klausul</th>
                         <th>Hasil Observasi</th>
                         <th>Klausul</th>
                         <th>File</th>
                         <th>Klasifikasi</th>
-                        <th colspan="2">Action</th>
+                        
                     </tr>
                     </thead>
                     
                     <tbody>
-                        <?php if (!empty($observasi)): ?>
-                            <?php foreach ($observasi as $index => $item): ?>
+                        <?php if (!empty($list_potensi)): ?>
+                            <?php foreach ($list_potensi as $index => $item): ?>
                             <tr>
                                 <td><?= $index + 1 ?></td>
+                                <input type="hidden" name="id" value="<?= $item['ID_VISIT'] ?>">
                                 <td>
-                                    <input type="text" class="form-control" name="hasil_observasi" 
-                                        value="<?= htmlspecialchars($item['HASIL_OBSERVASI']) ?>">
+                                    <input type="text" class="form-control" name="pertanyaan" value="<?= htmlspecialchars($item['PERTANYAAN']) ?>">
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" name="klausul" 
-                                        value="<?= htmlspecialchars($item['KLAUSUL']) ?>">
+                                    <input type="text" class="form-control" name="klausul" value="<?= htmlspecialchars($item['KLAUSUL']) ?>" readonly>
                                 </td>
                                 <td>
-                                    <?php if (!empty($item['FILE'])): ?>
-                                        <a href="<?= base_url('uploads/observasi/'.$item['FILE']) ?>" 
-                                        target="_blank">Lihat File</a>
-                                        <input type="hidden" name="existing_file" value="<?= $item['FILE'] ?>">
-                                    <?php endif; ?>
-                                    <input type="file" class="form-control-file" name="file">
+                                    <textarea class="form-control" name="hasil_observasi" rows="3"><?= htmlspecialchars($item['HASIL_OBSERVASI']) ?></textarea>
                                 </td>
+                                
                                 <td>
-                                    <select class="form-control" name="klasifikasi">
-                                        <option value="MAJOR" <?= $item['klasifikasi'] == 'MAJOR' ? 'selected' : '' ?>>MAJOR</option>
-                                        <option value="MINOR" <?= $item['klasifikasi'] == 'MINOR' ? 'selected' : '' ?>>MINOR</option>
-                                        <option value="OBSERVASI" <?= $item['klasifikasi'] == 'OBSERVASI' ? 'selected' : '' ?>>OBSERVASI</option>
-                                    </select>
+                                    <input type="text" class="form-control" name="klasifikasi" value="<?= htmlspecialchars($item['KLASIFIKASI']) ?>" READONLY>
                                 </td>
-                                <td>
-                                    <button class="btn btn-success submit-row" data-id="<?= $item['id'] ?>">
-                                        Simpan
-                                    </button>
-                                </td>
-                                <td>
-                                    <button class="btn btn-danger remove-row" data-id="<?= $item['id'] ?>">
-                                        Hapus
-                                    </button>
-                                </td>
+                                
                             </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td>1</td>
-                                <td><input type="text" class="form-control" name="hasil_observasi"></td>
+                                <td><?= $index + 1 ?></td>
+                                <input type="hidden" name="id" value="<?= $item['ID_VISIT'] ?>">
                                 <td>
-                                    <select class="form-control" name="klausul">
-                                        <option value="">Pilih Klausul</option>
-                                        <?php foreach ($klausul as $item): ?>
-                                            <option value="<?= $item['KLAUSUL'] ?>"><?= $item['KLAUSUL'] ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
+                                    <input type="text" class="form-control" name="pertanyaan" value="<?= htmlspecialchars($item['PERTANYAAN']) ?>">
                                 </td>
-                                <td><input type="file" class="form-control-file" name="file"></td>
                                 <td>
-                                    <select class="form-control" name="klasifikasi">
-                                        <option value="MAJOR">MAJOR</option>
-                                        <option value="MINOR">MINOR</option>
-                                        <option value="OBSERVASI">OBSERVASI</option>
-                                    </select>
+                                    <input type="text" class="form-control" name="klausul" value="<?= htmlspecialchars($item['KLAUSUL']) ?>" readonly>
                                 </td>
-                                <td><button class="btn btn-success submit-row">Simpan</button></td>
-                                <td><button class="btn btn-danger remove-row">Hapus</button></td>
+                                <td>
+                                    <textarea class="form-control" name="hasil_observasi" rows="3"><?= htmlspecialchars($item['HASIL_OBSERVASI']) ?></textarea>
+                                </td>
+                                
+                                <td>
+                                    <input type="text" class="form-control" name="klasifikasi" value="<?= htmlspecialchars($item['KLASIFIKASI']) ?>" READONLY>
+                                </td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
@@ -123,36 +102,10 @@
     </div>
 <script>
     $(document).ready(function () {
-        let rowCount = 1;
-        console.log('<?= json_encode($detail) ?>');
-        $('#add-row').click(function () {
-            rowCount++;
-            let newRow = `
-                <tr>
-                    <td>${rowCount}</td>
-                    <td><input type="text" class="form-control" name="hasil_observasi"></td>
-                    <td>
-                        <select class="form-control" name="klausul">
-                            <option value="">Pilih Klausul</option>
-                            <?php foreach ($klausul as $item): ?>
-                                <option value="<?= $item['KLAUSUL'] ?>"><?= $item['KLAUSUL'] ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </td>
-                    <td><input type="file" class="form-control-file" name="file"></td>
-                    <td>
-                        <select class="form-control" name="klasifikasi">
-                            <option value="MAJOR">MAJOR</option>
-                            <option value="MINOR">MINOR</option>
-                            <option value="OBSERVASI">OBSERVASI</option>
-                        </select>
-                    </td>
-                    <td><button class="btn btn-success submit-row">Simpan</button></td>
-                    <td><button class="btn btn-danger remove-row">Hapus</button></td>
-                </tr>
-            `;
-            $('#observasi-table tbody').append(newRow);
-        });
+        let rowCount = <?= $index + 1 ?>;
+        
+        // console.log('<?= json_encode($detail) ?>');
+        
 
         // Handle delete row
         $('#observasi-table').on('click', '.remove-row', function () {
@@ -168,20 +121,22 @@
 
         function saveRowData(row) {
             const formData = new FormData();
-            formData.append('hasil_observasi', row.find('input[name="hasil_observasi"]').val());
+            formData.append('hasil_observasi', row.find('textarea[name="hasil_observasi"]').val());
+            formData.append('id', row.find('input[name="id"]').val());
+            formData.append('existing_file', row.find('input[name="file"]').val());
             formData.append('klausul', row.find('input[name="klausul"]').val());
-            formData.append('klasifikasi', row.find('select[name="klasifikasi"]').val());
-            formData.append('count', rowCount);
+            formData.append('klasifikasi', row.find('input[name="klasifikasi"]').val());
+            
             formData.append('id_response', '<?= $detail['0']['ID_HEADER'] ?>');
             // console.log(formData.get('id_response'));
             // Append file if exists
             const fileInput = row.find('input[name="file"]')[0];
-            if (fileInput.files.length > 0) {
+            if (fileInput && fileInput.files && fileInput.files.length > 0) {
                 formData.append('file', fileInput.files[0]);
             }
 
             $.ajax({
-                url: '<?= base_url('aia/Observasi_lapangan/save') ?>',
+                url: '<?= base_url('aia/Visit_lapangan/save') ?>',
                 type: 'POST',
                 data: formData,
                 contentType: false,
