@@ -64,14 +64,14 @@ class Potensi_temuan extends MY_Controller {
         $this->db->where('PENILAIAN !=', 5);
         $this->db->where('PENILAIAN !=', NULL);
         $response_detail = $this->db->get('RESPONSE_AUDITEE_D')->result_array();
-
+        // var_dump($response_detail);die;
         // Ambil data dari visit_temuan yang memiliki ID_HEADER sesuai
         $this->db->where('ID_RESPONSE', $id_response_header);
         $visit_temuan = $this->db->get('VISIT_LAPANGAN')->result_array();
-
+        // var_dump($visit_temuan);die;
         // Ambil data dari response_auditee_h yang penilaiannya TIDAK sama dengan 5
-        $this->db->where('ID_HEADER', $id_response_header);
-        $response_header = $this->db->get('RESPONSE_AUDITEE_')->result_array();
+        // $this->db->where('ID_HEADER', $id_response_header);
+        // $response_header = $this->db->get('RESPONSE_AUDITEE_')->result_array();
 
         // Simulasi proses penggabungan dan insert ke tabel potensi_temuan
         $insert_data_response = [];
@@ -81,20 +81,20 @@ class Potensi_temuan extends MY_Controller {
             
                 // Contoh struktur data
                 if ($res_d['PENILAIAN']== 1 ) {
-                    $hasil_observasi == 'TIDAK DIISI SAMA SEKALI';
+                    $hasil_observasi = 'TIDAK DIISI SAMA SEKALI';
                 } elseif ($res_d['PENILAIAN'] == 2) {   
-                    $hasil_observasi == 'JAWABAN TIDAK SESUAI';
+                    $hasil_observasi = 'JAWABAN TIDAK SESUAI';
                 } elseif ($res_d['PENILAIAN'] == 3) {
-                    $hasil_observasi == 'JAWABAN SESUAI DAN LAMPIRAN BELUM SESUAI';
+                    $hasil_observasi = 'JAWABAN SESUAI DAN LAMPIRAN BELUM SESUAI';
                 } elseif ($res_d['PENILAIAN'] == 4) {
-                    $hasil_observasi == 'JAWABAN BELUM SESUAI DAN LAMPIRAN BELUM SESUAI';
+                    $hasil_observasi = 'JAWABAN BELUM SESUAI DAN LAMPIRAN BELUM SESUAI';
                 }
                 $insert_data_response[] = [
                     'HASIL_OBSERVASI'=> $hasil_observasi,
                     'FILE'=> $res_d['FILE'],
                     'KLASIFIKASI'=> $res_d['KLASIFIKASI'],
                     'ID_PERTANYAAN'=> $res_d['ID_MASTER_PERTANYAAN'],
-                    'ID_HEADER'=> $res_d['ID_HEADER'],
+                    'ID_RESPONSE'=> $id_response_header,
                 ];
         }
         foreach($visit_temuan as $visit_temuan){
@@ -103,20 +103,23 @@ class Potensi_temuan extends MY_Controller {
                 'FILE'=> $visit_temuan['FILE'],
                 'KLASIFIKASI'=> $visit_temuan['KLASIFIKASI'],
                 'ID_PERTANYAAN'=> $visit_temuan['ID_MASTER_PERTANYAAN'],
-                'ID_HEADER'=> $id_response_header,
+                'ID_RESPONSE'=> $id_response_header,
             ];
         }
+        // var_dump($insert_data_response);
+        // var_dump($insert_data_visit);die;
 
         // Insert batch jika ada data
         $this->db->where('ID_RESPONSE', $id_response_header);
         $cek_potensi_temuan = $this->db->get('POTENSI_TEMUAN')->result_array();
+        // var_dump($cek_potensi_temuan);die;
         if (!empty($insert_data_response)) {
             if(!$cek_potensi_temuan){
                 $this->db->insert_batch('POTENSI_TEMUAN', $insert_data_response);
                 $this->db->insert_batch('POTENSI_TEMUAN', $insert_data_visit);
                 echo json_encode(['status' => 'success', 'message' => 'Data berhasil di-generate']);
             }else{
-                $this->where('ID_RESPONSE', $id_response_header);
+                $this->db->where('ID_RESPONSE', $id_response_header);
                 $this->db->delete('POTENSI_TEMUAN');
                 $this->db->insert_batch('POTENSI_TEMUAN', $insert_data_response);
                 $this->db->insert_batch('POTENSI_TEMUAN', $insert_data_visit);
