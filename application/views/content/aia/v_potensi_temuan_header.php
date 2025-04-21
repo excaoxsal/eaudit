@@ -125,9 +125,11 @@ var KTDatatableJsonRemoteDemo = {
               <a href="<?= base_url() ?>aia/potensi_temuan/detail/${t.ID_HEADER}" class="btn btn-sm btn-clean btn-icon" title="Lihat">
                 <i class="fa fa-eye text-dark"></i>
               </a>
+              <?php if ($is_auditor) { ?>
               <a onclick="save(${t.ID_HEADER})" class="btn btn-sm btn-clean btn-icon" title="Generate">
                 <i class="fa fa-cogs text-dark"></i>
               </a>
+              <?php } ?>
             `;
             }
         }

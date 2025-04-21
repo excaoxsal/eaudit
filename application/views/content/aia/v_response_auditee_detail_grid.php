@@ -4,13 +4,13 @@
     position: absolute;
     right: 10px;
   }
-  #kt_datatable_popup {
-    overflow-x: auto !important;
-    display: block;
-    white-space: nowrap;
-  }
+  /*#kt_datatable_grid {
+    overflow-x: auto; 
+    overflow-y: auto; 
+    max-height: 500px;  
+  }*/
 </style>
-<div class="content d-flex flex-column flex-column-fluid" id="kt_content_grid">
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
   <div class="subheader py-2 py-lg-4 subheader-solid" id="kt_subheader">
     <div class="container-fluid d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
       <div class="d-flex align-items-center flex-wrap mr-2">
@@ -74,8 +74,7 @@
               </div>
             </div>
           </div>
-          <div class="datatable datatable-bordered datatable-head-custom" id="kt_datatable_grid"></div>
-        </div>
+            <div class="datatable datatable-bordered datatable-head-custom" id="kt_datatable_grid" style="width:1200px;"></div>
       </div>
     </div>
   </div>
@@ -92,20 +91,25 @@
           pageSize: 10
         },
         layout: {
-          scroll: true, // Enable scrolling
-          height: 500, // Set a fixed height for vertical scrolling
-          footer: false
+            scroll: true,
+            scrollY: 200,
+            height: 500,  
+            footer: false
         },
-        sortable: !0,
-        pagination: !0,
+        sortable: true,
+        pagination: true,
         search: {
           input: $("#kt_datatable_grid_search_query"),
           key: "generalSearch"
+        },
+        rows: {
+          autoHide: false,
         },
         columns: [
           {
             field: "number",
             title: "No.",
+            width: 50,
             template: function (row, index) {
               var currentPage = t.getCurrentPage();
               var pageSize = t.getPageSize();
@@ -115,6 +119,7 @@
           {
             field: "PERTANYAAN",
             title: "PERTANYAAN",
+            width: 300,
             template: function (row) {
               return `<span>${row.PERTANYAAN}</span>`;
             }
@@ -122,6 +127,7 @@
           {
             field: "KODE_KLAUSUL",
             title: "KODE KLAUSUL",
+            width: 200,
             template: function (row) {
               return `<span>${row.KODE_KLAUSUL}</span>`;
             }
@@ -129,6 +135,7 @@
           {
             field: "RESPONSE_AUDITEE",
             title: "RESPONSE AUDITEE",
+            width: 300,
             template: function (row) {
               return `<input type="text" class="form-control response-auditee-input" data-id="${row.ID_RE}" value="${row.RESPONSE_AUDITEE ? row.RESPONSE_AUDITEE : ''}" />`;
             }
@@ -136,6 +143,7 @@
           {
             field: "KOMENTAR_1",
             title: "KOMENTAR AUDITOR",
+            width: 300,
             template: function (row) {
               return `<input type="text" class="form-control response-auditee-input" data-id="${row.ID_RE}" value="${row.KOMENTAR_1 ? row.KOMENTAR_1 : ''}" />`;
             }
@@ -143,6 +151,7 @@
           {
             field: "KOMENTAR_2",
             title: "KOMENTAR AUDITEE",
+            width: 300,
             template: function (row) {
               return `<input type="text" class="form-control response-auditee-input" data-id="${row.ID_RE}" value="${row.KOMENTAR_2 ? row.KOMENTAR_2 : ''}" />`;
             }
@@ -150,6 +159,7 @@
           {
             field: "FILE",
             title: "FILE",
+            width: 200,
             template: function (row) {
               return `
                 <input type="file" class="file-upload-input" data-id="${row.ID_RE}" />
@@ -157,9 +167,11 @@
               `;
             }
           },
+          <?php if ($is_auditor) { ?>
           {
             field: "STATUS",
             title: "Status",
+            width: 150,
             template: function (row) {
               return `
                 <select class="form-control status-select" data-id="${row.ID_RE}">
@@ -173,19 +185,24 @@
             }
           },
           {
-            field: "ID_ISO",
-            title: "Action",
-            class: "text-center",
-            sortable: !1,
-            searchable: !1,
-            overflow: "visible",
+            field: "KLASIFIKASI",
+            title: "Klasifikasi",
+            width: 150,
             template: function (row) {
-              return `<a onclick="uploadFile(${row.ID_RE})" class="btn btn-sm btn-clean btn-icon" title="Respon"><i class="fa fa-upload text-dark"></i></a>`;
+              return `
+                <select class="form-control" name="KLASIFIKASI" data-id="${row.ID_RE}" >
+                  <option value="" ${row.KLASIFIKASI == null || row.KLASIFIKASI === "" ? "selected" : ""}>-- Pilih Klasifikasi --</option>
+                  <option value="MAJOR" <?= $row['KLASIFIKASI'] == 'MAJOR' ? 'selected' : '' ?>>MAJOR</option>
+                  <option value="MINOR" <?= $row['KLASIFIKASI'] == 'MINOR' ? 'selected' : '' ?>>MINOR</option>
+                  <option value="OBSERVASI" <?= $row['KLASIFIKASI'] == 'OBSERVASI' ? 'selected' : '' ?>>OBSERVASI</option>
+              </select>
+              `;
             }
           }
+          <?php } ?>
         ]
       });
-
+      
       // Event listener for input changes
       $(document).on("change", ".klausul-input, .pertanyaan-input, .status-select", function () {
         var id = $(this).data("id");
@@ -215,8 +232,4 @@
       });
     }
   };
-
-  // jQuery(document).ready(function () {
-  //   KTDatatableJsonRemoteDemo.init();
-  // });
 </script>

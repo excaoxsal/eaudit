@@ -258,7 +258,7 @@
     </div>
   </div>
 </div>
-<?= $is_auditee ?>
+
 <script type="text/javascript">
 "use strict";
 var KTDatatableJsonRemoteDemo = {
@@ -332,12 +332,11 @@ var KTDatatableJsonRemoteDemo = {
           }
           
           var iconClass = t.STATUS == 1 ? 'color:red' : 'color:#000';
-        return '<a onclick="uploadFile(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon" title="' + buttonTitle 
+          return '<a onclick="uploadFile(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon" title="' + buttonTitle 
         + '"></i></a><a onclick="chatbox(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-comment" style="' 
         + iconClass + '" title="Chat"></i></a>'
-        + '<a onclick="penilaian(' + t.ID_RE + ')" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-star" style="'
-        + iconClass + '" title="Penilaian"></i></a>';
-        }
+        <?php echo $is_auditor ? " + '<a onclick=\"penilaian(' + t.ID_RE + ')\" class=\"btn btn-sm btn-clean btn-icon\"><i class=\"fa fa-star\" style=\"' + iconClass + '\" title=\"Penilaian\"></i></a>'" : "''"; ?>;
+}
       }]
     }), $("#kt_datatable_popup_search_status").on("change", (function() {
       t.search($(this).val().toLowerCase(), "NAMA_DIVISI")
