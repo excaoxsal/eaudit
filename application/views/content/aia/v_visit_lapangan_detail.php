@@ -44,7 +44,7 @@
                     <thead>
                     <tr>
                         <th>No</th>
-                        <th>Hasil Observasi</th>
+                        <th>Hasil Visit Lapangan</th>
                         <th>Klausul</th>
                         <th>File</th>
                         <th>Klasifikasi</th>

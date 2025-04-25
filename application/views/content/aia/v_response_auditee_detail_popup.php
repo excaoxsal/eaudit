@@ -216,8 +216,7 @@
                     <option value="1" <?= $row['STATUS'] == 1 ? "selected" : "" ?>>TIDAK DIISI SAMA SEKALI</option>
                     <option value="2" <?= $row['STATUS'] == 2 ? "selected" : "" ?>>JAWABAN TIDAK SESUAI</option>
                     <option value="3" <?= $row['STATUS'] == 3 ? "selected" : "" ?>>JAWABAN BENAR, LAMPIRAN SALAH</option>
-                    <option value="4" <?= $row['STATUS'] == 4 ? "selected" : "" ?>>JAWABAN SALAH, LAMPIRAN BENAR</option>
-                    <option value="5" <?= $row['STATUS'] == 5 ? "selected" : "" ?>>JAWABAN DAN LAMPIRAN SESUAI</option>
+                    <option value="4" <?= $row['STATUS'] == 4 ? "selected" : "" ?>>JAWABAN DAN LAMPIRAN SESUAI</option>
                 </select>
             <?php } else {?>
             

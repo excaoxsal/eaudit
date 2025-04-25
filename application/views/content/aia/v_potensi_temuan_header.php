@@ -75,6 +75,7 @@
 </div>
 <script type="text/javascript">
 "use strict";
+var isSyncInProgress = false;
 var KTDatatableJsonRemoteDemo = {
   init: function() {
     var t;
@@ -122,7 +123,7 @@ var KTDatatableJsonRemoteDemo = {
           overflow: "visible",
           template: function(t) {
             return `
-              <a href="<?= base_url() ?>aia/potensi_temuan/detail/${t.ID_HEADER}" class="btn btn-sm btn-clean btn-icon" title="Lihat">
+              <a href="<?= base_url() ?>aia/potensi_temuan/detail_potensi/${t.ID_HEADER}" class="btn btn-sm btn-clean btn-icon" title="Lihat">
                 <i class="fa fa-eye text-dark"></i>
               </a>
               <?php if ($is_auditor) { ?>
@@ -145,22 +146,72 @@ var KTDatatableJsonRemoteDemo = {
   }
 };
 
+  // function save(id) {
+  //   // Check if a synchronization process is already running
+  //   if (isSyncInProgress) {
+  //       Swal.fire({
+  //           text: 'Sinkronisasi sedang berjalan. Harap tunggu hingga selesai.',
+  //           icon: 'warning',
+  //           confirmButtonColor: '#3085d6',
+  //           confirmButtonText: 'OK'
+  //       });
+  //       return;
+  //   }
+
+  //   // Set the flag to indicate that a synchronization is in progress
+  //   isSyncInProgress = true;
+
+  //   // Show the confirmation dialog
+  //   Swal.fire({
+  //       text: 'Apakah Anda yakin sinkronisasi data ini?',
+  //       icon: 'question',
+  //       showCancelButton: true,
+  //       confirmButtonColor: '#3085d6',
+  //       cancelButtonColor: '#d33',
+  //       confirmButtonText: 'Ya',
+  //       cancelButtonText: 'Batal'
+  //   }).then((result) => {
+  //       if (result.isConfirmed) {
+  //           // Show the dynamic loading screen when the user confirms
+  //           document.getElementById("loadingScreen").style.display = "flex";
+
+  //           // Optionally update the loading text periodically
+  //           let loadingText = document.getElementById("loadingText");
+  //           let messages = [
+  //               "Synchronizing data...",
+  //               "Please be patient..."
+  //           ];
+  //           let index = 0;
+
+  //           // Change the loading message every 2 seconds
+  //           let interval = setInterval(() => {
+  //               index = (index + 1) % messages.length;
+  //               loadingText.textContent = messages[index];
+  //           }, 3000);
+
+  //           // Redirect to the synchronization URL
+  //           window.location.href = '<?= base_url() ?>aia/Response_auditee/generate/' + id;
+
+  //           // Clear the interval when the page is about to unload
+  //           window.onbeforeunload = () => clearInterval(interval);
+  //       } else {
+  //           isSyncInProgress = false;
+  //       }
+  //   });
+  // }
+
   function save(id) {
-    // Check if a synchronization process is already running
     if (isSyncInProgress) {
-        Swal.fire({
+        return Swal.fire({
             text: 'Sinkronisasi sedang berjalan. Harap tunggu hingga selesai.',
             icon: 'warning',
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'OK'
         });
-        return;
     }
 
-    // Set the flag to indicate that a synchronization is in progress
     isSyncInProgress = true;
 
-    // Show the confirmation dialog
     Swal.fire({
         text: 'Apakah Anda yakin sinkronisasi data ini?',
         icon: 'question',
@@ -171,33 +222,31 @@ var KTDatatableJsonRemoteDemo = {
         cancelButtonText: 'Batal'
     }).then((result) => {
         if (result.isConfirmed) {
-            // Show the dynamic loading screen when the user confirms
-            document.getElementById("loadingScreen").style.display = "flex";
-
-            // Optionally update the loading text periodically
-            let loadingText = document.getElementById("loadingText");
-            let messages = [
-                "Synchronizing data...",
-                "Please be patient..."
-            ];
-            let index = 0;
-
-            // Change the loading message every 2 seconds
-            let interval = setInterval(() => {
-                index = (index + 1) % messages.length;
-                loadingText.textContent = messages[index];
-            }, 3000);
-
-            // Redirect to the synchronization URL
-            window.location.href = '<?= base_url() ?>aia/Response_auditee/generate/' + id;
-
-            // Clear the interval when the page is about to unload
-            window.onbeforeunload = () => clearInterval(interval);
+            startSynchronization(id);
         } else {
             isSyncInProgress = false;
         }
     });
-  }
+}
+
+function startSynchronization(id) {
+    const loadingScreen = document.getElementById("loadingScreen");
+    const loadingText = document.getElementById("loadingText");
+    const messages = ["Synchronizing data...", "Please be patient..."];
+    let index = 0;
+
+    if (loadingScreen) loadingScreen.style.display = "flex";
+
+    const interval = setInterval(() => {
+        if (loadingText) loadingText.textContent = messages[index];
+        index = (index + 1) % messages.length;
+    }, 3000);
+
+    // Redirect to generate endpoint with the ID_HEADER
+    window.location.href = '<?= base_url() ?>aia/potensi_temuan/generate/' + id;
+
+    window.onbeforeunload = () => clearInterval(interval);
+}
 jQuery(document).ready((function() {
   KTDatatableJsonRemoteDemo.init()
 }));

@@ -4,7 +4,7 @@ use PHPExcel\PhpSpreadsheet\Spreadsheet;
 use PHPExcel\PhpSpreadsheet\Writer\Xlsx;
 use PHPExcel\Writer\Pdf\mPDF;
 use PHPExcel\PhpSpreadsheet\IOFactory;
-class Potensi_temuan extends MY_Controller {
+class potensi_temuan extends MY_Controller {
 
     public function __construct() {
         parent::__construct();
@@ -59,84 +59,126 @@ class Potensi_temuan extends MY_Controller {
 
     public function generate($id_response_header)
     {
-        // Ambil data dari response_auditee_d yang memiliki ID_HEADER sesuai
+        // Get data from RESPONSE_AUDITEE_D
         $this->db->where('ID_HEADER', $id_response_header);
-        $this->db->where('PENILAIAN !=', 5);
-        $this->db->where('PENILAIAN !=', NULL);
+        $this->db->where('PENILAIAN !=', 4);
+        $this->db->where('PENILAIAN IS NOT NULL');
         $response_detail = $this->db->get('RESPONSE_AUDITEE_D')->result_array();
-        // var_dump($response_detail);die;
-        // Ambil data dari visit_temuan yang memiliki ID_HEADER sesuai
+
+        // Get data from VISIT_LAPANGAN
         $this->db->where('ID_RESPONSE', $id_response_header);
         $visit_temuan = $this->db->get('VISIT_LAPANGAN')->result_array();
-        // var_dump($visit_temuan);die;
-        // Ambil data dari response_auditee_h yang penilaiannya TIDAK sama dengan 5
-        // $this->db->where('ID_HEADER', $id_response_header);
-        // $response_header = $this->db->get('RESPONSE_AUDITEE_')->result_array();
 
-        // Simulasi proses penggabungan dan insert ke tabel potensi_temuan
-        $insert_data_response = [];
-        $insert_data_visit = [];
+        $insert_data = [];
 
+        // Process RESPONSE_AUDITEE_D records
         foreach ($response_detail as $res_d) {
+            $hasil_observasi = $this->getHasilObservasi($res_d['PENILAIAN']);
             
-                // Contoh struktur data
-                if ($res_d['PENILAIAN']== 1 ) {
-                    $hasil_observasi = 'TIDAK DIISI SAMA SEKALI';
-                } elseif ($res_d['PENILAIAN'] == 2) {   
-                    $hasil_observasi = 'JAWABAN TIDAK SESUAI';
-                } elseif ($res_d['PENILAIAN'] == 3) {
-                    $hasil_observasi = 'JAWABAN SESUAI DAN LAMPIRAN BELUM SESUAI';
-                } elseif ($res_d['PENILAIAN'] == 4) {
-                    $hasil_observasi = 'JAWABAN BELUM SESUAI DAN LAMPIRAN BELUM SESUAI';
-                }
-                $insert_data_response[] = [
-                    'HASIL_OBSERVASI'=> $hasil_observasi,
-                    'FILE'=> $res_d['FILE'],
-                    'KLASIFIKASI'=> $res_d['KLASIFIKASI'],
-                    'ID_PERTANYAAN'=> $res_d['ID_MASTER_PERTANYAAN'],
-                    'ID_RESPONSE'=> $id_response_header,
-                ];
-        }
-        foreach($visit_temuan as $visit_temuan){
-            $insert_data_visit[] = [
-                'HASIL_OBSERVASI'=> $visit_temuan['HASIL_OBSERVASI'],
-                'FILE'=> $visit_temuan['FILE'],
-                'KLASIFIKASI'=> $visit_temuan['KLASIFIKASI'],
-                'ID_PERTANYAAN'=> $visit_temuan['ID_MASTER_PERTANYAAN'],
-                'ID_RESPONSE'=> $id_response_header,
+            $insert_data[] = [
+                'HASIL_OBSERVASI' => $hasil_observasi,
+                'FILE' => $res_d['FILE'],
+                'KLASIFIKASI' => $res_d['KLASIFIKASI'],
+                'ID_PERTANYAAN' => $res_d['ID_MASTER_PERTANYAAN'],
+                'ID_RESPONSE' => $id_response_header,
+                'ID_RE' => $res_d['ID_RE'] // Make sure this is included
             ];
         }
-        // var_dump($insert_data_response);
-        // var_dump($insert_data_visit);die;
 
-        // Insert batch jika ada data
+        // Process VISIT_LAPANGAN records
+        foreach ($visit_temuan as $visit) {
+            $insert_data[] = [
+                'HASIL_OBSERVASI' => $visit['HASIL_OBSERVASI'],
+                'FILE' => $visit['FILE'],
+                'KLASIFIKASI' => $visit['KLASIFIKASI'],
+                'ID_PERTANYAAN' => $visit['ID_MASTER_PERTANYAAN'],
+                'ID_RESPONSE' => $id_response_header,
+                'ID_RE' => $visit['ID'] // Use appropriate ID field from VISIT_LAPANGAN
+            ];
+        }
+
+        // Check if data exists
         $this->db->where('ID_RESPONSE', $id_response_header);
-        $cek_potensi_temuan = $this->db->get('POTENSI_TEMUAN')->result_array();
-        // var_dump($cek_potensi_temuan);die;
-        if (!empty($insert_data_response)) {
-            if(!$cek_potensi_temuan){
-                $this->db->insert_batch('POTENSI_TEMUAN', $insert_data_response);
-                $this->db->insert_batch('POTENSI_TEMUAN', $insert_data_visit);
-                echo json_encode(['status' => 'success', 'message' => 'Data berhasil di-generate']);
-            }else{
+        $existing_data = $this->db->get('POTENSI_TEMUAN')->result_array();
+
+        if (!empty($insert_data)) {
+            // Delete existing data if any
+            if (!empty($existing_data)) {
                 $this->db->where('ID_RESPONSE', $id_response_header);
                 $this->db->delete('POTENSI_TEMUAN');
-                $this->db->insert_batch('POTENSI_TEMUAN', $insert_data_response);
-                $this->db->insert_batch('POTENSI_TEMUAN', $insert_data_visit);
-                echo json_encode(['status' => 'success', 'message' => 'Data berhasil di-generate']);
             }
             
+            // Insert new data
+            $this->db->insert_batch('POTENSI_TEMUAN', $insert_data);
+            
+            $this->session->set_flashdata('success', 'Data berhasil di-generate');
         } else {
-            echo json_encode(['status' => 'error', 'message' => 'Tidak ada data yang cocok untuk digenerate']);
+            $this->session->set_flashdata('error', 'Tidak ada data yang cocok untuk digenerate');
+        }
+        
+        redirect(base_url('aia/potensi_temuan/index'));
+    }
+
+    private function getHasilObservasi($penilaian)
+    {
+        switch ($penilaian) {
+            case 1: return 'TIDAK DIISI SAMA SEKALI';
+            case 2: return 'JAWABAN TIDAK SESUAI';
+            case 3: return 'JAWABAN BENAR, LAMPIRAN SALAH';
+            default: return '';
         }
     }
-    function detail_potensi($id){
-        $data['list_potensi'] = $this->M_potensi_temuan->get_by_id($id);
-        $data['menu']         = 'potensi-temuan';
-        $data['title']        = 'Detail Potensi Temuan';
-        $data['subtitle']     = 'Detail Potensi Temuan';
-        $data['content']      = 'content/aia/v_potensi_temuan_detail';
+   
+    function detail_potensi($id) {
+        $data['id_response_header'] = $id; // Kirim ID ke view
+        $data['menu'] = 'potensi-temuan';
+        $data['title'] = 'Detail Potensi Temuan';
+        $data['subtitle'] = 'Detail Potensi Temuan';
+        $data['content'] = 'content/aia/v_potensi_temuan_detail';
         $this->show($data);
+    }
+    public function get_potensi_temuan($id_response_header) {
+        $data = $this->M_potensi_temuan->get_potensi_temuan($id_response_header);
+        // echo "<pre/>";
+        // var_dump($data);die;
+        if (!empty($data)) {
+            echo json_encode(['status' => 'success', 'data' => $data]);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Tidak ada data potensi temuan']);
+        }
+    }
+
+    public function update_group() {
+        
+        $item_ids = $this->input->post('item_ids');
+        $group_id = $this->input->post('group_id');
+        
+        if (!empty($item_ids)) {
+            $result = $this->potensi_temuan_model->update_group($item_ids, $group_id);
+            
+            if ($result) {
+                $this->output
+                    ->set_content_type('application/json')
+                    ->set_output(json_encode([
+                        'status' => 'success',
+                        'message' => 'Group updated successfully'
+                    ]));
+            } else {
+                $this->output
+                    ->set_content_type('application/json')
+                    ->set_output(json_encode([
+                        'status' => 'error',
+                        'message' => 'Failed to update group'
+                    ]));
+            }
+        } else {
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode([
+                    'status' => 'error',
+                    'message' => 'No items selected'
+                ]));
+        }
     }
 
 }

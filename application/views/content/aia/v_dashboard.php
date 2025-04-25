@@ -213,25 +213,7 @@
     <div class="d-flex flex-column-fluid">
         <div class="container">
 
-            <!-- table & charts -->
-            <div class="card card-custom mt-2">
-                <div class="card-body">
-                    <div class="row" id="divisi">
-                        <div class="col-6">
-                            <h6>Pre-Audit</h6>
-                           
-                            <div id="chart-preaudit"></div>
-                        </div>
-                        <hr />
-                        <div class="col-6">
-                            <h6>Audit</h6>
-                            <div id="chart-audit"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card card-custom mt-2">
+        <div class="card card-custom mt-2">
                 <div class="card-body py-2">
                     <div class="d-flex flex-row justify-content-between align-items-center">
                         <div class="row w-25">
@@ -265,6 +247,24 @@
                                     <option value="Cabang">Cabang</option>
                                 </select>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- table & charts -->
+            <div class="card card-custom mt-2">
+                <div class="card-body">
+                    <div class="row" id="divisi">
+                        <div class="col-6">
+                            <h6>Pre-Audit</h6>
+                           
+                            <div id="chart-preaudit"></div>
+                        </div>
+                        <hr />
+                        <div class="col-6">
+                            <h6>Audit</h6>
+                            <div id="chart-audit"></div>
                         </div>
                     </div>
                 </div>

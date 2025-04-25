@@ -114,16 +114,16 @@ class visit_lapangan extends MY_Controller {
 		}else 
 		{
             $current_time = date('YmdHis');
-            $config['upload_path'] = './storage/aia/observasi/';
+            $config['upload_path'] = './storage/aia/visit_lapangan/';
             $config['allowed_types'] = 'jpg|jpeg|png|pdf|doc|docx';
             $config['max_size'] = 2048; // 2MB
             $config['overwrite'] = true;
-            $config['file_name']        = "File_Observasi".$current_time;
+            $config['file_name']        = "File_Visit_Lapangan".$current_time;
             $config['allowed_types'] = 'jpg|jpeg|png|pdf|doc|docx';
             $config['max_size'] = 2048; // 2MB
             $this->upload->initialize($config);
             // $this->load->library('upload', $config);
-            $file_path = base_url().'storage/aia/observasi/'.$config['file_name'].'.'.$ext;
+            $file_path = base_url().'storage/aia/visit_lapangan/'.$config['file_name'].'.'.$ext;
             $file_name = $file_path;
             $data = [
                 'HASIL_OBSERVASI' => $this->input->post('hasil_observasi'),
@@ -229,24 +229,86 @@ class visit_lapangan extends MY_Controller {
     }
 
 
-    public function delete_visit($id_visit)
-    {
-        // Validasi parameter
-        if (!$id_visit) {
-            echo json_encode(['status' => 'error', 'message' => 'ID tidak valid']);
-            return;
-        }
+    // public function delete_visit($id_visit)
+    // {
+    //     // Validasi parameter
+    //     if (!$id_visit) {
+    //         echo json_encode(['status' => 'error', 'message' => 'ID tidak valid']);
+    //         return;
+    //     }
 
-        // Proses hapus
-        $this->db->where('ID_VISIT', $id_visit);
-        $deleted = $this->db->delete('VISIT_LAPANGAN');
+    //     // Proses hapus
+    //     $this->db->where('ID_VISIT', $id_visit);
+    //     $deleted = $this->db->delete('VISIT_LAPANGAN');
 
-        // Respon
-        if ($deleted) {
-            echo json_encode(['status' => 'success', 'message' => 'Data berhasil dihapus']);
-        } else {
-            echo json_encode(['status' => 'error', 'message' => 'Gagal menghapus data']);
+    //     // Respon
+    //     if ($deleted) {
+    //         echo json_encode(['status' => 'success', 'message' => 'Data berhasil dihapus']);
+    //     } else {
+    //         echo json_encode(['status' => 'error', 'message' => 'Gagal menghapus data']);
+    //     }
+    // }
+
+    // public function delete_visit($id_visit)
+    // {
+    //     // Validasi parameter
+    //     if (!$id_visit) {
+    //         echo json_encode(['status' => 'error', 'message' => 'ID tidak valid']);
+    //         return;
+    //     }
+
+    //     // Ambil file path dari database
+    //     $query = $this->db->select('FILE')->from('VISIT_LAPANGAN')->where('ID_VISIT', $id_visit)->get();
+    //     $file_data = $query->row();
+
+    //     if ($file_data && !empty($file_data->FILE)) {
+    //         $file_path = str_replace(base_url(), './', $file_data->FILE); // Convert URL to local path
+    //         if (file_exists($file_path)) {
+    //             unlink($file_path); // Hapus file dari folder
+    //         }
+    //     }
+
+    //     // Proses hapus data dari database
+    //     $this->db->where('ID_VISIT', $id_visit);
+    //     $deleted = $this->db->delete('VISIT_LAPANGAN');
+
+    //     // Respon
+    //     if ($deleted) {
+    //         echo json_encode(['status' => 'success', 'message' => 'Data berhasil dihapus']);
+    //     } else {
+    //         echo json_encode(['status' => 'error', 'message' => 'Gagal menghapus data']);
+    //     }
+    // }
+
+public function delete_visit($id_visit)
+{
+    // Validate parameter
+    if (empty($id_visit) || !is_numeric($id_visit)) {
+        echo json_encode(['status' => 'error', 'message' => 'ID tidak valid']);
+        return;
+    }
+
+    // Retrieve file path from the database
+    $query = $this->db->select('FILE')->from('VISIT_LAPANGAN')->where('ID_VISIT', $id_visit)->get();
+    $file_data = $query->row();
+
+    if ($file_data && !empty($file_data->FILE)) {
+        $file_path = str_replace(base_url(), './', $file_data->FILE); // Convert URL to local path
+        if (file_exists($file_path)) {
+            unlink($file_path); // Delete the file from the folder
         }
     }
+
+    // Delete data from the database
+    $this->db->where('ID_VISIT', $id_visit);
+    $deleted = $this->db->delete('VISIT_LAPANGAN');
+
+    // Response
+    if ($deleted) {
+        echo json_encode(['status' => 'success', 'message' => 'Data berhasil dihapus']);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Gagal menghapus data']);
+    }
+}
 	
 }

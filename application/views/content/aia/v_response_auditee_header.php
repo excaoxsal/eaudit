@@ -128,7 +128,7 @@ var KTDatatableJsonRemoteDemo = {
           searchable: !1,
           overflow: "visible",
           template: function(t) {
-            return '<a  href="<?= base_url() ?>aia/visit_lapangan/detail/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Approve"><i class="fa-regular fa-circle-check text-dark"></i></a><a  href="<?= base_url() ?>aia/visit_lapangan/detail/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Reject"><i class="fa-regular fa-circle-xmark text-dark"></i></a><a  href="<?= base_url() ?>aia/Response_auditee/detail/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Lihat"><i class="fa fa-eye text-dark"></i></a><a  href="<?= base_url() ?>aia/Response_auditee/export_excel/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Export Excel"><i class="fa fa-file-excel text-dark"></i></a>'
+            return '<a  href="<?= base_url() ?>aia/Response_auditee/detail/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Lihat"><i class="fa fa-eye text-dark"></i></a><a  href="<?= base_url() ?>aia/Response_auditee/export_excel/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Export Excel"><i class="fa fa-file-excel text-dark"></i></a>'
             }
         }
       ]
