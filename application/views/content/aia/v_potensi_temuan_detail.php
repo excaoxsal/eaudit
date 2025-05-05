@@ -97,6 +97,7 @@
               <thead>
                 <tr>
                   <th>No.</th>
+                  <th>Potensti Temuan</th>
                   <th>Pertanyaan</th>
                   <th>Kode Klausul</th>
                   <th>Response Auditee</th>
@@ -125,7 +126,7 @@ $(document).ready(function() {
   // Initialize DataTable with scroll options
   const table = $('#potensiTemuanTable').DataTable({
     ajax: {
-      url: '<?= base_url("aia/potensi_temuan/get_potensi_temuan/") ?>' + <?= $id_response_header ?>,
+      url: '<?= base_url("aia/Potensi_temuan/get_potensi_temuan/") ?>' + <?= $id_response_header ?>,
       dataSrc: function(json) {
         if (json.status === 'success') {
           json.data.forEach(function(item) {
@@ -153,6 +154,14 @@ $(document).ready(function() {
         width: 50,
         render: function(data, type, row, meta) {
           return meta.row + 1;
+        }
+      },
+      {
+        data: "ID_POTENSI_TEMUAN",
+        title: "POTENSI TEMUAN",
+        width: 300,
+        render: function(data) {
+          return `<span>${data}</span>`;
         }
       },
       {
@@ -263,7 +272,9 @@ $(document).ready(function() {
         width: 20,
         orderable: false,
         render: function(data, type, row) {
-          return `<input type="checkbox" class="row-checkbox" data-id="${row.ID_RE}">`;
+          return `<input type="checkbox" 
+                        class="row-checkbox" 
+                        data-potensi-id="${row.ID_POTENSI_TEMUAN}">`;
         }
       }
     ],
@@ -286,7 +297,10 @@ $(document).ready(function() {
   $('#assign-group-btn').click(function() {
     const selectedItems = [];
     $('.row-checkbox:checked').each(function() {
-      selectedItems.push($(this).data('id'));
+      selectedItems.push({
+        id_re: $(this).data('id'),                       // ID_RE
+        id_potensi_temuan: $(this).data('potensi-id')    // ID_POTENSI_TEMUAN
+      });
     });
     
     const groupId = $('#group-select').val();
@@ -320,7 +334,7 @@ $(document).ready(function() {
   
   function assignToGroup(itemIds, groupId) {
     $.ajax({
-      url: '<?= base_url("aia/potensi_temuan/update_group") ?>',
+      url: '<?= base_url("aia/Potensi_temuan/update_group") ?>',
       method: 'POST',
       data: {
         item_ids: itemIds,
