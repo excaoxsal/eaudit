@@ -657,5 +657,90 @@ class Dashboard extends MY_Controller
         $data = $query->result_array();
         echo json_encode($data);
     }
+
+    public function chartKlasifikasi()
+    {
+        $query = $this->db->query("
+            SELECT td2.\"NAMA_DIVISI\", td.\"KATEGORI\", COUNT(*) AS jumlah
+            FROM \"TEMUAN_DETAIL\" td
+            JOIN \"RESPONSE_AUDITEE_H\" rah ON rah.\"ID_HEADER\" = td.\"ID_RESPONSE\"
+            JOIN \"TM_DIVISI\" td2 ON td2.\"KODE\" = rah.\"DIVISI\"
+            GROUP BY td2.\"COUNT\", td2.\"NAMA_DIVISI\", td.\"KATEGORI\"
+            ORDER BY td2.\"COUNT\", td2.\"NAMA_DIVISI\", td.\"KATEGORI\"
+        ")->result_array();
+        
+        // Susun data per divisi
+        $divisi = [];
+        foreach ($query as $row) {
+            $d = $row['NAMA_DIVISI'];
+            // normalize kategori ke format "Major", "Minor", atau "Observasi"
+            $k = ucfirst(strtolower($row['KATEGORI']));
+            $j = (int)$row['jumlah'];
+            if (!isset($divisi[$d])) {
+                $divisi[$d] = ['Major'=>0, 'Minor'=>0, 'Observasi'=>0];
+            }
+            // hanya simpan jika termasuk salah satu
+            if (in_array($k, ['Major','Minor','Observasi'])) {
+                $divisi[$d][$k] = $j;
+            }
+        }
+
+        // Buat array untuk Chart
+        $chart = [];
+        // Header
+        $chart[] = ['Divisi','Major',['role'=>'annotation'],'Minor',['role'=>'annotation'],'Observasi',['role'=>'annotation']];
+        foreach ($divisi as $nama=>$vals) {
+            $chart[] = [
+                $nama,
+                $vals['Major'], $vals['Major'],
+                $vals['Minor'], $vals['Minor'],
+                $vals['Observasi'], $vals['Observasi']
+            ];
+        }
+
+        echo json_encode($chart);
+    }
+
+    public function chartClose(){
+        // 1) Jalankan query
+        $sql = "
+        SELECT td2.\"NAMA_DIVISI\" AS divisi,
+                SUM(CASE WHEN td.\"STATUS\" = 'CLOSE' THEN 1 ELSE 0 END) AS closed,
+                SUM(CASE WHEN td.\"STATUS\" != 'CLOSE' THEN 1 ELSE 0 END) AS open
+        FROM \"TEMUAN_DETAIL\" td
+        JOIN \"RESPONSE_AUDITEE_H\" rah
+            ON rah.\"ID_HEADER\" = td.\"ID_RESPONSE\"
+        JOIN \"TM_DIVISI\" td2
+            ON td2.\"KODE\" = rah.\"DIVISI\"
+        GROUP BY td2.\"COUNT\", td2.\"NAMA_DIVISI\"
+        ORDER BY td2.\"COUNT\", td2.\"NAMA_DIVISI\" asc
+        ";
+        $query = $this->db->query($sql)->result_array();
+    
+        // 2) Siapkan array untuk arrayToDataTable
+        $chartData = [];
+        // header dengan role:annotation
+        $chartData[] = [
+        "Divisi",
+        "Open",      ["role"=>"annotation"],
+        "Closed",    ["role"=>"annotation"]
+        ];
+    
+        // 3) Masukkan tiap baris (raw counts saja, annotation diproses di JS)
+        foreach($query as $row){
+            $open   = (int)$row['open'];
+            $closed = (int)$row['closed'];
+            // leave annotation placeholders empty; JS will fill them (or null them)
+            $chartData[] = [
+              $row['divisi'],
+              $open,    "", 
+              $closed,  ""
+            ];
+        }
+    
+        // 4) Kirim JSON
+        header('Content-Type: application/json');
+        echo json_encode($chartData);
+    }
     
 }

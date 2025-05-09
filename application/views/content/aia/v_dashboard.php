@@ -256,15 +256,20 @@
             <div class="card card-custom mt-2">
                 <div class="card-body">
                     <div class="row" id="divisi">
-                        <div class="col-6">
+                        <div class="col-12">
                             <h6>Pre-Audit</h6>
-                           
                             <div id="chart-preaudit"></div>
                         </div>
-                        <hr />
-                        <div class="col-6">
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="card card-custom mt-2">
+                <div class="card-body">
+                    <div class="row" id="divisi">
+                        <div class="col-12">
                             <h6>Audit</h6>
-                            <div id="chart-audit"></div>
+                            <div id="chart-audit" style="width:100%; height:500px;"></div>
                         </div>
                     </div>
                 </div>
@@ -276,7 +281,7 @@
                         <div class="col-6">
                             <h6>Post-audit</h6>
                            
-                            <div id="chart-filterpusat"></div>
+                            <div id="chart-filterpusat" style="width:100%; height:500px;"></div>
                         </div>
                         <hr />
                         <div class="col-6">
@@ -291,10 +296,19 @@
             <div class="card card-custom mt-2">
                 <div class="card-body">
                     <div class="row" id="divisi">
-                        <div class="col-6">
+                        <div class="col-12">
                             <div id="chart-klasifikasi"></div>
                         </div>
-                        <div class="col-6">
+                        
+
+                    </div>
+                </div>
+            </div>
+            <div class="card card-custom mt-2">
+                <div class="card-body">
+                    <div class="row" id="divisi">
+                        
+                        <div class="col-12">
                             <div id="chart-klausul"></div>
                         </div>
 
@@ -305,11 +319,18 @@
             <div class="card card-custom mt-2">
                 <div class="card-body">
                     <div class="row" id="divisi">
-                        <div class="col-6">
-                            <div id="chart-close"></div>
+                        <div class="col-12">
+                            <div id="chart-close" style="width:100%; height:500px;"></div>
                         </div>
-                        <hr />
-                        <div class="col-6">
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="card card-custom mt-2">
+                <div class="card-body">
+                    <div class="row" id="divisi">
+
+                        <div class="col-12">
                             <div id="chart-pie"></div>
                         </div>
                     </div>
@@ -378,148 +399,162 @@
             .catch(error => console.error('Error fetching data:', error));
     }
 </script>
+
+<!-- Start Jumlah Pertanyaan Terjawab -->
 <script>
-    google.charts.load("current", {
-        packages: ["corechart", "bar"]
+  google.charts.load('current',{packages:['corechart']});
+  google.charts.setOnLoadCallback(drawChart);
+
+  async function fetchDatarespon() {
+    const resp = await fetch('<?= base_url("aia/Dashboard/get_responded_question") ?>');
+    return resp.json();
+  }
+
+  async function drawChart() {
+    const raw = await fetchDatarespon();
+
+    // 1) Build DataTable with TWO annotation columns
+    const dt = new google.visualization.DataTable();
+    dt.addColumn('string', 'Divisi');
+    dt.addColumn('number', 'Open');
+    dt.addColumn({ type: 'string', role: 'annotation' });   // openAnn
+    dt.addColumn('number', 'Closed');
+    dt.addColumn({ type: 'string', role: 'annotation' });   // closedAnn
+
+    // 2) Fill rows, apply 12% threshold
+    const threshold = 0.12;
+    raw.forEach(r => {
+      const open   = +r.Open   || 0;
+      const closed = +r.Closed || 0;
+      const sum    = open + closed || 1;
+      const pctO   = open   / sum;
+      const pctC   = closed / sum;
+
+      const openAnn   = pctO  >= threshold ? open.toString()   : null;
+      const closedAnn = pctC >= threshold ? closed.toString() : null;
+
+      dt.addRow([ r.DIVISI, open, openAnn, closed, closedAnn ]);
     });
-    google.charts.setOnLoadCallback(drawChart);
 
-    async function fetchDatarespon() {
-        const response = await fetch('<?php echo base_url('aia/Dashboard/get_responded_question'); ?>'); // Ganti URL sesuai backend Anda
-            const data = await response.json();
-            return data;
-    }
+    // 3) Draw as 100%-stacked with END‐INSIDE annotations
+    const options = {
+      title: 'Jumlah Pertanyaan Terjawab',
+      isStacked: 'percent',
+      chartArea: { width:'70%', height:'80%' },
+      bar: { groupWidth:'40px' },
+      colors: ['#3366cc','#008000'],
+      legend:{ position:'bottom' },
+      hAxis:{ textStyle:{ fontSize:10 } },
+      vAxis:{
+        format:'percent',
+        viewWindow:{ min:0, max:1 },
+        ticks:[0, .25, .5, .75, 1]
+      },
+      annotations:{
+        // force inside‐end of segment:
+        alwaysOutside: false,
+        position: 'insideEnd',
+        textStyle:{
+          fontSize: 10,
+          color: '#fff',     // white for contrast
+          auraColor: 'none'  // no halo
+        }
+      }
+    };
 
-    async function drawChart() {
-        const rawData = await fetchDatarespon();
-
-        // Format data untuk Google Charts
-        const data = new google.visualization.DataTable();
-        data.addColumn("string", "Divisi");
-        data.addColumn("number", "Open");
-        data.addColumn({ type: "string", role: "annotation" }); // Label teks
-        data.addColumn("number", "Closed");
-        data.addColumn({ type: "string", role: "annotation" }); // Label teks
-
-        // Memasukkan data ke dalam tabel
-        rawData.forEach(row => {
-            // Pastikan nilai Open dan Closed adalah number
-            const openValue = Number(row.Open);
-            const closedValue = Number(row.Closed);
-
-            data.addRow([
-                row.DIVISI,
-                openValue,               // Pastikan ini number
-                openValue.toString(),     // Label untuk "Open"
-                closedValue,              // Pastikan ini number
-                closedValue.toString()    // Label untuk "Closed"
-            ]);
-        });
-
-        var options = {
-            title: "Jumlah pertanyaan terjawab",
-            isStacked: true,
-            height: 500,
-            legend: {
-                position: "bottom"
-            },
-            chartArea: {
-                width: "60%"
-            },
-            bar: {
-                groupWidth: "50%"
-            },
-            annotations: {
-                alwaysOutside: false,
-                textStyle: {
-                    fontSize: 10,
-                    bold: false,
-                    color: "white",
-                },
-            },
-            hAxis: {
-                title: "",
-                textStyle: {
-                    fontSize: 10
-                },
-            },
-            vAxis: {
-                minValue: 0,
-                maxValue: 1000,
-                format: "#",
-            },
-            colors: ["#3366cc", "#008000"], // Biru untuk Open, Merah untuk Closed
-        };
-
-        var chart = new google.visualization.ColumnChart(
-            document.getElementById("chart-audit")
-        );
-        chart.draw(data, options);
-    }
+    new google.visualization.ColumnChart(
+      document.getElementById('chart-audit')
+    ).draw(dt, options);
+  }
 </script>
+<!-- End Jumlah Petanyaan Terjawab -->
 
 <!-- ini buat TOTAL TEMUAN AUDIT INTERNAL
 KANTOR PUSAT BERDASARKAN ISO -->
 <script type="text/javascript">
-    google.charts.load('current', { packages: ['corechart'] });
+    google.charts.load('current',{packages:['corechart']});
     google.charts.setOnLoadCallback(fetchDatatemuan);
 
     async function fetchDatatemuan() {
-        // Ambil data dari backend Bun
-        const response = await fetch('<?php echo base_url('aia/Dashboard/get_temuan_by_iso_div'); ?>');
-        const jsonData = await response.json();
+        const resp     = await fetch('<?= base_url("aia/Dashboard/get_temuan_by_iso_div") ?>');
+        const jsonData = await resp.json();
 
-        // Proses data untuk Google Charts
-        const chartDatatemuan = [['ISO', 'Total Temuan', { role: 'annotation' }]];
-        jsonData.forEach((item) => {
-            if (item && item.NOMOR_ISO && item.TOTAL_TEMUAN !== undefined) {
-                // Konversi TOTAL_TEMUAN ke numerik
-                const totalTemuan = parseInt(item.TOTAL_TEMUAN);
-                if (!isNaN(totalTemuan)) {
-                    chartDatatemuan.push([item.NOMOR_ISO, totalTemuan,item.TOTAL_TEMUAN]);
-                } else {
-                    console.warn('Data TOTAL_TEMUAN tidak valid:', item.TOTAL_TEMUAN);
-                }
-            } else {
-                console.warn('Data tidak valid:', item);
-            }
+        // 1) Daftar ISO & peta warna (beri urutan yang konsisten!)
+        const isoList   = jsonData.map(r => r.NOMOR_ISO);
+        const colorMap  = {
+        'ISO 9001':   '#3366cc',
+        'ISO 45001':  '#109618',
+        'ISO 14001':  '#ff9900',
+        'ISO 37001':  '#dc3912'
+        };
+        const colors    = isoList.map(iso => colorMap[iso] || '#888');
+
+        // 2) Header pivot: ["ISO", iso1, annotation, iso2, annotation, ...]
+        const header = ['ISO'];
+        isoList.forEach(iso => {
+        header.push(iso, { role: 'annotation', type: 'string' });
         });
-        // console.log(chartDatatemuan);
-        drawCharttemuan(chartDatatemuan);
+        const chartDatatemuan = [ header ];
+
+        // 3) Baris per ISO category
+        isoList.forEach(cat => {
+        // cari value untuk this ISO
+        const rec = jsonData.find(r => r.NOMOR_ISO === cat) || {};
+        const val = Number(rec.TOTAL_TEMUAN) || 0;
+        const ann = val > 0 ? val.toString() : null;
+
+        // bangun row: [ cat,  valOrNull, annOrNull,  ... ]
+        const row = [ cat ];
+        isoList.forEach(iso => {
+            if (iso === cat) row.push(val, ann);
+            else              row.push(null, null);
+        });
+        chartDatatemuan.push(row);
+        });
+
+        drawCharttemuan(chartDatatemuan, colors);
     }
 
-    function drawCharttemuan(chartDatatemuan) {
-        var data = google.visualization.arrayToDataTable(chartDatatemuan);
-        console.log(chartDatatemuan);
-        var options = {
+    function drawCharttemuan(chartDatatemuan, colors) {
+        // 4) Buat DataTable
+        const data = google.visualization.arrayToDataTable(chartDatatemuan);
+
+        // 5) Opsi chart
+        const options = {
         title: 'TOTAL TEMUAN AUDIT INTERNAL\nKANTOR PUSAT BERDASARKAN ISO',
-        chartArea: { width: '60%' },
+        chartArea: { width: '60%', height: '75%' },
         height: 500,
-        vAxis: {
-            title: 'Total Temuan',
-            minValue: 0,
-        },
-        bar: { groupWidth: '80%' }, // Perbesar batang
+        isStacked: false,
+        bar: { groupWidth: '60%' },
+        colors: colors,
+        legend: { position: 'bottom', alignment: 'center' },
         hAxis: {
             title: 'ISO',
+            slantedText: true,
+            slantedTextAngle: 45,
+            textStyle: { fontSize: 12 }
+        },
+        vAxis: {
+            title: 'Total Temuan',
+            minValue: 0
         },
         annotations: {
             alwaysOutside: true,
-            textStyle: {
-            fontSize: 12,
-            bold: true,
-            color: '#000',
-            },
-        },
-        legend: { position: 'bottom', alignment: 'center' },
-        colors: ['#3366cc', '#109618', '#ff9900', '#dc3912'], // Variasi warna untuk setiap ISO
-        isStacked: false,
+            position: 'center',
+            textStyle: { fontSize: 12, bold: true, color: '#000' }
+        }
         };
 
-        var chart = new google.visualization.ColumnChart(document.getElementById('chart-filterpusat'));
+        // 6) Render
+        const chart = new google.visualization.ColumnChart(
+        document.getElementById('chart-filterpusat')
+        );
         chart.draw(data, options);
     }
 </script>
+<!-- End -->
+
+<!-- Start TOTAL TEMUAN ISO 9001:2015 PER DIVISI -->
 <script>
     google.charts.load('current', {packages:['corechart']});
     google.charts.setOnLoadCallback(drawChart);
@@ -561,150 +596,199 @@ KANTOR PUSAT BERDASARKAN ISO -->
     chart.draw(data, options);
     }
 </script>
+<!-- End TOTAL TEMUAN ISO 9001:2015 PER DIVISI -->
+
+
+<!--Start Chart Klasifikasi Temuan -->
 <script>
-      google.charts.load('current', {packages:['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
+    google.charts.load('current',{ packages:['corechart'] });
+    google.charts.setOnLoadCallback(drawChart);
 
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-            ['Divisi', 'Mayor', { role: 'annotation' }, 'Minor', { role: 'annotation' }, 'Observasi', { role: 'annotation' }],
-            ['Perencanaan', 1, '1', 4, '4', 4, '4'],
-            ['Sekretaris', 2, '2', 4, '4', 4, '4'],
-            ['Pengawasan', 4, '4', 2, '2', 3, '3'],
-            ['Pemasaran', 5, '5', 1, '1', 2, '2'],
-            ['Pengembangan', 6, '6', 1, '1', 2, '2'],
-            ['Satuan Kerja', 6, '6', 1, '1', 3, '3'],
-            ['Operasi', 6, '6', 3, '3', 2, '2'],
-            ['Teknik', 4, '4', 4, '4', 4, '4'],
-            ['Sistem Informasi', 5, '5', 5, '5', 5, '5'],
-            ['SDM & Umum', 6, '6', 6, '6', 6, '6'],
-            ['Keuangan', 7, '7', 7, '7', 7, '7']
-        ]);
+    function drawChart() {
+        fetch('<?= base_url("aia/Dashboard/chartKlasifikasi") ?>')
+        .then(r => r.json())
+        .then(raw => {
+            // 1) Build DataTable manual
+            const dt = new google.visualization.DataTable();
+            dt.addColumn('string','Divisi');
+            dt.addColumn('number','Major');
+            dt.addColumn({ type:'string', role:'annotation' });
+            dt.addColumn('number','Minor');
+            dt.addColumn({ type:'string', role:'annotation' });
+            dt.addColumn('number','Observasi');
+            dt.addColumn({ type:'string', role:'annotation' });
 
-        var options = {
-          title: 'Chart Klasifikasi Temuan',
-          chartArea: {width: '60%'},
-          height : 500,
-          isStacked: 'percent',
-          hAxis: {
-            title: 'Divisi'
-          },
-          vAxis: {
-            title: 'Persentase (%)',
-            minValue: 0,
-            format: '#%'
-          },
-          legend: { position: 'top', maxLines: 3 },
-          colors: ['#dc3912', '#ffcc00', '#3366cc'],
-          annotations: {
-            alwaysOutside: false, // Biarkan annotation berada dalam batang
-            textStyle: {
-                fontSize: 12,
-                color: '#000'
+            // 2) Isi baris dengan threshold 12%
+            raw.slice(1).forEach(row => {
+            const div   = row[0];
+            const maj   = Number(row[1]);
+            const min   = Number(row[3]);
+            const obs   = Number(row[5]);
+            const sum   = maj + min + obs || 1;
+            const pct   = v => v/sum;
+
+            // hanya jika ≥12%
+            const annMaj = (maj>0 && pct(maj)>=0.05) ? maj.toString() : null;
+            const annMin = (min>0 && pct(min)>=0.05) ? min.toString() : null;
+            const annObs = (obs>0 && pct(obs)>=0.05) ? obs.toString() : null;
+
+            dt.addRow([ div, maj, annMaj, min, annMin, obs, annObs ]);
+            });
+
+            // 3) Opsi chart: annotation selalu di dalam, di‐center
+            const options = {
+            title: 'Chart Klasifikasi Temuan',
+            chartArea: { width:'60%' },
+            height: 500,
+            isStacked: 'percent',
+            bar: { groupWidth:'40px' },
+            hAxis: { title:'Divisi' },
+            vAxis: {
+                title: 'Persentase',
+                format: 'percent',
+                viewWindowMode: 'explicit',
+                viewWindow: { min:0, max:1 },
+                ticks: [0,0.25,0.5,0.75,1]
             },
-            position: 'inside' // Posisikan teks annotation di tengah batang
+            legend: { position:'top', maxLines:3 },
+            colors: ['#dc3912','#ffcc00','#3366cc'],
+            annotations: {
+                alwaysOutside: false,   // pastikan dalam batang
+                position: 'center',     // tepat di tengah segmen
+                textStyle: {
+                fontSize: 10,
+                color: '#000',
+                auraColor: 'none'     // hilangkan outline putih
+                }
             }
-        };
+            };
 
-        var chart = new google.visualization.ColumnChart(document.getElementById('chart-klasifikasi'));
-        chart.draw(data, options);
-      }
+            // 4) Gambar chart
+            new google.visualization.ColumnChart(
+            document.getElementById('chart-klasifikasi')
+            ).draw(dt, options);
+        });
+    }
 </script>
+<!-- End Chart Klasifikasi Temuan -->
+
+
+<!-- Start Jumlah Temuan -->
 <script>
-      google.charts.load('current', {packages:['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
+        google.charts.load('current', {packages:['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
 
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-          ['Klausul', 'Jumlah Temuan', { role: 'annotation' }],
-          ['K.4', 5, '5'],
-          ['K.5', 4, '4'],
-          ['K.6', 3, '3'],
-          ['K.7', 2, '2'],
-          ['K.8', 1, '1'],
-          ['K.9', 2, '2'],
-          ['K.10', 1, '1']
-        ]);
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+            ['Klausul', 'Jumlah Temuan', { role: 'annotation' }],
+            ['K.4', 5, '5'],
+            ['K.5', 4, '4'],
+            ['K.6', 3, '3'],
+            ['K.7', 2, '2'],
+            ['K.8', 1, '1'],
+            ['K.9', 2, '2'],
+            ['K.10', 1, '1']
+            ]);
 
-        var options = {
-          title: 'Jumlah Temuan Per Klausul',
-          chartArea: { width: '60%' },
-          height: 500,
-          hAxis: {
-            title: 'Klausul',
-          },
-          vAxis: {
-            title: 'Jumlah Temuan',
-            minValue: 0
-          },
-          legend: { position: 'none' },
-          colors: ['#1f77b4'],
-          annotations: {
-            alwaysOutside: false, // Menempatkan angka di dalam batang
-            textStyle: {
-              fontSize: 14,
-              bold: true,
-              color: '#fff' // Warna teks putih agar kontras
-            }
-          }
-        };
-
-        var chart = new google.visualization.ColumnChart(document.getElementById('chart-klausul'));
-        chart.draw(data, options);
-      }
-</script>
-<script>
-      google.charts.load("current", { packages: ["corechart"] });
-      google.charts.setOnLoadCallback(drawChart);
-
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-          ["Divisi", "Open", { role: "annotation" }, "Closed", { role: "annotation" }],
-          ["Div 1", 20, "20", 80, "80"],
-          ["Div 2", 30, "30", 70, "70"],
-          ["Div 3", 40, "40", 60, "60"],
-          ["Div 4", 50, "50", 50, "50"],
-          ["Div 5", 55, "55", 45, "45"],
-          ["Div 6", 27, "27", 73, "73"],
-          ["Div 7", 33, "33", 67, "67"],
-          ["Div 8", 58, "58", 42, "42"],
-          ["Div 9", 27, "27", 73, "73"],
-          ["Div 10", 10, "10", 90, "90"],
-          ["Div 11", 12, "12", 88, "88"],
-        ]);
-
-        var options = {
-          title: "Jumlah Temuan yang sudah ditutup",
-          chartArea: { width: "60%" },
-          height: 500,
-          isStacked: true,
-          vAxis: {
-            title: "Persentase",
-            minValue: 0,
-            maxValue: 100,
-            format: "#'%'",
-          },
-          hAxis: {
-            title: "Divisi",
-          },
-          legend: { position: "bottom" },
-          bar: { groupWidth: "70%" },
-          colors: ["#dc3912", "#3366cc"],
-          
-          annotations: {
-            alwaysOutside: false, // Biarkan annotation berada dalam batang
-            textStyle: {
-                fontSize: 12,
-                color: '#000'
+            var options = {
+            title: 'Jumlah Temuan Per Klausul',
+            chartArea: { width: '60%' },
+            height: 500,
+            hAxis: {
+                title: 'Klausul',
             },
-            position: 'inside' // Posisikan teks annotation di tengah batang
+            vAxis: {
+                title: 'Jumlah Temuan',
+                minValue: 0
+            },
+            legend: { position: 'none' },
+            colors: ['#1f77b4'],
+            annotations: {
+                alwaysOutside: false, // Menempatkan angka di dalam batang
+                textStyle: {
+                fontSize: 14,
+                bold: true,
+                color: '#fff' // Warna teks putih agar kontras
+                }
             }
+            };
+
+            var chart = new google.visualization.ColumnChart(document.getElementById('chart-klausul'));
+            chart.draw(data, options);
+        }
+</script>
+<!-- End Jumlah Temuan -->
+
+
+<!-- Start Jumlah Temuan yang Sudah Ditutup -->
+<script>
+    google.charts.load("current", { packages: ["corechart"] });
+    google.charts.setOnLoadCallback(drawChart);
+
+    async function drawChart() {
+        // 1) Ambil array-of-arrays dari endpoint
+        const resp = await fetch('<?= base_url("aia/Dashboard/chartClose") ?>');
+        const raw  = await resp.json();
+        // raw[0] = ['Divisi','Open',{role:'annotation'},'Closed',{role:'annotation'}]
+        // raw[1…] = [ divisi, openCount, openAnn, closedCount, closedAnn ]
+
+        // 2) Definisi DataTable manual
+        const dt = new google.visualization.DataTable();
+        dt.addColumn('string','Divisi');
+        dt.addColumn('number','Open');
+        dt.addColumn({ type:'string', role:'annotation' });
+        dt.addColumn('number','Closed');
+        dt.addColumn({ type:'string', role:'annotation' });
+
+        // 3) Isi baris dengan threshold annotation ≥10%
+        for (let i = 1; i < raw.length; i++) {
+        const [ div, oVal, , cVal ] = raw[i];
+        const open   = Number(oVal) || 0;       // benar: raw[i][1]
+        const closed = Number(cVal) || 0;       // benar: raw[i][3]
+        const sum    = open + closed || 1;
+        const pct    = v => v / sum;
+
+        // hanya annotation jika ≥10%
+        const annOpen   = pct(open)   >= 0.07 ? open.toString()   : null;
+        const annClosed = pct(closed) >= 0.07 ? closed.toString() : null;
+
+        dt.addRow([ div, open, annOpen, closed, annClosed ]);
+        }
+
+        // 4) Gambar chart
+        const options = {
+        title: "Jumlah Temuan yang Sudah Ditutup",
+        chartArea: { width: "80%" },
+        height: 500,
+        isStacked: 'percent',
+        bar: { groupWidth: '40px' },
+        hAxis: { title: 'Divisi' },
+        vAxis: {
+            title: 'Persentase',
+            format: 'percent',
+            viewWindowMode: 'explicit',
+            viewWindow: { min: 0, max: 1 },
+            ticks: [0, 0.25, 0.5, 0.75, 1]
+        },
+        legend: { position: 'bottom' },
+        colors: ['#dc3912','#3366cc'],  // merah=open, biru=closed
+        annotations: {
+            alwaysOutside: false,   // di dalam batang
+            position: 'center',     // tepat di tengah segmen
+            textStyle: {
+            fontSize: 12,
+            color: '#fff',
+            auraColor: 'none'
+            }
+        }
         };
 
-        var chart = new google.visualization.ColumnChart(document.getElementById("chart-close"));
-        chart.draw(data, options);
-      }    
+        new google.visualization.ColumnChart(
+        document.getElementById("chart-close")
+        ).draw(dt, options);
+    }
 </script>
+<!-- End Chart Jumlah Temuan yang Sudah Ditutup -->
 <script>
       google.charts.load("current", { packages: ["corechart"] });
       google.charts.setOnLoadCallback(drawChart);
