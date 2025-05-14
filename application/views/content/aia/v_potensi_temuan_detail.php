@@ -170,6 +170,7 @@
                   <th>No.</th>
                   <th>HASIL RESPON / VISIT</th>
                   <th>KODE KLAUSUL</th>
+                  <th>REFERENSI KLAUSUL</th>
                   <?php if ($is_auditor) { ?>
                   <th>STATUS</th>
                   <th>KLASIFIKASI</th>
@@ -815,6 +816,11 @@ $(document).ready(function() {
         {
           data: "KODE_KLAUSUL",
           title: "KODE KLAUSUL",
+          width: '150px'
+        },
+        {
+          data: "REFERENSI_KLAUSUL",
+          title: "REFERENSI KLAUSUL",
           width: '150px'
         }
       ];

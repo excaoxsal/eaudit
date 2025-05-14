@@ -21,7 +21,8 @@ class M_potensi_temuan extends CI_Model {
             pt.FILE,
             ra.PENILAIAN AS STATUS,
             ra.KOMENTAR_1,
-            ra.KOMENTAR_2
+            ra.KOMENTAR_2,
+            pt.REFERENSI_KLAUSUL
         ');
         $this->db->from('POTENSI_TEMUAN pt');
         $this->db->join('TM_PERTANYAAN mp', 'pt.ID_PERTANYAAN = mp.ID_MASTER_PERTANYAAN', 'left');

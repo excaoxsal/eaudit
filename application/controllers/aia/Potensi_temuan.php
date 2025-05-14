@@ -52,11 +52,43 @@ class Potensi_temuan extends MY_Controller {
     public function generate($id_response_header)
     {
         // Get data from RESPONSE_AUDITEE_D
-        $this->db->where('ID_HEADER', $id_response_header);
-        $this->db->where('PENILAIAN !=', 4);
-        $this->db->where('PENILAIAN IS NOT NULL');
-        $response_detail = $this->db->get('RESPONSE_AUDITEE_D')->result_array();
+        // $this->db->select('rad.RESPONSE_AUDITEE, rad.FILE, rad.KLASIFIKASI, rad.ID_MASTER_PERTANYAAN, rad.ID_HEADER,rad.ID_JADWAL, rad.ID_RE');
+        // $this->db->where('rad.ID_HEADER', $id_response_header);
+        // $this->db->where('rad.PENILAIAN !=', 4);
+        // $this->db->where('rad.PENILAIAN IS NOT NULL');
+        // $response_detail = $this->db->from('RESPONSE_AUDITEE_D as rad')->result_array();
+        $this->db->select("
+            concat(
+                'Kode Klausul : ',
+                tp.\"KODE_KLAUSUL\",
+                ' | Lv1 : ',
+                tp.\"LV1\",
+                ' | Lv2 : ',
+                tp.\"LV2\",
+                ' '
+            ) AS \"KODE_KLAUSUL\"
+        ");
+        $this->db->select('
+            rad.RESPONSE_AUDITEE,
+            rad.FILE,
+            rad.KLASIFIKASI,
+            rad.ID_MASTER_PERTANYAAN,
+            rad.ID_HEADER,
+            rad.ID_JADWAL,
+            rad.ID_RE
+        ');
+        $this->db->from('RESPONSE_AUDITEE_D rad');
+        $this->db->join(
+            'TM_PERTANYAAN tp',
+            'rad.ID_MASTER_PERTANYAAN = tp.ID_MASTER_PERTANYAAN',
+            'inner'
+        );
+        $this->db->where('rad.ID_HEADER', $id_response_header);
+        $this->db->where('rad.PENILAIAN !=', 4);
+        $this->db->where('rad.PENILAIAN IS NOT NULL', NULL);
+        $response_detail = $this->db->get()->result_array();
 
+        // var_dump($response_detail);die;
         // Get data from VISIT_LAPANGAN
         $this->db->where('ID_RESPONSE', $id_response_header);
         $visit_temuan = $this->db->get('VISIT_LAPANGAN')->result_array();
@@ -84,7 +116,8 @@ class Potensi_temuan extends MY_Controller {
                 'ID_PERTANYAAN' => $res_d['ID_MASTER_PERTANYAAN'],
                 'ID_RESPONSE' => $id_response_header,
                 'ID_JADWAL' => $waktu_audit[0]['ID_JADWAL'], // Use the first entry from WAKTU_AUDIT
-                'ID_RE' => $res_d['ID_RE'] // Make sure this is included
+                'ID_RE' => $res_d['ID_RE'], // Make sure this is included
+                'REFERENSI_KLAUSUL' => $res_d['KODE_KLAUSUL']
             ];
         }
 
@@ -146,7 +179,7 @@ class Potensi_temuan extends MY_Controller {
             }
             
             // Ambil data klasifikasi dari item yang akan diassign
-            $this->db->select('ID_POTENSI_TEMUAN, KLASIFIKASI, HASIL_OBSERVASI');
+            $this->db->select('ID_POTENSI_TEMUAN, KLASIFIKASI, HASIL_OBSERVASI,ID_RESPONSE');
             $this->db->where_in('ID_POTENSI_TEMUAN', $item_ids);
             $items = $this->db->get('POTENSI_TEMUAN')->result_array();
             
@@ -157,6 +190,8 @@ class Potensi_temuan extends MY_Controller {
             // Tentukan klasifikasi tertinggi
             $klasifikasi_values = array_column($items, 'KLASIFIKASI');
             $highest_klasifikasi = $this->getHighestKlasifikasi($klasifikasi_values);
+            $idresponse = $items[0]['ID_RESPONSE'];
+            // var_dump($idresponse);die;
             
             // Ambil kode klausul (ambil yang pertama saja atau sesuaikan kebutuhan)
             // $kode_klausul = $items[0]['KODE_KLAUSUL'];
@@ -180,7 +215,8 @@ class Potensi_temuan extends MY_Controller {
                 $this->db->update('GROUP_POTENSI_TEMUAN', [
                     'KLASIFIKASI' => $highest_klasifikasi,
                     'URAIAN_TEMUAN' => $combined_observasi,
-                    'UPDATED_AT' => date('Y-m-d H:i:s')
+                    'UPDATED_AT' => date('Y-m-d H:i:s'),
+                    'ID_RESPONSE' => $idresponse
                 ]);
             } else {
                 // Insert baru jika group belum ada
@@ -189,9 +225,15 @@ class Potensi_temuan extends MY_Controller {
                     'KLASIFIKASI' => $highest_klasifikasi,
                     'URAIAN_TEMUAN' => $combined_observasi,
                     'CREATED_AT' => date('Y-m-d H:i:s'),
-                    'ID_JADWAL' => $id_jadwal
+                    'ID_JADWAL' => $id_jadwal,
+                    'ID_RESPONSE' => $idresponse
                 ]);
             }
+            // 3. Update GROUP_ID di TM_GROUP
+            $this->db->where('ID', $group_id);
+            $this->db->update('TM_GROUP', [
+                'ID_RESPONSE' => $idresponse
+            ]);
             
             if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();
