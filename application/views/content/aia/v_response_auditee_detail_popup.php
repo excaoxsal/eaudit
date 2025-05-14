@@ -422,6 +422,7 @@ function uploadFile(id_tl)
   }
   function penilaian(id_tl)
   {
+    console.log('ID_RE_PENILAIAN (before setting):', id_tl); // Debugging ID_RE_PENILAIAN
     $.post('<?= base_url('aia/Response_auditee/submit_penilaian/') ?>'+id_tl, function(response) {
         
     });

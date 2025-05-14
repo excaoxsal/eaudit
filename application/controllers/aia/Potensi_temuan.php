@@ -1,60 +1,52 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-use PHPExcel\PhpSpreadsheet\Spreadsheet;
-use PHPExcel\PhpSpreadsheet\Writer\Xlsx;
-use PHPExcel\Writer\Pdf\mPDF;
-use PHPExcel\PhpSpreadsheet\IOFactory;
-class potensi_temuan extends MY_Controller {
 
+class Potensi_temuan extends MY_Controller {
     public function __construct() {
         parent::__construct();
-        $this->load->library('upload');
-		$this->load->library('excel');
-		$this->load->library('Pdf');
-        $this->load->model('aia/M_potensi_temuan','M_potensi_temuan');
-        $this->load->model('aia/M_master_act','master_act');
-        $this->load->model('aia/M_res_auditee','m_res_au');
-        $this->load->model('aia/M_jadwal','m_jadwal');
-		$this->is_login();
+        $this->load->model('aia/M_potensi_temuan', 'M_potensi_temuan');
+        $this->load->model('aia/M_master_act', 'master_act');
+        $this->load->model('aia/M_res_auditee', 'm_res_au');
+        $this->is_login();
     }
 
-    // Get all data
     public function index() {
-        $datauser= $_SESSION;
-		// var_dump($datauser);die;
-		$data['list_status'] 	= $this->master_act->status();
-		$data['list_divisi'] 	= $this->m_res_au->get_divisi();
-		$data['menu']           = 'potensi-temuan';
-        $data['title']          = 'Potensi Temuan';
-        $data['subtitle']       = 'Potensi Temuan';
-        $data['content']        = 'content/aia/v_potensi_temuan_header';
-		$this->show($data);
+        $data = [
+            'list_status' => $this->master_act->status(),
+            'list_divisi' => $this->m_res_au->get_divisi(),
+            'menu' => 'potensi-temuan',
+            'title' => 'Potensi Temuan',
+            'subtitle' => 'Potensi Temuan',
+            'content' => 'content/aia/v_potensi_temuan_header'
+        ];
+        $this->show($data);
     }
 
-    // Get single data by ID
-    public function get($id) {
-        $data = $this->M_potensi_temuan->get_by_id($id);
-        echo json_encode($data);
+    public function detail_potensi($id) {
+        $id_jadwal = $this->db->select('ID_JADWAL')
+                          ->where('ID_RESPONSE', $id)
+                          ->get('POTENSI_TEMUAN')
+                          ->row()
+                          ->ID_JADWAL;
+        $data = [
+            'id_response_header' => $id,
+            'id_jadwal' => $id_jadwal,
+            'menu' => 'potensi-temuan',
+            'title' => 'Detail Potensi Temuan',
+            'subtitle' => 'Detail Potensi Temuan',
+            'content' => 'content/aia/v_potensi_temuan_detail'
+        ];
+        // echo '<pre>';
+        // print_r($this->session->userdata());
+        // echo '</pre>';
+        // exit;
+        $this->show($data);
     }
 
-    // Create new data
-    public function create() {
-        $input = $this->input->post();
-        $result = $this->M_potensi_temuan->insert($input);
-        echo json_encode(['status' => $result ? 'success' : 'error']);
-    }
-
-    // Update existing data
-    public function update($id) {
-        $input = $this->input->post();
-        $result = $this->M_potensi_temuan->update($id, $input);
-        echo json_encode(['status' => $result ? 'success' : 'error']);
-    }
-
-    // Delete data
-    public function delete($id) {
-        $result = $this->M_potensi_temuan->delete($id);
-        echo json_encode(['status' => $result ? 'success' : 'error']);
+    public function get_potensi_temuan($id_response_header) {
+        $data = $this->M_potensi_temuan->get_potensi_temuan($id_response_header);
+        $this->output_json($data ? ['status' => 'success', 'data' => $data] 
+                                : ['status' => 'error', 'message' => 'Tidak ada data potensi temuan']);
     }
 
     public function generate($id_response_header)
@@ -69,18 +61,29 @@ class potensi_temuan extends MY_Controller {
         $this->db->where('ID_RESPONSE', $id_response_header);
         $visit_temuan = $this->db->get('VISIT_LAPANGAN')->result_array();
 
+        // Get data from WAKTU_AUDIT using session ID_DIVISI
+        $id_divisi = $this->session->userdata('ID_DIVISI'); // Ambil ID_DIVISI dari session
+        $this->db->where('ID_DIVISI', $id_divisi);
+        $this->db->order_by('ID_JADWAL', 'DESC');
+        $waktu_audit = $this->db->get('WAKTU_AUDIT')->result_array();
+        // echo '<pre>';
+        // print_r($waktu_audit);
+        // echo '</pre>';
+        // exit;
+
         $insert_data = [];
 
         // Process RESPONSE_AUDITEE_D records
         foreach ($response_detail as $res_d) {
-            $hasil_observasi = $this->getHasilObservasi($res_d['PENILAIAN']);
+            // $hasil_observasi = $this->getHasilObservasi($res_d['PENILAIAN']);
             
             $insert_data[] = [
-                'HASIL_OBSERVASI' => $hasil_observasi,
+                'HASIL_OBSERVASI' => $res_d['RESPONSE_AUDITEE'],
                 'FILE' => $res_d['FILE'],
                 'KLASIFIKASI' => $res_d['KLASIFIKASI'],
                 'ID_PERTANYAAN' => $res_d['ID_MASTER_PERTANYAAN'],
                 'ID_RESPONSE' => $id_response_header,
+                'ID_JADWAL' => $waktu_audit[0]['ID_JADWAL'], // Use the first entry from WAKTU_AUDIT
                 'ID_RE' => $res_d['ID_RE'] // Make sure this is included
             ];
         }
@@ -93,6 +96,7 @@ class potensi_temuan extends MY_Controller {
                 'KLASIFIKASI' => $visit['KLASIFIKASI'],
                 'ID_PERTANYAAN' => $visit['ID_MASTER_PERTANYAAN'],
                 'ID_RESPONSE' => $id_response_header,
+                'ID_JADWAL' => $waktu_audit[0]['ID_JADWAL'], // Use the first entry from WAKTU_AUDIT
                 'ID_RE' => $visit['ID'] // Use appropriate ID field from VISIT_LAPANGAN
             ];
         }
@@ -119,66 +123,317 @@ class potensi_temuan extends MY_Controller {
         redirect(base_url('aia/potensi_temuan/index'));
     }
 
-    private function getHasilObservasi($penilaian)
-    {
-        switch ($penilaian) {
-            case 1: return 'TIDAK DIISI SAMA SEKALI';
-            case 2: return 'JAWABAN TIDAK SESUAI';
-            case 3: return 'JAWABAN BENAR, LAMPIRAN SALAH';
-            default: return '';
+    // private function getHasilObservasi($penilaian)
+    // {
+    //     switch ($penilaian) {
+    //         case 1: return 'TIDAK DIISI SAMA SEKALI';
+    //         case 2: return 'JAWABAN TIDAK SESUAI';
+    //         case 3: return 'JAWABAN BENAR, LAMPIRAN SALAH';
+    //         default: return '';
+    //     }
+    // }
+
+    public function update_group() {
+        header('Content-Type: application/json');
+        
+        try {
+            $item_ids = $this->input->post('item_ids');
+            $group_id = $this->input->post('group_id');
+            $id_jadwal = $this->input->post('id_jadwal'); // Tambahkan ini
+            
+            if (empty($item_ids) || empty($group_id)) {
+                throw new Exception("Parameter tidak lengkap");
+            }
+            
+            // Ambil data klasifikasi dari item yang akan diassign
+            $this->db->select('ID_POTENSI_TEMUAN, KLASIFIKASI, HASIL_OBSERVASI');
+            $this->db->where_in('ID_POTENSI_TEMUAN', $item_ids);
+            $items = $this->db->get('POTENSI_TEMUAN')->result_array();
+            
+            if (empty($items)) {
+                throw new Exception("Item tidak ditemukan");
+            }
+            
+            // Tentukan klasifikasi tertinggi
+            $klasifikasi_values = array_column($items, 'KLASIFIKASI');
+            $highest_klasifikasi = $this->getHighestKlasifikasi($klasifikasi_values);
+            
+            // Ambil kode klausul (ambil yang pertama saja atau sesuaikan kebutuhan)
+            // $kode_klausul = $items[0]['KODE_KLAUSUL'];
+
+            // Gabungkan semua HASIL_OBSERVASI dengan pemisah
+            $combined_observasi = implode("\n", array_column($items, 'HASIL_OBSERVASI'));
+            //print_r($combined_observasi);die();
+            
+            $this->db->trans_begin();
+            
+            // 1. Update POTENSI_TEMUAN untuk set GROUP_ID
+            $this->db->where_in('ID_POTENSI_TEMUAN', $item_ids);
+            $this->db->update('POTENSI_TEMUAN', ['GROUP_ID' => $group_id]);
+            
+            // 2. Insert atau Update ke GROUP_POTENSI_TEMUAN
+            $existing_group = $this->db->get_where('GROUP_POTENSI_TEMUAN', ['GROUP_ID' => $group_id])->row();
+
+            if ($existing_group) {
+                // Update jika group sudah ada
+                $this->db->where('GROUP_ID', $group_id);
+                $this->db->update('GROUP_POTENSI_TEMUAN', [
+                    'KLASIFIKASI' => $highest_klasifikasi,
+                    'URAIAN_TEMUAN' => $combined_observasi,
+                    'UPDATED_AT' => date('Y-m-d H:i:s')
+                ]);
+            } else {
+                // Insert baru jika group belum ada
+                $this->db->insert('GROUP_POTENSI_TEMUAN', [
+                    'GROUP_ID' => $group_id,
+                    'KLASIFIKASI' => $highest_klasifikasi,
+                    'URAIAN_TEMUAN' => $combined_observasi,
+                    'CREATED_AT' => date('Y-m-d H:i:s'),
+                    'ID_JADWAL' => $id_jadwal
+                ]);
+            }
+            
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                throw new Exception("Gagal menyimpan data");
+            }
+            
+            $this->db->trans_commit();
+            
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Item berhasil diassign ke group',
+                'highest_klasifikasi' => $highest_klasifikasi
+            ]);
+            
+        } catch (Exception $e) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
         }
     }
-   
-    function detail_potensi($id) {
-        $data['id_response_header'] = $id; // Kirim ID ke view
-        $data['menu'] = 'potensi-temuan';
-        $data['title'] = 'Detail Potensi Temuan';
-        $data['subtitle'] = 'Detail Potensi Temuan';
-        $data['content'] = 'content/aia/v_potensi_temuan_detail';
-        $this->show($data);
+    
+    private function getHighestKlasifikasi($klasifikasi_values) {
+        $priority = [
+            'MAJOR' => 3,
+            'MINOR' => 2,
+            'OBSERVASI' => 1
+        ];
+        
+        $highest = 'OBSERVASI'; // Default
+        
+        foreach ($klasifikasi_values as $klasifikasi) {
+            if (!empty($klasifikasi)) {
+                // Periksa apakah prioritas klasifikasi saat ini lebih tinggi dari $highest
+                if ($priority[strtoupper($klasifikasi)] > $priority[$highest]) {
+                    $highest = strtoupper($klasifikasi);
+                }
+            }
+        }
+        
+        return $highest;
     }
-    public function get_potensi_temuan($id_response_header) {
-        $data = $this->M_potensi_temuan->get_potensi_temuan($id_response_header);
-        // echo "<pre/>";
-        // var_dump($data);die;
-        if (!empty($data)) {
-            echo json_encode(['status' => 'success', 'data' => $data]);
-        } else {
-            echo json_encode(['status' => 'error', 'message' => 'Tidak ada data potensi temuan']);
+
+    public function get_groups() {
+        $groups = $this->M_potensi_temuan->get_master_groups();
+        $this->output_json(['status' => 'success', 'data' => $groups]);
+    }
+
+    public function get_grouped_items() {
+        header('Content-Type: application/json');
+        
+        try {
+            $this->db->select('gpt.*, g.NAME as GROUP_NAME');
+            $this->db->from('GROUP_POTENSI_TEMUAN gpt');
+            $this->db->join('TM_GROUP g', 'g.ID = gpt.GROUP_ID', 'left');
+            $this->db->where('gpt.ID_JADWAL', $this->input->get('id_jadwal'));
+            $query = $this->db->get();
+            
+            $groups['ITEMS'] = $query->result_array();
+            // PRINT_R($groups);die();
+            
+            // // Get items for each group
+            // foreach ($groups as &$group) {
+            //     $item_ids = explode(',', $group['ITEM_IDS']);
+            //     if (!empty($item_ids)) {
+            //         $this->db->select('ID, H ASIL_OBSERVASI, URAIAN_TEMUAN, REFERENSI_KLAUSUL');
+            //         $this->db->where_in('ID_POTENSI_TEMUAN', $item_ids);
+            //         $group['ITEMS'] = $this->db->get('GROUP_POTENSI_TEMUAN')->result_array();
+            //     } else {
+            //         $group['ITEMS'] = [];
+            //     }
+            // }
+            
+            echo json_encode([
+                'status' => 'success',
+                'data' => $groups
+            ]);
+            
+        } catch (Exception $e) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
         }
     }
 
-    public function update_group() {
+    public function add_group() {
+        $group_name = $this->input->post('group_name');
         
+        if (empty($group_name)) {
+            $this->output_json(['status' => 'error', 'message' => 'Group name cannot be empty']);
+            return;
+        }
+        
+        $result = $this->M_potensi_temuan->add_group($group_name);
+        $this->output_json($result ? ['status' => 'success', 'message' => 'Group added successfully']
+                                   : ['status' => 'error', 'message' => 'Failed to add group']);
+    }
+
+    // public function reset_group()
+    // {
+    //     try {
+    //         // Retrieve group ID and item IDs from POST data
+    //         $group_id = $this->input->post('group_id');
+    //         $item_ids = $this->input->post('item_ids');
+
+    //         // Validate input
+    //         if (empty($group_id) || empty($item_ids)) {
+    //             throw new Exception('Group ID or item IDs are missing.');
+    //         }
+
+    //         // Convert item IDs string to an array
+    //         $item_ids_array = explode(',', $item_ids);
+
+    //         // Update items in the database to reset their group association
+    //         $this->load->model('M_potensi_temuan');
+    //         $result = $this->M_potensi_temuan->resetGroupItems($group_id, $item_ids_array);
+
+    //         if ($result) {
+    //             // Return success response
+    //             echo json_encode([
+    //                 'status' => 'success',
+    //                 'message' => 'Group items have been successfully reset.'
+    //             ]);
+    //         } else {
+    //             throw new Exception('Failed to reset group items in the database.');
+    //         }
+    //     } catch (Exception $e) {
+    //         // Return error response
+    //         echo json_encode([
+    //             'status' => 'error',
+    //             'message' => $e->getMessage()
+    //         ]);
+    //     }
+    // }
+
+    public function reset_selected_items() {
         $item_ids = $this->input->post('item_ids');
         $group_id = $this->input->post('group_id');
         
-        if (!empty($item_ids)) {
-            $result = $this->potensi_temuan_model->update_group($item_ids, $group_id);
-            
-            if ($result) {
-                $this->output
-                    ->set_content_type('application/json')
-                    ->set_output(json_encode([
-                        'status' => 'success',
-                        'message' => 'Group updated successfully'
-                    ]));
-            } else {
-                $this->output
-                    ->set_content_type('application/json')
-                    ->set_output(json_encode([
-                        'status' => 'error',
-                        'message' => 'Failed to update group'
-                    ]));
+            // Update all selected items to have GROUP_ID = NULL
+            $this->db->where_in('ID_POTENSI_TEMUAN', $item_ids)
+                    ->update('POTENSI_TEMUAN', ['GROUP_ID' => NULL]);
+        
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'Selected items reset successfully'
+        ]);
+    }
+
+    public function reset_group() {
+        header('Content-Type: application/json');
+        
+        try {
+            $group_id = $this->input->post('group_id');
+    
+            if (empty($group_id)) {
+                throw new Exception("Group ID tidak boleh kosong");
             }
-        } else {
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode([
-                    'status' => 'error',
-                    'message' => 'No items selected'
-                ]));
+    
+            $this->db->trans_begin();
+    
+            // 1. Update GROUP_ID menjadi NULL di POTENSI_TEMUAN
+            $this->db->where('GROUP_ID', $group_id);
+            $this->db->update('POTENSI_TEMUAN', ['GROUP_ID' => null]);
+    
+            // 2. Hapus dari GROUP_POTENSI_TEMUAN
+            $this->db->where('GROUP_ID', $group_id);
+            $this->db->delete('GROUP_POTENSI_TEMUAN');
+    
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                throw new Exception("Gagal mereset group");
+            }
+    
+            $this->db->trans_commit();
+    
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Group berhasil direset',
+                'data' => [
+                    'group_id' => $group_id,
+                    'affected_rows' => $this->db->affected_rows()
+                ]
+            ]);
+    
+        } catch (Exception $e) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'data' => []
+            ]);
         }
     }
 
+    public function delete_group() {
+        header('Content-Type: application/json');
+        
+        try {
+            $group_id = $this->input->post('group_id');
+    
+            if (empty($group_id)) {
+                throw new Exception("Group ID tidak boleh kosong");
+            }
+    
+            $this->db->trans_begin();
+    
+            // 1. Reset GROUP_ID di POTENSI_TEMUAN
+            $this->db->where('GROUP_ID', $group_id);
+            $this->db->update('POTENSI_TEMUAN', ['GROUP_ID' => null]);
+    
+            // 2. Hapus dari GROUP_POTENSI_TEMUAN
+            $this->db->where('GROUP_ID', $group_id);
+            $this->db->delete('GROUP_POTENSI_TEMUAN');
+    
+            // 3. Hapus dari TM_GROUP
+            $this->db->where('ID', $group_id);
+            $this->db->delete('TM_GROUP');
+    
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                throw new Exception("Gagal menghapus group");
+            }
+    
+            $this->db->trans_commit();
+    
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Group berhasil dihapus',
+                'data' => [] // Pastikan ada property data
+            ]);
+    
+        } catch (Exception $e) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'data' => [] // Pastikan ada property data
+            ]);
+        }
+    }
+
+    private function output_json($data) {
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
 }

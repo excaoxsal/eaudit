@@ -3,14 +3,14 @@
   .table-container {
     max-height: 70vh;
     border: 1px solid #ebedf3;
+    margin-bottom: 20px;
   }
   
-  #potensiTemuanTable {
+  #potensiTemuanTable, .grouped-master-table {
     min-width: 100%;
-    white-space: nowrap;
   }
   
-  #potensiTemuanTable thead th {
+  #potensiTemuanTable thead th, .grouped-master-table thead th {
     position: sticky;
     top: 0;
     background: #f8f9fa;
@@ -21,22 +21,110 @@
     background: #3699ff;
     color: white;
   }
-  
-  /* Grouping Controls */
-  #grouping-controls {
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 5px;
-    margin-bottom: 20px;
+
+  .btn-warning {
+    color: #212529;
+    background-color: #ffc107;
+    border-color: #ffc107;
+  }
+
+  .btn-warning:hover {
+    color: #212529;
+    background-color: #e0a800;
+    border-color: #d39e00;
   }
   
-  .w-200px {
-    width: 200px;
+  /* Group Table Styles */
+  .grouped-master-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+  }
+
+  .grouped-master-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #3699ff;
+  }
+
+  .observasi-container {
+    max-height: 120px;
+    overflow-y: auto;
+    padding: 5px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    border: 1px solid #eee;
+  }
+
+  .observasi-container ul {
+    padding-left: 20px;
+    margin-bottom: 0;
+  }
+
+  .observasi-container li {
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+  }
+
+  /* Badge Styles */
+  .badge {
+    font-size: 0.8em;
+    font-weight: 500;
+    padding: 4px 8px;
+  }
+
+  .badge-danger {
+    background-color: #dc3545;
+  }
+
+  .badge-warning {
+    background-color: #ffc107;
+    color: #212529;
+  }
+
+  .badge-info {
+    background-color: #17a2b8;
+  }
+
+  .badge-secondary {
+    background-color: #6c757d;
+  }
+
+  /* Status Select Colors */
+  .status-red {
+    background-color: #ff4d4f;
+    color: white;
+  }
+
+  .status-orange {
+    background-color: #ffa500;
+    color: white;
+  }
+
+  .status-green {
+    background-color: #28a745;
+    color: white;
+  }
+
+  .status-blue {
+    background-color: #007bff;
+    color: white;
   }
   
-  /* Alert Styling */
-  .alert {
-    margin-bottom: 20px;
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .table-container {
+      max-height: 50vh;
+    }
+    
+    #grouping-controls .d-flex {
+      flex-wrap: wrap;
+    }
+    
+    .group-btn {
+      margin-bottom: 8px;
+    }
   }
 </style>
 
@@ -54,67 +142,46 @@
   <div class="d-flex flex-column-fluid">
     <div class="container">
       <div class="card card-custom">
-        <div class="card-header flex-wrap border-0 pt-6 pb-0">
-          <div class="card-title">
-            <h3 class="card-label">List <?= $subtitle ?></h3>
-          </div>
-        </div>
-        
         <div class="card-body">
-          <?php if ($this->session->flashdata('error')): ?>
-            <div class="alert alert-danger alert-dismissible">
-              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-              <h4><i class="icon fa fa-ban text-white"></i> Error!</h4>
-              <?= $this->session->flashdata('error'); ?>
-            </div>
-          <?php endif; ?>
-          
-          <?php if ($this->session->flashdata('success')): ?>
-            <div class="alert alert-success alert-dismissible">
-              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-              <h6><i class="icon fa fa-check text-white"></i> Success!</h6>
-              <?= $this->session->flashdata('success'); ?>
-            </div>
-          <?php endif; ?>
-          
           <!-- Grouping Controls -->
           <div id="grouping-controls" class="mb-5">
-            <div class="d-flex align-items-center">
-              <select id="group-select" class="form-control form-control-sm w-200px mr-3">
+            <div class="d-flex align-items-center flex-wrap">
+              <select id="group-select" class="form-control form-control-sm w-200px group-btn">
                 <option value="">-- Pilih Group --</option>
-                <option value="1">Group 1</option>
-                <option value="2">Group 2</option>
-                <option value="3">Group 3</option>
               </select>
-              <button id="assign-group-btn" class="btn btn-sm btn-success">Assign to Group</button>
-              <button id="reset-group-btn" class="btn btn-sm btn-danger ml-2">Reset Group</button>
+              <button id="add-group-btn" class="btn btn-sm btn-info group-btn">
+                <i class="fas fa-plus"></i> Tambah Group
+              </button>
+              <button id="assign-group-btn" class="btn btn-sm btn-success group-btn">
+                <i class="fas fa-object-group"></i> Assign to Group
+              </button>
             </div>
           </div>
           
-          <!-- Table Container with Scroll -->
+          <!-- Main Table -->
+          <div class="d-flex align-items-center flex-wrap">
+              <div class="grouped-master-title">TABEL UTAMA</div>
+            </div>
           <div class="table-container">
             <table id="potensiTemuanTable" class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">
               <thead>
                 <tr>
-                  <th>No.</th>
-                  <th>Potensti Temuan</th>
-                  <th>Pertanyaan</th>
-                  <th>Kode Klausul</th>
-                  <th>Response Auditee</th>
-                  <th>Komentar Auditor</th>
-                  <th>Komentar Auditee</th>
-                  <th>File</th>
-                  <?php if ($is_auditor) { ?>
-                    <th>Status</th>
-                    <th>Klasifikasi</th>
-                    <th>Group</th>
-                  <?php } ?>
                   <th width="20"><input type="checkbox" id="select-all"></th>
+                  <th>No.</th>
+                  <th>HASIL RESPON / VISIT</th>
+                  <th>KODE KLAUSUL</th>
+                  <?php if ($is_auditor) { ?>
+                  <th>STATUS</th>
+                  <th>KLASIFIKASI</th>
+                  <?php } ?>
                 </tr>
               </thead>
               <tbody></tbody>
             </table>
           </div>
+          
+          <!-- This div will contain our dynamically added grouped master tables -->
+          <div id="groupedMasterContainer"></div>
         </div>
       </div>
     </div>
@@ -123,236 +190,690 @@
 
 <script>
 $(document).ready(function() {
-  // Initialize DataTable with scroll options
-  const table = $('#potensiTemuanTable').DataTable({
-    ajax: {
-      url: '<?= base_url("aia/Potensi_temuan/get_potensi_temuan/") ?>' + <?= $id_response_header ?>,
-      dataSrc: function(json) {
-        if (json.status === 'success') {
-          json.data.forEach(function(item) {
-            item.GROUP_ID = item.GROUP_ID || 0;
-          });
-          return json.data;
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: json.message
-          });
-          return [];
+  class GroupManager {
+    constructor() {
+      this.groupList = [];
+      this.groupedMasterTable = null;
+      this.currentGroupedItems = [];
+    }
+
+    // Load all available groups
+    async loadGroups() {
+      try {
+        const response = await $.ajax({
+          url: '<?= base_url("aia/potensi_temuan/get_groups") ?>',
+          method: 'GET',
+          dataType: 'json'
+        });
+
+        if (response.status === 'success') {
+          this.groupList = response.data;
+          this.updateGroupDropdown();
+          return response.data;
         }
+        throw new Error(response.message || 'Failed to load groups');
+      } catch (error) {
+        console.error('Error loading groups:', error);
+        throw error;
       }
-    },
-    scrollX: true,
-    scrollY: '70vh',
-    scrollCollapse: true,
-    fixedHeader: true,
-    columns: [
-      {
-        data: null,
-        title: "No.",
-        width: 50,
-        render: function(data, type, row, meta) {
-          return meta.row + 1;
+    }
+
+    // Load grouped items from backend
+    async loadGroupedItems() {
+      try {
+        const response = await $.ajax({
+          url: '<?= base_url("aia/potensi_temuan/get_grouped_items") ?>',
+          method: 'GET',
+          dataType: 'json',
+          data: { id_jadwal: <?= json_encode($id_jadwal); ?> }
+        });
+
+        if (response.status === 'success') {
+          // Pastikan mengakses array dari atribut 'ITEMS'
+      this.currentGroupedItems = response.data.ITEMS || []; // Default ke array kosong jika undefined
+      return this.currentGroupedItems;
         }
-      },
-      {
-        data: "ID_POTENSI_TEMUAN",
-        title: "POTENSI TEMUAN",
-        width: 300,
-        render: function(data) {
-          return `<span>${data}</span>`;
+        throw new Error(response.message || 'Failed to load grouped items');
+      } catch (error) {
+        console.error('Error loading grouped items:', error);
+        throw error;
+      }
+    }
+
+    async resetGroup(groupId) {
+        try {
+            const response = await $.ajax({
+                url: '<?= base_url("aia/potensi_temuan/reset_group") ?>',
+                method: 'POST',
+                dataType: 'json',
+                data: { group_id: groupId }
+            });
+
+            if (response.status !== 'success') {
+                throw new Error(response.message || 'Failed to reset group');
+            }
+            return response;
+        } catch (error) {
+            console.error('Error resetting group:', error);
+            throw error;
         }
-      },
-      {
-        data: "PERTANYAAN",
-        title: "PERTANYAAN",
-        width: 300,
-        render: function(data) {
-          return `<span>${data}</span>`;
+    }
+
+    // Update group dropdown selector
+    updateGroupDropdown() {
+      const $groupSelect = $('#group-select')
+        .empty()
+        .append('<option value="">-- Pilih Group --</option>');
+      
+      this.groupList.forEach(group => {
+        $groupSelect.append(`<option value="${group.ID}">${group.NAME}</option>`);
+      });
+    }
+
+    // Initialize or refresh the grouped items table
+    async initGroupedTable() {
+      try {
+        await this.loadGroupedItems();
+        
+        // Destroy existing table if any
+        if (this.groupedMasterTable) {
+          this.groupedMasterTable.destroy();
+          $('#groupedMasterTable').remove();
         }
-      },
-      {
-        data: "KODE_KLAUSUL",
-        title: "KODE KLAUSUL",
-        width: 200,
-        render: function(data) {
-          return `<span>${data}</span>`;
+
+        // Create table structure
+        const tableHTML = `
+          <div class="grouped-master-section">
+            <div class="d-flex align-items-center flex-wrap">
+              <div class="grouped-master-title">TABEL GROUP</div>
+            </div>
+            <div class="table-container">
+              <table id="groupedMasterTable" class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">
+                <thead>
+                  <tr>
+                    <th>No.</th>
+                    <th>GROUP</th>
+                    <th>KLASIFIKASI</th>
+                    <th>URAIAN TEMUAN</th>
+                    <th>KODE KLAUSUL</th>
+                    <th>AKSI</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        `;
+        
+        $('#groupedMasterContainer').html(tableHTML);
+
+        // Initialize DataTable
+        this.groupedMasterTable = $('#groupedMasterTable').DataTable({
+          data: this.prepareTableData(),
+          columns: this.getTableColumns(),
+          scrollX: true,
+          scrollY: '50vh',
+          scrollCollapse: true,
+          createdRow: (row, data) => {
+            $(row).attr('data-group-id', data.groupId);
+          }
+        });
+
+      } catch (error) {
+        console.error('Error initializing grouped table:', error);
+        throw error;
+      }
+    }
+
+    // Prepare data for DataTable
+    prepareTableData() {
+      // Validasi bahwa currentGroupedItems adalah array
+      if (!Array.isArray(this.currentGroupedItems)) {
+        console.error('currentGroupedItems is not an array:', this.currentGroupedItems);
+        return [];
+      }
+
+      return this.currentGroupedItems.map((group, index) => ({
+        id: index + 1,
+        groupId: group.GROUP_ID,
+        groupName: group.GROUP_NAME,
+        klasifikasi: group.KLASIFIKASI,
+        itemCount: group.ITEMS ? group.ITEMS.length : 0,
+        uraianTemuan: (group.URAIAN_TEMUAN || '-').replace(/\n/g, '<br>'), // Ganti \n dengan <br>
+        kodeKlausul: (group.ITEMS && group.ITEMS.length > 0) ? group.ITEMS[0].KODE_KLAUSUL : ''
+      }));
+    }
+
+    // Define table columns
+    getTableColumns() {
+      return [
+        { 
+          data: 'id',
+          className: 'text-center',
+          width: '50px'
+        },
+        { 
+          data: 'groupName',
+          render: (data, type, row) => `<strong>${data}</strong>`
+        },
+        { 
+          data: 'klasifikasi',
+          className: 'text-center',
+          render: (data) => `
+            <span class="badge ${this.getKlasifikasiClass(data)}">
+              ${data}
+            </span>
+          `
+        },
+        { 
+            data: 'uraianTemuan', // Tambahkan kolom ini
+            render: (data) => `
+                <div class="uraian-temuan-container">
+                    ${data || '-'}
+                </div>
+            `
+        },
+        { 
+          data: 'kodeKlausul',
+          className: 'text-center'
+        },
+        { 
+          data: 'groupId',
+          className: 'text-center',
+          render: (data) => `
+            <button class="btn btn-sm btn-warning reset-group-btn mr-1" data-group-id="${data}" title="Reset Group">
+                <i class="fas fa-undo"></i>
+            </button>
+            <button class="btn btn-sm btn-danger delete-group-btn" data-group-id="${data}">
+              <i class="fas fa-trash"></i>
+            </button>
+          `,
+          orderable: false
         }
-      },
-      {
-        data: "RESPONSE_AUDITEE",
-        title: "RESPONSE AUDITEE",
-        width: 300,
-        render: function(data, type, row) {
-          return `<input type="text" class="form-control response-auditee-input" 
-                  data-id="${row.ID_RE}" value="${data ? data : ''}" />`;
+      ];
+    }
+
+    // Format observasi items as HTML
+    formatObservasi(items) {
+      if (!items || items.length === 0) return '-';
+      
+      const limitedItems = items.slice(0, 3); // Show max 3 items
+      let html = '<ul class="mb-0">';
+      
+      limitedItems.forEach(item => {
+        html += `<li>${item.URAIAN_TEMUAN}</li>`;
+      });
+      
+      if (items.length > 3) {
+        html += `<li class="text-muted">+ ${items.length - 3} item lainnya</li>`;
+      }
+      
+      html += '</ul>';
+      return html;
+    }
+
+    // Get CSS class for klasifikasi badge
+    getKlasifikasiClass(klasifikasi) {
+      const classes = {
+        'MAJOR': 'badge-danger',
+        'MINOR': 'badge-warning',
+        'OBSERVASI': 'badge-info'
+      };
+      return classes[klasifikasi] || 'badge-secondary';
+    }
+
+    // Assign items to a group
+    async assignToGroup(itemIds, groupId, idJadwal) {
+      try {
+        if (!itemIds.length) throw new Error('No items selected');
+        if (!groupId) throw new Error('No group selected');
+
+        const response = await $.ajax({
+          url: '<?= base_url("aia/potensi_temuan/update_group") ?>',
+          method: 'POST',
+          dataType: 'json',
+          data: { 
+            item_ids: itemIds, 
+            group_id: groupId,
+            id_jadwal: idJadwal
+          }
+        });
+
+        if (response.status !== 'success') {
+          throw new Error(response.message || 'Failed to assign items to group');
         }
-      },
-      {
-        data: "KOMENTAR_1",
-        title: "KOMENTAR AUDITOR",
-        width: 300,
-        render: function(data, type, row) {
-          return `<input type="text" class="form-control response-auditee-input" 
-                  data-id="${row.ID_RE}" value="${data ? data : ''}" />`;
+        return response;
+      } catch (error) {
+        console.error('Error assigning to group:', error);
+        throw error;
+      }
+    }
+
+    // Delete a group
+    async deleteGroup(groupId) {
+      try {
+          const response = await $.ajax({
+              url: '<?= base_url("aia/potensi_temuan/delete_group") ?>',
+              method: 'POST',
+              dataType: 'json',
+              data: { group_id: groupId }
+          });
+
+          // Pastikan response memiliki struktur yang konsisten
+          if (response && response.status === 'success') {
+              return response;
+          }
+          
+          throw new Error(response.message || 'Invalid response from server');
+      } catch (error) {
+          console.error('Error deleting group:', error);
+          throw error;
+      }
+    }
+  }
+
+  class AppController {
+    constructor() {
+      this.groupManager = new GroupManager();
+      this.potensiTemuanTable = null;
+      this.currentItemData = [];
+    }
+
+    // Initialize the application
+    async init() {
+      try {
+        await this.initDataTables();
+        this.setupEventListeners();
+        await this.loadInitialData();
+      } catch (error) {
+        this.showError('Gagal memulai aplikasi: ' + error.message);
+      }
+    }
+
+    // Initialize main data table
+    async initDataTables() {
+      try {
+        const response = await $.ajax({
+          url: `<?= base_url("aia/potensi_temuan/get_potensi_temuan/") ?>${<?= $id_response_header ?>}`,
+          method: 'GET',
+          dataType: 'json'
+        });
+
+        this.currentItemData = this.processItemData(response);
+        
+        this.potensiTemuanTable = $('#potensiTemuanTable').DataTable({
+          data: this.getUngroupedItems(),
+          columns: this.getPotensiTemuanColumns(),
+          scrollX: true,
+          scrollY: '50vh',
+          scrollCollapse: true,
+          createdRow: (row, data) => {
+            $(row).attr('data-id', data.ID_POTENSI_TEMUAN);
+          }
+        });
+      } catch (error) {
+        console.error('Error initializing main table:', error);
+        throw error;
+      }
+    }
+
+    // Process item data from backend
+    processItemData(response) {
+      if (response.status !== 'success') {
+        throw new Error(response.message || 'Invalid response format');
+      }
+      
+      return response.data.map(item => ({
+        ...item,
+        GROUP_ID: item.GROUP_ID || 0
+      }));
+    }
+
+    // Get ungrouped items only
+    getUngroupedItems() {
+      return this.currentItemData.filter(item => !item.GROUP_ID || item.GROUP_ID == 0);
+    }
+
+    // Load initial data
+    async loadInitialData() {
+      try {
+        await this.groupManager.loadGroups();
+        await this.groupManager.initGroupedTable();
+      } catch (error) {
+        this.showError('Gagal memuat data awal: ' + error.message);
+      }
+    }
+
+    // Get selected items from main table
+    getSelectedItems() {
+      return $('.row-checkbox:checked').map(function() {
+        return $(this).data('id');
+      }).get();
+    }
+
+    // Setup all event listeners
+    setupEventListeners() {
+      // Group management buttons
+      $('#add-group-btn').click(() => this.handleAddGroup());
+      $('#assign-group-btn').click(() => this.handleAssignToGroup());
+      
+      // Group table actions
+      $(document).on('click', '.delete-group-btn', (e) => this.handleDeleteGroup(e));
+      $(document).on('click', '.reset-group-btn', (e) => {
+        const groupId = $(e.currentTarget).data('group-id');
+        this.handleResetGroup(groupId);
+      });
+      
+      // Checkbox controls
+      $('#select-all').change((e) => {
+        $('.row-checkbox').prop('checked', e.target.checked);
+      });
+      
+      // Status select styling
+      $(document).on('change focus', '.status-select', function() {
+        const value = $(this).val();
+        $(this).removeClass('status-red status-orange status-green status-blue');
+        
+        if (value == "1") $(this).addClass('status-red');
+        else if (value == "2") $(this).addClass('status-orange');
+        else if (value == "3") $(this).addClass('status-green');
+        else if (value == "4") $(this).addClass('status-blue');
+      });
+    }
+
+    // Handle assign to group action
+    async handleAssignToGroup() {
+      try {
+        const selectedItems = this.getSelectedItems();
+        const groupId = $('#group-select').val();
+        const idJadwal = <?= json_encode($id_jadwal); ?>;
+        
+        if (!selectedItems.length) {
+          throw new Error('Pilih setidaknya satu item');
         }
-      },
-      {
-        data: "KOMENTAR_2",
-        title: "KOMENTAR AUDITEE",
-        width: 300,
-        render: function(data, type, row) {
-          return `<input type="text" class="form-control response-auditee-input" 
-                  data-id="${row.ID_RE}" value="${data ? data : ''}" />`;
+        if (!groupId) {
+          throw new Error('Pilih group terlebih dahulu');
         }
-      },
-      {
-        data: "FILE",
-        title: "FILE",
-        width: 200,
-        render: function(data, type, row) {
-          return `
-            <input type="file" class="file-upload-input" data-id="${row.ID_RE}" />
-            <a href="${data ? data : '#'}" target="_blank" 
-               class="btn btn-sm btn-primary mt-2" 
-               ${data ? '' : 'style="display:none"'}>Download</a>
-          `;
+        
+        const confirmed = await this.showConfirmation(
+          'Konfirmasi',
+          `Assign ${selectedItems.length} item ke group ini?`
+        );
+        
+        if (!confirmed) return;
+
+        await this.groupManager.assignToGroup(selectedItems, groupId, idJadwal);
+        
+        // Update local data
+        this.currentItemData.forEach(item => {
+          if (selectedItems.includes(item.ID_POTENSI_TEMUAN)) {
+            item.GROUP_ID = groupId;
+          }
+        });
+
+        this.showSuccess(`${selectedItems.length} item berhasil diassign ke group`);
+        
+        // Refresh main table dengan cara yang benar
+        await this.refreshMainTable();
+        
+        await this.groupManager.initGroupedTable();
+      } catch (error) {
+        this.showError(error.message);
+      }
+    }
+
+    async handleResetGroup(groupId) {
+        try {
+            const confirmed = await this.showConfirmation(
+                'Konfirmasi Reset Group',
+                'Reset group ini akan menghapus dari daftar group tetapi tetap mempertahankan group di master. Lanjutkan?'
+            );
+            
+            if (!confirmed) return;
+
+            const response = await this.groupManager.resetGroup(groupId);
+            
+            this.showSuccess('Group berhasil direset');
+            
+            // Refresh data
+            await this.refreshAllData();
+            
+        } catch (error) {
+            this.showError('Gagal mereset group: ' + error.message);
         }
-      },
+    }
+
+    async refreshAllData() {
+        try {
+            // Refresh main table
+            await this.refreshMainTable();
+            
+            // Refresh grouped table
+            await this.groupManager.initGroupedTable();
+            
+        } catch (error) {
+            console.error('Error refreshing data:', error);
+            this.showError('Gagal memuat ulang data');
+        }
+    }
+
+    // Handle delete group action
+    async handleDeleteGroup(e) {
+      try {
+          const groupId = $(e.currentTarget).data('group-id');
+          
+          const confirmed = await this.showConfirmation(
+              'Konfirmasi',
+              'Hapus group ini? Semua item akan dikembalikan ke tabel utama.'
+          );
+          
+          if (!confirmed) return;
+
+          // Kirim request delete
+          const response = await this.groupManager.deleteGroup(groupId);
+          
+          if (response.status === 'success') {
+              this.showSuccess('Group berhasil dihapus');
+              
+              // Refresh grouped table
+              await this.groupManager.initGroupedTable();
+              
+              // Refresh main table dengan cara yang benar
+              await this.refreshMainTable();
+              
+              await this.groupManager.loadGroups();
+          } else {
+              throw new Error(response.message || 'Gagal menghapus group');
+          }
+      } catch (error) {
+          this.showError(error.message);
+      }
+    }
+
+    async refreshMainTable() {
+      try {
+          const response = await $.ajax({
+              url: `<?= base_url("aia/potensi_temuan/get_potensi_temuan/") ?>${<?= $id_response_header ?>}`,
+              method: 'GET',
+              dataType: 'json'
+          });
+
+          if (response.status === 'success') {
+              this.currentItemData = response.data.map(item => ({
+                  ...item,
+                  GROUP_ID: item.GROUP_ID || 0
+              }));
+              
+              // Hancurkan dan buat ulang DataTable
+              this.potensiTemuanTable.destroy();
+              
+              this.potensiTemuanTable = $('#potensiTemuanTable').DataTable({
+                  data: this.getUngroupedItems(),
+                  columns: this.getPotensiTemuanColumns(),
+                  scrollX: true,
+                  scrollY: '50vh',
+                  scrollCollapse: true,
+                  createdRow: (row, data) => {
+                      $(row).attr('data-id', data.ID_POTENSI_TEMUAN);
+                  }
+              });
+          } else {
+              throw new Error(response.message || 'Gagal memuat data');
+          }
+      } catch (error) {
+          console.error('Error refreshing main table:', error);
+          this.showError('Gagal memuat ulang data tabel utama');
+      }
+    }
+
+    // Handle add new group
+    async handleAddGroup() {
+      try {
+        const { value: groupName } = await Swal.fire({
+          title: 'Tambah Group Baru',
+          input: 'text',
+          inputPlaceholder: 'Nama Group',
+          showCancelButton: true,
+          inputValidator: (value) => !value && 'Nama group tidak boleh kosong!'
+        });
+
+        if (!groupName) return;
+
+        const response = await $.ajax({
+          url: '<?= base_url("aia/potensi_temuan/add_group") ?>',
+          method: 'POST',
+          dataType: 'json',
+          data: { group_name: groupName }
+        });
+
+        if (response.status === 'success') {
+          this.showSuccess('Group berhasil ditambahkan');
+          await this.groupManager.loadGroups();
+        } else {
+          throw new Error(response.message);
+        }
+      } catch (error) {
+        this.showError(error.message);
+      }
+    }
+
+    // Show confirmation dialog
+    async showConfirmation(title, text) {
+      const result = await Swal.fire({
+        title,
+        text,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33'
+      });
+      return result.isConfirmed;
+    }
+
+    // Show success message
+    showSuccess(message) {
+      Swal.fire({
+        title: 'Berhasil',
+        text: message,
+        icon: 'success',
+        timer: 2000,
+        showConfirmButton: false
+      });
+    }
+
+    // Show error message
+    showError(message) {
+      Swal.fire({
+        title: 'Error',
+        text: message,
+        icon: 'error'
+      });
+    }
+
+    // Get columns for main table
+    getPotensiTemuanColumns() {
+      const columns = [
+        { 
+          data: null,
+          title: "<input type='checkbox' id='select-all'>",
+          orderable: false,
+          width: '20px',
+          render: (data) => `
+            <input type="checkbox" class="row-checkbox" data-id="${data.ID_POTENSI_TEMUAN}">
+          `
+        },
+        {
+          data: null,
+          title: "No.",
+          width: '50px',
+          render: (data, type, row, meta) => meta.row + 1
+        },
+        {
+          data: "HASIL_OBSERVASI",
+          title: "HASIL RESPON / VISIT"
+        },
+        {
+          data: "KODE_KLAUSUL",
+          title: "KODE KLAUSUL",
+          width: '150px'
+        }
+      ];
+
       <?php if ($is_auditor) { ?>
-      {
-        data: "STATUS",
-        title: "Status",
-        width: 150,
-        render: function(data, type, row) {
-          return `
+      columns.push(
+        {
+          data: "STATUS",
+          title: "STATUS",
+          width: '200px',
+          render: (data, type, row) => `
             <select class="form-control status-select" data-id="${row.ID_RE}">
-              <option value="" ${data == null || data === "" ? "selected" : ""}>-- Pilih Status --</option>
+              <option value="" ${!data ? "selected" : ""}>-- Pilih Status --</option>
               <option value="1" ${data == 1 ? "selected" : ""}>TIDAK DIISI SAMA SEKALI</option>
               <option value="2" ${data == 2 ? "selected" : ""}>JAWABAN TIDAK SESUAI</option>
               <option value="3" ${data == 3 ? "selected" : ""}>JAWABAN BENAR, LAMPIRAN SALAH</option>
               <option value="4" ${data == 4 ? "selected" : ""}>JAWABAN DAN LAMPIRAN SESUAI</option>
             </select>
-          `;
-        }
-      },
-      {
-        data: "KLASIFIKASI",
-        title: "Klasifikasi",
-        width: 150,
-        render: function(data, type, row) {
-          return `
-            <select class="form-control" name="KLASIFIKASI" data-id="${row.ID_RE}">
-              <option value="" ${data == null || data === "" ? "selected" : ""}>-- Pilih Klasifikasi --</option>
+          `
+        },
+        {
+          data: "KLASIFIKASI",
+          title: "KLASIFIKASI",
+          width: '150px',
+          render: (data, type, row) => `
+            <select class="form-control klasifikasi-select" data-id="${row.ID_RE}">
+              <option value="" ${!data ? "selected" : ""}>-- Pilih Klasifikasi --</option>
               <option value="MAJOR" ${data == 'MAJOR' ? 'selected' : ''}>MAJOR</option>
               <option value="MINOR" ${data == 'MINOR' ? 'selected' : ''}>MINOR</option>
               <option value="OBSERVASI" ${data == 'OBSERVASI' ? 'selected' : ''}>OBSERVASI</option>
             </select>
-          `;
+          `
         }
-      },
-      {
-        data: "GROUP_ID",
-        title: "Group",
-        width: 100,
-        render: function(data, type, row) {
-          const groupId = data || 0;
-          return `
-            <span class="badge ${groupId == 0 ? 'badge-light' : 'badge-primary'}">
-              ${groupId == 0 ? 'Ungrouped' : 'Group '+groupId}
-            </span>
-          `;
-        }
-      },
+      );
       <?php } ?>
-      {
-        data: null,
-        title: "<input type='checkbox' id='select-all'>",
-        width: 20,
-        orderable: false,
-        render: function(data, type, row) {
-          return `<input type="checkbox" 
-                        class="row-checkbox" 
-                        data-potensi-id="${row.ID_POTENSI_TEMUAN}">`;
-        }
-      }
-    ],
-    createdRow: function(row, data, dataIndex) {
-      $(row).attr('data-id', data.ID_RE)
-            .attr('data-group-id', data.GROUP_ID || 0);
-      
-      if (data.GROUP_ID > 0) {
-        $(row).addClass('group-' + data.GROUP_ID);
-      }
+
+      return columns;
     }
-  });
-  
-  // Grouping Functionality
-  <?php if ($is_auditor) { ?>
-  $('#select-all').click(function() {
-    $('.row-checkbox').prop('checked', this.checked);
-  });
-  
-  $('#assign-group-btn').click(function() {
-    const selectedItems = [];
-    $('.row-checkbox:checked').each(function() {
-      selectedItems.push({
-        id_re: $(this).data('id'),                       // ID_RE
-        id_potensi_temuan: $(this).data('potensi-id')    // ID_POTENSI_TEMUAN
-      });
-    });
-    
-    const groupId = $('#group-select').val();
-    
-    if (selectedItems.length === 0) {
-      Swal.fire('Error', 'Please select at least one item', 'error');
-      return;
-    }
-    
-    if (!groupId) {
-      Swal.fire('Error', 'Please select a group', 'error');
-      return;
-    }
-    
-    assignToGroup(selectedItems, groupId);
-  });
-  
-  $('#reset-group-btn').click(function() {
-    const selectedItems = [];
-    $('.row-checkbox:checked').each(function() {
-      selectedItems.push($(this).data('id'));
-    });
-    
-    if (selectedItems.length === 0) {
-      Swal.fire('Error', 'Please select at least one item', 'error');
-      return;
-    }
-    
-    assignToGroup(selectedItems, 0);
-  });
-  
-  function assignToGroup(itemIds, groupId) {
-    $.ajax({
-      url: '<?= base_url("aia/Potensi_temuan/update_group") ?>',
-      method: 'POST',
-      data: {
-        item_ids: itemIds,
-        group_id: groupId
-      },
-      success: function(response) {
-        if (response.status === 'success') {
-          Swal.fire('Success', 'Items grouped successfully', 'success');
-          table.ajax.reload();
-        } else {
-          Swal.fire('Error', response.message, 'error');
-        }
-      },
-      error: function() {
-        Swal.fire('Error', 'Failed to update group', 'error');
-      }
-    });
   }
-  <?php } ?>
+
+  // Initialize the application
+  const appController = new AppController();
+  appController.init();
+});
+$(document).on('change focus', '.status-select', function () {
+  const selectedValue = $(this).val();
+
+  // Reset semua kelas warna sebelumnya
+  $(this).removeClass('status-red status-orange status-green status-blue');
+
+  // Tambahkan warna berdasarkan nilai yang dipilih
+  if (selectedValue == "1") {
+    $(this).addClass('status-red'); // Warna merah
+  } else if (selectedValue == "2") {
+    $(this).addClass('status-orange'); // Warna oranye
+  } else if (selectedValue == "3") {
+    $(this).addClass('status-green'); // Warna hijau
+  } else if (selectedValue == "4") {
+    $(this).addClass('status-blue'); // Warna biru
+  }
 });
 </script>
