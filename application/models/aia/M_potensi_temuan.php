@@ -22,7 +22,7 @@ class M_potensi_temuan extends CI_Model {
             ra.PENILAIAN AS STATUS,
             ra.KOMENTAR_1,
             ra.KOMENTAR_2,
-            pt.REFERENSI_KLAUSUL
+            pt.KODE_KLAUSUL
         ');
         $this->db->from('POTENSI_TEMUAN pt');
         $this->db->join('TM_PERTANYAAN mp', 'pt.ID_PERTANYAAN = mp.ID_MASTER_PERTANYAAN', 'left');
@@ -63,9 +63,10 @@ class M_potensi_temuan extends CI_Model {
         return $this->db->get_where($this->group_table, ['DELETED_AT' => null])->result_array();
     }
     
-    public function add_group($group_name) {
+    public function add_group($group_name,$id_response_header) {
         $data = [
             'NAME' => $group_name,
+            'ID_RESPONSE' => $id_response_header,
             'CREATED_AT' => date('Y-m-d H:i:s')
         ];
         return $this->db->insert($this->group_table, $data);

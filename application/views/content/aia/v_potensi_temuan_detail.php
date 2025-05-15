@@ -170,7 +170,6 @@
                   <th>No.</th>
                   <th>HASIL RESPON / VISIT</th>
                   <th>KODE KLAUSUL</th>
-                  <th>REFERENSI KLAUSUL</th>
                   <?php if ($is_auditor) { ?>
                   <th>STATUS</th>
                   <th>KLASIFIKASI</th>
@@ -204,7 +203,8 @@ $(document).ready(function() {
         const response = await $.ajax({
           url: '<?= base_url("aia/potensi_temuan/get_groups") ?>',
           method: 'GET',
-          dataType: 'json'
+          dataType: 'json',
+          data: { id_response_header: <?= json_encode($id_response_header); ?> }
         });
 
         if (response.status === 'success') {
@@ -297,6 +297,7 @@ $(document).ready(function() {
                     <th>KLASIFIKASI</th>
                     <th>URAIAN TEMUAN</th>
                     <th>KODE KLAUSUL</th>
+                    <th>REFERENSI KLAUSUL</th>
                     <th>AKSI</th>
                   </tr>
                 </thead>
@@ -333,7 +334,7 @@ $(document).ready(function() {
         console.error('currentGroupedItems is not an array:', this.currentGroupedItems);
         return [];
       }
-
+      console.log('Preparing table data:', this.currentGroupedItems);
       return this.currentGroupedItems.map((group, index) => ({
         id: index + 1,
         groupId: group.GROUP_ID,
@@ -341,7 +342,8 @@ $(document).ready(function() {
         klasifikasi: group.KLASIFIKASI,
         itemCount: group.ITEMS ? group.ITEMS.length : 0,
         uraianTemuan: (group.URAIAN_TEMUAN || '-').replace(/\n/g, '<br>'), // Ganti \n dengan <br>
-        kodeKlausul: (group.ITEMS && group.ITEMS.length > 0) ? group.ITEMS[0].KODE_KLAUSUL : ''
+        kodeKlausul: (group.KODE_KLAUSUL || '-').replace(/\n/g, '<br>'),
+        referensiKlausul: (group.REFERENSI_KLAUSUL || '-').replace(/\n/g, '<br>')
       }));
     }
 
@@ -376,6 +378,10 @@ $(document).ready(function() {
         },
         { 
           data: 'kodeKlausul',
+          className: 'text-justify',
+        },
+        { 
+          data: 'referensiKlausul',
           className: 'text-center'
         },
         { 
@@ -744,7 +750,7 @@ $(document).ready(function() {
           url: '<?= base_url("aia/potensi_temuan/add_group") ?>',
           method: 'POST',
           dataType: 'json',
-          data: { group_name: groupName }
+          data: { group_name: groupName, id_response_header: <?= json_encode($id_response_header); ?> }
         });
 
         if (response.status === 'success') {
@@ -816,13 +822,8 @@ $(document).ready(function() {
         {
           data: "KODE_KLAUSUL",
           title: "KODE KLAUSUL",
-          width: '150px'
+          width: '300px'
         },
-        {
-          data: "REFERENSI_KLAUSUL",
-          title: "REFERENSI KLAUSUL",
-          width: '150px'
-        }
       ];
 
       <?php if ($is_auditor) { ?>
@@ -832,7 +833,7 @@ $(document).ready(function() {
           title: "STATUS",
           width: '200px',
           render: (data, type, row) => `
-            <select class="form-control status-select" data-id="${row.ID_RE}">
+            <select class="form-control status-select" data-id="${row.ID_RE}" disabled>
               <option value="" ${!data ? "selected" : ""}>-- Pilih Status --</option>
               <option value="1" ${data == 1 ? "selected" : ""}>TIDAK DIISI SAMA SEKALI</option>
               <option value="2" ${data == 2 ? "selected" : ""}>JAWABAN TIDAK SESUAI</option>
@@ -846,7 +847,7 @@ $(document).ready(function() {
           title: "KLASIFIKASI",
           width: '150px',
           render: (data, type, row) => `
-            <select class="form-control klasifikasi-select" data-id="${row.ID_RE}">
+            <select class="form-control klasifikasi-select" data-id="${row.ID_RE}" disabled>
               <option value="" ${!data ? "selected" : ""}>-- Pilih Klasifikasi --</option>
               <option value="MAJOR" ${data == 'MAJOR' ? 'selected' : ''}>MAJOR</option>
               <option value="MINOR" ${data == 'MINOR' ? 'selected' : ''}>MINOR</option>
