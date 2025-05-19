@@ -10,6 +10,71 @@ class M_potensi_temuan extends CI_Model {
         parent::__construct();
     }
 
+
+    public function get_potensi_temuan_header(){
+        $datauser = $_SESSION['NAMA_ROLE'];
+        if($datauser=="AUDITOR"){
+            $query = $this->db->query('
+                SELECT
+                    ra."ID_HEADER",
+                    i."NOMOR_ISO",
+                    ra."DIVISI" AS "KODE",
+                    d."NAMA_DIVISI",
+                    w."WAKTU_AUDIT_AWAL",
+                    w."WAKTU_AUDIT_SELESAI",
+                    au."NAMA" AS "AUDITOR",
+                    la."NAMA" AS "LEAD_AUDITOR",
+                    COUNT(rd."RESPONSE_AUDITEE") AS "JUMLAH_RESPONSE_AUDITEE_NOT_NULL",
+                    COUNT(rd."ID_MASTER_PERTANYAAN") AS "JUMLAH_TOTAL_PERTANYAAN",
+                    gpt."STATUS"
+                FROM "RESPONSE_AUDITEE_H" ra
+                LEFT JOIN "WAKTU_AUDIT" w ON ra."ID_JADWAL" = w."ID_JADWAL"
+                JOIN "TM_USER" au ON w."ID_AUDITOR" = au."ID_USER"
+                LEFT JOIN "TM_USER" la ON w."ID_LEAD_AUDITOR" = la."ID_USER"
+                LEFT JOIN "TM_ISO" i ON ra."ID_ISO" = i."ID_ISO"
+                LEFT JOIN "RESPONSE_AUDITEE_D" rd ON ra."ID_HEADER" = rd."ID_HEADER"
+                JOIN "TM_DIVISI" d ON d."KODE" = ra."DIVISI"
+                left join "GROUP_POTENSI_TEMUAN" gpt on ra."ID_HEADER" = gpt."ID_RESPONSE"
+                GROUP BY ra."ID_HEADER", i."NOMOR_ISO",i."ID_ISO", ra."DIVISI", d."NAMA_DIVISI", w."WAKTU_AUDIT_AWAL", 
+                w."WAKTU_AUDIT_SELESAI", au."NAMA", la."NAMA", gpt."STATUS"
+
+                ORDER BY w."WAKTU_AUDIT_SELESAI" ,i."ID_ISO"  DESC
+            ');
+            return $query->result_array();
+        }else{
+            $query = $this->db->query('
+                SELECT
+                    ra."ID_HEADER",
+                    i."NOMOR_ISO",
+                    ra."DIVISI" AS "KODE",
+                    d."NAMA_DIVISI",
+                    w."WAKTU_AUDIT_AWAL",
+                    w."WAKTU_AUDIT_SELESAI",
+                    au."NAMA" AS "AUDITOR",
+                    la."NAMA" AS "LEAD_AUDITOR",
+                    COUNT(rd."RESPONSE_AUDITEE") AS "JUMLAH_RESPONSE_AUDITEE_NOT_NULL",
+                    COUNT(rd."ID_MASTER_PERTANYAAN") AS "JUMLAH_TOTAL_PERTANYAAN",
+                    gpt."STATUS"
+                    
+                FROM "RESPONSE_AUDITEE_H" ra
+                LEFT JOIN "WAKTU_AUDIT" w ON ra."ID_JADWAL" = w."ID_JADWAL"
+                JOIN "TM_USER" au ON w."ID_AUDITOR" = au."ID_USER"
+                LEFT JOIN "TM_USER" la ON w."ID_LEAD_AUDITOR" = la."ID_USER"
+                LEFT JOIN "TM_ISO" i ON ra."ID_ISO" = i."ID_ISO"
+                LEFT JOIN "RESPONSE_AUDITEE_D" rd ON ra."ID_HEADER" = rd."ID_HEADER"
+                JOIN "TM_DIVISI" d ON d."KODE" = ra."DIVISI"
+                LEFT JOIN "GROUP_POTENSI_TEMUAN" gpt ON ra."ID_HEADER" = gpt."ID_RESPONSE"
+                WHERE d."ID_DIVISI" =' . $_SESSION['ID_DIVISI'] . ' 
+                AND d."STATUS" = \'1\'
+                GROUP BY ra."ID_HEADER", i."NOMOR_ISO", ra."DIVISI", d."NAMA_DIVISI", w."WAKTU_AUDIT_AWAL", 
+                w."WAKTU_AUDIT_SELESAI", au."NAMA", la."NAMA", gpt."STATUS"
+                
+                ORDER BY i."NOMOR_ISO", w."WAKTU_AUDIT_SELESAI" DESC
+            ');
+            return $query->result_array();
+        }    
+    }
+
     public function get_potensi_temuan($id_response_header) {
         $this->db->select('
             pt.ID_POTENSI_TEMUAN,

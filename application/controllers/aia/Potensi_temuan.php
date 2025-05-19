@@ -22,20 +22,59 @@ class Potensi_temuan extends MY_Controller {
         $this->show($data);
     }
 
+    function jsonPotensiTemuan() 
+	{
+        header('Content-Type: application/json');
+		$getquery = $this->M_potensi_temuan->get_potensi_temuan_header();
+        echo json_encode($getquery);
+	}
+
+    public function get_status_generate($id_response_header){
+        $id_response_header = $this->input->get('id_response_header');
+        $this->db->select('*');
+        $this->db->where('ID_RESPONSE', $id_response_header);
+        $this->db->where('STATUS', 'NOT NULL');
+        $this->db->where('STATUS', '1');
+        $result = $this->db->get('GROUP_POTENSI_TEMUAN')->row();
+        if ($result) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function detail_potensi($id) {
-        $id_jadwal = $this->db->select('ID_JADWAL')
-                          ->where('ID_RESPONSE', $id)
-                          ->get('POTENSI_TEMUAN')
-                          ->row()
-                          ->ID_JADWAL;
-        $data = [
-            'id_response_header' => $id,
-            'id_jadwal' => $id_jadwal,
-            'menu' => 'potensi-temuan',
-            'title' => 'Detail Potensi Temuan',
-            'subtitle' => 'Detail Potensi Temuan',
-            'content' => 'content/aia/v_potensi_temuan_detail'
-        ];
+        if($this->is_auditor()||$this->is_lead_auditor()){
+            $id_jadwal = $this->db->select('ID_JADWAL')
+                ->where('ID_RESPONSE', $id)
+                ->get('POTENSI_TEMUAN')
+                ->row()
+                ->ID_JADWAL;
+            $data = [
+                'id_response_header' => $id,
+                'id_jadwal' => $id_jadwal,
+                'menu' => 'potensi-temuan',
+                'title' => 'Detail Potensi Temuan',
+                'subtitle' => 'Detail Potensi Temuan',
+                'content' => 'content/aia/v_potensi_temuan_detail'
+            ];
+        }
+        else{
+            $id_jadwal = $this->db->select('ID_JADWAL')
+                ->where('ID_RESPONSE', $id)
+                ->get('POTENSI_TEMUAN')
+                ->row()
+                ->ID_JADWAL;
+            $data = [
+                'id_response_header' => $id,
+                'id_jadwal' => $id_jadwal,
+                'menu' => 'potensi-temuan',
+                'title' => 'Detail Potensi Temuan',
+                'subtitle' => 'Detail Potensi Temuan',
+                'content' => 'content/aia/v_potensi_temuan_approval'
+            ];
+        }
+        
         // echo '<pre>';
         // print_r($this->session->userdata());
         // echo '</pre>';
@@ -50,6 +89,7 @@ class Potensi_temuan extends MY_Controller {
 
     public function generate($id_response_header)
     {
+        if(!($this->is_auditor()||$this->is_lead_auditor())) $this->load->view('/errors/html/err_401');
         $this->db->select("
             concat(
                 'Kode Klausul : ',
@@ -159,6 +199,9 @@ class Potensi_temuan extends MY_Controller {
             if (!empty($existing_data)) {
                 $this->db->where('ID_RESPONSE', $id_response_header);
                 $this->db->delete('POTENSI_TEMUAN');
+
+                // $this->db->where('ID_RESPONSE', $id_response_header);
+                // $this->db->delete('GROUP_POTENSI_TEMUAN');
             }
             $this->db->insert_batch('POTENSI_TEMUAN', $insert_data);
             
@@ -172,7 +215,7 @@ class Potensi_temuan extends MY_Controller {
 
     public function update_group() {
         // header('Content-Type: application/json');
-        
+        if(!$this->is_auditor()) $this->load->view('/errors/html/err_401');
         try {
             $item_ids = $this->input->post('item_ids');
             $group_id = $this->input->post('group_id');
@@ -271,7 +314,7 @@ class Potensi_temuan extends MY_Controller {
         }
     }
     
-    private function getHighestKlasifikasi($klasifikasi_values) {
+    public function getHighestKlasifikasi($klasifikasi_values) {
         $priority = [
             'MAJOR' => 3,
             'MINOR' => 2,
@@ -350,43 +393,6 @@ class Potensi_temuan extends MY_Controller {
         $this->output_json($result ? ['status' => 'success', 'message' => 'Group added successfully']
                                    : ['status' => 'error', 'message' => 'Failed to add group']);
     }
-
-    // public function reset_group()
-    // {
-    //     try {
-    //         // Retrieve group ID and item IDs from POST data
-    //         $group_id = $this->input->post('group_id');
-    //         $item_ids = $this->input->post('item_ids');
-
-    //         // Validate input
-    //         if (empty($group_id) || empty($item_ids)) {
-    //             throw new Exception('Group ID or item IDs are missing.');
-    //         }
-
-    //         // Convert item IDs string to an array
-    //         $item_ids_array = explode(',', $item_ids);
-
-    //         // Update items in the database to reset their group association
-    //         $this->load->model('M_potensi_temuan');
-    //         $result = $this->M_potensi_temuan->resetGroupItems($group_id, $item_ids_array);
-
-    //         if ($result) {
-    //             // Return success response
-    //             echo json_encode([
-    //                 'status' => 'success',
-    //                 'message' => 'Group items have been successfully reset.'
-    //             ]);
-    //         } else {
-    //             throw new Exception('Failed to reset group items in the database.');
-    //         }
-    //     } catch (Exception $e) {
-    //         // Return error response
-    //         echo json_encode([
-    //             'status' => 'error',
-    //             'message' => $e->getMessage()
-    //         ]);
-    //     }
-    // }
 
     public function reset_selected_items() {
         $item_ids = $this->input->post('item_ids');
@@ -491,6 +497,18 @@ class Potensi_temuan extends MY_Controller {
                 'data' => [] // Pastikan ada property data
             ]);
         }
+    }
+
+    public function approve($id) {
+        $data = [
+            'STATUS' => 2,
+            'APPROVED_SM_BY' => $this->session->userdata('ID_USER'),
+            'APPROVED_SM_AT' => date('Y-m-d H:i:s')
+        ];
+        $this->db->where('ID_RESPONSE', $id);
+        $this->db->update('GROUP_POTENSI_TEMUAN', $data);
+        $this->session->set_flashdata('success', $success_message);
+				redirect(base_url('aia/Potensi_temuan/detail_potensi/'.$id));
     }
 
     private function output_json($data) {

@@ -82,7 +82,7 @@ var KTDatatableJsonRemoteDemo = {
     t = $("#kt_datatable").KTDatatable({
       data: {
         type: "remote",
-        source: '<?= base_url() ?>aia/Response_auditee/jsonResponAuditee',
+        source: '<?= base_url() ?>aia/Potensi_temuan/jsonPotensiTemuan',
         pageSize: 10
       },
       layout: {
@@ -122,7 +122,28 @@ var KTDatatableJsonRemoteDemo = {
           searchable: !1,
           overflow: "visible",
           template: function(t) {
-            return `
+            
+            if (t.STATUS == '1') {
+              
+              return `
+                <a href="<?= base_url() ?>aia/potensi_temuan/detail_potensi/${t.ID_HEADER}" class="btn btn-sm btn-clean btn-icon" title="Lihat">
+                <i class="fa fa-eye text-dark"></i>
+                </a>
+                
+                <?php if ($is_auditor) { ?>
+                <a onclick="save(${t.ID_HEADER})" class="btn btn-sm btn-clean btn-icon" title="Generate">
+                  <i class="fa fa-cogs text-dark"></i>
+                </a>
+                <?php } ?>
+                <?php if ($is_atasan_auditee) { ?>
+                <a href="<?= base_url() ?>aia/potensi_temuan/detail_potensi/${t.ID_HEADER}" class="btn btn-sm btn-clean btn-icon" title="Approve">
+                <i class="fa fa-check text-dark"></i>
+                </a>
+                <?php } ?>
+              `;
+            }
+            else{
+              return `
               <a href="<?= base_url() ?>aia/potensi_temuan/detail_potensi/${t.ID_HEADER}" class="btn btn-sm btn-clean btn-icon" title="Lihat">
                 <i class="fa fa-eye text-dark"></i>
               </a>
@@ -133,6 +154,7 @@ var KTDatatableJsonRemoteDemo = {
               <?php } ?>
             `;
             }
+          }
         }
       ]
     }), $("#kt_datatable_search_status").on("change", (function() {
@@ -146,59 +168,7 @@ var KTDatatableJsonRemoteDemo = {
   }
 };
 
-  // function save(id) {
-  //   // Check if a synchronization process is already running
-  //   if (isSyncInProgress) {
-  //       Swal.fire({
-  //           text: 'Sinkronisasi sedang berjalan. Harap tunggu hingga selesai.',
-  //           icon: 'warning',
-  //           confirmButtonColor: '#3085d6',
-  //           confirmButtonText: 'OK'
-  //       });
-  //       return;
-  //   }
 
-  //   // Set the flag to indicate that a synchronization is in progress
-  //   isSyncInProgress = true;
-
-  //   // Show the confirmation dialog
-  //   Swal.fire({
-  //       text: 'Apakah Anda yakin sinkronisasi data ini?',
-  //       icon: 'question',
-  //       showCancelButton: true,
-  //       confirmButtonColor: '#3085d6',
-  //       cancelButtonColor: '#d33',
-  //       confirmButtonText: 'Ya',
-  //       cancelButtonText: 'Batal'
-  //   }).then((result) => {
-  //       if (result.isConfirmed) {
-  //           // Show the dynamic loading screen when the user confirms
-  //           document.getElementById("loadingScreen").style.display = "flex";
-
-  //           // Optionally update the loading text periodically
-  //           let loadingText = document.getElementById("loadingText");
-  //           let messages = [
-  //               "Synchronizing data...",
-  //               "Please be patient..."
-  //           ];
-  //           let index = 0;
-
-  //           // Change the loading message every 2 seconds
-  //           let interval = setInterval(() => {
-  //               index = (index + 1) % messages.length;
-  //               loadingText.textContent = messages[index];
-  //           }, 3000);
-
-  //           // Redirect to the synchronization URL
-  //           window.location.href = '<?= base_url() ?>aia/Response_auditee/generate/' + id;
-
-  //           // Clear the interval when the page is about to unload
-  //           window.onbeforeunload = () => clearInterval(interval);
-  //       } else {
-  //           isSyncInProgress = false;
-  //       }
-  //   });
-  // }
 
   function save(id) {
     if (isSyncInProgress) {
