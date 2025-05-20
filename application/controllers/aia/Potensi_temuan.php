@@ -87,9 +87,14 @@ class Potensi_temuan extends MY_Controller {
         $this->output_json(['status' => 'success', 'data' => $data]);
     }
 
-    public function generate($id_response_header)
-    {
+    public function generate($id_response_header) {
         if(!($this->is_auditor()||$this->is_lead_auditor())) $this->load->view('/errors/html/err_401');
+        // Ambil ID_JADWAL dari header response
+        $this->db->select('ID_JADWAL');
+        $this->db->where('ID_HEADER', $id_response_header);
+        $header_data = $this->db->get('RESPONSE_AUDITEE_H')->row_array();
+        $id_jadwal = $header_data['ID_JADWAL'];
+        
         $this->db->select("
             concat(
                 'Kode Klausul : ',
@@ -154,11 +159,8 @@ class Potensi_temuan extends MY_Controller {
         $this->db->where('rah.ID_HEADER', $id_response_header);
         $visit_temuan = $this->db->get()->result_array();
         // var_dump($visit_temuan);die;
-        $id_divisi = $this->session->userdata('ID_DIVISI'); // Ambil ID_DIVISI dari session
-        $this->db->where('ID_DIVISI', $id_divisi);
-        $this->db->order_by('ID_JADWAL', 'DESC');
-        $waktu_audit = $this->db->get('WAKTU_AUDIT')->result_array();
-        
+        // $id_divisi = $this->session->userdata('ID_DIVISI'); // Ambil ID_DIVISI dari session
+        // $this->db->where('ID_DIVISI', $id_divisi);
 
         $insert_data = [];
 
@@ -170,7 +172,7 @@ class Potensi_temuan extends MY_Controller {
                 'KLASIFIKASI' => $res_d['KLASIFIKASI'],
                 'ID_PERTANYAAN' => $res_d['ID_MASTER_PERTANYAAN'],
                 'ID_RESPONSE' => $id_response_header,
-                'ID_JADWAL' => $waktu_audit[0]['ID_JADWAL'], // Use the first entry from WAKTU_AUDIT
+                'ID_JADWAL' => $id_jadwal,
                 'ID_RE' => $res_d['ID_RE'], // Make sure this is included
                 'KODE_KLAUSUL' => $res_d['KODE_KLAUSUL']
             ];
@@ -184,7 +186,7 @@ class Potensi_temuan extends MY_Controller {
                 'KLASIFIKASI' => $visit['KLASIFIKASI'],
                 'ID_PERTANYAAN' => $visit['ID_MASTER_PERTANYAAN'],
                 'ID_RESPONSE' => $id_response_header,
-                'ID_JADWAL' => $waktu_audit[0]['ID_JADWAL'], // Use the first entry from WAKTU_AUDIT
+                'ID_JADWAL' => $id_jadwal,
                 'ID_RE' => $visit['ID'], // Use appropriate ID field from VISIT_LAPANGAN
                 'KODE_KLAUSUL' => $res_d['KODE_KLAUSUL']
             ];

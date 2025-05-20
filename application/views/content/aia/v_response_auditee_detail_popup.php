@@ -1,9 +1,69 @@
 <style type="text/css">
   #kt_datatable_popup_paginate{
-
     position: absolute;
     right: 10px;
   }
+  #PENILAIAN.status-red,
+  #PENILAIAN.status-red:focus {
+    background-color: #ff0000 !important;
+    color: white !important;
+    border-color: #cc0000 !important;
+  }
+
+  #PENILAIAN.status-orange,
+  #PENILAIAN.status-orange:focus {
+    background-color: #ffa500 !important;
+    color: white !important;
+    border-color: #cc8400 !important;
+  }
+
+  #PENILAIAN.status-green,
+  #PENILAIAN.status-green:focus {
+    background-color: #008000 !important;
+    color: white !important;
+    border-color: #006600 !important;
+  }
+
+  #PENILAIAN.status-blue,
+  #PENILAIAN.status-blue:focus {
+    background-color: #0000ff !important;
+    color: white !important;
+    border-color: #0000cc !important;
+  }
+
+  /* Pastikan select box bisa menampilkan warna */
+  #PENILAIAN {
+    transition: all 0.3s ease;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+
+  /* Style untuk select klasifikasi */
+#KLASIFIKASI.badge-danger {
+  background-color: #dc3545 !important;
+  color: white !important;
+  border-color: #bd2130 !important;
+}
+
+#KLASIFIKASI.badge-warning {
+  background-color: #ffc107 !important;
+  color: #212529 !important;
+  border-color: #d39e00 !important;
+}
+
+#KLASIFIKASI.badge-info {
+  background-color: #17a2b8 !important;
+  color: white !important;
+  border-color: #117a8b !important;
+}
+
+/* Style dasar untuk select box */
+#KLASIFIKASI {
+  transition: all 0.3s ease;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
 </style>
 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
   <div class="subheader py-2 py-lg-4 subheader-solid" id="kt_subheader">
@@ -420,19 +480,27 @@ function uploadFile(id_tl)
     });
     $('#modal_chat').modal('show');
   }
-  function penilaian(id_tl)
-  {
-    console.log('ID_RE_PENILAIAN (before setting):', id_tl); // Debugging ID_RE_PENILAIAN
-    $.post('<?= base_url('aia/Response_auditee/submit_penilaian/') ?>'+id_tl, function(response) {
-        
-    });
+  function penilaian(id_tl) {
+    console.log('ID_RE_PENILAIAN (before setting):', id_tl);
+    $.post('<?= base_url('aia/Response_auditee/submit_penilaian/') ?>'+id_tl, function(response) {});
+    
     $.get(`<?= base_url('aia/Response_auditee/getpenilaian/') ?>`+id_tl, function(data,status){
-        const obj = JSON.parse(data);
-        $('#ID_RE_PENILAIAN').val(id_tl);
-        $('#PENILAIAN').val(obj.PENILAIAN);
-        $('#KLASIFIKASI').val(obj.KLASIFIKASI);
-        
+      const obj = JSON.parse(data);
+      $('#ID_RE_PENILAIAN').val(id_tl);
+      const selectElement = $('#PENILAIAN');
+      selectElement.val(obj.PENILAIAN);
+      const klasifikasiSelect = $('#KLASIFIKASI');
+      klasifikasiSelect.val(obj.KLASIFIKASI);
+      
+      // Update warna segera
+      updateSelectColor(selectElement);
+      updateKlasifikasiColor(klasifikasiSelect);
+      // Refresh select picker jika menggunakan Bootstrap Select
+      if (selectElement.hasClass('selectpicker')) {
+        selectElement.selectpicker('refresh');
+      }
     });
+    
     $('#modal_penilaian').modal('show');
   }
 jQuery(document).ready((function() {
@@ -453,5 +521,72 @@ $(document).ready(function() {
   $('#modal_penilaian').on('hidden.bs.modal', function() {
     $("#kt_datatable_popup").KTDatatable().reload();
   });
+});
+
+// Event handler yang diperbaiki
+$(document).on('change', '#PENILAIAN', function() {
+  // Trigger update warna secara manual
+  updateSelectColor($(this));
+  
+  // Force reflow untuk memastikan perubahan diterapkan
+  void this.offsetWidth;
+}).on('click', '#PENILAIAN', function() {
+  // Handle klik langsung untuk kasus tertentu
+  updateSelectColor($(this));
+});
+
+// Fungsi untuk update warna
+function updateSelectColor(selectElement) {
+  const selectedValue = selectElement.val();
+  
+  // Reset semua kelas warna sebelumnya
+  selectElement.removeClass('status-red status-orange status-green status-blue');
+
+  // Tambahkan warna berdasarkan nilai yang dipilih
+  if (selectedValue === "1") {
+    selectElement.addClass('status-red');
+  } else if (selectedValue === "2") {
+    selectElement.addClass('status-orange');
+  } else if (selectedValue === "3") {
+    selectElement.addClass('status-green');
+  } else if (selectedValue === "4") {
+    selectElement.addClass('status-blue');
+  }
+}
+
+// Inisialisasi saat modal dibuka
+$('#modal_penilaian').on('shown.bs.modal', function() {
+  // Update warna saat modal pertama kali dibuka
+  updateSelectColor($('#PENILAIAN'));
+  
+  // Tambahkan event listener tambahan untuk Bootstrap select
+  $('#PENILAIAN').selectpicker('refresh');
+});
+
+// Fungsi update warna klasifikasi
+function updateKlasifikasiColor(selectElement) {
+  const selectedValue = selectElement.val();
+  
+  // Reset semua kelas warna sebelumnya
+  selectElement.removeClass('badge-danger badge-warning badge-info');
+  
+  // Tambahkan warna berdasarkan nilai yang dipilih
+  if (selectedValue === "MAJOR") {
+    selectElement.addClass('badge-danger');
+  } else if (selectedValue === "MINOR") {
+    selectElement.addClass('badge-warning');
+  } else if (selectedValue === "OBSERVASI") {
+    selectElement.addClass('badge-info');
+  }
+}
+
+// Event handler untuk select klasifikasi
+$(document).on('change', '#KLASIFIKASI', function() {
+  updateKlasifikasiColor($(this));
+});
+
+// Update saat modal dibuka
+$('#modal_penilaian').on('shown.bs.modal', function() {
+  updateKlasifikasiColor($('#KLASIFIKASI'));
 });
 </script>

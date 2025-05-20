@@ -62,101 +62,101 @@ class visit_lapangan extends MY_Controller {
 
 
 	public function save() {
-        $this->load->library('form_validation');
-        // var_dump($_POST);die;
-        // Validasi input
+    $this->load->library('form_validation');
+    $this->load->library('upload');
+    
+    // Validasi input
+    $this->form_validation->set_rules('hasil_observasi', 'Hasil Observasi', 'required');
+    $this->form_validation->set_rules('klasifikasi', 'Klasifikasi', 'required|in_list[MAJOR,MINOR,OBSERVASI]');
+    
+    if ($this->form_validation->run() == FALSE) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => validation_errors()
+        ]);
+        return;
+    }
+
+    // Data dasar
+    $data = [
+        'HASIL_OBSERVASI' => $this->input->post('hasil_observasi'),
+        'ID_MASTER_PERTANYAAN' => $this->input->post('id_master_pertanyaan'),
+        'KLASIFIKASI' => $this->input->post('klasifikasi'),
+        'ID_RESPONSE' => $this->input->post('id_response')
+    ];
+
+    // Handle file upload
+    if (!empty($_FILES['file']['name'])) {
         $ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
-        $this->form_validation->set_rules('hasil_observasi', 'Hasil Observasi', 'required');
-        // $this->form_validation->set_rules('id_master_pertanyaan', 'master', 'required');
-        $this->form_validation->set_rules('klasifikasi', 'Klasifikasi', 'required');
+        $current_time = date('YmdHis');
+        $config = [
+            'upload_path' => './storage/aia/visit_lapangan/',
+            'allowed_types' => 'jpg|jpeg|png|pdf|doc|docx',
+            'max_size' => 2048,
+            'file_name' => "File_Visit_Lapangan_".$current_time,
+            'overwrite' => false
+        ];
         
-        if ($this->form_validation->run() == FALSE) {
+        $this->upload->initialize($config);
+        
+        if ($this->upload->do_upload('file')) {
+            $file_data = $this->upload->data();
+            $data['FILE'] = 'storage/aia/visit_lapangan/'.$file_data['file_name'];
+            
+            // Hapus file lama jika ada
+            if ($this->input->post('id')) {
+                $old_file = $this->db->select('FILE')
+                                  ->where('ID_VISIT', $this->input->post('id'))
+                                  ->get('VISIT_LAPANGAN')
+                                  ->row()->FILE;
+                if ($old_file && file_exists($old_file)) {
+                    unlink($old_file);
+                }
+            }
+        } else {
             echo json_encode([
                 'status' => 'error',
-                'message' => validation_errors()
+                'message' => $this->upload->display_errors()
             ]);
             return;
         }
-		if($ext==""||$ext==null){
-            $data = [
-                'HASIL_OBSERVASI' => $this->input->post('hasil_observasi'),
-                'ID_MASTER_PERTANYAAN' => $this->input->post('id_master_pertanyaan'),
-                'KLASIFIKASI' => $this->input->post('klasifikasi'),
-                
-                'ID_RESPONSE' => $this->input->post('id_response')
-            ];
-		}else 
-		{
-            $current_time = date('YmdHis');
-            $config['upload_path'] = './storage/aia/visit_lapangan/';
-            $config['allowed_types'] = 'jpg|jpeg|png|pdf|doc|docx';
-            $config['max_size'] = 2048; // 2MB
-            $config['overwrite'] = true;
-            $config['file_name']        = "File_Visit_Lapangan".$current_time;
-            $config['allowed_types'] = 'jpg|jpeg|png|pdf|doc|docx';
-            $config['max_size'] = 2048; // 2MB
-            $this->upload->initialize($config);
-            // $this->load->library('upload', $config);
-            $file_path = base_url().'storage/aia/visit_lapangan/'.$config['file_name'].'.'.$ext;
-            $file_name = $file_path;
-            $data = [
-                'HASIL_OBSERVASI' => $this->input->post('hasil_observasi'),
-                'ID_MASTER_PERTANYAAN' => $this->input->post('id_master_pertanyaan'),
-                'FILE' => $file_name,
-                'KLASIFIKASI' => $this->input->post('klasifikasi'),
-                
-                'ID_VISIT' => $this->input->post('id')
-            ];
-            $query = $this->db->select('FILE')->from('VISIT_LAPANGAN')->where('ID_VISIT',$this->input->post('id'))->get();
-            // var_dump($query->result_array());
-            $file_path = $query->result_array();
-            // var_dump($file_path[0]['FILE']);die;
-            if($query){
-                unlink($file_path[0]['FILE']);
-            }
-            
-		}
-
-        // Konfigurasi upload file
-		
-        if (!empty($_FILES['file']['name'])) {
-            if ($this->upload->do_upload('file')) {
-                $file_data = $this->upload->data();
-                // $file_name = $file_path;
-            } else {
-                echo json_encode([
-                    'status' => 'error',
-                    'message' => $this->upload->display_errors()
-                ]);
-                return;
-            }
-        }
-
-        // Data untuk disimpan
-        // var_dump($data);die;
-
-        // Simpan ke database
-        $id_response = $this->input->post('id');
-        if ($id_response) {
-            // Update data
-            $this->db->where('ID_VISIT', $id_response);
-            $result = $this->db->update('VISIT_LAPANGAN', $data);
-        } else {
-            // Insert data baru
-            $result = $this->m_visit_lapangan->save_observasi($data);
-        }
-        if ($result) {
-            echo json_encode([
-                'status' => 'success',
-                'message' => 'Data observasi berhasil disimpan'
-            ]);
-        } else {
-            echo json_encode([
-                'status' => 'error',
-                'message' => 'Gagal menyimpan data observasi'
-            ]);
-        }
+    } elseif ($this->input->post('existing_file')) {
+        $data['FILE'] = $this->input->post('existing_file');
     }
+
+    // Simpan ke database
+    $id_visit = $this->input->post('id');
+    if ($id_visit) {
+        $this->db->where('ID_VISIT', $id_visit);
+        $result = $this->db->update('VISIT_LAPANGAN', $data);
+    } else {
+        $result = $this->db->insert('VISIT_LAPANGAN', $data);
+        $id_visit = $this->db->insert_id();
+    }
+
+    if ($result) {
+        // Ambil data terbaru termasuk klasifikasi
+        $updated_data = $this->db->where('ID_VISIT', $id_visit)
+                              ->get('VISIT_LAPANGAN')
+                              ->row_array();
+        
+        // Pastikan URL file lengkap
+        if (!empty($updated_data['FILE']) && strpos($updated_data['FILE'], 'http') !== 0) {
+            $updated_data['FILE'] = base_url($updated_data['FILE']);
+        }
+        
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'Data observasi berhasil disimpan',
+            'data' => $updated_data
+        ]);
+    } else {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Gagal menyimpan data observasi'
+        ]);
+    }
+}
 
     public function get_observasi_by_iso_kode($nomor_iso, $kode) {
         return $this->db->get_where('visit_lapangan', [
