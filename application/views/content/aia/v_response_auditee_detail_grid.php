@@ -90,6 +90,7 @@
           source: '<?= base_url() ?>aia/Response_auditee/jsonResponAuditeeDetail/<?= $kode ?>',
           pageSize: 10
         },
+        
         layout: {
             scroll: true,
             scrollY: 200,
@@ -109,6 +110,7 @@
           {
             field: "number",
             title: "No.",
+            width: 50,
             width: 50,
             template: function (row, index) {
               var currentPage = t.getCurrentPage();
@@ -137,7 +139,7 @@
             title: "RESPONSE AUDITEE",
             width: 300,
             template: function (row) {
-              return `<input type="text" class="form-control response-auditee-input" data-id="${row.ID_RE}" value="${row.RESPONSE_AUDITEE ? row.RESPONSE_AUDITEE : ''}" />`;
+              return `<div style="white-space: pre-wrap; word-wrap: break-word; min-height: 40px; display: flex; align-items: center;"><input type="text" class="form-control response-auditee-input" data-id="${row.ID_RE}" value="${row.RESPONSE_AUDITEE ? row.RESPONSE_AUDITEE : ''}" /></div>`;
             }
           },
           {

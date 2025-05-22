@@ -235,6 +235,24 @@ $(document).ready(function() {
             throw error;
         }
     }
+    async approveGroup(groupId) {
+        try {
+            const response = await $.ajax({
+                url: '<?= base_url("aia/potensi_temuan/approve") ?>',
+                method: 'POST',
+                dataType: 'json',
+                data: { group_id: groupId }
+            });
+
+            if (response.status !== 'success') {
+                throw new Error(response.message || 'Failed to reset group');
+            }
+            return response;
+        } catch (error) {
+            console.error('Error resetting group:', error);
+            throw error;
+        }
+    }
 
     // Update group dropdown selector
     updateGroupDropdown() {
@@ -353,11 +371,11 @@ $(document).ready(function() {
             `
         },
         { 
-          data: 'kodeKlausul',
+          data: 'referensiKlausul',
           className: 'text-justify',
         },
         { 
-          data: 'referensiKlausul',
+          data: 'kodeKlausul',
           className: 'text-center'
         },
         { 
@@ -865,7 +883,7 @@ let id_response =[];
 // approval
 function approve() {
   this.id_response = <?= json_encode($id_response_header); ?>;
-  console.log(this.id_response);
+  console.log(<?= json_encode($status); ?>);
   if (isSyncInProgress) {
       Swal.fire({
           text: 'Approval sedang berjalan. Harap tunggu hingga selesai.',

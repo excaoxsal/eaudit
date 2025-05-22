@@ -182,6 +182,9 @@
           
           <!-- This div will contain our dynamically added grouped master tables -->
           <div id="groupedMasterContainer"></div>
+          <div class="d-flex justify-content-end"> <!-- Gunakan justify-content-end -->
+            <btn class="btn btn-success submit-group-btn" id="approve-btn">Submit</btn>
+          </div>
         </div>
       </div>
     </div>
@@ -256,6 +259,87 @@ $(document).ready(function() {
             return response;
         } catch (error) {
             console.error('Error resetting group:', error);
+            throw error;
+        }
+    }
+
+    async saveGroup(groupId) {
+      try {
+        // 1. Bentuk ID textarea berdasarkan groupId.
+        //    Ini HARUS cocok dengan pola ID yang Anda buat di fungsi render.
+        const textAreaId = `textarea_uraian_temuan_${groupId}`;
+        const option_clause_id = `option_clause_${groupId}`;
+
+        // 2. Dapatkan nilai dari textarea menggunakan jQuery dan ID yang telah dibentuk.
+        const uraianTemuanValue = $(`#${textAreaId}`).val();
+        const option_clauseValue = $(`#${option_clause_id}`).val();
+
+        // 3. Siapkan data payload untuk permintaan AJAX.
+        //    'this.currentGroupedItems' adalah objek data dasar yang ingin Anda kirim.
+        //    Kita akan menambahkan/memperbarui properti 'uraianTemuan' ke objek ini.
+        const dataToSend = {
+          ...this.currentGroupedItems, // Salin properti yang ada dari currentGroupedItems
+          uraianTemuan: uraianTemuanValue, // Tambahkan atau perbarui nilai 'uraianTemuan'
+          option_clause: option_clauseValue, // Tambahkan nilai dari select option
+          // Jika 'groupId' itu sendiri perlu menjadi bagian dari objek 'dataToSend' ini, tambahkan di sini:
+          // actualGroupId: groupId, // Atau nama properti apa pun yang diharapkan backend Anda untuk ID grup
+        };
+
+        // Untuk debugging, Anda bisa melihat data yang akan dikirim:
+        console.log('Data yang akan dikirim:', dataToSend);
+        console.log('Nilai dari textarea:', uraianTemuanValue);
+        console.log('Textarea ID yang dicari:', `#${textAreaId}`);
+        if ($(`#${textAreaId}`).length === 0) {
+            console.warn('PERINGATAN: Textarea dengan ID', `#${textAreaId}`, 'tidak ditemukan!');
+        }
+
+
+        const response = await $.ajax({
+          url: '<?= base_url("aia/potensi_temuan/save_group") ?>', // Pastikan URL ini benar
+          method: 'POST',
+          dataType: 'json',
+          data: {
+            data: dataToSend // Ini akan mengirim 'dataToSend' di bawah kunci 'data'
+            // Jika backend Anda mengharapkan groupId di level ini, Anda bisa menambahkannya:
+            // requestGroupId: groupId
+          }
+        });
+
+        if (response.status !== 'success') {
+          throw new Error(response.message || 'Gagal menyimpan grup');
+        }
+
+        // Opsional: Jika Anda ingin memperbarui 'this.currentGroupedItems' di state komponen Anda
+        // setelah penyimpanan berhasil:
+        // this.currentGroupedItems.uraianTemuan = uraianTemuanValue; // Jika 'this.currentGroupedItems' adalah objek yang sama
+        // atau jika `this.currentGroupedItems` harus diganti dengan `dataToSend`:
+        // this.currentGroupedItems = dataToSend;
+
+        return response;
+      } catch (error) {
+        console.error('Error saat menyimpan grup:', error);
+        // Anda mungkin ingin menampilkan pesan error yang lebih ramah pengguna di sini
+        // misalnya menggunakan alert atau notifikasi toast.
+        // alert(`Gagal menyimpan grup: ${error.message}`);
+        throw error; // Lempar kembali error jika Anda ingin kode pemanggil menanganinya
+      }
+    }
+
+    async submitGroup(groupId) {
+        try {
+            const response = await $.ajax({
+                url: '<?= base_url("aia/potensi_temuan/submit_group") ?>',
+                method: 'POST',
+                dataType: 'json',
+                data: { group_id: <?= json_encode($id_response_header); ?> }
+            });
+
+            if (response.status !== 'success') {
+                throw new Error(response.message || 'Failed to save group');
+            }
+            return response;
+        } catch (error) {
+            console.error('Error saving group:', error);
             throw error;
         }
     }
@@ -368,27 +452,82 @@ $(document).ready(function() {
             </span>
           `
         },
-        { 
-            data: 'uraianTemuan', // Tambahkan kolom ini
-            render: (data) => `
-                <div class="uraian-temuan-container">
-                    ${data || '-'}
-                </div>
-            `
+        {
+          data: 'uraianTemuan', // Properti dari sumber data Anda untuk teks awal
+          render: function(data, type, row) {
+            // console.log();
+            // 'data' adalah nilai saat ini dari 'uraianTemuan' untuk baris ini.
+            // 'row' adalah objek data lengkap untuk baris saat ini.
+            // Kita memerlukan pengenal unik dari objek 'row' untuk membuat ID textarea unik.
+            // Asumsikan data baris Anda memiliki properti seperti 'id' atau 'groupId' yang secara unik mengidentifikasi grup.
+            const uniqueGroupIdentifier = row.groupId; // GANTI DENGAN KUNCI UNIK DARI DATA BARIS ANDA (mis. row.groupId)
+
+            // Pastikan 'data' adalah string, jika null atau undefined, jadikan string kosong.
+            const textValue = String(data || '').replace(/<br\s*\/?>/gi, '\n');
+
+            // Buat ID unik untuk textarea
+            // Pola ID ini (misalnya "textarea_uraian_temuan_X") akan kita gunakan di fungsi saveGroup.
+            const textareaId = `textarea_uraian_temuan_${uniqueGroupIdentifier}`;
+
+            return `
+              <div class="uraian-temuan-container w-100">
+                <textarea
+                  id="${textareaId}"  // <-- ID unik ditambahkan di sini
+                  class="form-control w-100 uraian-temuan-input" // Kelas umum untuk seleksi atau styling jika perlu
+                  rows="5"
+                  style="resize: vertical;"
+                >${textValue}</textarea>
+              </div>
+            `;
+          }
         },
-        { 
+        {
           data: 'kodeKlausul',
           className: 'text-justify',
         },
         { 
           data: 'referensiKlausul',
-          className: 'text-center'
+          render: (data, type, row) => {
+            // Hilangkan tag <br> dan kembalikan ke newline (\n)
+            const rawData = data.replace(/<br\s*\/?>/gi, '\n');
+            const uniqueGroupIdentifier = row.groupId;
+            const option_clause_id = `option_clause_${uniqueGroupIdentifier}`;
+            // Split berdasarkan newline dan filter yang kosong
+            const clauses = rawData.split('\n')
+              .map(clause => clause.trim())
+              .filter(clause => clause.length > 0);
+            
+            // Jika tidak ada data, kembalikan select kosong
+            if (clauses.length === 0) {
+              return `
+                <div class="uraian-temuan-container">
+                  <select id="${option_clause_id}" class="form-control status-select">
+                    <option value="-">-</option>
+                  </select>
+                </div>
+              `;
+            }
+
+            // Buat opsi untuk setiap klausul
+            return `
+              <div class="uraian-temuan-container">
+                <select id="${option_clause_id}" class="form-control status-select">
+                  ${clauses.map(clause => `
+                    <option value="${clause}">${clause}</option>
+                  `).join('')}
+                </select>
+              </div>
+            `;
+          }
         },
         { 
           data: 'groupId',
           className: 'text-center',
           render: (data) => `
-            <button class="btn btn-sm btn-warning reset-group-btn mr-1" data-group-id="${data}" title="Reset Group">
+            <button class="btn btn-sm btn-success save-group-btn" data-group-id="${data}" title="Save Group">
+                <i class="fas fa-save"></i>
+            </button>
+            <button class="btn btn-sm btn-warning reset-group-btn" data-group-id="${data}" title="Reset Group">
                 <i class="fas fa-undo"></i>
             </button>
             <button class="btn btn-sm btn-danger delete-group-btn" data-group-id="${data}">
@@ -570,6 +709,14 @@ $(document).ready(function() {
         const groupId = $(e.currentTarget).data('group-id');
         this.handleResetGroup(groupId);
       });
+      $(document).on('click', '.save-group-btn', (e) => {
+        const groupId = $(e.currentTarget).data('group-id');
+        this.handleSaveGroup(groupId);
+      });
+      $(document).on('click', '.submit-group-btn', (e) => {
+        const groupId = $(e.currentTarget).data('group-id');
+        this.handleSubmitGroup(groupId);
+      });
       
       // Checkbox controls
       $('#select-all').change((e) => {
@@ -647,6 +794,48 @@ $(document).ready(function() {
             
         } catch (error) {
             this.showError('Gagal mereset group: ' + error.message);
+        }
+    }
+
+    async handleSaveGroup(groupId) {
+        try {
+            const confirmed = await this.showConfirmation(
+                'Konfirmasi Simpan Group',
+                'Apa anda yakin menyimpan group ini?'
+            );
+            
+            if (!confirmed) return;
+
+            const response = await this.groupManager.saveGroup(groupId);
+            
+            this.showSuccess('Group berhasil disimpan');
+            
+            // Refresh data
+            await this.refreshAllData();
+            
+        } catch (error) {
+            this.showError('Gagal simpan group: ' + error.message);
+        }
+    }
+
+    async handleSubmitGroup(groupId) {
+        try {
+            const confirmed = await this.showConfirmation(
+                'Konfirmasi kirim Group',
+                'Apa anda yakin mengirim data ini?'
+            );
+            
+            if (!confirmed) return;
+
+            const response = await this.groupManager.submitGroup(groupId);
+            
+            this.showSuccess('Data berhasil dikirim');
+            
+            // Refresh data
+            await this.refreshAllData();
+            
+        } catch (error) {
+            this.showError('Gagal kirim data: ' + error.message);
         }
     }
 

@@ -123,7 +123,7 @@ var KTDatatableJsonRemoteDemo = {
           overflow: "visible",
           template: function(t) {
             
-            if (t.STATUS == '1') {
+            if (t.STATUS == '0') {
               
               return `
                 <a href="<?= base_url() ?>aia/potensi_temuan/detail_potensi/${t.ID_HEADER}" class="btn btn-sm btn-clean btn-icon" title="Lihat">

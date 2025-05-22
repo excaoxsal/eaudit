@@ -34,7 +34,7 @@ class M_potensi_temuan extends CI_Model {
                 LEFT JOIN "TM_ISO" i ON ra."ID_ISO" = i."ID_ISO"
                 LEFT JOIN "RESPONSE_AUDITEE_D" rd ON ra."ID_HEADER" = rd."ID_HEADER"
                 JOIN "TM_DIVISI" d ON d."KODE" = ra."DIVISI"
-                left join "GROUP_POTENSI_TEMUAN" gpt on ra."ID_HEADER" = gpt."ID_RESPONSE"
+                left join "POTENSI_TEMUAN_STATUS" gpt on ra."ID_HEADER" = gpt."ID_RESPONSE"
                 GROUP BY ra."ID_HEADER", i."NOMOR_ISO",i."ID_ISO", ra."DIVISI", d."NAMA_DIVISI", w."WAKTU_AUDIT_AWAL", 
                 w."WAKTU_AUDIT_SELESAI", au."NAMA", la."NAMA", gpt."STATUS"
 
@@ -63,7 +63,7 @@ class M_potensi_temuan extends CI_Model {
                 LEFT JOIN "TM_ISO" i ON ra."ID_ISO" = i."ID_ISO"
                 LEFT JOIN "RESPONSE_AUDITEE_D" rd ON ra."ID_HEADER" = rd."ID_HEADER"
                 JOIN "TM_DIVISI" d ON d."KODE" = ra."DIVISI"
-                LEFT JOIN "GROUP_POTENSI_TEMUAN" gpt ON ra."ID_HEADER" = gpt."ID_RESPONSE"
+                left join "POTENSI_TEMUAN_STATUS" gpt on ra."ID_HEADER" = gpt."ID_RESPONSE"
                 WHERE d."ID_DIVISI" =' . $_SESSION['ID_DIVISI'] . ' 
                 AND d."STATUS" = \'1\'
                 GROUP BY ra."ID_HEADER", i."NOMOR_ISO", ra."DIVISI", d."NAMA_DIVISI", w."WAKTU_AUDIT_AWAL", 
