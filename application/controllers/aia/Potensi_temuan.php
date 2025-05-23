@@ -93,126 +93,151 @@ class Potensi_temuan extends MY_Controller {
         $this->db->select('ID_JADWAL');
         $this->db->where('ID_HEADER', $id_response_header);
         $header_data = $this->db->get('RESPONSE_AUDITEE_H')->row_array();
-        $id_jadwal = $header_data['ID_JADWAL'];
+        $cek_status_visit = $this->db->select('STATUS_VISIT')
+            ->where('ID_HEADER', $id_response_header)
+            ->get('RESPONSE_AUDITEE_H')
+            ->row()
+            ->STATUS_VISIT;
+        $cek_status_response = $this->db->select('STATUS')
+            ->where('ID_HEADER', $id_response_header)
+            ->get('RESPONSE_AUDITEE_H')
+            ->row()
+            ->STATUS;
+        if ($cek_status_visit == 1&&$cek_status_response == 1) {
+            $id_jadwal = $header_data['ID_JADWAL'];
         
-        $this->db->select("
-            concat(
-                'Kode Klausul : ',
-                tp.\"KODE_KLAUSUL\",
-                ' | Lv1 : ',
-                tp.\"LV1\",
-                ' | Lv2 : ',
-                tp.\"LV2\",
-                ' '
-            ) AS \"KODE_KLAUSUL\"
-        ");
-        $this->db->select('
-            rad.RESPONSE_AUDITEE,
-            rad.FILE,
-            rad.KLASIFIKASI,
-            rad.ID_MASTER_PERTANYAAN,
-            rad.ID_HEADER,
-            rad.ID_JADWAL,
-            rad.ID_RE
-        ');
-        $this->db->from('RESPONSE_AUDITEE_D rad');
-        $this->db->join(
-            'TM_PERTANYAAN tp',
-            'rad.ID_MASTER_PERTANYAAN = tp.ID_MASTER_PERTANYAAN',
-            'inner'
-        );
-        $this->db->where('rad.ID_HEADER', $id_response_header);
-        $this->db->where('rad.PENILAIAN !=', 4);
-        $this->db->where('rad.PENILAIAN IS NOT NULL', NULL);
-        $response_detail = $this->db->get()->result_array();
-        $this->db->select("
-            concat(
-                'Kode Klausul : ',
-                tp.\"KODE_KLAUSUL\",
-                ' | Lv1 : ',
-                tp.\"LV1\",
-                ' | Lv2 : ',
-                tp.\"LV2\",
-                ' '
-            ) AS \"KODE_KLAUSUL\"
-        ");
-        $this->db->select('
-            vl.HASIL_OBSERVASI,
-            vl.FILE,
-            vl.KLASIFIKASI,
-            vl.ID_MASTER_PERTANYAAN,
-            rah.ID_HEADER,
-            rah.ID_JADWAL,
-            vl.ID_VISIT
-        ');
-        $this->db->from('VISIT_LAPANGAN vl');
-        $this->db->join(
-            'TM_PERTANYAAN tp',
-            'vl.ID_MASTER_PERTANYAAN = tp.ID_MASTER_PERTANYAAN',
-            'inner'
-        );
-        $this->db->join(
-            'RESPONSE_AUDITEE_H rah',
-            'vl.ID_RESPONSE = rah.ID_HEADER',
-            'inner'
-        );
-        $this->db->where('rah.ID_HEADER', $id_response_header);
-        $visit_temuan = $this->db->get()->result_array();
-        // var_dump($visit_temuan);die; 
-        // $id_divisi = $this->session->userdata('ID_DIVISI'); // Ambil ID_DIVISI dari session
-        // $this->db->where('ID_DIVISI', $id_divisi);
+            $this->db->select("
+                concat(
+                    'Kode Klausul : ',
+                    tp.\"KODE_KLAUSUL\",
+                    ' | Lv1 : ',
+                    tp.\"LV1\",
+                    ' | Lv2 : ',
+                    tp.\"LV2\",
+                    ' '
+                ) AS \"KODE_KLAUSUL\"
+            ");
+            $this->db->select('
+                rad.RESPONSE_AUDITEE,
+                rad.FILE,
+                rad.KLASIFIKASI,
+                rad.ID_MASTER_PERTANYAAN,
+                rad.ID_HEADER,
+                rad.ID_JADWAL,
+                rad.ID_RE
+            ');
+            $this->db->from('RESPONSE_AUDITEE_D rad');
+            $this->db->join(
+                'TM_PERTANYAAN tp',
+                'rad.ID_MASTER_PERTANYAAN = tp.ID_MASTER_PERTANYAAN',
+                'inner'
+            );
+            $this->db->where('rad.ID_HEADER', $id_response_header);
+            $this->db->where('rad.PENILAIAN !=', 4);
+            $this->db->where('rad.PENILAIAN IS NOT NULL', NULL);
+            $response_detail = $this->db->get()->result_array();
+            $this->db->select("
+                concat(
+                    'Kode Klausul : ',
+                    tp.\"KODE_KLAUSUL\",
+                    ' | Lv1 : ',
+                    tp.\"LV1\",
+                    ' | Lv2 : ',
+                    tp.\"LV2\",
+                    ' '
+                ) AS \"KODE_KLAUSUL\"
+            ");
+            $this->db->select('
+                vl.HASIL_OBSERVASI,
+                vl.FILE,
+                vl.KLASIFIKASI,
+                vl.ID_MASTER_PERTANYAAN,
+                rah.ID_HEADER,
+                rah.ID_JADWAL,
+                vl.ID_VISIT
+            ');
+            $this->db->from('VISIT_LAPANGAN vl');
+            $this->db->join(
+                'TM_PERTANYAAN tp',
+                'vl.ID_MASTER_PERTANYAAN = tp.ID_MASTER_PERTANYAAN',
+                'inner'
+            );
+            $this->db->join(
+                'RESPONSE_AUDITEE_H rah',
+                'vl.ID_RESPONSE = rah.ID_HEADER',
+                'inner'
+            );
+            $this->db->where('rah.ID_HEADER', $id_response_header);
+            $visit_temuan = $this->db->get()->result_array();
+            // var_dump($visit_temuan);die; 
+            // $id_divisi = $this->session->userdata('ID_DIVISI'); // Ambil ID_DIVISI dari session
+            // $this->db->where('ID_DIVISI', $id_divisi);
 
-        $insert_data = [];
+            $insert_data = [];
 
-        // Process RESPONSE_AUDITEE_D records
-        foreach ($response_detail as $res_d) {
-            $insert_data[] = [
-                'HASIL_OBSERVASI' => $res_d['RESPONSE_AUDITEE'],
-                'FILE' => $res_d['FILE'],
-                'KLASIFIKASI' => $res_d['KLASIFIKASI'],
-                'ID_PERTANYAAN' => $res_d['ID_MASTER_PERTANYAAN'],
-                'ID_RESPONSE' => $id_response_header,
-                'ID_JADWAL' => $id_jadwal,
-                'ID_RE' => $res_d['ID_RE'], // Make sure this is included
-                'KODE_KLAUSUL' => $res_d['KODE_KLAUSUL']
-            ];
-        }
-
-        // Process VISIT_LAPANGAN records
-        foreach ($visit_temuan as $visit) {
-            $insert_data[] = [
-                'HASIL_OBSERVASI' => $visit['HASIL_OBSERVASI'],
-                'FILE' => $visit['FILE'],
-                'KLASIFIKASI' => $visit['KLASIFIKASI'],
-                'ID_PERTANYAAN' => $visit['ID_MASTER_PERTANYAAN'],
-                'ID_RESPONSE' => $id_response_header,
-                'ID_JADWAL' => $id_jadwal,
-                'ID_RE' => $visit['ID'], // Use appropriate ID field from VISIT_LAPANGAN
-                'KODE_KLAUSUL' => $visit['KODE_KLAUSUL']
-            ];
-        }
-
-        // Check if data exists
-        $this->db->where('ID_RESPONSE', $id_response_header);
-        $existing_data = $this->db->get('POTENSI_TEMUAN')->result_array();
-
-        if (!empty($insert_data)) {
-            // Delete existing data if any
-            if (!empty($existing_data)) {
-                $this->db->where('ID_RESPONSE', $id_response_header);
-                $this->db->delete('POTENSI_TEMUAN');
-
-                // $this->db->where('ID_RESPONSE', $id_response_header);
-                // $this->db->delete('GROUP_POTENSI_TEMUAN');
+            // Process RESPONSE_AUDITEE_D records
+            foreach ($response_detail as $res_d) {
+                $insert_data[] = [
+                    'HASIL_OBSERVASI' => $res_d['RESPONSE_AUDITEE'],
+                    'FILE' => $res_d['FILE'],
+                    'KLASIFIKASI' => $res_d['KLASIFIKASI'],
+                    'ID_PERTANYAAN' => $res_d['ID_MASTER_PERTANYAAN'],
+                    'ID_RESPONSE' => $id_response_header,
+                    'ID_JADWAL' => $id_jadwal,
+                    'ID_RE' => $res_d['ID_RE'], // Make sure this is included
+                    'KODE_KLAUSUL' => $res_d['KODE_KLAUSUL']
+                ];
             }
-            $this->db->insert_batch('POTENSI_TEMUAN', $insert_data);
+
+            // Process VISIT_LAPANGAN records
+            foreach ($visit_temuan as $visit) {
+                $insert_data[] = [
+                    'HASIL_OBSERVASI' => $visit['HASIL_OBSERVASI'],
+                    'FILE' => $visit['FILE'],
+                    'KLASIFIKASI' => $visit['KLASIFIKASI'],
+                    'ID_PERTANYAAN' => $visit['ID_MASTER_PERTANYAAN'],
+                    'ID_RESPONSE' => $id_response_header,
+                    'ID_JADWAL' => $id_jadwal,
+                    'ID_RE' => $visit['ID'], // Use appropriate ID field from VISIT_LAPANGAN
+                    'KODE_KLAUSUL' => $visit['KODE_KLAUSUL']
+                ];
+            }
+
+            // Check if data exists
+            $this->db->where('ID_RESPONSE', $id_response_header);
+            $existing_data = $this->db->get('POTENSI_TEMUAN')->result_array();
+
+            if (!empty($insert_data)) {
+                // Delete existing data if any
+                if (!empty($existing_data)) {
+                    $this->db->where('ID_RESPONSE', $id_response_header);
+                    $this->db->delete('POTENSI_TEMUAN');
+
+                    // $this->db->where('ID_RESPONSE', $id_response_header);
+                    // $this->db->delete('GROUP_POTENSI_TEMUAN');
+                }
+                $this->db->insert_batch('POTENSI_TEMUAN', $insert_data);
+                
+                $this->session->set_flashdata('success', 'Data berhasil di-generate');
+            } else {
+                $this->session->set_flashdata('error', 'Tidak ada data yang cocok untuk digenerate');
+            }
             
-            $this->session->set_flashdata('success', 'Data berhasil di-generate');
-        } else {
-            $this->session->set_flashdata('error', 'Tidak ada data yang cocok untuk digenerate');
+            redirect(base_url('aia/potensi_temuan/index'));
+        }
+        else if (($cek_status_visit == 0 || $cek_status_visit==null)||$cek_status_response == 1) {
+            $this->session->set_flashdata('error', 'Data tidak bisa digenerate, Visit Lapangan belum dikunci');
+            redirect(base_url('aia/potensi_temuan/index'));
+        }
+        else if ($cek_status_visit == 1||($cek_status_response == 0||$cek_status_response==null)) {
+            $this->session->set_flashdata('error', 'Data tidak bisa digenerate, Response Auditee belum dikunci');
+            redirect(base_url('aia/potensi_temuan/index'));
+        }
+        else {
+            $this->session->set_flashdata('error', 'Data tidak bisa digenerate, Visit Lapangan dan Response Auditee belum dikunci');
+            redirect(base_url('aia/potensi_temuan/index'));
         }
         
-        redirect(base_url('aia/potensi_temuan/index'));
     }
 
     public function update_group() {

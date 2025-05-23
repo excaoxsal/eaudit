@@ -64,7 +64,12 @@ class visit_lapangan extends MY_Controller {
 	public function save() {
         $this->load->library('form_validation');
         $this->load->library('upload');
-        
+        $cek_status_visit=$this->db->select('STATUS_VISIT')->from('RESPONSE_AUDITEE_H')->where('ID_HEADER',$this->input->post('id_response'))->get();
+		if($cek_status->result_array()['0']['STATUS_VISIT']==1){
+			$error_message = 'Audit sudah dikunci, tidak bisa mengirimkan Visit Lapangan';
+			$this->session->set_flashdata('error', $error_message);
+			redirect(base_url('aia/visit_lapangan/detail/'.$data));
+		}
         // Validasi input
         $this->form_validation->set_rules('hasil_observasi', 'Hasil Observasi', 'required');
         $this->form_validation->set_rules('klasifikasi', 'Klasifikasi', 'required|in_list[MAJOR,MINOR,OBSERVASI]');
@@ -235,5 +240,34 @@ class visit_lapangan extends MY_Controller {
             echo json_encode(['status' => 'error', 'message' => 'Gagal menghapus data']);
         }
     }
+
+    public function lock($id_response){
+		$this->db->set('STATUS_VISIT', '1');
+		$this->db->where('ID_HEADER', $id_response);
+		$update = $this->db->update('RESPONSE_AUDITEE_H');
+		if($update){
+			$success_message = 'Data Berhasil dikunci.';
+			$this->session->set_flashdata('success', $success_message);
+			redirect(base_url('aia/response_auditee/detail/'.$id_response));
+		}else{
+			$error_message = 'Gagal Silahakan coba lagi';
+			$this->session->set_flashdata('error', $error_message);
+			redirect(base_url('aia/response_auditee/detail/'.$id_response));
+		}
+	}
+	public function unlock($id_response){
+		$this->db->set('STATUS_VISIT', '0');
+		$this->db->where('ID_HEADER', $id_response);
+		$update = $this->db->update('RESPONSE_AUDITEE_H');
+		if($update){
+			$success_message = 'Data Berhasil dibuka.';
+			$this->session->set_flashdata('success', $success_message);
+			redirect(base_url('aia/response_auditee/detail/'.$id_response));
+		}else{
+			$error_message = 'Gagal Silahakan coba lagi';
+			$this->session->set_flashdata('error', $error_message);
+			redirect(base_url('aia/response_auditee/detail/'.$id_response));
+		}
+	}
 	
 }

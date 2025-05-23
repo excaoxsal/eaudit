@@ -56,6 +56,12 @@ class Response_auditee extends MY_Controller {
 		->get();
 		$result_waktu= $query_waktu->result_array();
 		// var_dump($current_date<=$result_waktu['0']['WAKTU_AUDIT_SELESAI']);var_dump($current_date,$result_waktu);var_dump($data);die;
+		$cek_status=$this->db->select('STATUS')->from('RESPONSE_AUDITEE_H')->where('ID_HEADER',$data)->get();
+		if($cek_status->result_array()['0']['STATUS']==1){
+			$error_message = 'Audit sudah dikunci, tidak bisa mengirimkan respon';
+			$this->session->set_flashdata('error', $error_message);
+			redirect(base_url('aia/response_auditee/detail/'.$data));
+		}
 		if($current_date>=$result_waktu['0']['WAKTU_AUDIT_AWAL']){
 			if($current_date<=$result_waktu['0']['WAKTU_AUDIT_SELESAI']){
 				if($ext==""||$ext==null){
@@ -124,12 +130,9 @@ class Response_auditee extends MY_Controller {
 			$this->session->set_flashdata('error', $error_message);
 			redirect(base_url('aia/response_auditee/detail/'.$data));
 		}
-
-		
-		
-		
-
 	}
+
+
 	public function deletefile() {
 		$query = $this->db->select('FILE')->from('RESPONSE_AUDITEE_D')->where('ID_RE',$_POST['ID_RE'])->get();
 		// var_dump($query->result_array());
@@ -613,6 +616,35 @@ class Response_auditee extends MY_Controller {
 		}
 		function is_empty_return_null($value) {
 			return empty($value) ? NULL : $value;
+	}
+
+	public function lock($id_response){
+		$this->db->set('STATUS', '1');
+		$this->db->where('ID_HEADER', $id_response);
+		$update = $this->db->update('RESPONSE_AUDITEE_H');
+		if($update){
+			$success_message = 'Data Berhasil dikunci.';
+			$this->session->set_flashdata('success', $success_message);
+			redirect(base_url('aia/response_auditee/detail/'.$id_response));
+		}else{
+			$error_message = 'Gagal Silahakan coba lagi';
+			$this->session->set_flashdata('error', $error_message);
+			redirect(base_url('aia/response_auditee/detail/'.$id_response));
+		}
+	}
+	public function unlock($id_response){
+		$this->db->set('STATUS', '0');
+		$this->db->where('ID_HEADER', $id_response);
+		$update = $this->db->update('RESPONSE_AUDITEE_H');
+		if($update){
+			$success_message = 'Data Berhasil dibuka.';
+			$this->session->set_flashdata('success', $success_message);
+			redirect(base_url('aia/response_auditee/detail/'.$id_response));
+		}else{
+			$error_message = 'Gagal Silahakan coba lagi';
+			$this->session->set_flashdata('error', $error_message);
+			redirect(base_url('aia/response_auditee/detail/'.$id_response));
+		}
 	}
 	
 }

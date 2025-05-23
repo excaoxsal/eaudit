@@ -113,16 +113,28 @@ var KTDatatableJsonRemoteDemo = {
         field: "LEAD_AUDITOR",
         title: "Lead Auditor"
       },{
-          field: "ID_ISO",
-          title: "Action",
-          class: "text-center",
-          sortable: !1,
-          searchable: !1,
-          overflow: "visible",
-          template: function(t) {
-            return '<a  href="<?= base_url() ?>aia/visit_lapangan/detail/'+t.ID_HEADER+'" class="btn btn-sm btn-clean btn-icon" title="Lihat"><i class="fa fa-eye text-dark"></i></a>'
-            }
+        field: "ID_HEADER", // Field ini tetap ID_HEADER atau ID_ISO sesuai kebutuhan link, bukan STATUS
+        title: "Action",
+        class: "text-center",
+        sortable: !1,
+        searchable: !1,
+        overflow: "visible",
+        template: function(t) {
+          let lockButtonHtml = '';
+          var isLeadAuditor = <?php echo json_encode($is_lead_auditor); ?>;
+          var isAuditor = <?php echo json_encode($is_auditor); ?>;
+          // Ganti kondisi di bawah ini sesuai dengan nilai aktual dari field STATUS Anda
+          if (t.STATUS_VISIT == 1) { // Contoh kondisi untuk terkunci
+            lockButtonHtml = '<a href="<?= base_url() ?>aia/visit_lapangan/unlock/' + t.ID_HEADER + '" class="btn btn-sm btn-clean btn-icon" title="Buka Kunci"><i class="fa fa-unlock text-success"></i></a>';
+          } else { // Kondisi untuk tidak terkunci / terbuka
+            lockButtonHtml = '<a href="<?= base_url() ?>aia/visit_lapangan/lock/' + t.ID_HEADER + '" class="btn btn-sm btn-clean btn-icon" title="Kunci"><i class="fa fa-lock text-dark"></i></a>';
+          }
+          // Tombol lainnya tetap sama
+          const viewButtonHtml = '<a href="<?= base_url() ?>aia/visit_lapangan/detail/' + t.ID_HEADER + '" class="btn btn-sm btn-clean btn-icon" title="Lihat"><i class="fa fa-eye text-dark"></i></a>';
+
+          return lockButtonHtml + viewButtonHtml;
         }
+      },
       ]
     }), $("#kt_datatable_search_status").on("change", (function() {
       t.search($(this).val().toLowerCase(), "NAMA_DIVISI")
